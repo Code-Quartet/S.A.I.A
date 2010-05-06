@@ -25,7 +25,7 @@ let window_register_instructor;
 
 module.exports = function Register_instructor(parentWindow) {
   window_register_instructor = new BrowserWindow({
-        width:480,
+        width:580,
         height:540,
         resizable:false,
         frame:false,

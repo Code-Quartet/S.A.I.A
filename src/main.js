@@ -318,21 +318,22 @@ ipcMain.on("Get-data-stats-dasboard",async(event,data)=>{
 /********************************System Reload Dasboard***********************************************/
 ipcMain.on("Reload-dasboard-system-data-MyProfile",async(event,data)=>{
 
-    await mainWindow.webContents.send("notification-my-profile");
 
-    console.log("Reload-dasboard-system-data-Employee-MyProfile")
+   // console.log("Reload-dasboard-system-data-Employee-MyProfile")
     setTimeout(async()=>{
     
       let dataUSer = await Get_data_user_key(User_sesion_login_id.user.key)
       mainWindow.webContents.send("reload-user-data-modif",dataUSer);
     
-    },1000)
+    },500)
+
+        await mainWindow.webContents.send("notification-my-profile");
+
 
 })
 
 ipcMain.on("Reload-dasboard-system-Employee-MyProfile",async(event,data)=>{
 
-      console.log("Reload-dasboard-system-data-Employee-MyProfile")
       let dataUSer = await Get_data_user_key(User_sesion_login_id.user.key)
       mainWindow.webContents.send("reload-user-data-modif",dataUSer);
 
@@ -355,7 +356,6 @@ ipcMain.on("Reload-dasboard-system-data-Course",async(event,data)=>{
 ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
 
     let result = await GetStudentPaged();
-    //console.log("Reload-dasboard-system-data-Student",result)
     await mainWindow.webContents.send("Data-list-Student",result);
 
 })
@@ -363,8 +363,7 @@ ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
 ipcMain.on("Reload-dasboard-system-data-Employee",async(event,data)=>{
 
     let result = await GetEmployeesPaged()
-   // console.log("Reload-dasboard-system-data-Employee",result)
-    mainWindow.webContents.send("Render-data-employee-list",result)
+    await mainWindow.webContents.send("Render-data-employee-list",result)
 
 })
 /********************************System Reload Dasboard***********************************************/

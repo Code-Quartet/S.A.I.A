@@ -286,7 +286,7 @@ api.receive("Activate-button-register-employee",(event,data)=>{
 
 api.receive("Render-data-employee-list",(event,info)=>{
 
-    console.log("Render-data-employee-list",info)
+   //console.log("Render-data-employee-list",info)
 
     document.getElementById("employee-body").innerHTML=""
 
@@ -331,7 +331,6 @@ api.receive("Render-data-employee-list",(event,info)=>{
 
     }
 
-
 })
 
 api.receive("Render-data-employee-list-search",(event,info)=>{
@@ -368,12 +367,10 @@ api.receive("Render-data-employee-list-search",(event,info)=>{
 
 })
 
-
-
 function SearchEmployee(data){
 
 
-api.send("search-data-registre-employee",data)
+    api.send("search-data-registre-employee",data)
 
 
 }
@@ -463,7 +460,7 @@ function exexportarAExcelEmployee() {
                 }
             }
 
-       api.send("Login-user-master-permission",obj)
+            api.send("Login-user-master-permission",obj)
 
    
 }

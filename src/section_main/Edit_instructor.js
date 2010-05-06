@@ -21,10 +21,8 @@ let window_edit_instructor;
 let key_Instructor=null
 module.exports = function Edit_instructor(parentWindow,key) {
   window_edit_instructor = new BrowserWindow({
-    width:480,
+  width:580,
         height:540,
-        maxWidth:480,    
-        maxHeight:540,
         resizable:false,
         frame:false,
       modal: true,

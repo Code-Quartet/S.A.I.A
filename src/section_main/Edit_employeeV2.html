@@ -29,7 +29,6 @@
 body {
     background-color: white;
     font-family: 'Inter', sans-serif;
-    width: 480px;
     height: 546px;
     overflow: hidden;
     display: flex;
@@ -497,40 +496,30 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
         };
 
        // console.log("save-data-update-employee", objData);
-        api.send("save-data-update-employee", objData);
-
-        setTimeout(() => {
-            api.send("Reload-dasboard-system-data-Employee");
-        }, 1000);
+        api.send("save-data-update-employee",objData);
+  
+    
     }
-
-
 
         /*---------------------------------------------*/
 
         api.receive("open-modal-update-employee", () => {
             const notif = document.getElementById('notif');
             notif.classList.add('show');
+            api.send("Reload-dasboard-system-data-Employee");
             setTimeout(() => notif.classList.remove('show'), 3000);
         });
+
 
         api.receive("open-modal-update-employee-admin", () => {
             const notif = document.getElementById('notif');
             notif.classList.add('show');
-            setTimeout(() =>{
-
-                notif.classList.remove('show')
             api.send("Reload-dasboard-system-Employee-MyProfile")  
-              // console.log("data employe admin user")
-                setTimeout(() =>{
-                    window.close()
-                }, 2000);  
-            }, 2000);  
-
-
+            setTimeout(() =>{  notif.classList.remove('show'); window.close() }, 1000); 
         });
         /*---------------------------------------------------------*/
 
+        /*---------------------------------------------------------*/
 
         // --- MANEJO DE IMÁGENES (AVATAR & DOC) ---
         document.getElementById('viewAvatar').onclick = (e) => {

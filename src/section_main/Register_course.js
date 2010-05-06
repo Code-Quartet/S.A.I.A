@@ -22,7 +22,7 @@ let window_register_course;
 
 module.exports = function Register_course(parentWindow) {
   window_register_course = new BrowserWindow({
-        width:560,
+        width:580,
         height:580,
         resizable:false, 
         frame:false,

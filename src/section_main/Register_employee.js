@@ -21,9 +21,7 @@ let window_register_employee;
 
 module.exports = function Register_employee(parentWindow) {
   window_register_employee = new BrowserWindow({
-      //  width:940,
-        //height:540,
-        width:480,
+        width:580,
         height:540,
        modal: true,
         resizable:false, 

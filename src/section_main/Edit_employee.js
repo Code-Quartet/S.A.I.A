@@ -29,7 +29,7 @@ module.exports = function Edit_employee(parentWindow,id,keyusersession) {
   window_edit_employee = new BrowserWindow({
      /* width:940,
         height:540,*/
-      width:480,
+      width:580,
         height:540,
        modal: true,
         resizable:false, 

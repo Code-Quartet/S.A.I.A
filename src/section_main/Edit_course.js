@@ -21,7 +21,7 @@ let window_edit_course;
 let Key_course="";
 module.exports = function Edit_course(parentWindow,key) {
   window_edit_course = new BrowserWindow({
-        width:560,
+        width:580,
         height:580,
        resizable:false, 
         frame:false,
