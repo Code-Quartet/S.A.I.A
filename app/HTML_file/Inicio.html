@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link rel="stylesheet" type="text/css" href="../assets/style/main.css">  
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">  
+</head>
+<style type="text/css">
+.body-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #264eca;
+    height: 100vh;
+}
+.main-login {
+    background: white;
+    padding: 27px;
+    width: 31%;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+.form-login-system {
+    background: white;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: min-content;
+}
+
+.imagen-login {
+    background: #264eca;
+    border-radius: 51%;
+    width: 40%;
+}
+.container-input {
+    padding: 2px;
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+    .label-login{}
+
+.sub-container-login {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: row;
+        border-radius: 6px;
+    border: 0.5px solid grey;
+}
+
+
+
+.sub-container-login>span{
+    color:grey;
+}
+.sub-container-login>input {
+    width: 87%;
+    padding: 2px;
+    height: 21px;
+border-style: none;
+}
+.sub-container-login>input:focus {
+    outline: none;
+}
+
+.Btn-Ingresar-login {
+    padding: 14px;
+    background: #264eca;
+    color: white;
+    border-radius: 6px;
+    border-style: none;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/*------EFETO BOTON PASSWORD------------*/
+
+
+#password{
+    width:80%;
+}
+
+#toggleBtn {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+#toggleBtn:hover {
+  color: #000;
+}
+/*------EFETO BOTON PASSWORD------------*/
+/*-----------------sTYLO BARRA DE CARGA-----------------------------*/
+/* Estilos del fondo del modal */
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* Caja blanca del modal */
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+/* Contenedor gris de la barra */
+.progress-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+/* La barra de carga real */
+.progress-bar {
+    width: 0%;
+    height: 20px;
+    background: linear-gradient(45deg, #001ac1, #2c578de0, blue);
+    border-radius: 10px;
+    transition: width 0.1s linear;
+}
+/*-----------------sTYLO BARRA DE CARGA-----------------------------*/
+/*-STYLO MODAL VERIFICAR DATA*/
+/* Estilos Generales y Overlay */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+/* Tarjeta del Modal */
+.modal-card {
+  background: #fff;
+  width: 90%;
+  max-width: 380px;
+  margin: 10% auto;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.modal-title {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+/* Input y Etiquetas */
+.input-group {
+  text-align: left;
+  margin: 20px 0;
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper .icon-lock {
+  position: absolute;
+  left: 12px;
+  color: #888;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px 12px 12px 35px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.input-wrapper input:focus {
+  border-color: #007bff;
+}
+
+/* Botones */
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-continuar, .btn-salir {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+.btn-continuar {
+    background-color: #264eca;
+    color: white;
+}
+.btn-salir { 
+  background-color: #dc3545; 
+  color: white;
+}
+
+.btn-continuar:hover, .btn-salir:hover { opacity: 0.9; }
+
+/* Barra de Carga */
+.loading-area { margin-top: 15px; }
+.progress-bg {
+  background: #eee;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #28a745;
+  transition: width 0.1s linear;
+}
+/*-STYLO MODAL VERIFICAR DATA*/
+</style>
+<body class="body-login">
+    <main class="main-login">
+        <img src="../assets/imagen/ImageLogin3.png" alt="Imagen login" class="imagen-login">
+       <div class="form-login-system">
+           <label class="container-input username">
+                <span class="label-login">Coreo Electronico</span>
+                <div class="sub-container-login">
+                 <span class="icon-user"></span>   
+               <input type="text" name="usename" class="username" placeholder="Ingrese su correo electronico" id="username-input" require>
+               </div>
+           </label>
+            <label class="container-input password">
+                <span class="label-login">Contraseña</span>
+                    <div class="sub-container-login">
+                        <span  class="icon-lock"></span>   
+                        <input type="password" name="password"  class="password-input" id="password" placeholder="Ingrese su contraseña" require>
+                        <button type="button" id="toggleBtn">
+                             <span id="eyeIcon" class="icon-eye"></span>
+                        </button>
+                    </div>
+            </label>
+           <button class="Btn-Ingresar-login" id="Btn-Ingresar-login">Ingresar <span class="icon-arrow-right2"></span></button>
+       </div>
+       <!---->
+       <div id="miModal" class="modal">
+  <div class="modal-content">
+    <h2>Procesando...</h2>
+    <p>Por favor, espera un momento.</p>
+    
+    <div class="progress-container">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+    
+    <p id="statusText">0%</p>
+  </div>
+</div>
+<!---------------------------------->
+<div id="modalIdentidad" class="modal-overlay">
+  <div class="modal-card">
+    <h2 class="modal-title">Verificar Identidad</h2>
+    
+    <div class="input-group">
+      <label for="claveMaestra">Clave Maestra</label>
+      <div class="input-wrapper">
+        <span class="icon-lock"></span> 
+        <input type="password" id="claveMaestra" placeholder="Ingrese su clave maestra de administrador">
+      </div>
+    </div>
+
+    <div id="loadingArea" class="loading-area" style="display: none;">
+      <div class="progress-bg">
+        <div id="bar" class="progress-fill"></div>
+      </div>
+      <p id="percentText">0%</p>
+    </div>
+
+    <div class="button-group">
+      <button onclick="iniciarVerificacion()" class="btn-continuar">Continuar<span style="padding:5px;"></span><span class="icon-checkmark"></span></button>
+      <button onclick="cerrarModal()" class="btn-salir">Salir</button>
+    </div>
+  </div>
+</div>
+<!---------------------------------->
+    </main>
+<script type="text/javascript">
+  const passwordInput = document.getElementById('password');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const eyeIcon = document.getElementById('eyeIcon');
+
+  toggleBtn.addEventListener('click', () => {
+    // 1. Cambiamos el tipo de input
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+
+    // 2. Intercambiamos las clases de Icomoon
+    if (isPassword) {
+      eyeIcon.classList.remove('icon-eye');
+      eyeIcon.classList.add('icon-eye-blocked');
+    } else {
+      eyeIcon.classList.remove('icon-eye-blocked');
+      eyeIcon.classList.add('icon-eye');
+    }
+  });
+
+  /*login validar*/
+  // Seleccionamos el formulario por su clase
+  const form = document.querySelector('.form-login-system');
+
+  document.getElementById("Btn-Ingresar-login").addEventListener("click",()=>{
+      // 1. Prevenimos la recarga de la página
+      event.preventDefault();
+
+      // 2. Capturamos los inputs
+      const usernameInput = document.getElementById('username-input');
+      const passwordInput = document.getElementById('password');
+
+      // 3. Validamos si están vacíos (usando .trim() para evitar espacios en blanco)
+      if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
+          alert("Por favor, complete todos los campos.");
+          return; // Detenemos la ejecución si hay campos vacíos
+      }
+
+      // 4. Si pasa la validación, aquí puedes proceder con el envío (fetch, axios, etc.)
+      console.log("Formulario válido. Enviando datos...");
+      console.log("Usuario:", usernameInput.value);
+      console.log("Password:", passwordInput.value);
+      abrirModal()
+
+});
+/*login validar*/
+/*-----------BARRA DE CARGA----------------------------*/
+function abrirModal() {
+  // 1. Mostrar el modal
+  const modal = document.getElementById("miModal");
+  const bar = document.getElementById("progressBar");
+  const status = document.getElementById("statusText");
+  
+  modal.style.display = "block";
+  let width = 0;
+
+  // 2. Iniciar la animación de la barra
+  const intervalo = setInterval(() => {
+    if (width >= 100) {
+      clearInterval(intervalo);
+      // 3. Ejecutar la función al terminar
+      finalizarProceso();
+    } else {
+      width++;
+      bar.style.width = width + '%';
+      status.innerText = width + '%';
+    }
+  }, 30); // Velocidad: 30ms por cada 1% (aprox 3 segundos total)
+}
+
+function finalizarProceso() {
+  alert("¡Carga completada! Ejecutando función final...");
+  // Aquí puedes cerrar el modal o redirigir al usuario
+  mostrarModalVerificacion()
+  document.getElementById("miModal").style.display = "none";
+
+}
+/*-----------BARRA DE CARGA----------------------------*/
+/*-----------------------------*/ 
+function mostrarModalVerificacion() {
+ 
+  document.getElementById("modalIdentidad").style.display = "block";
+}
+
+function cerrarModal() {
+ 
+  document.getElementById("modalIdentidad").style.display = "none";
+  resetearModal();
+}
+
+function iniciarVerificacion() {
+  const clave = document.getElementById("claveMaestra").value;
+  
+  if(!clave) {
+    alert("Por favor, ingresa la clave maestra");
+    return;
+  }
+
+  // Ocultar botones y mostrar carga
+  document.querySelector(".button-group").style.display = "none";
+  document.getElementById("loadingArea").style.display = "block";
+
+  let width = 0;
+  const bar = document.getElementById("bar");
+  const text = document.getElementById("percentText");
+
+  const intervalo = setInterval(() => {
+    if (width >= 100) {
+      clearInterval(intervalo);
+      ejecutarFuncionFinal();
+    } else {
+      width += 2; // Sube de 2 en 2 para que sea más rápido
+      bar.style.width = width + "%";
+      text.innerText = width + "%";
+    }
+  }, 40);
+}
+
+function ejecutarFuncionFinal() {
+  alert("Identidad Verificada con éxito.");
+  cerrarModal();
+}
+
+function resetearModal() {
+  // Limpiar para la próxima vez que se abra
+  document.getElementById("claveMaestra").value = "";
+  document.getElementById("bar").style.width = "0%";
+  document.getElementById("percentText").innerText = "0%";
+  document.getElementById("loadingArea").style.display = "none";
+  document.querySelector(".button-group").style.display = "flex";
+}
+</script>
+</body>
+<script href="assets/iconos/icomoon/selection.json" type="text/javascript"></script>
+</html>

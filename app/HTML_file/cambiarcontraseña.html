@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Contraseña</title>
+    <link rel="stylesheet" href="icomoon/style.css">
+   <style type="text/css">
+       :root {
+    --primary-color: #2b56c5;
+    --text-color: #333;
+    --border-color: #d1d5db;
+    --placeholder-color: #9ca3af;
+    --bg-color: #f9fafb;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Iconos de Icomoon dentro del input */
+.input-container span[class^="icon-"] {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8; /* Color grisáceo de la imagen */
+    font-size: 1.2rem;
+}
+
+input {
+    width: 100%;
+    padding: 12px 12px 12px 45px; /* Espacio para el icono */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+}
+
+input::placeholder {
+    color: var(--placeholder-color);
+}
+
+/* Contenedor de botones */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 2rem;
+}
+
+button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-outline {
+    background: white;
+    border: 1.5px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: #f0f4ff;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    border: none;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1e3fa1;
+}
+   </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Cambiar contraseña</h2>
+
+    <form>
+        <div class="form-group">
+            <label>Contraseña Actual</label>
+            <div class="input-container">
+                <span class="icon-lock"></span> <input type="password" placeholder="••••••••••">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Nueva Contraseña</label>
+            <div class="input-container">
+                <span class="icon-pencil"></span> <input type="password" placeholder="Ingrese nueva contraseña">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Confirmar Contraseña</label>
+            <div class="input-container">
+                <span class="icon-shield"></span> <input type="password" placeholder="Ingrese nueva contraseña">
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn-outline">
+                Cancelar <span class="icon-cross"></span>
+            </button>
+            <button type="submit" class="btn-primary">
+                Confirmar <span class="icon-checkmark"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

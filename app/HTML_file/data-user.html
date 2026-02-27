@@ -1,0 +1,179 @@
+   <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">  
+ <style type="text/css">
+    *{
+        margin: 0px;
+        padding: 0px;
+    }
+.container-user-info {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+}
+.container-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 10% 30% 60%;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width: 40%;
+    height: 91%;
+}
+.header-text{
+
+grid-area: 1 / 1 / 2 / 2;
+
+}
+
+.container-avatar-main{  grid-area: 2 / 1 / 3 / 2; }
+
+.avatar-main {
+    width: 130px;
+    height: 130px;
+    background-color:blue;
+    border-radius: 50%;
+    margin: 0 auto 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 60px;
+}
+
+.container-data{
+   grid-area: 3 / 1 / 4 / 2;
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+
+  .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 400;
+        }
+
+        .row-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-edit {
+            background-color:blue;
+            color: white;
+            border: none;
+            padding: 7px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-edit:active { transform: scale(0.95); }
+        /*--------------------------------------------*/
+        .view-input {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    width: 150px;
+    padding: 0;
+    pointer-events: none; /* Evita que el usuario escriba directamente sin editar */
+}
+
+/* Estilo para el icono cuando está activo */
+.icon-eye.active::before {
+    content: "\e9ce"; /* Este es el código típico del ojo tachado en Icomoon, verifícalo en tu fuente */
+}
+   </style> 
+    <div class="container-user-info">
+            <header class="header-text">
+                <h1>Buen día, Yris</h1>
+                <p>Centro de Capacitación 3e - Escuela de Manejo</p>
+            </header>
+            <div class="container-form">
+                <div class="container-avatar-main"> 
+                 
+                    <img class="avatar-main" src="../assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+                </div>
+                <div class="container-data">
+                            <div class="info-row">
+                                <div>
+                                    <label class="info-label">Nombre</label>
+                                    <div class="info-value" id="txt-nombre">Yris</div>
+                                </div>
+                                <button class="btn-edit" onclick="pedirVerificacion('nombre')">Editar</button>
+                            </div>
+
+                            <div class="info-row">
+                                <div>
+                                    <label class="info-label">Correo Electrónico</label>
+                                    <div class="info-value" id="txt-correo">yrisadmin@correo.com</div>
+                                </div>
+                                <button class="btn-edit" onclick="pedirVerificacion('correo')">Editar</button>
+                            </div>
+
+                            <div class="info-row">
+    <div>
+        <label class="info-label">Contraseña</label>
+        <input type="password" class="view-input" id="pass-usuario" value="contraseñasecreta" readonly>
+    </div>
+    <div class="row-right">
+        <span class="icon-eye" id="toggle-pass" onclick="toggleVisibility('pass-usuario', this)" style="cursor:pointer; color:#1a43a0"></span>
+        <button class="btn-edit" onclick="pedirVerificacion('password')">Editar</button>
+    </div>
+</div>
+
+<div class="info-row">
+    <div>
+        <label class="info-label">Clave Maestra</label>
+        <input type="password" class="view-input" id="clave-maestra" value="123456" readonly>
+    </div>
+    <div class="row-right">
+        <span class="icon-eye" id="toggle-clave" onclick="toggleVisibility('clave-maestra', this)" style="cursor:pointer; color:#1a43a0"></span>
+        <button class="btn-edit" onclick="pedirVerificacion('clave_maestra')">Editar</button>
+    </div>
+</div>
+
+
+            </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function toggleVisibility(idInput, icono) {
+    const input = document.getElementById(idInput);
+    
+    if (input.type === "password") {
+        // Mostrar contraseña
+        input.type = "text";
+        // Cambiar icono (Dependiendo de tu pack de Icomoon, podrías cambiar la clase)
+        icono.classList.remove("icon-eye");
+        icono.classList.add("icon-eye-blocked"); 
+    } else {
+        // Ocultar contraseña
+        input.type = "password";
+        icono.classList.remove("icon-eye-blocked");
+        icono.classList.add("icon-eye");
+    }
+}
+</script>
+<script href="assets/iconos/icomoon/selection.json" type="text/javascript"></script>

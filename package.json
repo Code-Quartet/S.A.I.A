@@ -1,0 +1,37 @@
+{
+  "name": "S.A.I.A",
+  "version": "1.0.0",
+  "description": "",
+  "main":"main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "build --win",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build  --win --publish always"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "build": {
+    "appId": "com.AdVizualyze.app",
+    "productName": "AdVizualyze",
+    "asar":true,
+    "extraResources": [
+      "data_app/**"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "NSIS"
+      ]
+    }
+  },
+  "devDependencies": {
+    "electron": "^13.6.9",
+    "electron-builder": "^24.4.0"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
+  }
+}

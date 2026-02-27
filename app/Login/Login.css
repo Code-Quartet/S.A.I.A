@@ -1,0 +1,261 @@
+.body-login {
+
+    background-image:url('../assets/imagen/studio.jpg');
+    /*background-image:url('studiolicht.jpg');*/
+      background-position: center;
+    background-size: cover;
+    background-repeat:no-repeat; 
+    height: 100vh;
+}
+.sub-body-container-login {
+    height: inherit;
+    background: #152963c2;
+    width: 100%;
+        display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+   
+}
+.main-login {
+    background: white;
+    padding: 27px;
+    width: 31%;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+.form-login-system {
+    background: white;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: min-content;
+}
+
+.imagen-login {
+   /* background: #264eca;*/
+   background-image:url('../assets/imagen/studio.jpg');background-position: center;
+    background-size: cover;
+    background-repeat:no-repeat; 
+   
+    border-radius: 51%;
+    width: 40%;
+}
+.container-input {
+    padding: 2px;
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+    .label-login{}
+
+.sub-container-login {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: row;
+        border-radius: 6px;
+    border: 0.5px solid grey;
+}
+
+
+
+.sub-container-login>span{
+    color:grey;
+}
+.sub-container-login>input {
+    width: 87%;
+    padding: 2px;
+    height: 21px;
+border-style: none;
+}
+.sub-container-login>input:focus {
+    outline: none;
+}
+
+.Btn-Ingresar-login {
+    padding: 14px;
+    background: #264eca;
+    color: white;
+    border-radius: 6px;
+    border-style: none;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/*------EFETO BOTON PASSWORD------------*/
+
+
+#password{
+    width:80%;
+}
+
+#toggleBtn {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+#toggleBtn:hover {
+  color: #000;
+}
+
+/*-----------------sTYLO BARRA DE CARGA-----------------------------*/
+/* Estilos del fondo del modal */
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* Caja blanca del modal */
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+/* Contenedor gris de la barra */
+.progress-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+/* La barra de carga real */
+.progress-bar {
+    width: 0%;
+    height: 20px;
+    background: linear-gradient(45deg, #001ac1, #2c578de0, blue);
+    border-radius: 10px;
+    transition: width 0.1s linear;
+}
+/*-----------------sTYLO BARRA DE CARGA-----------------------------*/
+/*-----------STYLO MODAL VERIFICAR DATA-------------------------------*/
+/* Estilos Generales y Overlay */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+/* Tarjeta del Modal */
+.modal-card {
+  background: #fff;
+  width: 90%;
+  max-width: 380px;
+  margin: 10% auto;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.modal-title {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+/* Input y Etiquetas */
+.input-group {
+  text-align: left;
+  margin: 20px 0;
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper .icon-lock {
+  position: absolute;
+  left: 12px;
+  color: #888;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px 12px 12px 35px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.input-wrapper input:focus {
+  border-color: #007bff;
+}
+
+/* Botones */
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-continuar, .btn-salir {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+.btn-continuar {
+    background-color: #264eca;
+    color: white;
+}
+.btn-salir { 
+  background-color: #dc3545; 
+  color: white;
+}
+
+.btn-continuar:hover, .btn-salir:hover { opacity: 0.9; }
+
+/* Barra de Carga */
+.loading-area { margin-top: 15px; }
+.progress-bg {
+  background: #eee;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #28a745;
+  transition: width 0.1s linear;
+}
+/*-STYLO MODAL VERIFICAR DATA*/

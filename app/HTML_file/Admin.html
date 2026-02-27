@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <link rel="stylesheet" type="text/css" href="../assets/style/main.css">  
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
+</head>
+<style type="text/css">
+
+
+.dashboard-container {
+display: grid;
+grid-template-columns: 20% 80%;
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+	height: 100vh;
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+    background-color: #1a43a0;
+    color: white;
+    display: flex;
+    flex-direction: column;
+     grid-area: 1 / 1 / 2 / 2;
+}
+
+.dashboard-menu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-top: 20px;
+}
+
+.menu-item {
+    padding: 11px 25px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s;
+}
+
+.menu-item span {
+    margin-right: 15px;
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Pie del Sidebar */
+.menu-footer {
+    margin-top: auto;
+    padding-bottom: 10px;
+}
+
+.logout {
+    margin-bottom: 20px;
+}
+
+.version-text {
+    font-size: 10px;
+    text-align: center;
+    opacity: 0.6;
+}
+
+/* Área de Contenido */
+.main-content {
+    flex: 1;
+    background-color: white;
+    padding: 40px;
+}
+
+.top-header h1 {
+    font-size: 24px;
+    color: #444;
+    font-weight: 400;
+}
+
+.top-header h2 {
+    font-size: 18px;
+    color: #888;
+    font-weight: 300;
+    margin-top: 5px;
+}
+.container-admin-info{
+	background:white;
+	grid-area: 1 / 2 / 2 / 3;
+}
+</style>
+<body>
+	<div class="dashboard-container">
+        <aside class="dashboard-sidebar">
+			<nav class="dashboard-menu">
+	                <a href="#" class="menu-item"><span class="icon-user"></span> Mi Perfil</a>
+	                <a href="#" class="menu-item"><span class="icon-user-plus"></span> Nueva Inscripción</a>
+	                <a href="#" class="menu-item"><span class="icon-list"></span> Ver todos los Inscritos</a>
+	                <a href="#" class="menu-item"><span class="icon-search"></span> Buscar por Cédula</a>
+	                <a href="#" class="menu-item"><span class="icon-book"></span> Gestionar Cursos</a>
+	                <a href="#" class="menu-item"><span class="icon-instructor"></span> Gestionar Instructores</a>
+	                <a href="#" class="menu-item"><span class="icon-users"></span> Gestionar Empleados</a>
+	                <a href="#" class="menu-item"><span class="icon-bin"></span> Papelera</a>
+	                
+	                <div class="menu-footer">
+	                    <a href="#" class="menu-item logout"><span class="icon-exit"></span> Cerrar Sesión</a>
+	                    <p class="version-text">SAIA v2 - Prototipo</p>
+	                </div>
+	        </nav>			
+		</aside>
+		<section class="container-admin-info" id="container-admin-info">
+		</section>
+	</div>
+</body>
+</html>

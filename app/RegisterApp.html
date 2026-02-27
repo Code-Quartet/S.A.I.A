@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css">
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	.container-body-registre-app{
+		background: blue;
+		height: 100vh;
+	}
+
+	.container-hide{
+		display: none;
+	}
+	/*-------------------------*/
+	.container-show-logo{
+		display:flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.container-show-detail{
+		display:flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		
+	}
+	/*---------------------------*/
+	.logo-install-app{
+		background:#cddc39;
+		width: 100%;
+		height: 100vh;
+	}
+	.show-detail{
+		background: red;
+		width: 100%;
+		height: 100vh;
+	}
+	.title-system-install{
+		color: white;
+	}
+
+	.container-slide{}
+	.info-install-app{
+		color:white;
+	}
+	.btn-install-system{
+background: green
+color:white;
+border-style: none;
+	}
+</style>
+<body class="container-body-registre-app">
+<section id="window-logo-install-app" class="container-show-logo logo-install-app">
+	<h1>Logo app</h1>
+</section>
+<section id="window-detail-install-app" class="show-detail container-hide">
+	<h1 class="title-system-install">Sistema de Instalación</h1>
+	<section class="container-slide"></section>
+	<label class="info-install-app">Usuario y contaseña por defecto Admin/123456789</label>
+	<button class="btn-install-system">Instalar</button>
+</section>
+</body>
+<script type="text/javascript">
+	setTimeout(()=>{
+
+		document.getElementById("window-logo-install-app").classList.replace("container-show-logo","container-hide")
+
+		document.getElementById("window-detail-install-app").classList.replace("container-hide","container-show-detail")
+
+console.log("time")
+	},10000)
+</script>
+</html>

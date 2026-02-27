@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css">
+	.container-tabla-wiev-user{
+
+	}
+	.header-table-wiev-user{}
+	.header-table-wiev-user>h2{}
+	.container-info-wiev-user{
+
+	}
+.info-wiev-user{
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+.info-wiev-user>label {
+    border: 0.5px solid lightgrey;
+    padding: 5px;
+}
+.data-info-wiev-user{
+	overflow-y:scroll;
+}
+.list-info-wiev-user{
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+.list-info-wiev-user>label {
+    border: 0.5px solid lightgrey;
+    padding: 5px;
+}
+.footer-tabla-wiev-user {
+    display: flex;
+    justify-content: flex-end;
+    padding: 7px;
+}
+.btn-confirm-table-wiev-user{
+	 background-color: #2b56c5;
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+</style>
+<div class="container-tabla-wiev-user">
+	<div class="header-table-wiev-user">
+		<h2>Todos los Inscritos</h2>
+	</div>
+	<div class="container-info-wiev-user">
+		<div class="info-wiev-user">
+			<label>Nombre completo</label>
+			<label>Cédula</label>
+			<label>Teléfono</label>
+			<label>Correo Electrónico</label>
+			<label>Curso</label>
+			<label>Fecha de Inscripción</label>
+		</div>
+		<div class="data-info-wiev-user">
+			<label class="list-info-wiev-user">
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+			</label>
+			<label class="list-info-wiev-user">
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+			</label>
+			<label class="list-info-wiev-user">
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+			</label>
+			<label class="list-info-wiev-user">
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+				<label>item</label>
+			</label> 			
+		</div>
+	</div>
+	<div class="footer-tabla-wiev-user">
+		<button type="submit" class="btn-confirm-table-wiev-user">
+                Confirmar <span class="icon-checkmark"></span>
+            </button>
+	</div>
+</div>
+</html>

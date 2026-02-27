@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAIA v2 - Gestión de Perfil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/icomoon/1.0.1/style.css">
+    
+    <style>
+        :root {
+            --blue-dark: #1a43a0;
+            --blue-light: #2d5fd1;
+            --gray-bg: #f8f9fa;
+            --border-color: #eee;
+            --danger: #dc3545;
+            --success: #28a745;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: #fff;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--blue-dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+            height: 100%;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .menu-item span {
+            margin-right: 15px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .brand-text {
+            font-size: 11px;
+            opacity: 0.6;
+            margin-top: 10px;
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        .main-content {
+            flex: 1;
+            padding: 50px;
+            overflow-y: auto;
+        }
+
+        .header-text h1 {
+            font-size: 26px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .header-text p {
+            color: #888;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        /* --- SECCIÓN PERFIL --- */
+        .profile-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .avatar-main {
+            width: 130px;
+            height: 130px;
+            background-color: var(--blue-light);
+            border-radius: 50%;
+            margin: 0 auto 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 60px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 400;
+        }
+
+        .row-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-edit {
+            background-color: var(--blue-light);
+            color: white;
+            border: none;
+            padding: 7px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-edit:active { transform: scale(0.95); }
+
+        /* --- MODAL Y BARRA --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: white;
+            width: 360px;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bg {
+            background: #eee;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--success);
+            transition: width 0.1s linear;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-continue { background-color: var(--blue-light); }
+        .btn-exit { background-color: var(--danger); }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <nav class="menu">
+            <a href="#" class="menu-item active"><span class="icon-user"></span> Mi Perfil</a>
+            <a href="#" class="menu-item"><span class="icon-user-plus"></span> Nueva Inscripción</a>
+            <a href="#" class="menu-item"><span class="icon-list"></span> Ver todos los Inscritos</a>
+            <a href="#" class="menu-item"><span class="icon-search"></span> Buscar por Cédula</a>
+            <a href="#" class="menu-item"><span class="icon-book"></span> Gestionar Cursos</a>
+            <a href="#" class="menu-item"><span class="icon-users"></span> Gestionar Instructores</a>
+            <a href="#" class="menu-item"><span class="icon-users"></span> Gestionar Empleados</a>
+            <a href="#" class="menu-item"><span class="icon-bin"></span> Papelera</a>
+            
+            <div class="sidebar-footer">
+                <a href="#" class="menu-item logout"><span class="icon-exit"></span> Cerrar Sesión</a>
+                <p class="brand-text">SAIA v2 - Prototipo</p>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header-text">
+            <h1>Buen día, Yris</h1>
+            <p>Centro de Capacitación 3e - Escuela de Manejo</p>
+        </header>
+
+        <section class="profile-container">
+            <div class="avatar-main">
+                <span class="icon-user"></span>
+            </div>
+
+            <div class="info-row">
+                <div>
+                    <label class="info-label">Nombre</label>
+                    <div class="info-value" id="txt-nombre">Yris</div>
+                </div>
+                <button class="btn-edit" onclick="pedirVerificacion('nombre')">Editar</button>
+            </div>
+
+            <div class="info-row">
+                <div>
+                    <label class="info-label">Correo Electrónico</label>
+                    <div class="info-value" id="txt-correo">yrisadmin@correo.com</div>
+                </div>
+                <button class="btn-edit" onclick="pedirVerificacion('correo')">Editar</button>
+            </div>
+
+            <div class="info-row">
+                <div>
+                    <label class="info-label">Contraseña</label>
+                    <div class="info-value">••••••••••</div>
+                </div>
+                <div class="row-right">
+                    <span class="icon-eye-blocked" style="color:#aaa"></span>
+                    <button class="btn-edit" onclick="pedirVerificacion('password')">Editar</button>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div>
+                    <label class="info-label">Clave Maestra</label>
+                    <div class="info-value">••••••</div>
+                </div>
+                <div class="row-right">
+                    <span class="icon-eye-blocked" style="color:#aaa"></span>
+                    <button class="btn-edit" onclick="pedirVerificacion('clave_maestra')">Editar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="modalId" class="modal-overlay">
+        <div class="modal-card">
+            <h2 style="margin-bottom:10px">Verificar Identidad</h2>
+            <p style="font-size: 14px; color: #666;">Ingrese su clave para continuar</p>
+            
+            <div class="input-wrapper">
+                <span class="icon-lock"></span>
+                <input type="password" id="inputClave" placeholder="Clave Maestra">
+            </div>
+
+            <div id="loaderArea" class="progress-container">
+                <div class="progress-bg">
+                    <div id="bar" class="progress-bar"></div>
+                </div>
+                <p id="status" style="margin-top:5px; font-size:12px">0%</p>
+            </div>
+
+            <div id="modalActions" class="btn-group">
+                <button class="btn-action btn-continue" onclick="iniciarCarga()">Continuar</button>
+                <button class="btn-action btn-exit" onclick="cerrarModal()">Salir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let campoAEditar = "";
+
+        function pedirVerificacion(campo) {
+            campoAEditar = campo;
+            document.getElementById("modalId").style.display = "block";
+        }
+
+        function cerrarModal() {
+            document.getElementById("modalId").style.display = "none";
+            resetModal();
+        }
+
+        function iniciarCarga() {
+            const pass = document.getElementById("inputClave").value;
+            if(!pass) return alert("Ingrese la clave");
+
+            // UI: Ocultar botones, mostrar barra
+            document.getElementById("modalActions").style.display = "none";
+            document.getElementById("loaderArea").style.display = "block";
+
+            let p = 0;
+            const bar = document.getElementById("bar");
+            const status = document.getElementById("status");
+
+            const interval = setInterval(() => {
+                p += 4;
+                bar.style.width = p + "%";
+                status.innerText = p + "%";
+
+                if(p >= 100) {
+                    clearInterval(interval);
+                    ejecutarAccionFinal();
+                }
+            }, 50);
+        }
+
+        function ejecutarAccionFinal() {
+            // Aquí la función que se ejecuta al terminar
+            const nuevoDato = prompt("Ingrese nuevo valor para " + campoAEditar + ":");
+            
+            if(nuevoDato) {
+                if(campoAEditar === 'nombre') document.getElementById("txt-nombre").innerText = nuevoDato;
+                if(campoAEditar === 'correo') document.getElementById("txt-correo").innerText = nuevoDato;
+                alert("Cambio realizado con éxito");
+            }
+            
+            cerrarModal();
+        }
+
+        function resetModal() {
+            document.getElementById("inputClave").value = "";
+            document.getElementById("modalActions").style.display = "flex";
+            document.getElementById("loaderArea").style.display = "none";
+            document.getElementById("bar").style.width = "0%";
+        }
+    </script>
+</body>
+</html>

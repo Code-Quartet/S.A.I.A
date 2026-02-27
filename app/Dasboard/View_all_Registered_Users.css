@@ -1,0 +1,49 @@
+	.container-tabla-wiev-user{
+
+	}
+	.header-table-wiev-user{}
+	.header-table-wiev-user>h2{}
+	.container-info-wiev-user{
+
+	}
+.info-wiev-user{
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+.info-wiev-user>label {
+    border: 0.5px solid lightgrey;
+    padding: 5px;
+}
+.data-info-wiev-user{
+	overflow-y:scroll;
+}
+.list-info-wiev-user{
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+.list-info-wiev-user>label {
+    border: 0.5px solid lightgrey;
+    padding: 5px;
+}
+.footer-tabla-wiev-user {
+    display: flex;
+    justify-content: flex-end;
+    padding: 7px;
+}
+.btn-confirm-table-wiev-user{
+	 background-color: #2b56c5;
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+}

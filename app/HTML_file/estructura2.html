@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Inscripción</title>
+    <link rel="stylesheet" href="icomoon/style.css">
+    <style type="text/css">
+        :root {
+    --primary-blue: #2b56c5;
+    --text-main: #374151;
+    --text-muted: #9ca3af;
+    --border-color: #d1d5db;
+    --bg-light: #ffffff;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+    margin: 0;
+    padding: 40px;
+    color: var(--text-main);
+}
+
+.container-new-registre {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.main-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    color: #1f2937;
+}
+
+/* Sistema de Grid para dos columnas */
+.grid-container-new-registre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 4rem; /* Espaciado entre filas y columnas */
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group>label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+}
+
+.form-group>input{
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+.select-input-new-registre {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+.form-group>input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-group>input:focus {
+    border-color: var(--primary-blue);
+}
+
+/* Estilo para el Selector */
+.select-wrapper {
+    position: relative;
+}
+
+.select-input-new-registre{
+    appearance: none; /* Quita la flecha por defecto */
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.custom-arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-muted);
+}
+
+/* Contenedor de Carga de Archivo */
+.file-upload-container-new-registre {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    padding: 8px 12px;
+    background-color: var(--bg-light);
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.preview-box {
+    width: 45px;
+    height: 45px;
+    background-color: #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 1.2rem;
+}
+
+.file-placeholder {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.btn-upload {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+/* Botón de Confirmación Flotante a la Derecha */
+.action-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 3rem;
+}
+
+.btn-confirm {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-confirm:hover {
+    filter: brightness(1.1);
+}
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+    .grid-container-new-registre {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-footer {
+        justify-content: center;
+    }
+    
+    .btn-confirm {
+        width: 100%;
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="container-new-registre">
+    <h1 class="main-title">Nueva Inscripción</h1>
+
+    <form class="registration-form">
+        <div class="grid-container-new-registre">
+            <div class="column">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" placeholder="Ej: Rosa María Pérez Gonzales">
+                </div>
+
+                <div class="form-group">
+                    <label>Cédula</label>
+                    <input type="text" placeholder="Ej: 21783921">
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" placeholder="Ej: 04163003485">
+                </div>
+
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" placeholder="Ej: nombre@correo.com">
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="form-group">
+                    <label>Dirección</label>
+                    <input type="text" placeholder="Ej: Calle 24 entre Av. Miranda y Av. Libertador">
+                </div>
+
+                <div class="form-group">
+                    <label>Curso</label>
+                    <div class="select-wrapper">
+                        <select class="select-input-new-registre">
+                            <option value="" disabled selected>Selecciona un Curso</option>
+                            <option value="1">Curso de Programación</option>
+                            <option value="2">Curso de Diseño</option>
+                        </select>
+                        <span class="icon-chevron-down custom-arrow"></span> </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Foto</label>
+                    <div class="file-upload-container-new-registre">
+                        <div class="file-info">
+                            <div class="preview-box">
+                                <span class="icon-image"></span> </div>
+                            <span class="file-placeholder">Selecciona una imagen</span>
+                        </div>
+                        <label for="file-input" class="btn-upload">Subir</label>
+                        <input type="file" id="file-input" hidden>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-footer">
+            <button type="submit" class="btn-confirm">
+                Confirmar <span class="icon-checkmark"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
