@@ -13,8 +13,8 @@ const Register_App = require(path.join(__dirname,'./RegisterApp'));
 /*--------select-system-init------------*/
 function Select_system_type(){
 
-//createWindow()
-Register_App()
+createWindow()
+//Register_App()
 
 }
 /*--------select-system-init------------*/
