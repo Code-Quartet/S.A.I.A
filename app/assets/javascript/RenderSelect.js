@@ -14,4 +14,4 @@ function StatusRender(render){
 	}
 }
 
-StatusRender("dasboard")
+StatusRender("login")

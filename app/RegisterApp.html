@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style type="text/css">
 	*{
 		margin: 0px;
 		padding: 0px;
 	}
 	.container-body-registre-app{
-		background: blue;
+		    background-image:url('assets/imagen/studio.jpg');
+   
+      background-position: center;
+    background-size: cover;
+    background-repeat:no-repeat;
 		height: 100vh;
 	}
 
@@ -20,46 +26,167 @@
 		align-items: center;
 	}
 	.container-show-detail{
-		display:flex;
+		/*display:flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
-		
-	}
+		align-items: center;*/
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 20% 60% 20%;
+    justify-content: center;
+    align-items: center;
+}
 	/*---------------------------*/
-	.logo-install-app{
-		background:#cddc39;
-		width: 100%;
-		height: 100vh;
-	}
+.logo-install-app {
+    background: #2196f391;
+    width: 100%;
+    height: 100vh;
+}
 	.show-detail{
-		background: red;
+		background:#2196f391;
 		width: 100%;
 		height: 100vh;
-	}
-	.title-system-install{
-		color: white;
 	}
 
-	.container-slide{}
+
+.title-system-install {
+    color: white;
+    text-align: center;
+    font-size: 47px;
+}
+
+.container-info-btn {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    /* background: red; */
+    height: -webkit-fill-available;
+    justify-content: space-around;
+}
 	.info-install-app{
 		color:white;
 	}
-	.btn-install-system{
-background: green
-color:white;
-border-style: none;
-	}
+.btn-install-system {
+    background: #228e0e;
+    border-style: none;
+    color: white;
+    padding: 10px 20px;
+    width: 20%;
+    border-radius: 9px;
+}
+	/*----------------------------------------------------*/
+.container-slide {
+    /* background: black; */
+    height: -webkit-fill-available;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slideshow-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: green;
+    height: -webkit-fill-available;
+    width: 95%;
+}
+/* Ocultar imágenes por defecto */
+.mySlides {
+  display: none;
+}
+
+.imagen-slide{
+	width: 100%;
+	object-fit: contain;
+}
+/* Animación de desvanecimiento */
+.fade {
+  animation: fadeAnim 1.5s;
+}
+
+@keyframes fadeAnim {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* Estilo de los puntos */
+.dot {
+  height: 12px;
+  width: 12px;
+  margin: 0 5px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+  background-color: #717171;
+}
+
+/* Texto superpuesto */
+.text {
+    color: #f2f2f2;
+    font-size: 18px;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 20px;
+    width: 90%;
+    left: 40px;
+    text-align: center;
+    background-color: rgba(0,0,0,0.3);
+}
+
+
+.container-bot{
+    text-align: center;
+    margin-top: 8px;
+    position: absolute;
+    z-index: 10000;
+}
+
+/*---------------------*/
+
 </style>
 <body class="container-body-registre-app">
 <section id="window-logo-install-app" class="container-show-logo logo-install-app">
-	<h1>Logo app</h1>
+	<h1 style="color:white; font-size: 50px">S.A.I.A</h1>
 </section>
 <section id="window-detail-install-app" class="show-detail container-hide">
 	<h1 class="title-system-install">Sistema de Instalación</h1>
-	<section class="container-slide"></section>
+
+	<section class="container-slide">
+		<div class="slideshow-container">
+<div class="container-bot">
+    <span class="dot"></span> 
+    <span class="dot"></span> 
+    <span class="dot"></span> 
+  </div>
+		  <div class="mySlides fade">
+		    <img src="assets/imagen/ice-cream-2.jpg" class="imagen-slide">
+		    <div class="text">Explora la Naturaleza</div>
+		  </div>
+
+		  <div class="mySlides fade">
+		    <img src="assets/imagen/ice-cream-1.jpg" class="imagen-slide">
+		    <div class="text">Diseño Minimalista</div>
+		  </div>
+
+		  <div class="mySlides fade">
+		    <img src="assets/imagen/pizza-5179939_1280.jpg" class="imagen-slide">
+		    <div class="text">Aventura Urbana</div>
+		  </div>
+
+
+		
+		</div>
+	</section>
+<section class="container-info-btn">
 	<label class="info-install-app">Usuario y contaseña por defecto Admin/123456789</label>
-	<button class="btn-install-system">Instalar</button>
+	<button class="btn-install-system" id="btn-install-system">Instalar</button>
+</section>
 </section>
 </body>
 <script type="text/javascript">
@@ -71,5 +198,43 @@ border-style: none;
 
 console.log("time")
 	},10000)
+
+
+	/*----------------------------------------------------------*/
+	let slideIndex = 0;
+showSlides();
+
+function showSlides() {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  
+  // Ocultar todas las imágenes
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  
+  slideIndex++;
+  
+  // Reiniciar el índice si llega al final
+  if (slideIndex > slides.length) {slideIndex = 1}    
+  
+  // Quitar la clase "active" de todos los puntos
+
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  
+  // Mostrar la imagen actual y activar el punto correspondiente
+  slides[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " active";
+  
+  // Ejecutar la función cada 3000ms (3 segundos)
+ setTimeout(showSlides, 3000); 
+}
+
+document.getElementById("btn-install-system").addEventListener("click",()=>{
+	api.send("Instalar-app")
+})
 </script>
 </html>

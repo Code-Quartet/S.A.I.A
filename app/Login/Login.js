@@ -139,9 +139,9 @@ function abrirModal_barraCarga() {
 
 function finalizarProceso() {
   alert("¡Carga completada! Ejecutando función final...");
-  // Aquí puedes cerrar el modal o redirigir al usuario
-  mostrarModalVerificacion()
+  //mostrarModalVerificacion()
   document.getElementById("miModal").style.display = "none";
+  StatusRender("dasboard")
 
 }
 /*-----------BARRA DE CARGA----------------------------*/

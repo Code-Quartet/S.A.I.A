@@ -44,8 +44,7 @@ function EfectoColorMenuItem(){
 	        });
 
 	        Select_menu(index,"container-admin-info")
-			
-	        // 2. Luego aplicamos el color rojo solo al elemento que se clickeó
+
 	        this.classList.add("ItemMenuActive");
 	    }
 	});
@@ -53,7 +52,7 @@ function EfectoColorMenuItem(){
 
 
 function Select_menu(index,container){
-
+console.log(index)
 switch (index) {
 	case 0:
 		My_Profile(container)
@@ -63,6 +62,9 @@ switch (index) {
 		break;
 	case 2:
 		View_all_Registered_Users(container)
+	break;	
+	case 8:
+		StatusRender("login")
 	break;	
 	default:
 		// statements_def

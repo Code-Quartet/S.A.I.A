@@ -3,7 +3,7 @@ const {app, BrowserWindow, Menu, MenuItem, ipcMain, dialog, Notification } = req
 const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
-
+const config = require(path.join(__dirname,".config.json"));
 
 /*------------Modulos externos----------------*/
 const Register_App = require(path.join(__dirname,'./RegisterApp'));
@@ -13,8 +13,18 @@ const Register_App = require(path.join(__dirname,'./RegisterApp'));
 /*--------select-system-init------------*/
 function Select_system_type(){
 
-createWindow()
-//Register_App()
+//
+if(config.state==false && config.plataform=="" && config.cpu=="" && config.hostname==""){
+  
+  Register_App()
+
+}
+
+if(config.state==true && config.plataform!=="" && config.cpu!=="" && config.hostname!==""){
+  
+  createWindow()
+
+}
 
 }
 /*--------select-system-init------------*/
@@ -57,11 +67,7 @@ function createWindow() {
 
 /********************************************************************************************/
 // Evento cuando la app está lista para crear ventanas
-app.on('ready',  () => {
-
-  Select_system_type()
-
-});
+app.on('ready', Select_system_type, Menu.setApplicationMenu(null) );
 
 // Evento cuando todas las ventanas están cerradas
 app.on('window-all-closed', () => {

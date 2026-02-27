@@ -62,15 +62,31 @@ function Reset_data(){
 }
 
 
-ipcMain.on('get_language_register_user',(event,arg) => {  
+ipcMain.on('Instalar-app',(event,arg) => {  
 
-       register_app.send("change_language_register_user",Setting_App_control.type_language)
+       let hostname = os_system.hostname().toString();
+        let platform = os_system.platform().toString();
+        let cpu = os_system.cpus()[0].model.toString();
+
+    const info = {
+                    "state":true,
+                    "hostname":hostname,
+                    "plataform":platform,
+                    "cpu":cpu                 
+                }
+
+        let data = JSON.stringify(info);
+        fs.writeFile(".config.json",data, function (err) {
+                if (err) throw err;
+                  console.log('Saved data install!');
+                  app.relaunch();
+             app.quit();
+        });
 
 });
 
 
-/*   app.relaunch();
-             app.quit();
+/*   
 
 */
 /********************************************************************************************/
