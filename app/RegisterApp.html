@@ -2,206 +2,151 @@
 <html>
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style type="text/css">
-	*{
-		margin: 0px;
-		padding: 0px;
-	}
-	.container-body-registre-app{
-		    background-image:url('assets/imagen/studio.jpg');
-   
-      background-position: center;
-    background-size: cover;
-    background-repeat:no-repeat;
-		height: 100vh;
-	}
-
-	.container-hide{
-		display: none;
-	}
-	/*-------------------------*/
-	.container-show-logo{
-		display:flex;
-		justify-content: center;
-		align-items: center;
-	}
-	.container-show-detail{
-		/*display:flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;*/
-
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 20% 60% 20%;
-    justify-content: center;
-    align-items: center;
-}
-	/*---------------------------*/
-.logo-install-app {
-    background: #2196f391;
-    width: 100%;
-    height: 100vh;
-}
-	.show-detail{
-		background:#2196f391;
-		width: 100%;
-		height: 100vh;
-	}
-
-
-.title-system-install {
-    color: white;
-    text-align: center;
-    font-size: 47px;
-}
-
-.container-info-btn {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    /* background: red; */
-    height: -webkit-fill-available;
-    justify-content: space-around;
-}
-	.info-install-app{
-		color:white;
-	}
-.btn-install-system {
-    background: #228e0e;
-    border-style: none;
-    color: white;
-    padding: 10px 20px;
-    width: 20%;
-    border-radius: 9px;
-}
-	/*----------------------------------------------------*/
-.container-slide {
-    /* background: black; */
-    height: -webkit-fill-available;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.slideshow-container {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    background: green;
-    height: -webkit-fill-available;
-    width: 95%;
-}
-/* Ocultar imágenes por defecto */
-.mySlides {
-  display: none;
-}
-
-.imagen-slide{
-	width: 100%;
-	object-fit: contain;
-}
-/* Animación de desvanecimiento */
-.fade {
-  animation: fadeAnim 1.5s;
-}
-
-@keyframes fadeAnim {
-  from {opacity: .4} 
-  to {opacity: 1}
-}
-
-/* Estilo de los puntos */
-.dot {
-  height: 12px;
-  width: 12px;
-  margin: 0 5px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  transition: background-color 0.6s ease;
-}
-
-.active {
-  background-color: #717171;
-}
-
-/* Texto superpuesto */
-.text {
-    color: #f2f2f2;
-    font-size: 18px;
-    padding: 8px 12px;
-    position: absolute;
-    bottom: 20px;
-    width: 90%;
-    left: 40px;
-    text-align: center;
-    background-color: rgba(0,0,0,0.3);
-}
-
-
-.container-bot{
-    text-align: center;
-    margin-top: 8px;
-    position: absolute;
-    z-index: 10000;
-}
-
-/*---------------------*/
-
-</style>
+    <link rel="stylesheet" type="text/css" href="assets/iconos/icomoon/style.css">
+    <link rel="stylesheet" type="text/css" href="RegisterApp.css">
 <body class="container-body-registre-app">
-<section id="window-logo-install-app" class="container-show-logo logo-install-app">
-	<h1 style="color:white; font-size: 50px">S.A.I.A</h1>
-</section>
-<section id="window-detail-install-app" class="show-detail container-hide">
-	<h1 class="title-system-install">Sistema de Instalación</h1>
-
-	<section class="container-slide">
-		<div class="slideshow-container">
-<div class="container-bot">
-    <span class="dot"></span> 
-    <span class="dot"></span> 
-    <span class="dot"></span> 
-  </div>
-		  <div class="mySlides fade">
-		    <img src="assets/imagen/ice-cream-2.jpg" class="imagen-slide">
-		    <div class="text">Explora la Naturaleza</div>
-		  </div>
-
-		  <div class="mySlides fade">
-		    <img src="assets/imagen/ice-cream-1.jpg" class="imagen-slide">
-		    <div class="text">Diseño Minimalista</div>
-		  </div>
-
-		  <div class="mySlides fade">
-		    <img src="assets/imagen/pizza-5179939_1280.jpg" class="imagen-slide">
-		    <div class="text">Aventura Urbana</div>
-		  </div>
-
-
+	<section id="window-logo-install-app" class="container-show-logo logo-install-app">
 		
-		</div>
+		<h1 style="color:white; font-size: 250px">S.A.I.A</h1>
+
 	</section>
-<section class="container-info-btn">
-	<label class="info-install-app">Usuario y contaseña por defecto Admin/123456789</label>
-	<button class="btn-install-system" id="btn-install-system">Instalar</button>
-</section>
-</section>
+	<section id="window-detail-install-app" class="show-detail container-hide">
+		<h1 class="title-system-install">Sistema de Instalación</h1>
+		<section class="container-slide">
+			<div class="slideshow-container">
+
+				<div class="container-bot">
+				    <span class="dot"></span> 
+				    <span class="dot"></span> 
+				    <span class="dot"></span> 
+				</div>
+
+				 <div class="mySlides fade">
+				    <img src="assets/imagen/image1.jpg" class="imagen-slide">
+				    <!--<div class="text">Explora la Naturaleza</div>-->
+				 </div>
+
+				<div class="mySlides fade">
+					    <img src="assets/imagen/image2.jpg" class="imagen-slide">
+					    <!--<div class="text">Diseño Minimalista</div>-->
+				</div>
+
+				 <div class="mySlides fade">
+				    <img src="assets/imagen/image3.jpg" class="imagen-slide">
+				    <!--<div class="text">Aventura Urbana</div>-->
+				</div>	
+
+			</div>
+		</section>
+		<section class="container-info-btn">
+			<!--
+			<label class="info-install-app">Usuario y contaseña por defecto Admin/123456789</label>-->
+			<button class="btn-pulse" id="btn-install-system">Agregar información</button>
+		</section>
+	</section>
+
+	<!-----------MODAL SYSTEM---------------->
+
+    <div id="modalRegisterAppOverlay" class="modalRegisterApp-overlay-RegisterApp">
+        <div class="modalRegisterApp-content-RegisterApp">
+			<div class="div1">
+				<h1 style="text-align: center;">Registre Informacion del Aministrador</h1>
+			</div>
+	    <div class="registration-form">
+        <div class="grid-container-new-registre">
+            <div class="column">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="nombre" placeholder="Ej: Rosa María Pérez Gonzales">
+                </div>
+
+                <div class="form-group">
+                    <label>Cédula</label>
+                    <input type="text" id="ci" placeholder="Ej: 21783921">
+                </div>
+
+                 <div class="form-group">
+                        <label>Edad</label>
+                        <input type="text" id="edad" placeholder="Ej: 20" style="width:50px">
+                </div>
+
+                <div class="form-group">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" id="fechanacimiento">
+                 </div>
+
+                <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" id="usuario" value="admin" placeholder="Rosa María Pérez Gonzales">
+                </div>
+
+                <div class="form-group">
+					<label>Contraseña</label>
+						<div class="sub-container-password">
+							<span  class="icon-lock"></span>   
+							<input  type="password" id="password"placeholder="Ingrese su Contraseña" value="123456789">
+							<button type="button" id="toggleBtn">
+								<span id="eyeIcon" class="icon-eye"></span>
+							</button>
+						</div>
+                </div>
+            </div>
+
+            <div class="column">
+            	<div class="form-group ContainerUploadImagen" >
+                    <label>Foto</label>
+                    <div class="file-upload-container-new-registre" style="border-style: none;">
+                       <label class="image-uploader" for="fileInputregister">
+                        <div class="main-circle">
+                          <img id="imagen-avatar" class="avatar-main-register" src="assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+                        </div>
+                        
+                           <button class="camera-button" id="Btn_select_image_user">
+                            <span class="icon-camera"></span>
+                           </button> 
+                       
+                      </label>
+                    </div>
+                 </div>
+
+                <div class="form-group">
+                    <label>Dirección</label>
+                    <input id="direccion" type="text" placeholder="Ej: Calle 24 entre Av. Miranda y Av. Libertador">
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input id="telefono" type="tel" placeholder="Ej: 04163003485">
+                </div>
+
+                                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input id="correo" type="email" placeholder="Ej: nombre@correo.com">
+                </div>
+            </div>
+        </div>
+    </div>
+			<div class="div3"> 
+				<button class="btn-modal Register" id="RegisterData">Registrar</button>
+				<button class="btn-modal Close" id="CloseModal">Cerrar</button>
+			</div>
+        </div>
+    </div>
 </body>
 <script type="text/javascript">
-	setTimeout(()=>{
+/**-------------------------FUNCION PARA EL CAMBIO DE VISTSA-----------------------------*/
 
-		document.getElementById("window-logo-install-app").classList.replace("container-show-logo","container-hide")
+setTimeout(()=>{
 
-		document.getElementById("window-detail-install-app").classList.replace("container-hide","container-show-detail")
+	document.getElementById("window-logo-install-app").classList.replace("container-show-logo","container-hide")
 
-console.log("time")
-	},10000)
+	document.getElementById("window-detail-install-app").classList.replace("container-hide","container-show-detail")
+
+},5000)
 
 
-	/*----------------------------------------------------------*/
-	let slideIndex = 0;
+/*----------------------CONTROL DEL SLIDECHOW------------------------------------*/
+let slideIndex = 0;
 showSlides();
 
 function showSlides() {
@@ -230,11 +175,168 @@ function showSlides() {
   dots[slideIndex-1].className += " active";
   
   // Ejecutar la función cada 3000ms (3 segundos)
- setTimeout(showSlides, 3000); 
+     setTimeout(showSlides, 3000); 
+
 }
 
 document.getElementById("btn-install-system").addEventListener("click",()=>{
-	api.send("Instalar-app")
+	
+	Modal_register_data_admin()
+
+
 })
+
+
+function Modal_register_data_admin(){
+
+	const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");
+	modalRegisterInstallApp.style.display = "flex";
+
+	    const closeBtnRegisterInstallApp = document.getElementById("CloseModal");
+        const confirmBtnRegisterInstallApp = document.getElementById("RegisterData");
+
+        // Función para abrir el modalRegisterApp
+        confirmBtnRegisterInstallApp.addEventListener("click", () => {
+
+           obtenerYValidarDatosRegistro()
+        });
+
+        // Función para cerrar el modalRegisterApp (X)
+        closeBtnRegisterInstallApp.addEventListener("click", () => {
+            modalRegisterInstallApp.style.display = "none";
+        });
+}
+
+/*FUNCION DE APERTURA DEL MODAL*/
+document.getElementById("Btn_select_image_user").addEventListener("click",(event)=>{
+
+  api.send("select-image-user")
+
+})
+
+api.receive("Imagen-user-select",(event,image)=>{
+
+  document.getElementById("imagen-avatar").src=image
+
+})
+function obtenerYValidarDatosRegistro(){
+
+  let fecha = new Date();
+  let formatofecha = fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear();
+  /*--------------------------*/
+  const ahora = new Date();
+  const horaActual = ahora.getHours().toString().padStart(2, '0') + ':' +
+                     ahora.getMinutes().toString().padStart(2, '0') + ':' +
+                     ahora.getSeconds().toString().padStart(2, '0');
+
+	if(document.getElementById("nombre").value!="" && document.getElementById("ci").value!="" && document.getElementById("edad").value!="" && document.getElementById("fechanacimiento").value!="" && document.getElementById("usuario").value!="" && document.getElementById("password").value && document.getElementById("correo").value && document.getElementById("telefono").value && document.getElementById("direccion").value){
+
+        if(document.getElementById("usuario").value!=="admin" && document.getElementById("password").value!=="123456789"){
+
+          			let data={
+          				Employee:{nombre:document.getElementById("nombre").value,
+          					ci:document.getElementById("ci").value,
+          					edad:document.getElementById("edad").value,
+          					fechanacimiento:document.getElementById("fechanacimiento").value,
+          					correo:document.getElementById("correo").value,
+          					tlf:document.getElementById("telefono").value,
+          					direccion:document.getElementById("direccion").value,
+          					image:document.getElementById("imagen-avatar").src
+          				},
+          				User:{
+          					usuario:document.getElementById("usuario").value,
+          					clave:document.getElementById("password").value
+          				},
+                  fecha:formatofecha,
+                  hora:horaActual
+          			}
+
+                 api.send("Instalar-app",data)
+                 // modalRegisterInstallApp.style.display = "none";
+            }
+
+      if(document.getElementById("usuario").value=="admin" && document.getElementById("password").value=="123456789"){
+
+      	
+        api.send('open-message-system-user-pass-default',"Mantiene los datos usuario y contraseña por defecto")
+
+
+      }
+    		
+
+    }
+    else{
+    	console.log("complete todo los campos")
+    }
+
+
+
+}
+
+api.receive("Saving-data-default-user",(event,data)=>{
+
+ let fecha = new Date();
+ let formatofecha = fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear();
+  /*--------------------------*/
+  const ahora = new Date();
+  const horaActual = ahora.getHours().toString().padStart(2, '0') + ':' +
+                     ahora.getMinutes().toString().padStart(2, '0') + ':' +
+                     ahora.getSeconds().toString().padStart(2, '0');
+
+  if(document.getElementById("nombre").value!="" && document.getElementById("ci").value!="" && document.getElementById("edad").value!="" && document.getElementById("fechanacimiento").value!="" && document.getElementById("usuario").value!="" && document.getElementById("password").value && document.getElementById("correo").value && document.getElementById("telefono").value && document.getElementById("direccion").value){
+
+  
+            let data={
+              Employee:{nombre:document.getElementById("nombre").value,
+                ci:document.getElementById("ci").value,
+                edad:document.getElementById("edad").value,
+                fechanacimiento:document.getElementById("fechanacimiento").value,
+                correo:document.getElementById("correo").value,
+                tlf:document.getElementById("telefono").value,
+                direccion:document.getElementById("direccion").value,
+                image:document.getElementById("imagen-avatar").src
+              },
+              User:{
+                usuario:document.getElementById("usuario").value,
+                clave:document.getElementById("password").value
+              },
+              fecha:formatofecha,
+              hora:horaActual
+            }
+
+             api.send("Instalar-app",data)
+        }
+})
+
+api.receive("Completed-Saving-data",(event,data)=>{
+  const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");
+ modalRegisterInstallApp.style.display = "none";
+
+})
+
+
+/*---------------funcion buttob eyes---------------------------*/
+
+  const passwordInput = document.getElementById('password');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const eyeIcon = document.getElementById('eyeIcon');
+
+  toggleBtn.addEventListener('click', () => {
+    // 1. Cambiamos el tipo de input
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+
+    // 2. Intercambiamos las clases de Icomoon
+    if (isPassword) {
+      eyeIcon.classList.remove('icon-eye');
+      eyeIcon.classList.add('icon-eye-blocked');
+    } else {
+      eyeIcon.classList.remove('icon-eye-blocked');
+      eyeIcon.classList.add('icon-eye');
+    }
+  });
+
+  /*---------------funcion butto eyes---------------------------*/
+
 </script>
 </html>

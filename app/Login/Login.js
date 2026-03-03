@@ -3,7 +3,7 @@ function Login(app){
 	let template_login =`<div class="body-login">
 	    <div class="sub-body-container-login">
 			<div class="main-login">
-	        	<img src="assets/imagen/ImageLogin3.png" alt="Imagen login" class="imagen-login">
+	        	<img src="assets/imagen/ImageLogin3.png" alt="Imagen login" class="imagen-login" id="ImagenLogin">
 		       <div class="form-login-system">
 		           <label class="container-input username">
 		                <span class="label-login">Coreo Electronico</span>
@@ -107,9 +107,74 @@ function Login(app){
       console.log("Formulario válido. Enviando datos...");
       console.log("Usuario:", usernameInput.value);
       console.log("Password:", passwordInput.value);
-   abrirModal_barraCarga()
+
+
+      api.send("Login-user-app",{username:usernameInput.value,password:passwordInput.value})
+   //abrirModal_barraCarga()
 
 });
+
+
+// Agregar el evento para detectar la tecla Enter
+const passwordInputClick  = document.getElementById('password');
+passwordInputClick.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Previene comportamientos por defecto del formulario
+        
+              // 2. Capturamos los inputs
+      const usernameInput = document.getElementById('username-input');
+      const passwordInput = document.getElementById('password');
+
+      // 3. Validamos si están vacíos (usando .trim() para evitar espacios en blanco)
+      if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
+          alert("Por favor, complete todos los campos.");
+          return; // Detenemos la ejecución si hay campos vacíos
+      }
+
+      // 4. Si pasa la validación, aquí puedes proceder con el envío (fetch, axios, etc.)
+      console.log("Formulario válido. Enviando datos...");
+      console.log("Usuario:", usernameInput.value);
+      console.log("Password:", passwordInput.value);
+
+
+      api.send("Login-user-app",{username:usernameInput.value,password:passwordInput.value})
+
+
+        }
+});
+
+
+api.receive("Data-user-employee",(event,data)=>{
+
+/*
+ Username: 'admin',
+ Permission: 'Administrador',
+ Name: 'Luis Edgardo Duno Castellano',
+ Age: '20',
+ Cod_id: '23860814',
+ Address: 'Zulia Venezuela',
+ Tlf: '0414258963',
+ E_mail: 'Luis@mail.com',
+ Image: 'C:\\fakepath\\business.png',
+ Id_user: '8315cdcd-36c9-4748-adfe-98500c0c7c78'
+*/
+ Data_user={user:data.Username,permission:data.Permission};
+ Data_employee={
+     name:data.Name,
+     age:data.Age,
+     codId:data.Cod_id,
+     direccion:data.Address,
+     telefono:data.Tlf,
+     correo:data.E_mail,
+     image:data.Image,
+     iduser:data.Id_user
+ };
+
+console.log(data.Image)
+document.getElementById("ImagenLogin").src=data.Image
+
+
+})
 /*-----------------Validar campos de formulario---------------------------------*/
 
 }
@@ -141,7 +206,7 @@ function finalizarProceso() {
   alert("¡Carga completada! Ejecutando función final...");
   //mostrarModalVerificacion()
   document.getElementById("miModal").style.display = "none";
-  StatusRender("dasboard")
+ // StatusRender("dasboard")
 
 }
 /*-----------BARRA DE CARGA----------------------------*/

@@ -1,49 +1,218 @@
-	.container-tabla-wiev-user{
+        :root {
+            --primary-blue: #2563eb;
+            --primary-hover: #1d4ed8;
+            --border-color: #e5e7eb;
+            --bg-light: #f9fafb;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --white: #ffffff;
+        }
+        /* --- CONTENEDOR PRINCIPAL (GRID) --- */
+        .container-view-all-registe-user {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
 
-	}
-	.header-table-wiev-user{}
-	.header-table-wiev-user>h2{}
-	.container-info-wiev-user{
+        .header-table-wiev-user>header>h1 {
+            font-size: 24px;
+            color: #4b5563;
+            font-weight: 500;
+        }
 
-	}
-.info-wiev-user{
-display: grid;
-grid-template-columns: repeat(6, 1fr);
-grid-template-rows: 1fr;
-grid-column-gap: 0px;
-grid-row-gap: 0px;
-}
+        /* --- BARRA DE FILTROS (FLEXBOX) --- */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
 
-.info-wiev-user>label {
-    border: 0.5px solid lightgrey;
-    padding: 5px;
-}
-.data-info-wiev-user{
-	overflow-y:scroll;
-}
-.list-info-wiev-user{
-display: grid;
-grid-template-columns: repeat(6, 1fr);
-grid-template-rows: 1fr;
-grid-column-gap: 0px;
-grid-row-gap: 0px;
-}
-.list-info-wiev-user>label {
-    border: 0.5px solid lightgrey;
-    padding: 5px;
-}
-.footer-tabla-wiev-user {
-    display: flex;
-    justify-content: flex-end;
-    padding: 7px;
-}
-.btn-confirm-table-wiev-user{
-	 background-color: #2b56c5;
-    color: white;
-    border: none;
-    padding: 14px 40px;
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+        }
+
+    .search-box input {
+    width: 95%;
+    padding: 10px 16px;
+    border: 1px solid var(--border-color);
     border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
+    outline: none;
+    margin-left: 6px;
 }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .btn-dropdown {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-dropdown:hover {
+            background: var(--bg-light);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            padding: 12px;
+            z-index: 50;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dropdown.active .dropdown-menu {
+            display: flex;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #374151;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+        }
+
+        .menu-footer {
+            margin-top: 8px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-apply {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-reset {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* --- TABLA --- */
+        .table-wrapper {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f3f4f6;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: capitalize;
+            color: #4b5563;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #374151;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- PAGINACIÓN Y EXPORTAR (FLEXBOX) --- */
+        .footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .page-btn:hover:not(.active) {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Efecto Active solicitado */
+        .page-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        .btn-export {
+            position: absolute;
+            right: 0;
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-export:hover {
+            background: var(--primary-hover);
+        }

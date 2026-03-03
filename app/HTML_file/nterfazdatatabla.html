@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Inscritos - Funcional</title>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-hover: #1d4ed8;
+            --border-color: #e5e7eb;
+            --bg-light: #f9fafb;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            padding: 40px;
+            color: var(--text-dark);
+        }
+
+        /* --- CONTENEDOR PRINCIPAL (GRID) --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        /* --- BARRA DE FILTROS (FLEXBOX) --- */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .btn-dropdown {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-dropdown:hover {
+            background: var(--bg-light);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            padding: 12px;
+            z-index: 50;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dropdown.active .dropdown-menu {
+            display: flex;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #374151;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+        }
+
+        .menu-footer {
+            margin-top: 8px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-apply {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-reset {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* --- TABLA --- */
+        .table-wrapper {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f3f4f6;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: capitalize;
+            color: #4b5563;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #374151;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- PAGINACIÓN Y EXPORTAR (FLEXBOX) --- */
+        .footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .page-btn:hover:not(.active) {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Efecto Active solicitado */
+        .page-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        .btn-export {
+            position: absolute;
+            right: 0;
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-export:hover {
+            background: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Todos los Inscritos</h1>
+    </header>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <input type="text" placeholder="Buscar">
+        </div>
+
+        <div class="dropdown" id="drop-curso">
+            <button class="btn-dropdown">Curso ▾</button>
+            <div class="dropdown-menu">
+                <label class="filter-option"><input type="checkbox"> Inglés</label>
+                <label class="filter-option"><input type="checkbox"> Manejo</label>
+                <label class="filter-option"><input type="checkbox"> Dibujo</label>
+                <div class="menu-footer">
+                    <button class="btn-apply">Aplicar</button>
+                    <button class="btn-reset">Limpiar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dropdown" id="drop-fecha">
+            <button class="btn-dropdown">Fecha ▾</button>
+            <div class="dropdown-menu">
+                <label class="filter-option"><input type="checkbox"> Hoy</label>
+                <label class="filter-option"><input type="checkbox"> Esta semana</label>
+                <div class="menu-footer">
+                    <button class="btn-apply">Aplicar</button>
+                    <button class="btn-reset">Limpiar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="tablaInscritos">
+            <thead>
+                <tr>
+                    <th>Nombre Completo</th>
+                    <th>Cédula</th>
+                    <th>Teléfono</th>
+                    <th>Correo Electrónico</th>
+                    <th>Curso</th>
+                    <th>Fecha de Inscripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Carlos Alexander Soto Fuentes</td>
+                    <td>28.123.456</td>
+                    <td>0412-555-2345</td>
+                    <td>carlos17@correo.com</td>
+                    <td>Manejo</td>
+                    <td>15/10/2024</td>
+                </tr>
+                <tr>
+                    <td>Jesús Alberto García Castro</td>
+                    <td>30.789.123</td>
+                    <td>0416-555-2345</td>
+                    <td>j.garcia@correo.com</td>
+                    <td>Inglés</td>
+                    <td>14/10/2024</td>
+                </tr>
+                <tr>
+                    <td>Carlos Alexander Soto Fuentes</td>
+                    <td>28.123.456</td>
+                    <td>0412-555-2345</td>
+                    <td>carlos17@correo.com</td>
+                    <td>Manejo</td>
+                    <td>15/10/2024</td>
+                </tr>
+                <tr>
+                    <td>Jesús Alberto García Castro</td>
+                    <td>30.789.123</td>
+                    <td>0416-555-2345</td>
+                    <td>j.garcia@correo.com</td>
+                    <td>Inglés</td>
+                    <td>14/10/2024</td>
+                </tr>
+                <tr>
+                    <td>María Alejandra Pérez González</td>
+                    <td>31.234.456</td>
+                    <td>0424-555-5678</td>
+                    <td>perez@correo.com</td>
+                    <td>Dibujo</td>
+                    <td>13/10/2024</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="footer">
+        <nav class="pagination">
+            <button class="page-btn">&lt;</button>
+            <button class="page-btn active">1</button> <button class="page-btn">2</button>
+            <button class="page-btn">&gt;</button>
+        </nav>
+
+        <button class="btn-export" onclick="exportarAExcel()">
+            Exportar Listado 📄
+        </button>
+    </footer>
+</div>
+
+<script>
+    // --- Lógica de Dropdowns (Abrir/Cerrar y cerrar al hacer clic fuera) ---
+    const dropdowns = document.querySelectorAll('.dropdown');
+    
+    dropdowns.forEach(drop => {
+        const btn = drop.querySelector('.btn-dropdown');
+        
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Cerrar otros dropdowns
+            dropdowns.forEach(d => { if(d !== drop) d.classList.remove('active'); });
+            drop.classList.toggle('active');
+        });
+    });
+
+    document.addEventListener('click', () => {
+        dropdowns.forEach(d => d.classList.remove('active'));
+    });
+
+    // Evitar que el menú se cierre al hacer clic dentro
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.addEventListener('click', (e) => e.stopPropagation());
+    });
+
+
+
+
+    // Lógica visual simple para la paginación
+    const pageButtons = document.querySelectorAll('.page-btn:not(.disabled)');
+    pageButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if(btn.innerText !== '<' && btn.innerText !== '>') {
+                pageButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+        });
+    });
+
+    // --- Lógica de Exportación a Excel ---
+    function exportarAExcel() {
+        var table = document.getElementById("tablaInscritos");
+        var ws = XLSX.utils.table_to_sheet(table);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Inscritos");
+        XLSX.writeFile(wb, "ReporteInscritos.xlsx");
+    }
+</script>
+
+</body>
+</html>

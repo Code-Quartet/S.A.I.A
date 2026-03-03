@@ -1,0 +1,452 @@
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+
+
+        :root {
+    --primary-blue: #2b56c5;
+    --text-main: #374151;
+    --text-muted: #9ca3af;
+    --border-color: #d1d5db;
+    --bg-light: #ffffff;
+}
+
+
+
+	.container-body-registre-app{
+		    background-image:url('assets/imagen/fondo.jpg');
+   
+      background-position: center;
+    background-size: cover;
+    background-repeat:no-repeat;
+		height: 100vh;
+	}
+
+	.container-hide{
+		display: none;
+	}
+	/*-------------------------*/
+	.container-show-logo{
+		display:flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.container-show-detail{
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 20% 60% 20%;
+    justify-content: center;
+    align-items: center;
+}
+	/*---------------------------*/
+.logo-install-app {
+    background: linear-gradient(166deg, #2196f387, #26306799);
+    width: 100%;
+    height: 100vh;
+}
+	.show-detail{
+		background:#2196f391;
+		width: 100%;
+		height: 100vh;
+	}
+
+
+.title-system-install {
+    color: white;
+    text-align: center;
+    font-size: 47px;
+}
+
+.container-info-btn {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: -webkit-fill-available;
+    justify-content: space-around;
+}
+	.info-install-app{
+		color:white;
+	}
+
+/* Estilo de boton ulsante para abrir modal iy agregar informacion */
+.btn-pulse {
+  padding: 15px 30px;
+  border: none;
+  outline: none;
+  color: white;
+  background: #2ecc71;
+  cursor: pointer;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: bold;
+  position: relative;
+  
+  /* Aplicamos la animación */
+  animation: pulse-animation 1s infinite;
+}
+
+/* Definición de la animación de pulso */
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(46, 204, 113, 0.7);
+  }
+  70% {
+    /* El "aro" se expande y se vuelve más transparente */
+    box-shadow: 0 0 0 20px rgba(46, 204, 113, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0px rgba(46, 204, 113, 0);
+  }
+}
+
+/* Estilo de boton ulsante para abrir modal iy agregar informacion */
+	/*------------------CONTAINER SLIDE SHOW----------------------------------*/
+.container-slide {
+    height: -webkit-fill-available;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slideshow-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    /* background: green;
+    height: -webkit-fill-available; */
+    width: 95%;
+}
+/* Ocultar imágenes por defecto */
+.mySlides {
+  display: none;
+}
+
+.imagen-slide{
+	width: 100%;
+	object-fit: contain;
+}
+/* Animación de desvanecimiento */
+.fade {
+  animation: fadeAnim 1.5s;
+}
+
+@keyframes fadeAnim {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* Estilo de los puntos */
+.dot {
+  height: 12px;
+  width: 12px;
+  margin: 0 5px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+ /* background-color: #717171;*/
+}
+
+/* Texto superpuesto */
+.text {
+    color: #f2f2f2;
+    font-size: 18px;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 20px;
+    width: 90%;
+    left: 40px;
+    text-align: center;
+    background-color: rgba(0,0,0,0.3);
+}
+
+
+.container-bot {
+    text-align: center;
+    margin-top: 8px;
+    position: absolute;
+    z-index: 996;
+}
+/*---------MODAL AGREGAR DATOS USER ADMIN------------*/
+    /* Fondo del modalRegisterApp */
+        .modalRegisterApp-overlay-RegisterApp {
+            display: none; /* Oculto inicialmente */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal del modalRegisterApp */
+.modalRegisterApp-content-RegisterApp {
+    background-color: #ffffff;
+    width: 94%;
+    height: 100%;
+    max-width: 625px;
+    padding: 6px;
+    border-radius: 4px;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 10% 80% 10%;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        .div1 { grid-area: 1 / 1 / 2 / 2; }
+.registration-form { grid-area: 2 / 1 / 3 / 2; }
+.div3 { 
+
+	grid-area: 3 / 1 / 4 / 2;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+justify-content: space-around;
+width: 100%;
+	 }
+
+        /* Grupo del Input */
+        .input-group-RegisterApp {
+            margin-bottom: 35px;
+        }
+
+        .input-group-RegisterApp label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .input-group-RegisterApp input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #000; /* Borde negro marcado */
+            box-sizing: border-box;
+            font-size: 18px;
+            outline: none;
+        }
+  .btn-modal {
+    width: 40%;
+    color: white;
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 9px;
+}
+.Register{
+	background: green; 
+}
+.Close{
+    background:red; 
+}
+
+/*---------MODAL AGREGAR DATOS USER ADMIN------------*/
+/*-----------STYLO DE FORMULARIO-------------------------------------------*/
+/* Sistema de Grid para dos columnas */
+.grid-container-new-registre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+ 
+}
+
+.form-group {
+    /* margin-bottom: 1.5rem; */
+}
+
+
+.form-group>label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+}
+
+.form-group>input {
+    width: 79%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+.select-input-new-registre {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+.form-group>input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-group>input:focus {
+    border-color: var(--primary-blue);
+}
+
+/* Estilo para el Selector */
+.select-wrapper {
+    position: relative;
+}
+
+.select-input-new-registre{
+    appearance: none; /* Quita la flecha por defecto */
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.custom-arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-muted);
+}
+
+/* Contenedor de Carga de Archivo */
+.file-upload-container-new-registre {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    /* padding: 8px 12px; */
+    background-color: var(--bg-light);
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.preview-box {
+    width: 45px;
+    height: 45px;
+    background-color: #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 1.2rem;
+}
+
+.file-placeholder {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+/*-----------------------------------------------*/
+/*-----------ESTRUCTURA DEL GESTOR PARA SUBIR IMAGEN------------------------*/
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 7px;
+}
+.image-uploader {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+}
+
+/* Círculo con borde negro grueso */
+.main-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #d8d8d8;
+    overflow: hidden;
+
+}
+
+/* Estilo de tu imagen específica */
+.avatar-main {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: blue;
+}
+
+/* Botón de cámara superpuesto */
+.camera-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    background-color: #d8d8d8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 2;
+    border-style: none;
+}
+
+.btn-select-imagen {
+    background: #ff00000f;
+    border-style: none;
+}
+
+.icon-camera {
+  font-size: 18px;
+  color: #333;
+}
+
+.avatar-main-register {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: blue;
+}
+/*-----------ESTRUCTURA DEL GESTOR PARA SUBIR IMAGEN------------------------*/
+
+/*------------------------------------------------------*/
+.sub-container-password {
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    width: fit-content;
+}
+
+
+#password {
+    border-style: none;
+    width: 66%;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+#toggleBtn {
+    background: #ff00000f;
+    font-size: 20px;
+    border-style: none;
+}

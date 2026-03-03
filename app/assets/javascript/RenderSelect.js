@@ -15,3 +15,4 @@ function StatusRender(render){
 }
 
 StatusRender("login")
+//StatusRender("dasboard")

@@ -1,37 +1,41 @@
+
+/*CONTAINER ESTRUCTURA*/
 .container-user-info {
-    display: flex;
-    align-items: stretch;
-    flex-direction: row;
-}
-.container-form {
+
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 10% 30% 60%;
+    grid-template-rows: 10% 90%;
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+}
+
+.container-form {
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 34% 0%;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
-    width: 40%;
-    height: 91%;
+    width: 60%;
 }
+
 .header-text{
+    grid-area: 1 / 1 / 2 / 2;
+}
 
-grid-area: 1 / 1 / 2 / 2;
-
+.container-textheader {
+    margin-left: 18px;
 }
 
 .container-avatar-main{  grid-area: 2 / 1 / 3 / 2; }
-
-.avatar-main {
-    width: 130px;
-    height: 130px;
-    background-color:blue;
-    border-radius: 50%;
-    margin: 0 auto 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 60px;
-}
 
 .container-data{
    grid-area: 3 / 1 / 4 / 2;
@@ -40,50 +44,50 @@ grid-area: 1 / 1 / 2 / 2;
 
 }
 
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
 
+.info-label {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 4px;
+    display: block;
+}
 
-  .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--border-color);
-            text-align: left;
-        }
+.info-value {
+    font-size: 16px;
+    color: #333;
+    font-weight: 400;
+}
 
-        .info-label {
-            font-size: 13px;
-            color: #999;
-            margin-bottom: 4px;
-            display: block;
-        }
+.row-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-        .info-value {
-            font-size: 16px;
-            color: #333;
-            font-weight: 400;
-        }
+.btn-edit {
+    background-color:blue;
+    color: white;
+    border: none;
+    padding: 7px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
 
-        .row-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+.btn-edit:active { transform: scale(0.95); }
 
-        .btn-edit {
-            background-color:blue;
-            color: white;
-            border: none;
-            padding: 7px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .btn-edit:active { transform: scale(0.95); }
-        /*--------------------------------------------*/
-        .view-input {
+/*ESTRUCTURA DE MI PORFILE*/
+ /*--------------------------------------------*/
+.view-input {
     border: none;
     background: transparent;
     font-size: 16px;
@@ -98,3 +102,58 @@ grid-area: 1 / 1 / 2 / 2;
 .icon-eye.active::before {
     content: "\e9ce"; /* Este es el código típico del ojo tachado en Icomoon, verifícalo en tu fuente */
 }
+
+/*-----------ESTRUCTURA DEL GESTOR PARA SUBIR IMAGEN------------------------*/
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 7px;
+}
+.image-uploader {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+}
+
+/* Círculo con borde negro grueso */
+.main-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #d8d8d8;
+    overflow: hidden;
+
+}
+
+/* Estilo de tu imagen específica */
+.avatar-main {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: blue;
+}
+
+/* Botón de cámara superpuesto */
+.camera-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    background-color: #d8d8d8;
+    border-radius: 50%;
+    /* border: 4px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 2;
+}
+
+.icon-camera {
+  font-size: 18px;
+  color: #333;
+}
+/*-----------ESTRUCTURA DEL GESTOR PARA SUBIR IMAGEN------------------------*/
