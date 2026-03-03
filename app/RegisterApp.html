@@ -219,6 +219,7 @@ api.receive("Imagen-user-select",(event,image)=>{
   document.getElementById("imagen-avatar").src=image
 
 })
+
 function obtenerYValidarDatosRegistro(){
 
   let fecha = new Date();
@@ -255,18 +256,18 @@ function obtenerYValidarDatosRegistro(){
                  // modalRegisterInstallApp.style.display = "none";
             }
 
-      if(document.getElementById("usuario").value=="admin" && document.getElementById("password").value=="123456789"){
+            if(document.getElementById("usuario").value=="admin" && document.getElementById("password").value=="123456789"){
 
-      	
-        api.send('open-message-system-user-pass-default',"Mantiene los datos usuario y contraseña por defecto")
+            	
+              api.send('open-message-system-user-pass-default',"Mantiene los datos usuario y contraseña por defecto")
 
 
-      }
+            }
     		
 
     }
     else{
-    	console.log("complete todo los campos")
+    	api.send("message-campos-vacios","complete todo los campos")
     }
 
 

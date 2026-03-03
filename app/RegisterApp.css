@@ -110,13 +110,19 @@
     justify-content: center;
 }
 
+/*
 .slideshow-container {
     position: relative;
     overflow: hidden;
     border-radius: 10px;
-    /* background: green;
-    height: -webkit-fill-available; */
     width: 95%;
+}*/
+
+.slideshow-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    width: 69%;
 }
 /* Ocultar imágenes por defecto */
 .mySlides {
@@ -191,10 +197,10 @@
 .modalRegisterApp-content-RegisterApp {
     background-color: #ffffff;
     width: 94%;
-    height: 100%;
+    height: 95%;
     max-width: 625px;
-    padding: 6px;
-    border-radius: 4px;
+    padding: 7px;
+    border-radius: 18px;
     position: relative;
     display: grid;
     grid-template-columns: 1fr;
@@ -446,7 +452,7 @@ width: 100%;
 }
 
 #toggleBtn {
-    background: #ff00000f;
+    background: #ff000000;
     font-size: 20px;
     border-style: none;
 }

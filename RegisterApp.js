@@ -285,11 +285,29 @@ function AlertMessage(text){
               
               console.log(err);
         });
-
-
 }
 
 
+ipcMain.on('message-campos-vacios', async (event,text) => {
+
+    dialog.showMessageBox({
+      title: 'Notificación',
+      type:'question',
+      message: text,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    }).then(result => {
+      console.log(result.response);
+    }).catch(err => {
+      console.log(err);
+    });
+
+
+
+})
 ipcMain.on('Instalar-app', async (event,data) => {  
 
         let hostname = os_system.hostname().toString();
