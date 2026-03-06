@@ -99,8 +99,11 @@ function Login(app){
 
       // 3. Validamos si están vacíos (usando .trim() para evitar espacios en blanco)
       if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
-          alert("Por favor, complete todos los campos.");
-          return; // Detenemos la ejecución si hay campos vacíos
+        //  alert("Por favor, complete todos los campos.");
+         
+
+          api.send("message-campos-vacios-login","Por favor, complete todos los campos.")
+       return; // Detenemos la ejecución si hay campos vacíos
       }
 
       // 4. Si pasa la validación, aquí puedes proceder con el envío (fetch, axios, etc.)
@@ -110,7 +113,7 @@ function Login(app){
 
 
       api.send("Login-user-app",{username:usernameInput.value,password:passwordInput.value})
-   //abrirModal_barraCarga()
+   //
 
 });
 
@@ -146,32 +149,55 @@ passwordInputClick.addEventListener('keydown', function(event) {
 
 api.receive("Data-user-employee",(event,data)=>{
 
-/*
- Username: 'admin',
- Permission: 'Administrador',
- Name: 'Luis Edgardo Duno Castellano',
- Age: '20',
- Cod_id: '23860814',
- Address: 'Zulia Venezuela',
- Tlf: '0414258963',
- E_mail: 'Luis@mail.com',
- Image: 'C:\\fakepath\\business.png',
- Id_user: '8315cdcd-36c9-4748-adfe-98500c0c7c78'
-*/
- Data_user={user:data.Username,permission:data.Permission};
+  console.log(data)/*
+  console.log(data.employee.image)*/
+/*--------------------------------------
+{
+    "user": {
+        "key": "bc3ce645-5490-4bf5-b8e8-6b135b43b297",
+        "username": "admin",
+        "permission": "Administrador"
+    },
+    "employee": {
+        "key": "76cbda11-241d-4fb8-9316-7d5639ba0f58",
+        "name": "Luis Edgardo Duno Castellano",
+        "age": "20",
+        "cod_id": "23860814",
+        "address": "Zulia Venexula",
+        "tlf": "041245789",
+        "email": "Duno@mail.com",
+        "image": "file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/business.png",
+        "id_user": "bc3ce645-5490-4bf5-b8e8-6b135b43b297"
+    }
+}
+/*---------------------------------------*/
+ Data_user={
+  key:data.user.key,
+  user:data.user.username,
+  password:data.user.password,
+  permission:data.user.permission
+};
  Data_employee={
-     name:data.Name,
-     age:data.Age,
-     codId:data.Cod_id,
-     direccion:data.Address,
-     telefono:data.Tlf,
-     correo:data.E_mail,
-     image:data.Image,
-     iduser:data.Id_user
+    key:data.employee.key,
+     name:data.employee.name,
+     age:data.employee.age,
+     codId:data.employee.cod_id,
+     direccion:data.employee.address,
+     telefono:data.employee.tlf,
+     correo:data.employee.email,
+     image:data.employee.image,
  };
+/*
+console.log(Data_user)
+console.log(Data_employee)
+*/
+document.getElementById("ImagenLogin").src=data.employee.image
 
-console.log(data.Image)
-document.getElementById("ImagenLogin").src=data.Image
+setTimeout(()=>{
+
+  abrirModal_barraCarga()
+
+},2000)
 
 
 })
@@ -203,10 +229,10 @@ function abrirModal_barraCarga() {
 }
 
 function finalizarProceso() {
-  alert("¡Carga completada! Ejecutando función final...");
+ //alert("¡Carga completada! Ejecutando función final...");
   //mostrarModalVerificacion()
   document.getElementById("miModal").style.display = "none";
- // StatusRender("dasboard")
+  StatusRender("dasboard")
 
 }
 /*-----------BARRA DE CARGA----------------------------*/

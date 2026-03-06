@@ -28,7 +28,7 @@ document.getElementById(app).innerHTML=template_dasboard;
 
 EfectoColorMenuItem()
 
- Select_menu(1,"container-admin-info")
+ Select_menu(0,"container-admin-info")
 }
 
 function EfectoColorMenuItem(){

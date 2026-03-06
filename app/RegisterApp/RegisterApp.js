@@ -5,8 +5,8 @@ const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
 /*-------------------------------------*/
-const SAIADB = require(path.join(__dirname,'./DataBase/SAIA_manager.js'))
-const DB = new SAIADB(path.join(__dirname,'./DataBase/SAIA.db'));
+const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
+const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
 
 let window_register_app;
@@ -25,12 +25,12 @@ module.exports = function Register_App(parentWindow) {
             nodeIntegration: false,
             contextIsolation: true,
             enableRemoteModule: false,
-            preload: path.join(__dirname, "./preload.js")
+            preload: path.join(__dirname, "../preload.js")
         }
     });
 //console.log(window_register_app)
 
-    window_register_app.loadFile('app/RegisterApp.html');
+    window_register_app.loadFile('app/RegisterApp/RegisterApp.html');
 
     // Herramientas de desarrollo
     window_register_app.webContents.openDevTools();
@@ -59,7 +59,7 @@ function Reset_data(){
                     "cpu":""                 
                 }
         let data = JSON.stringify(info);
-        fs.writeFile(".config.json",data, function (err) {
+        fs.writeFile(path.join(__dirname,"../.config.json"),data, function (err) {
                 if (err) throw err;
                   console.log('Saved!');
         });
@@ -114,6 +114,7 @@ async function Adding_table_db(){
     Key TEXT PRIMARY KEY, -- Clave primaria
     Username TEXT NOT NULL UNIQUE,         -- Nombre de usuario único
     Password TEXT NOT NULL,                -- Contraseña
+    PasswordMaster TEXT NOT NULL,                -- Contraseña
     Permission TEXT NOT NULL,              -- Permisos del usuario
     Date DATE NOT NULL,                    -- Fecha de creación
     Time TIME NOT NULL,                    -- Hora de creación
@@ -148,6 +149,9 @@ async function Adding_table_db(){
     Address TEXT,                          -- Dirección
     Tlf TEXT,                              -- Teléfono
     E_mail TEXT UNIQUE,                    -- Correo electrónico único
+    NameR TEXT,
+    Cod_idR TEXT,
+    TlfR TEXT,
     Date DATE NOT NULL,                    -- Fecha de creación
     Time TIME NOT NULL,                    -- Hora de creación
     Time_delet DATE,                       -- Fecha de eliminación lógica
@@ -207,9 +211,6 @@ ipcMain.on("select-image-user",(event, arg) => {
 
 /*******CREA LA BASE DE DATOS SI NO ESTA Y SE CONECTA****************/
 async function Adding_data_Admin_default(data) {
-
-console.log(data)
-
     const ID_USER = uuidv4();
     const ID_EMPLOYEE = uuidv4();
 
@@ -220,9 +221,9 @@ console.log(data)
     return Promise.all([
         // Inserción en tabla User
         DB.crear(
-            `INSERT INTO User (key, Username, Password, Permission, Date, Time) 
-             VALUES (?, ?, ?, ?, ?, ?)`,
-            [ID_USER, data.User.usuario, data.User.clave, 'Administrador', data.fecha, data.hora]
+            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date, Time) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, 'Administrador', data.fecha, data.hora]
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
@@ -308,6 +309,9 @@ ipcMain.on('message-campos-vacios', async (event,text) => {
 
 
 })
+
+console.log(path.join(__dirname,"../.config.json"))
+
 ipcMain.on('Instalar-app', async (event,data) => {  
 
         let hostname = os_system.hostname().toString();
@@ -325,7 +329,7 @@ ipcMain.on('Instalar-app', async (event,data) => {
         
         await Adding_data_Admin_default(data).then(()=>{
        
-            fs.writeFile(".config.json",obj, function(err){
+            fs.writeFile(path.join(__dirname,"../.config.json"),obj, function(err){
                     if (err) throw err;
 
                     //console.log('Saved data install!');

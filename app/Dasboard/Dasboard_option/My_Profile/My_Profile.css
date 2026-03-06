@@ -33,6 +33,7 @@
 
 .container-textheader {
     margin-left: 18px;
+    margin-top: 14px;
 }
 
 .container-avatar-main{  grid-area: 2 / 1 / 3 / 2; }
@@ -114,7 +115,7 @@
   position: relative;
   width: 150px;
   height: 150px;
-  cursor: pointer;
+ 
 }
 
 /* Círculo con borde negro grueso */
@@ -150,6 +151,8 @@
     align-items: center;
     box-sizing: border-box;
     z-index: 2;
+    border-style: none;
+     cursor: pointer;
 }
 
 .icon-camera {

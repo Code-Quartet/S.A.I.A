@@ -1,4 +1,4 @@
-        :root {
+:root {
     --primary-blue: #2b56c5;
     --text-main: #374151;
     --text-muted: #9ca3af;
@@ -6,11 +6,11 @@
     --bg-light: #ffffff;
 }
 
-
 .registration-form {
-    width: 94%;
+    width: 97%;
     margin-left: 20px;
 }
+
 .container-new-registre {
     margin: 0 auto;
     background: white;
@@ -34,16 +34,16 @@
 
 .column1 {
     grid-area: 1 / 1 / 2 / 2;
-    /*background: red;*/
     height: fit-content;
 }
+
 .column2 {
     grid-area: 1 / 2 / 2 / 3;
-    /*-background: yellow;*/
     height: fit-content;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 64% 148px 8%;
+    grid-template-rows: 0.2fr 144px 219px 39px;
+  
 }
 
 .action-footer{ grid-area: 2 / 1 / 3 / 3; }

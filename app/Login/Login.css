@@ -1,6 +1,6 @@
 .body-login {
 
-    background-image:url('../assets/imagen/studio.jpg');
+    background-image:url('../assets/imagen/fondo.jpg');
    
       background-position: center;
     background-size: cover;
@@ -20,7 +20,7 @@
 .main-login {
     background: white;
     padding: 27px;
-    width: 46%;
+    width: 34%;
     border-radius: 8px;
     display: flex;
     flex-direction: column;

@@ -2,7 +2,7 @@
 <html>
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="assets/iconos/icomoon/style.css">
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
     <link rel="stylesheet" type="text/css" href="RegisterApp.css">
 <body class="container-body-registre-app">
 	<section id="window-logo-install-app" class="container-show-logo logo-install-app">
@@ -22,17 +22,17 @@
 				</div>
 
 				 <div class="mySlides fade">
-				    <img src="assets/imagen/image1.jpg" class="imagen-slide">
+				    <img src="../assets/imagen/image1.jpg" class="imagen-slide">
 				    <!--<div class="text">Explora la Naturaleza</div>-->
 				 </div>
 
 				<div class="mySlides fade">
-					    <img src="assets/imagen/image2.jpg" class="imagen-slide">
+					    <img src="../assets/imagen/image2.jpg" class="imagen-slide">
 					    <!--<div class="text">Diseño Minimalista</div>-->
 				</div>
 
 				 <div class="mySlides fade">
-				    <img src="assets/imagen/image3.jpg" class="imagen-slide">
+				    <img src="../assets/imagen/image3.jpg" class="imagen-slide">
 				    <!--<div class="text">Aventura Urbana</div>-->
 				</div>	
 
@@ -73,41 +73,7 @@
                 <div class="form-group">
                         <label>Fecha de Nacimiento</label>
                         <input type="date" id="fechanacimiento">
-                 </div>
-
-                <div class="form-group">
-                    <label>Nombre de Usuario</label>
-                    <input type="text" id="usuario" value="admin" placeholder="Rosa María Pérez Gonzales">
                 </div>
-
-                <div class="form-group">
-					<label>Contraseña</label>
-						<div class="sub-container-password">
-							<span  class="icon-lock"></span>   
-							<input  type="password" id="password"placeholder="Ingrese su Contraseña" value="123456789">
-							<button type="button" id="toggleBtn">
-								<span id="eyeIcon" class="icon-eye"></span>
-							</button>
-						</div>
-                </div>
-            </div>
-
-            <div class="column">
-            	<div class="form-group ContainerUploadImagen" >
-                    <label>Foto</label>
-                    <div class="file-upload-container-new-registre" style="border-style: none;">
-                       <label class="image-uploader" for="fileInputregister">
-                        <div class="main-circle">
-                          <img id="imagen-avatar" class="avatar-main-register" src="assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
-                        </div>
-                        
-                           <button class="camera-button" id="Btn_select_image_user">
-                            <span class="icon-camera"></span>
-                           </button> 
-                       
-                      </label>
-                    </div>
-                 </div>
 
                 <div class="form-group">
                     <label>Dirección</label>
@@ -119,10 +85,52 @@
                     <input id="telefono" type="tel" placeholder="Ej: 04163003485">
                 </div>
 
-                                <div class="form-group">
+            </div>
+
+            <div class="column">
+            	<div class="form-group ContainerUploadImagen" >
+                    <label>Foto</label>
+                    <div class="file-upload-container-new-registre" style="border-style: none;">
+                       <label class="image-uploader" for="fileInputregister">
+                        <div class="main-circle">
+                          <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+                        </div>
+                        
+                           <button class="camera-button" id="Btn_select_image_user">
+                            <span class="icon-camera"></span>
+                           </button> 
+                       
+                      </label>
+                    </div>
+              </div>         
+                <div class="form-group">
                     <label>Correo Electrónico</label>
                     <input id="correo" type="email" placeholder="Ej: nombre@correo.com">
                 </div>
+              <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" id="usuario" value="admin" placeholder="Rosa María Pérez Gonzales">
+              </div>
+              <div class="form-group">
+                    <label>Contraseña</label>
+                    <div class="sub-container-password">
+                        <span  class="icon-lock"></span>   
+                        <input  type="password" id="password"placeholder="Ingrese su Contraseña" value="123456789">
+                        <button type="button" id="toggleBtn">
+                          <span id="eyeIcon" class="icon-eye"></span>
+                        </button>
+                    </div>
+              </div>
+              <div class="form-group">
+                    <label>Contraseña Maestra</label>
+                    <div class="sub-container-password">
+                        <span  class="icon-lock"></span>   
+                        <input  type="password" id="Mpassword"placeholder="Ingrese su Contraseña" value="123456789">
+                        <button type="button" id="toggleBtn">
+                          <span id="eyeIcon" class="icon-eye"></span>
+                        </button>
+                    </div>
+              </div>
             </div>
         </div>
     </div>
@@ -132,6 +140,7 @@
 			</div>
         </div>
     </div>
+
 </body>
 <script type="text/javascript">
 /**-------------------------FUNCION PARA EL CAMBIO DE VISTSA-----------------------------*/
@@ -234,45 +243,39 @@ function obtenerYValidarDatosRegistro(){
 
         if(document.getElementById("usuario").value!=="admin" && document.getElementById("password").value!=="123456789"){
 
-          			let data={
-          				Employee:{nombre:document.getElementById("nombre").value,
-          					ci:document.getElementById("ci").value,
-          					edad:document.getElementById("edad").value,
-          					fechanacimiento:document.getElementById("fechanacimiento").value,
-          					correo:document.getElementById("correo").value,
-          					tlf:document.getElementById("telefono").value,
-          					direccion:document.getElementById("direccion").value,
-          					image:document.getElementById("imagen-avatar").src
-          				},
-          				User:{
-          					usuario:document.getElementById("usuario").value,
-          					clave:document.getElementById("password").value
-          				},
-                  fecha:formatofecha,
-                  hora:horaActual
-          			}
-
-                 api.send("Instalar-app",data)
-                 // modalRegisterInstallApp.style.display = "none";
+                let objData={
+                        Employee:{nombre:document.getElementById("nombre").value,
+                          ci:document.getElementById("ci").value,
+                          edad:document.getElementById("edad").value,
+                          fechanacimiento:document.getElementById("fechanacimiento").value,
+                          correo:document.getElementById("correo").value,
+                          tlf:document.getElementById("telefono").value,
+                          direccion:document.getElementById("direccion").value,
+                          image:document.getElementById("imagen-avatar").src
+                        },
+                        User:{
+                          usuario:document.getElementById("usuario").value,
+                          clave:document.getElementById("password").value,
+                           Mclave:document.getElementById("Mpassword").value
+                        },
+                        fecha:formatofecha,
+                        hora:horaActual
+               }
             }
 
             if(document.getElementById("usuario").value=="admin" && document.getElementById("password").value=="123456789"){
 
-            	
-              api.send('open-message-system-user-pass-default',"Mantiene los datos usuario y contraseña por defecto")
-
+              api.send('open-message-system-user-pass-default',"Mantiene los datos usuario / contraseñas por defecto")
 
             }
     		
-
     }
     else{
     	api.send("message-campos-vacios","complete todo los campos")
     }
 
-
-
 }
+
 
 api.receive("Saving-data-default-user",(event,data)=>{
 
@@ -283,40 +286,43 @@ api.receive("Saving-data-default-user",(event,data)=>{
   const horaActual = ahora.getHours().toString().padStart(2, '0') + ':' +
                      ahora.getMinutes().toString().padStart(2, '0') + ':' +
                      ahora.getSeconds().toString().padStart(2, '0');
-
-  if(document.getElementById("nombre").value!="" && document.getElementById("ci").value!="" && document.getElementById("edad").value!="" && document.getElementById("fechanacimiento").value!="" && document.getElementById("usuario").value!="" && document.getElementById("password").value && document.getElementById("correo").value && document.getElementById("telefono").value && document.getElementById("direccion").value){
-
   
-            let data={
-              Employee:{nombre:document.getElementById("nombre").value,
-                ci:document.getElementById("ci").value,
-                edad:document.getElementById("edad").value,
-                fechanacimiento:document.getElementById("fechanacimiento").value,
-                correo:document.getElementById("correo").value,
-                tlf:document.getElementById("telefono").value,
-                direccion:document.getElementById("direccion").value,
-                image:document.getElementById("imagen-avatar").src
-              },
-              User:{
-                usuario:document.getElementById("usuario").value,
-                clave:document.getElementById("password").value
-              },
-              fecha:formatofecha,
-              hora:horaActual
+            let objData={
+                Employee:{
+                    nombre:document.getElementById("nombre").value,
+                    ci:document.getElementById("ci").value,
+                    edad:document.getElementById("edad").value,
+                    fechanacimiento:document.getElementById("fechanacimiento").value,
+                    correo:document.getElementById("correo").value,
+                    tlf:document.getElementById("telefono").value,
+                    direccion:document.getElementById("direccion").value,
+                    image:document.getElementById("imagen-avatar").src
+                },
+                User:{
+                    usuario:document.getElementById("usuario").value,
+                    clave:document.getElementById("password").value,
+                    Mclave:document.getElementById("Mpassword").value
+                },
+                fecha:formatofecha,
+                hora:horaActual
             }
 
-             api.send("Instalar-app",data)
-        }
+            api.send("Instalar-app",objData)
 })
+
+
+
+
+/*-----------------------------------------------------------------------*/
 
 api.receive("Completed-Saving-data",(event,data)=>{
+ 
   const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");
- modalRegisterInstallApp.style.display = "none";
+  modalRegisterInstallApp.style.display = "none";
 
 })
 
-
-/*---------------funcion buttob eyes---------------------------*/
+/*---------------funcion button eyes---------------------------*/
 
   const passwordInput = document.getElementById('password');
   const toggleBtn = document.getElementById('toggleBtn');
@@ -337,7 +343,7 @@ api.receive("Completed-Saving-data",(event,data)=>{
     }
   });
 
-  /*---------------funcion butto eyes---------------------------*/
+  /*---------------funcion button eyes---------------------------*/
 
 </script>
 </html>
