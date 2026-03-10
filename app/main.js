@@ -21,6 +21,8 @@ const Edit_password = require(path.join(__dirname,'./section_main/Edit_password'
 const Edit_password_master = require(path.join(__dirname,'./section_main/Edit_password_master'));
 const Edit_email = require(path.join(__dirname,'./section_main/Edit_email'));
 const Edit_user = require(path.join(__dirname,'./section_main/Edit_user'));
+const Register_course = require(path.join(__dirname,'./section_main/Register_course'));
+const  Edit_course = require(path.join(__dirname,'./section_main/Edit_course'));
 /*------------Modulos externos----------------*/
 
 /*--------select-system-init------------*/
@@ -153,7 +155,6 @@ ipcMain.on('message-campos-vacios-login', async (event,text) => {
 
 })
 /**********************************LOGIN SYSTEM APP********************************/
-/*----*/
 /***********************DASBOARD*********************************************/
 /***********************MY-PROFILE******************************************/
 ipcMain.on('Image-select-my-profile',(event,text) => {
@@ -223,6 +224,7 @@ ipcMain.on("select-Image-new-student",(even,data)=>{
 
 
 })
+
 ipcMain.on("Register-new-data-student-representante",(even,data)=>{
 
 
@@ -245,6 +247,18 @@ InfoMessage("Notificación",text)
 
 })
 /*************************NEW INSCRIPTCION**********************************/
+/*****************************Register New Cource*******************************/
+ipcMain.on("Open-system-new-course-register",(event,data)=>{
+ 
+  Register_course(mainWindow)
+
+})
+ipcMain.on("Open-system-edit-course-register",(event,data)=>{
+ 
+   Edit_course(mainWindow)
+
+})
+/*****************************Register New Cource*******************************/
 /***********************DASBOARD*********************************************/
 // Evento cuando la app está lista para crear ventanas
 app.on('ready', Select_system_type, 

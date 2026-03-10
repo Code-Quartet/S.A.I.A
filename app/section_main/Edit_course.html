@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Curso - SAIA v2</title>
+    <style>
+        :root {
+            --primary-blue: #2c5282;
+            --secondary-blue: #3182ce;
+            --bg-light: #f7fafc;
+            --border-color: #e2e8f0;
+            --text-main: #2d3748;
+            --white: #ffffff;
+            --error-red: #e53e3e;
+            --success-green: #48bb78;
+            --warning-orange: #ed8936; /* Color para Pausa */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            background: var(--white);
+            width: 100%;
+            max-width: 550px;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--text-main);
+            font-size: 1.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        } 
+
+        .col-span-2 { grid-column: span 2; }
+
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        label { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
+
+        input, select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus { border-color: var(--secondary-blue); box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1); }
+
+        /* Días de la semana y Estado */
+        .pill-container { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 5px; }
+        .pill-item { flex: 1; text-align: center; min-width: 45px; }
+        .pill-item input { display: none; }
+        .pill-item span {
+            display: block; padding: 10px 0; background: #edf2f7;
+            border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+
+        /* Colores de selección */
+        .pill-item input:checked + span.day { background: var(--secondary-blue); color: white; }
+        .pill-item input:checked + span.status-active { background: var(--success-green); color: white; }
+        .pill-item input:checked + span.status-pause { background: var(--warning-orange); color: white; }
+        .pill-item input:checked + span.status-inactive { background: var(--error-red); color: white; }
+
+        .input-split { display: flex; align-items: center; gap: 0.5rem; }
+        .input-split input, .input-split select { flex: 1; width: 50%; }
+
+        .form-actions { grid-column: span 2; display: flex; justify-content: space-between; margin-top: 1.5rem; }
+
+        .btn {
+            padding: 0.8rem 1.8rem; border-radius: 10px; font-weight: 600;
+            cursor: pointer; border: none; display: flex; align-items: center; gap: 10px; font-size: 0.95rem;
+        }
+
+        .btn-cancel { background: transparent; border: 1.5px solid var(--primary-blue); color: var(--primary-blue); }
+        .btn-save { background: var(--secondary-blue); color: white; transition: opacity 0.3s; }
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Editar Curso</h2>
+    <form id="editCourseForm" class="course-form" novalidate>
+        
+        <div class="form-group col-span-2">
+            <label>Nombre del Curso *</label>
+            <input type="text" name="nombre" placeholder="Ej: Maquillaje" required>
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Descripción</label>
+            <input type="text" name="descripcion" placeholder="Ej: Curso básico profesional">
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Instructor *</label>
+            <select name="instructor" required id="instructorSelect">
+                <option value="">Seleccione un instructor</option>
+                <option value="1">Instructor 01</option>
+                <option value="2">Instructor 02</option>
+            </select>
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Días de Clase *</label>
+            <div class="pill-container">
+                <label class="pill-item"><input type="checkbox" name="dias" value="Lun"><span class="day">Lun</span></label>
+                <label class="pill-item"><input type="checkbox" name="dias" value="Mar"><span class="day">Mar</span></label>
+                <label class="pill-item"><input type="checkbox" name="dias" value="Mie"><span class="day">Mié</span></label>
+                <label class="pill-item"><input type="checkbox" name="dias" value="Jue"><span class="day">Jue</span></label>
+                <label class="pill-item"><input type="checkbox" name="dias" value="Vie"><span class="day">Vie</span></label>
+                <label class="pill-item"><input type="checkbox" name="dias" value="Sab"><span class="day">Sáb</span></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Horario *</label>
+            <div class="input-split">
+                <input type="time" name="hora_inicio" required>
+                <input type="time" name="hora_fin" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Duración *</label>
+            <div class="input-split">
+                <input type="number" name="duracion_valor" min="0" required>
+                <select name="duracion_unidad">
+                    <option value="Semanas">Semanas</option>
+                    <option value="Meses">Meses</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Estado del Curso</label>
+            <div class="pill-container">
+                <label class="pill-item">
+                    <input type="radio" name="estado" value="Activo" checked>
+                    <span class="status-active">Activo</span>
+                </label>
+                <label class="pill-item">
+                    <input type="radio" name="estado" value="Pausa">
+                    <span class="status-pause">Pausa</span>
+                </label>
+                <label class="pill-item">
+                    <input type="radio" name="estado" value="Inactivo">
+                    <span class="status-inactive">Inactivo</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-cancel" id="btnCancel">Descartar</button>
+            <button type="submit" class="btn btn-save" id="btnSave">Actualizar ✓</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('editCourseForm');
+    const btnSave = document.getElementById('btnSave');
+
+    function cargarDatosDelCurso(curso) {
+        form.nombre.value = curso.nombre;
+        form.descripcion.value = curso.descripcion;
+        form.instructor.value = curso.instructorId;
+        form.hora_inicio.value = curso.h_inicio;
+        form.hora_fin.value = curso.h_fin;
+        form.duracion_valor.value = curso.dur_val;
+        form.duracion_unidad.value = curso.dur_uni;
+        
+        curso.dias.forEach(dia => {
+            const check = form.querySelector(`input[name="dias"][value="${dia}"]`);
+            if(check) check.checked = true;
+        });
+
+        const radioStatus = form.querySelector(`input[name="estado"][value="${curso.estado}"]`);
+        if(radioStatus) radioStatus.checked = true;
+
+        checkFormValidity();
+    }
+
+    function checkFormValidity() {
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(f => { if (!f.value.trim()) isValid = false; });
+
+        const dias = form.querySelectorAll('input[name="dias"]:checked');
+        if (dias.length === 0) isValid = false;
+
+        btnSave.disabled = !isValid;
+    }
+
+    form.addEventListener('input', checkFormValidity);
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const updatedData = Object.fromEntries(formData.entries());
+        updatedData.dias = Array.from(form.querySelectorAll('input[name="dias"]:checked')).map(el => el.value);
+
+        console.log("Datos actualizados para la DB:", updatedData);
+        alert("Cambios guardados con éxito.");
+    });
+
+    document.getElementById('btnCancel').addEventListener('click', () => {
+        if(confirm("¿Descartar los cambios realizados?")) {
+            window.location.reload();
+        }
+    });
+
+    // Para probar la opción pausa, podrías descomentar esto:
+    // cargarDatosDelCurso({ 
+    //    nombre: "Diseño Web", descripcion: "HTML y CSS Pro", instructorId: "1",
+    //    h_inicio: "14:00", h_fin: "16:00", dur_val: "4", dur_uni: "Semanas",
+    //    dias: ["Lun", "Mie"], estado: "Pausa"
+    // });
+    
+    checkFormValidity();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+:root {
+            --primary-blue: #2b56c5;
+            --primary-light: #eef2ff;
+            --text-main: #374151;
+            --text-muted: #9ca3af;
+            --border-color: #d1d5db;
+            --bg-light: #f9fafb;
+            --white: #ffffff;
+            
+            /* Colores de Estados */
+            --status-active-bg: #e0e7ff;
+            --status-active-text: #3730a3;
+            --status-inactive-bg: #fef3c7;
+            --status-inactive-text: #92400e;
+            --status-fired-bg: #fee2e2;
+            --status-fired-text: #b91c1c;
+            --status-finished-bg: #d1fae5;
+            --status-finished-text: #065f46;
+        }
+
+
+        /* --- ESTRUCTURA PRINCIPAL (GRID) --- */
+.gestion-container-Instructores {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+        .main-title-Instructor {
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        /* --- FILTROS Y BUSQUEDA (FLEX) --- */
+.filters-header-Instructor {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+.search-container-Instructor {
+    display: flex;
+    position: relative;
+    width: 91%;
+    align-items: center;
+    flex-direction: row;
+}
+
+
+        .search-input-Instructor{
+            width: 100%;
+            padding: 12px 15px 12px 20px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .search-input-Instructor:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(43, 86, 197, 0.1);
+        }
+
+        .icon-search-Instructor {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        .btn-filter-Instructor{
+            background: var(--white);
+            border: 1.5px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- DROPDOWN ESTADO --- */
+        .filter-dropdownbtn-Instructor {
+            position: absolute;
+            top: 55px;
+            left: 415px;
+            background: var(--white);
+            width: 280px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            z-index: 100;
+            display: none; /* Oculto por defecto */
+        }
+
+        .filter-dropdown-Instructor.show {
+            display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .dropdown-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+        }
+
+        .dropdown-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 15px;
+        }
+
+        .btn-apply {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        /* --- TABLA --- */
+        .container-table-Instructor {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .data-table-Instructor {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table-Instructor thead { background: #f1f5f9; }
+        .data-table-Instructor th {
+            padding: 18px 20px;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .data-table-Instructor td { padding: 15px 20px; border-bottom: 1px solid #f3f4f6; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+
+.container-table-Instructor {
+    display: block; /* Permite que la tabla se comporte como bloque */
+}
+
+.container-table-Instructor thead {
+    display: block;
+    width: 100%;
+    background: #f3f4f6;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: capitalize;
+            color: #4b5563;
+            border-bottom: 1px solid var(--border-color);
+}
+
+.container-table-Instructor tbody {
+    display: block;
+    width: 100%;
+    max-height: 300px;    /* Ajusta la altura a tu gusto */
+    overflow-y: auto;    /* Activa el scroll vertical */
+}
+
+/* Para mantener las celdas alineadas entre thead y tbody */
+.container-table-Instructor thead tr, 
+.container-table-Instructor tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Obliga a que las columnas tengan el mismo ancho */
+}
+
+/* Estilo opcional para la barra de scroll (opcional) */
+.container-table-Instructor tbody::-webkit-scrollbar {
+    width: 8px;
+}
+.container-table-Instructor tbody::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+        .status-badge.activo { background: var(--status-active-bg); color: var(--status-active-text); }
+        .status-badge.inactivo { background: var(--status-inactive-bg); color: var(--status-inactive-text); }
+        .status-badge.despedido { background: var(--status-fired-bg); color: var(--status-fired-text); }
+        .status-badge.finalizado { background: var(--status-finished-bg); color: var(--status-finished-text); }
+
+        .action-icon { font-size: 18px; cursor: pointer; margin-right: 10px; }
+        .icon-pencil-Instructor { color: blue; }
+        .icon-trash-Instructor { color: red; }
+
+        /* --- FOOTER --- */
+        .gestion-footer-Instructor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination-Instructor { display: flex; gap: 8px; }
+        .page-btn {
+            width: 38px;
+            height: 38px;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .page-btn.active { background: var(--primary-blue); color: white; border: none; }
+
+        .btn-new-instructor {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }

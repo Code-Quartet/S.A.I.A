@@ -102,7 +102,7 @@ function Login(app){
         //  alert("Por favor, complete todos los campos.");
          
 
-          api.send("message-campos-vacios-login","Por favor, complete todos los campos.")
+       api.send("message-campos-vacios-login","Por favor, complete todos los campos.")
        return; // Detenemos la ejecución si hay campos vacíos
       }
 
@@ -149,7 +149,8 @@ passwordInputClick.addEventListener('keydown', function(event) {
 
 api.receive("Data-user-employee",(event,data)=>{
 
-  console.log(data)/*
+ // console.log(data)
+ /*
   console.log(data.employee.image)*/
 /*--------------------------------------
 {
@@ -231,7 +232,7 @@ function abrirModal_barraCarga() {
 function finalizarProceso() {
  //alert("¡Carga completada! Ejecutando función final...");
   //mostrarModalVerificacion()
-  document.getElementById("miModal").style.display = "none";
+  //document.getElementById("miModal").style.display = "none";
   StatusRender("dasboard")
 
 }

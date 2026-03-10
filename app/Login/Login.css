@@ -19,13 +19,14 @@
 }
 .main-login {
     background: white;
-    padding: 27px;
-    width: 34%;
+    padding: 21px;
+    width: 35%;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     align-content: center;
+    box-shadow: 0px 1px 3px 3px #676767;
 }
 .form-login-system {
     background: white;
@@ -38,14 +39,29 @@
 }
 
 .imagen-login {
-   /* background: #264eca;*/
-   background-image:url('../assets/imagen/studio.jpg');background-position: center;
+    /* background: #264eca; */
+    background-image: url('../assets/imagen/studio.jpg');
+    background-position: center;
     background-size: cover;
-    background-repeat:no-repeat; 
-   
-    border-radius: 51%;
-    width: 40%;
+    background-repeat: no-repeat;
+    box-shadow: 0 4px 5px rgb(115 115 115);
+    object-fit: cover;
+    border-radius: 61%;
+    width: 215px;
+    height: 220px;
+    margin: 5px;
 }
+/*
+.avatar-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 6px solid var(--white);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    object-fit: cover;
+}
+
+*/
 .container-input {
     padding: 2px;
     font-size: 19px;
@@ -56,15 +72,14 @@
 
 .sub-container-login {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-content: center;
     flex-direction: row;
     border-radius: 6px;
     border: 0.5px solid #2196f3;
     padding: 5px;
+    align-items: center;
 }
-
-
 
 .sub-container-login>span{
     color:grey;
@@ -87,6 +102,7 @@ border-style: none;
     border-style: none;
     margin-top: 10px;
     font-weight: bold;
+    font-size: 20px;
 }
 
 /*------EFETO BOTON PASSWORD------------*/

@@ -10,11 +10,21 @@
 
 /* Sidebar */
 .dashboard-sidebar {
-    background-color: #1a43a0;
+  
+     grid-area: 1 / 1 / 2 / 2;
+     /*-------------------------*/
+       background-image:url('../assets/imagen/fondo.jpg');
+    background-position:;
+    background-size: cover;
+    background-repeat: no-repeat;  
+}
+
+.sub-fondo-sidebar {
     color: white;
     display: flex;
     flex-direction: column;
-     grid-area: 1 / 1 / 2 / 2;
+    background-color: #1a43a0db;
+    height: 100%;
 }
 
 .dashboard-menu {

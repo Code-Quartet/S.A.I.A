@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil del Instructor - Recreación</title>
+    <style>
+        /* --- ESTILOS GENERALES (CSS) --- */
+        
+        /* Reset básico para márgenes y paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: #f6f8fa; /* Fondo gris muy suave, imitando la captura */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Contenedor principal del perfil (la "tarjeta") */
+        .profile-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 700px; /* Ancho máximo para que no se estire demasiado */
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Sombra suave */
+            padding: 30px;
+            overflow: hidden; /* Asegura que los bordes redondeados contengan todo */
+        }
+
+        /* --- SECCIÓN DE CABECERA (Foto y Datos Básicos) --- */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        /* Foto de perfil */
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px; /* Esquinas redondeadas como en la imagen */
+            overflow: hidden;
+            margin-right: 25px;
+            border: 1px solid #e1e4e8; /* Borde muy fino */
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ajusta la imagen sin deformarla */
+            display: block;
+        }
+
+        /* Datos a la derecha de la foto */
+        .profile-header-data {
+            flex-grow: 1;
+        }
+
+        .instructor-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #1a1a1a;
+        }
+
+        .header-field {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        /* Badge de 'Activo' */
+        .status-badge {
+            background-color: #e6f0fd; /* Azul pálido de fondo */
+            color: #0c63e4; /* Texto azul vibrante */
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        /* Líneas divisorias horizontales */
+        hr {
+            border: none;
+            border-top: 1px solid #e1e4e8; /* Línea gris muy tenue */
+            margin: 20px 0;
+        }
+
+        /* --- SECCIONES DE DETALLES (Personal, Cursos) --- */
+        .details-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .detail-row {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 7px;
+            display: flex; /* Para alinear label y valor */
+        }
+
+        /* Estilo para los 'labels' de cada campo */
+        .detail-label {
+            color: #666; /* Texto más suave */
+            margin-right: 6px; /* Espacio antes del valor */
+        }
+
+        /* --- SECCIÓN DE ACCIONES (Botones) --- */
+        .profile-actions {
+            display: flex;
+            justify-content: space-between; /* Un botón a cada lado */
+            gap: 20px; /* Espacio entre botones en pantallas pequeñas */
+            margin-top: 30px;
+        }
+.action-button {
+            flex: 1; /* Botones del mismo ancho */
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none; /* Por si se usan como enlaces */
+        }
+
+        /* Estilo Botón Editar (Azul) */
+        .btn-edit {
+            border: 2px solid #0c63e4;
+            color: #0c63e4;
+            background-color: #ffffff;
+        }
+
+        .btn-edit:hover {
+            background-color: #e6f0fd;
+        }
+
+        /* Estilo Botón Eliminar (Rojo) */
+        .btn-delete {
+            border: 2px solid #d73a49;
+            color: #d73a49;
+            background-color: #ffffff;
+        }
+
+        .btn-delete:hover {
+            background-color: #ffeef0;
+        }
+
+        /* Estilos para los Iconos SVG (incrustados) */
+        .button-icon {
+            width: 18px;
+            height: 18px;
+            margin-left: 8px; /* Espacio entre texto e icono para 'Editar' */
+            fill: currentColor; /* El icono toma el color del texto del botón */
+        }
+        
+        /* Ajuste específico para el icono de papelera (izquierda) */
+        .btn-delete .button-icon {
+            margin-left: 0;
+            margin-right: 8px; /* Espacio a la derecha */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+
+        <div class="profile-header">
+            <div class="profile-photo">
+                <img src="https://i.ibb.co/5xbkCdB/portrait-photo-placeholder.jpg" alt="Foto de Cristian Luis Blanco Toyota">
+            </div>
+            <div class="profile-header-data">
+                <h1 class="instructor-name">Cristian Luis Blanco Toyota</h1>
+                <div class="header-field">
+                    Especialidad: Fotógrafo
+                </div>
+                <div class="header-field">
+                    Estado: <span class="status-badge">Activo</span>
+                </div>
+            </div>
+        </div>
+
+        <hr> <div class="details-section">
+            <h2 class="section-title">Datos Personales</h2>
+            <div class="detail-row">
+                <span class="detail-label">Teléfono:</span>
+                0412-389-5783
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Edad:</span>
+                29
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Cédula:</span>
+                10.234.543
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Correo Electrónico:</span>
+                c.blanco@correo.com
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Dirección:</span>
+                Calle 24 Av Bolívar
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Certificaciones:</span>
+                Instructor certificado por Escuela de Fotografía
+            </div>
+        </div>
+
+        <hr> <div class="details-section">
+            <h2 class="section-title">Cursos Asignados: <span style="font-weight: 400; color: #333;">Fotografía</span></h2>
+            <div class="detail-row">
+                Horario: Lun-Vie 8:00 am- 9:30 am
+            </div>
+            <div class="detail-row">
+                Ingreso: 15/03/2023
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button class="action-button btn-edit">
+                <span>Editar Información</span>
+                <svg class="button-icon" viewBox="0 0 24 24">
+                    <path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"/>
+                </svg>
+            </button>
+<button class="action-button btn-delete">
+                <svg class="button-icon" viewBox="0 0 24 24">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+                <span>Eliminar Instructor</span>
+            </button>
+        </div>
+
+    </div>
+
+</body>
+</html>

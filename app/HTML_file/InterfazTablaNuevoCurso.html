@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cursos - SAIA v2</title>
+    <style>
+        :root {
+            --primary-blue: #2c5282;
+            --secondary-blue: #3182ce;
+            --bg-light: #f7fafc;
+            --border-color: #e2e8f0;
+            --text-main: #2d3748;
+            --white: #ffffff;
+            /* Estados */
+            --status-active-bg: #dcfce7; --status-active-txt: #166534;
+            --status-inactive-bg: #fee2e2; --status-inactive-txt: #991b1b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Tabla Estilizada */
+        .table-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background-color: #f8fafc;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        th {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:hover { background-color: #f1f5f9; }
+
+        /* Estilos específicos para columnas del formulario */
+        .col-curso { font-weight: 600; color: var(--text-main); width: 20%; }
+        .col-instructor { color: #4a5568; }
+        
+        .days-pill {
+            display: inline-flex;
+            gap: 2px;
+        }
+
+        .day-tag {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .time-info { font-size: 0.8rem; color: #718096; display: block; }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-activo { background: var(--status-active-bg); color: var(--status-active-txt); }
+        .status-inactivo { background: var(--status-inactive-bg); color: var(--status-inactive-txt); }
+
+        /* Acciones */
+        .btn-action {
+            padding: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: transform 0.1s;
+        }
+
+        .btn-edit { color: var(--secondary-blue); }
+        .btn-delete { color: #e53e3e; }
+        .btn-edit:hover { transform: scale(1.2); }
+
+        .btn-new {
+            background: var(--secondary-blue);
+            color: white;
+            padding: 0.7rem 1.4rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Gestión de Cursos</h1>
+        <button class="btn-new">＋ Nuevo Curso</button>
+    </div>
+
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Curso / Descripción</th>
+                    <th>Instructor</th>
+                    <th>Horario & Días</th>
+                    <th>Duración</th>
+                    <th>Costo</th>
+                    <th>Extras</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaCursos">
+                <tr>
+                    <td class="col-curso">
+                        <div>Maquillaje Profesional</div>
+                        <div style="font-size: 0.75rem; font-weight: 400; color: #a0aec0;">Curso básico de técnicas faciales</div>
+                    </td>
+                    <td class="col-instructor">Juan Pérez</td>
+                    <td>
+                        <div class="days-pill">
+                            <span class="day-tag">Lun</span><span class="day-tag">Mie</span><span class="day-tag">Vie</span>
+                        </div>
+                        <span class="time-info">08:30 - 10:30</span>
+                    </td>
+                    <td>2 Semanas</td>
+                    <td><strong>30$</strong></td>
+                    <td>
+                        <div title="Certificado">📜 ✅</div>
+                        <div title="Evaluación">📝 ✅</div>
+                    </td>
+                    <td><span class="badge status-activo">Activo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" title="Editar">✎</button>
+                        <button class="btn-action btn-delete" title="Eliminar">🗑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-curso">
+                        <div>Corte de Cabello</div>
+                        <div style="font-size: 0.75rem; font-weight: 400; color: #a0aec0;">Estilismo avanzado</div>
+                    </td>
+                    <td class="col-instructor">María García</td>
+                    <td>
+                        <div class="days-pill">
+                            <span class="day-tag">Mar</span><span class="day-tag">Jue</span>
+                        </div>
+                        <span class="time-info">14:00 - 16:00</span>
+                    </td>
+                    <td>1 Mes</td>
+                    <td><strong>50$</strong></td>
+                    <td>
+                        <div title="Certificado">📜 ✅</div>
+                        <div title="Evaluación">📝 ❌</div>
+                    </td>
+                    <td><span class="badge status-inactivo">Inactivo</span></td>
+                    <td>
+                        <button class="btn-action btn-edit" title="Editar">✎</button>
+                        <button class="btn-action btn-delete" title="Eliminar">🗑</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

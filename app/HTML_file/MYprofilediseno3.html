@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
+    
+    <style type="text/css">
+        :root {
+            --brand-blue: #2b56c5;
+            --brand-light: #f0f4ff;
+            --brand-success: #10b981;
+            --brand-excel: #059669;
+            --text-dark: #2d3748;
+            --text-soft: #718096;
+            --bg-body: #edf2f7;
+            --white: #ffffff;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* --- TARJETA DE PERFIL --- */
+        .profile-container {
+            background: var(--white);
+            width: 420px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            padding: 30px;
+            padding-top: 70px;
+        }
+
+        .avatar-header {
+            position: absolute;
+            top: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .avatar-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 6px solid var(--white);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            object-fit: cover;
+        }
+
+        .profile-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-title h2 { margin: 0; color: var(--text-dark); font-size: 24px; }
+        .profile-title p { margin: 5px 0; color: var(--text-soft); font-size: 14px; }
+
+        /* Grupos de Datos */
+        .info-section { margin-bottom: 20px; }
+        .section-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--brand-blue);
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: block;
+            border-bottom: 1px solid var(--brand-light);
+            padding-bottom: 4px;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .data-content label { display: block; font-size: 12px; color: var(--text-soft); }
+        .data-content input, .data-content span {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            border: none;
+            background: transparent;
+            outline: none;
+        }
+
+        /* Botones e Iconos */
+        .action-icon {
+            color: var(--text-soft);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+        .action-icon:hover { background: var(--brand-light); color: var(--brand-blue); }
+
+        .btn-main-action {
+            width: 100%;
+            background-color: var(--brand-blue);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .btn-main-action:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        /* --- VENTANA MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none; /* Controlado por JS */
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 550px;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .modal-header h3 { margin: 0; color: var(--brand-blue); display: flex; align-items: center; gap: 10px; }
+
+        .advanced-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .advanced-card {
+            border: 1px solid var(--brand-light);
+            border-radius: 16px;
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .advanced-card:hover {
+            border-color: var(--brand-blue);
+            background: var(--brand-light);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .card-info h4 { margin: 0; font-size: 14px; color: var(--text-dark); }
+        .card-info p { margin: 2px 0 0; font-size: 11px; color: var(--text-soft); }
+
+        .close-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .close-btn:hover { background: #fee2e2; color: #ef4444; }
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <div class="avatar-header">
+            <img src="../assets/imagen/ImageLogin3.png" class="avatar-img" alt="Foto Perfil">
+        </div>
+
+        <div class="profile-title">
+            <h2>Yris</h2>
+            <p>Admin • Centro de Capacitación 3e</p>
+        </div>
+
+        <div class="info-section">
+            <span class="section-label">Credenciales</span>
+            <div class="data-item">
+                <div class="data-content">
+                    <label>Usuario</label>
+                    <span>yrisadmin@correo.com</span>
+                </div>
+                <span class="icon-pencil action-icon"></span>
+            </div>
+            <div class="data-item">
+                <div class="data-content">
+                    <label>Contraseña</label>
+                    <input type="password" id="pass-main" value="password123" readonly>
+                </div>
+                <div style="display: flex;">
+                    <span class="icon-eye action-icon" onclick="toggleView('pass-main', this)"></span>
+                    <span class="icon-pencil action-icon"></span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-main-action" id="openModalBtn">
+            <span class="icon-cog"></span> Configuración Avanzada
+        </button>
+    </div>
+
+    <div class="modal-overlay" id="modalConfig">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><span class="icon-cog"></span> Ajustes Avanzados</h3>
+                <button class="close-btn" onclick="closeAdvanced()">×</button>
+            </div>
+
+            <div class="advanced-grid">
+                <div class="advanced-card" onclick="alert('Accediendo a Clave Maestra...')">
+                    <div class="card-icon" style="background: var(--brand-blue);"><span class="icon-key"></span></div>
+                    <div class="card-info">
+                        <h4>Clave Maestra</h4>
+                        <p>Cambiar acceso de nivel 2.</p>
+                    </div>
+                </div>
+
+                <div class="advanced-card" onclick="alert('Exportando a Excel...')">
+                    <div class="card-icon" style="background: var(--brand-excel);"><span class="icon-file-excel"></span></div>
+                    <div class="card-info">
+                        <h4>Exportar Todo</h4>
+                        <p>Generar reporte en Excel.</p>
+                    </div>
+                </div>
+
+                <div class="advanced-card" onclick="alert('Iniciando Backup de SAIA.db...')">
+                    <div class="card-icon" style="background: var(--brand-success);"><span class="icon-database"></span></div>
+                    <div class="card-info">
+                        <h4>Backup SQLite</h4>
+                        <p>Respaldar base de datos.</p>
+                    </div>
+                </div>
+
+                <div class="advanced-card" onclick="alert('Abriendo registro de actividad...')">
+                    <div class="card-icon" style="background: #f59e0b;"><span class="icon-list"></span></div>
+                    <div class="card-info">
+                        <h4>Auditoría</h4>
+                        <p>Registro de movimientos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Elementos del DOM
+        const modal = document.getElementById('modalConfig');
+        const btnOpen = document.getElementById('openModalBtn');
+
+        // Función para mostrar/ocultar contraseña
+        function toggleView(id, icon) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("icon-eye", "icon-eye-blocked");
+            } else {
+                input.type = "password";
+                icon.classList.replace("icon-eye-blocked", "icon-eye");
+            }
+        }
+
+        // Abrir Modal
+        btnOpen.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+
+        // Cerrar Modal
+        function closeAdvanced() {
+            modal.style.display = 'none';
+        }
+
+        // Cerrar si se hace clic fuera del modal
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) closeAdvanced();
+        });
+    </script>
+</body>
+</html>

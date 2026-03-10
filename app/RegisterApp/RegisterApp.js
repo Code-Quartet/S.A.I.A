@@ -161,13 +161,24 @@ async function Adding_table_db(){
 
 //Tabla Curso
   await DB.crearTabla(`CREATE TABLE Course (
-    Key TEXT PRIMARY KEY, -- Clave primaria
-    Name TEXT NOT NULL UNIQUE,           -- Nombre del curso
-    Description TEXT,                      -- Descripción del curso
-    Date DATE NOT NULL,                    -- Fecha de creación
-    Time TIME NOT NULL,                    -- Hora de creación
-    Time_delet DATE                        -- Fecha de eliminación lógica
-)`);
+    Key TEXT PRIMARY KEY,                 -- UUID o Código único
+    Name TEXT NOT NULL UNIQUE,            -- Nombre del curso
+    Description TEXT,                     -- Descripción detallada
+    Instructor_ID TEXT NOT NULL,          -- Relación con tabla de instructores
+    Days TEXT NOT NULL,                   -- Días (Ej: "Lun,Mie,Vie")
+    Start_Time TIME NOT NULL,             -- Hora de inicio (Ej: "08:30")
+    End_Time TIME NOT NULL,               -- Hora de fin (Ej: "10:30")
+    Duration_Value INTEGER NOT NULL,      -- Cantidad (Ej: 2)
+    Duration_Unit TEXT NOT NULL,          -- Unidad (Ej: "Semanas")
+    Capacity INTEGER,                     -- Cupo máximo (Ej: 20)
+    Cost TEXT,                            -- Costo (Ej: "30$")
+    Has_Evaluation BOOLEAN DEFAULT 0,     -- 1 = Sí, 0 = No
+    Has_Certificate BOOLEAN DEFAULT 0,    -- 1 = Sí, 0 = No
+    Status TEXT DEFAULT 'Activo',         -- Activo, Inactivo, Completado, etc.
+    Date_Created DATE NOT NULL,           -- Fecha de creación
+    Time_Created TIME NOT NULL,           -- Hora de creación
+    Time_Deleted DATE                     -- Borrado lógico
+);`);
 
 //Tabla Horarios
   await DB.crearTabla(`CREATE TABLE Schedule (

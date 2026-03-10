@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Instructores - SAIA v2</title>
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
+    
+    <style type="text/css">
+        :root {
+            --primary-blue: #2b56c5;
+            --primary-light: #eef2ff;
+            --text-main: #374151;
+            --text-muted: #9ca3af;
+            --border-color: #d1d5db;
+            --bg-light: #f9fafb;
+            --white: #ffffff;
+            
+            /* Colores de Estados */
+            --status-active-bg: #e0e7ff;
+            --status-active-text: #3730a3;
+            --status-inactive-bg: #fef3c7;
+            --status-inactive-text: #92400e;
+            --status-fired-bg: #fee2e2;
+            --status-fired-text: #b91c1c;
+            --status-finished-bg: #d1fae5;
+            --status-finished-text: #065f46;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            padding: 40px;
+        }
+
+        /* --- ESTRUCTURA PRINCIPAL (GRID) --- */
+        .gestion-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto 1fr auto;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-title {
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        /* --- FILTROS Y BUSQUEDA (FLEX) --- */
+        .filters-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 20px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(43, 86, 197, 0.1);
+        }
+
+        .icon-search {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        .btn-filter {
+            background: var(--white);
+            border: 1.5px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- DROPDOWN ESTADO --- */
+        .filter-dropdown {
+            position: absolute;
+            top: 55px;
+            left: 415px;
+            background: var(--white);
+            width: 280px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            z-index: 100;
+            display: none; /* Oculto por defecto */
+        }
+
+        .filter-dropdown.show {
+            display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .dropdown-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+        }
+
+        .dropdown-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 15px;
+        }
+
+        .btn-apply {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        /* --- TABLA --- */
+        .container-table {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table thead { background: #f1f5f9; }
+        .data-table th {
+            padding: 18px 20px;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .data-table td { padding: 15px 20px; border-bottom: 1px solid #f3f4f6; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.activo { background: var(--status-active-bg); color: var(--status-active-text); }
+        .status-badge.inactivo { background: var(--status-inactive-bg); color: var(--status-inactive-text); }
+        .status-badge.despedido { background: var(--status-fired-bg); color: var(--status-fired-text); }
+        .status-badge.finalizado { background: var(--status-finished-bg); color: var(--status-finished-text); }
+
+        .action-icon { font-size: 18px; cursor: pointer; margin-right: 10px; }
+        .icon-pencil { color: var(--primary-blue); }
+        .icon-trash { color: #ef4444; }
+
+        /* --- FOOTER --- */
+        .gestion-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination { display: flex; gap: 8px; }
+        .page-btn {
+            width: 38px;
+            height: 38px;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .page-btn.active { background: var(--primary-blue); color: white; border: none; }
+
+        .btn-new-instructor {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gestion-container">
+    <h1 class="main-title">Gestionar Instructores</h1>
+
+    <div class="filters-header">
+        <div class="search-container">
+            <input type="text" class="search-input" id="inputSearch" placeholder="Buscar instructor...">
+            <span class="icon-search"></span>
+        </div>
+        
+        <button class="btn-filter" id="btnFilterEstado">
+            Estado <span class="icon-chevron-down"></span>
+        </button>
+
+        <div class="filter-dropdown" id="dropdownEstado">
+            <div class="dropdown-item">
+                <input type="checkbox" id="chk-activo" value="Activo">
+                <label for="chk-activo">Activo</label>
+            </div>
+            <div class="dropdown-item">
+                <input type="checkbox" id="chk-inactivo" value="Inactivo">
+                <label for="chk-inactivo">Inactivo</label>
+            </div>
+            <div class="dropdown-item">
+                <input type="checkbox" id="chk-despedido" value="Despedido">
+                <label for="chk-despedido">Despedido</label>
+            </div>
+            <div class="dropdown-item">
+                <input type="checkbox" id="chk-finalizado" value="Finalizado">
+                <label for="chk-finalizado">Curso Finalizado</label>
+            </div>
+            <div class="dropdown-footer">
+                <button class="btn-apply" onclick="aplicarFiltros()">Aplicar</button>
+                <button class="btn-reset" onclick="restablecerFiltros()">Restablecer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-table">
+        <table class="data-table" id="tablaInstructores">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Especialidad</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Carlos Soto Fuentes</td>
+                    <td>Manejo</td>
+                    <td>0412-555-2134</td>
+                    <td><span class="status-badge inactivo">Inactivo</span></td>
+                    <td><span class="icon-pencil action-icon"></span><span class="icon-trash action-icon"></span></td>
+                </tr>
+                <tr>
+                    <td>Jesús Alberto García</td>
+                    <td>Inglés</td>
+                    <td>0416-555-2134</td>
+                    <td><span class="status-badge activo">Activo</span></td>
+                    <td><span class="icon-pencil action-icon"></span><span class="icon-trash action-icon"></span></td>
+                </tr>
+                <tr>
+                    <td>Ana Isabella Contreras</td>
+                    <td>Fotografía</td>
+                    <td>0412-555-3456</td>
+                    <td><span class="status-badge despedido">Despedido</span></td>
+                    <td><span class="icon-pencil action-icon"></span><span class="icon-trash action-icon"></span></td>
+                </tr>
+                <tr>
+                    <td>Pedro Antonio Rojas</td>
+                    <td>Dibujo</td>
+                    <td>0416-555-4567</td>
+                    <td><span class="status-badge finalizado">Curso Finalizado</span></td>
+                    <td><span class="icon-pencil action-icon"></span><span class="icon-trash action-icon"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="gestion-footer">
+        <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+        </div>
+        <button class="btn-new-instructor">
+            <span class="icon-user-plus"></span> Nuevo Instructor
+        </button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const btn = document.getElementById('btnFilterEstado');
+    const menu = document.getElementById('dropdownEstado');
+
+    // Toggle Menu
+    btn.onclick = (e) => {
+        e.stopPropagation();
+        menu.classList.toggle('show');
+    };
+
+    // Cerrar al clickear fuera
+    window.onclick = (e) => {
+        if (!menu.contains(e.target) && e.target !== btn) {
+            menu.classList.remove('show');
+        }
+    };
+
+    function aplicarFiltros() {
+        const checks = menu.querySelectorAll('input:checked');
+        const valores = Array.from(checks).map(c => c.value);
+        console.log("Filtrando por:", valores);
+        menu.classList.remove('show');
+    }
+
+    function restablecerFiltros() {
+        menu.querySelectorAll('input').forEach(i => i.checked = false);
+    }
+</script>
+
+</body>
+</html>

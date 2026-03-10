@@ -121,7 +121,7 @@ async function UpdatePassword(key, passwordActual, nuevaPassword) {
     }
 }
 /*----------------------------------------*/
-async function actualizarPasswordMaster(key, nuevaPasswordMaster) {
+async function UpdatePasswordMaster(key, nuevaPasswordMaster) {
     const sql = `UPDATE User SET PasswordMaster = ? WHERE Key = ?`;
     try {
         await DB.actualizar(sql, [nuevaPasswordMaster, key]);
@@ -134,7 +134,8 @@ module.exports={
 		login_system:login_system,
         UpdateUsername:UpdateUsername,
         UpdateEmail:UpdateEmail,
-        UpdatePassword:UpdatePassword
+        UpdatePassword:UpdatePassword,
+        UpdatePasswordMaster:UpdatePasswordMaster
 }
 
 /*

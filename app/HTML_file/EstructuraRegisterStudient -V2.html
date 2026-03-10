@@ -1,7 +1,274 @@
-let template_New_Registration= `<div class="container-new-registre">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Inscripción - Sistema Escolar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/icomoon/1.0.0/style.css">
+
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2b56c5;
+            --text-main: #374151;
+            --text-muted: #9ca3af;
+            --border-color: #d1d5db;
+            --bg-light: #ffffff;
+            --bg-disabled: #f3f4f6;
+            --danger-red: #ef4444;
+        }
+
+        body {
+        /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;*/
+            color: var(--text-main);
+        }
+
+        /*--------ESTRUCTURA-----------------*/
+.container-new-registre {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr 70px;
+    height: 100vh;
+    /* padding: 20px; */
+}
+.container-title-register {
+    display: flex;
+    align-items: center;
+    /* border-bottom: 1px solid var(--border-color); */
+    /* margin-bottom: 15px; */
+}
+.container-registration-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* grid-gap: 20px; */
+    /* overflow-y: auto; */
+    padding: 3px;
+    margin-left: 20px;
+}
+
+
+
+        .columns {
+           /* padding: 10px;*/
+        }
+
+.action-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    /* border-top: 1px solid var(--border-color); */
+    /* padding-top: 10px; */
+}
+
+        /*--------------------STYLE TOGGLE SWITCH---------------*/
+        .container-toogle-swicht {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .label-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #d8d8d8;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .knob {
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            top: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input:checked + .slider {
+            background-color: #60b8ff;
+        }
+
+        input:checked + .slider .knob {
+            transform: translateX(40px);
+        }
+
+        /*----------------INPUT STYLE-------------------------*/
+    .form-group {
+    /* margin-bottom: 1rem; */
+}
+
+        .form-group > label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+.form-group > input, .select-input-new-registre {
+    width: 90%;
+    padding: 10px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s;
+}
+        .form-group > input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 5px rgba(43, 86, 197, 0.2);
+        }
+
+        /* Estado Deshabilitado */
+        input:disabled, select:disabled {
+            background-color: var(--bg-disabled);
+            cursor: not-allowed;
+            color: var(--text-muted);
+        }
+
+        /* Estilos de Subgrupos */
+        .sub-group-data-personal, .container-tlf-email, .sub-container-representante-tlf-email {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sub-group-data-personal > div, .container-tlf-email > div, .sub-container-representante-tlf-email > div {
+            flex: 1;
+        }
+
+        /*-----------------IMAGE UPLOAD------------------------------*/
+        .file-upload-container-new-registre {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+.image-uploader-register-studient {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+}
+
+        .main-circle-register-studient {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+.avatar-main-register {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: blue;
+}
+
+.camera-button-register-studient {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 35px;
+    height: 35px;
+    background-color: #d7d7d7;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid white;
+}
+
+        /*-----------------BUTTON CONFIRM--------------------*/
+        .btn-confirm {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-confirm:hover:not(:disabled) {
+            filter: brightness(1.2);
+        }
+
+        .btn-confirm:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Estilo Botón Limpiar */
+.btn-clear {
+    background-color: transparent;
+    color: var(--text-main);
+    border: 1.5px solid var(--border-color);
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-right: 10px;
+}
+        .btn-clear:hover {
+            background-color: #fceaea;
+            border-color: var(--danger-red);
+            color: var(--danger-red);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-new-registre">
+   
     <div class="container-title-register">
-     <h1 class="titleRegister" style=" margin-left: 11px; ">Nueva Inscripción</h1>
+     
+        <h1 class="titleRegister">Nueva Inscripción</h1>
     </div>
+
     <form class="container-registration-form" id="registrationForm">
         <div class="columns column1">
             <div class="form-group">
@@ -28,7 +295,7 @@ let template_New_Registration= `<div class="container-new-registre">
                 </div>
                 <div class="form-group">
                     <label>Edad</label>
-                    <input type="number" id="edad" min="0" placeholder="Ej: 20" required>
+                    <input type="number" id="edad" placeholder="Ej: 20" required>
                 </div>
                 <div class="form-group">
                     <label>Nacimiento</label>
@@ -79,9 +346,9 @@ let template_New_Registration= `<div class="container-new-registre">
                     <div class="main-circle-register-studient">
                         <img id="imagen-avatar" class="avatar-main-register" src="file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/ImageLogin3.png" alt="Avatar">
                     </div>
-                    <button class="camera-button-register-studient" id="Btn_select_image_student">
-                       <span class="icon-camera"></span>
-                    </button> 
+                    <div class="camera-button-register-studient">
+                        <span class="icon-camera"></span>
+                    </div>
                 </div>
             </div>
 
@@ -107,6 +374,7 @@ let template_New_Registration= `<div class="container-new-registre">
             </div>
         </div>
     </form>
+
     <div class="action-footer">
         <button type="button" class="btn-clear" id="btn-clear">Limpiar</button>
         <button type="submit" class="btn-confirm" id="btn-confirm" disabled>
@@ -114,45 +382,15 @@ let template_New_Registration= `<div class="container-new-registre">
         </button>
     </div>
 </div>
-<!---------------------------------------------------->
-<div class="top-notification" id="topNotif">
-        <span class="contain-icono-message">
-            <span class="icon-checkmark icono-message">
-            </span>
-        </span>
-        <h3>¡Inscripción guardada!</h3>
-</div>`;
-function New_Registration(id){
 
-    document.getElementById(id).innerHTML=template_New_Registration;
-
-/*---------------------------------------*/
-  const ageToggle = document.getElementById('ageToggle');
+<script type="text/javascript">
+   const ageToggle = document.getElementById('ageToggle');
     const btnConfirm = document.getElementById('btn-confirm');
     const btnClear = document.getElementById('btn-clear');
     const textToggle = document.getElementById('text-toggle');
     const repFields = document.querySelectorAll('.rep-field');
     const allInputs = document.querySelectorAll('#registrationForm input, #registrationForm select');
     const registrationForm = document.getElementById('registrationForm');
-
-
-/*-----------------------------------------*/
-document.getElementById("Btn_select_image_student").addEventListener("click",(event)=>{
-
-    api.send("select-Image-new-student")
-
-})
-
-api.receive('Image-select-new-student', async (event,imagen) => {
-
-    document.getElementById("imagen-avatar").src=imagen
-})
-
-
-/*------------------------------------------*/
-
-
-
 
     function validateForm() {
         let isFormValid = true;
@@ -189,6 +427,16 @@ api.receive('Image-select-new-student', async (event,imagen) => {
     // --- FUNCIÓN LIMPIAR ---
     btnClear.addEventListener('click', () => {
 
+        /*------------------------------------------------*/
+  let fecha = new Date();
+  let formatofecha = fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear();
+  /*--------------------------*/
+  const ahora = new Date();
+  const horaActual = ahora.getHours().toString().padStart(2, '0') + ':' +
+                     ahora.getMinutes().toString().padStart(2, '0') + ':' +
+                     ahora.getSeconds().toString().padStart(2, '0');
+
+        /*------------------------------------------------*/
         // Resetea el formulario completo
         registrationForm.reset();
         
@@ -206,16 +454,6 @@ api.receive('Image-select-new-student', async (event,imagen) => {
     });
 
     btnConfirm.addEventListener('click', () => {
-
-        /*------------------------------------------------*/
-          let fecha = new Date();
-          let formatofecha = fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear();
-          /*--------------------------*/
-          const ahora = new Date();
-          const horaActual = ahora.getHours().toString().padStart(2, '0') + ':' +
-                             ahora.getMinutes().toString().padStart(2, '0') + ':' +
-                             ahora.getSeconds().toString().padStart(2, '0');
-        /*------------------------------------------------*/
         const formData = {
             estudiante: {
                 esMenor: ageToggle.checked,
@@ -249,28 +487,11 @@ api.receive('Image-select-new-student', async (event,imagen) => {
 
         console.log("Datos capturados:", formData);
         alert("Inscripción de " + formData.estudiante.nombre + " capturada.");
-        mostrarNotificacion()
     });
 
     validateForm();
 
-/*-----------------------------------------*/
-}
-  /*-----CONTROL DE VENTANA DE Notificacion-------*/
-        function mostrarNotificacion() {
-             const overlay = document.getElementById('modal-message-register');
-        const btnClose = document.getElementById('closeModal');
-        
-        const notif = document.getElementById('topNotif');
-            notif.classList.add('show');
-            
-        setTimeout(() => {
-             cerrarNotificacion();
-            }, 4000);
-        }
+</script>
 
-        function cerrarNotificacion() {
-             const notif = document.getElementById('topNotif');
-            notif.classList.remove('show');
-        }
-        /*--------------------------------------*/
+</body>
+</html>

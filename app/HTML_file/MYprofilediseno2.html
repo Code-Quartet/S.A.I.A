@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">  
+    <style type="text/css">
+        :root {
+            --primary: #2b56c5;
+            --primary-light: #eef2ff;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border: #e5e7eb;
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: #f9fafb;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 40px;
+        }
+
+        /* Contenedor Principal */
+        .container-user-info {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header-text {
+            margin-bottom: 30px;
+        }
+
+        .header-text h1 {
+            color: var(--text-dark);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        /* Tarjeta de Perfil */
+        .profile-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            overflow: hidden;
+            min-height: 450px;
+        }
+
+        /* Sección Izquierda: Avatar */
+        .sidebar-avatar {
+            background-color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid var(--border);
+            padding: 40px;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin-bottom: 20px;
+        }
+
+        .avatar-main {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        /* Sección Derecha: Datos */
+        .container-data {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-gray);
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .info-value, .view-input {
+            font-size: 16px;
+            color: var(--text-dark);
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            outline: none;
+        }
+
+        .view-input { width: 100%; }
+
+        /* Botones y Acciones */
+        .row-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-edit {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-edit:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .icon-toggle {
+            font-size: 18px;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .icon-toggle:hover {
+            background: var(--primary-light);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-user-info">
+    <header class="header-text">
+        <h1>Buen día, Yris</h1>
+        <p>Centro de Capacitación 3e - Escuela de Manejo</p>
+    </header>
+
+    <div class="profile-card">
+        <div class="sidebar-avatar">
+            <div class="avatar-wrapper">
+                <img class="avatar-main" src="../assets/imagen/ImageLogin3.png" alt="Perfil">
+            </div>
+            <button class="btn-edit" style="background: var(--primary); color: white;">Cambiar Foto</button>
+        </div>
+
+        <div class="container-data">
+            <div class="info-row">
+                <div>
+                    <label class="info-label">Nombre de Usuario</label>
+                    <div class="info-value" id="txt-nombre">Yris</div>
+                </div>
+                <button class="btn-edit" onclick="pedirVerificacion('nombre')">Editar</button>
+            </div>
+
+            <div class="info-row">
+                <div>
+                    <label class="info-label">Correo Electrónico</label>
+                    <div class="info-value" id="txt-correo">yrisadmin@correo.com</div>
+                </div>
+                <button class="btn-edit" onclick="pedirVerificacion('correo')">Editar</button>
+            </div>
+
+            <div class="info-row">
+                <div style="flex: 1;">
+                    <label class="info-label">Contraseña</label>
+                    <input type="password" class="view-input" id="pass-usuario" value="contraseñasecreta" readonly>
+                </div>
+                <div class="row-right">
+                    <span class="icon-eye icon-toggle" onclick="toggleVisibility('pass-usuario', this)"></span>
+                    <button class="btn-edit" onclick="pedirVerificacion('password')">Editar</button>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div style="flex: 1;">
+                    <label class="info-label">Clave Maestra</label>
+                    <input type="password" class="view-input" id="clave-maestra" value="123456" readonly>
+                </div>
+                <div class="row-right">
+                    <span class="icon-eye icon-toggle" onclick="toggleVisibility('clave-maestra', this)"></span>
+                    <button class="btn-edit" onclick="pedirVerificacion('clave_maestra')">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleVisibility(idInput, icono) {
+        const input = document.getElementById(idInput);
+        if (input.type === "password") {
+            input.type = "text";
+            icono.className = "icon-eye-blocked icon-toggle"; 
+        } else {
+            input.type = "password";
+            icono.className = "icon-eye icon-toggle";
+        }
+    }
+</script>
+
+</body>
+</html>

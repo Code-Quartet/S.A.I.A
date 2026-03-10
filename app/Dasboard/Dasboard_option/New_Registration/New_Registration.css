@@ -1,303 +1,245 @@
+
 :root {
-    --primary-blue: #2b56c5;
-    --text-main: #374151;
-    --text-muted: #9ca3af;
-    --border-color: #d1d5db;
-    --bg-light: #ffffff;
+--primary-blue: #2b56c5;
+--text-main: #374151;
+--text-muted: #9ca3af;
+--border-color: #d1d5db;
+--bg-light: #ffffff;
+--bg-disabled: #f3f4f6;
+--danger-red: #ef4444;
 }
 
-.registration-form {
-    width: 97%;
+
+/*--------ESTRUCTURA-----------------*/
+.container-new-registre {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr 70px;
+    height: 100vh;
+}
+.container-title-register {
+    display: flex;
+    align-items: center;
+}
+
+.container-registration-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 3px;
     margin-left: 20px;
 }
 
-.container-new-registre {
-    margin: 0 auto;
-    background: white;
-    height: 100vh;
-
-}
-.main-title-new-registre {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-    color: #1f2937;
-}
-/* Sistema de Grid para dos columnas */
-.grid-container-new-registre {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 80% 10%;
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
+.columns {
+   /* padding: 10px;*/
 }
 
-.column1 {
-    grid-area: 1 / 1 / 2 / 2;
-    height: fit-content;
-}
-
-.column2 {
-    grid-area: 1 / 2 / 2 / 3;
-    height: fit-content;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 0.2fr 144px 219px 39px;
-  
-}
-
-.action-footer{ grid-area: 2 / 1 / 3 / 3; }
-
-.ContainerUploadImagen{
-    border-style: none;
-}
-.form-group {
-    margin-bottom: 0.5rem;
-}
-
-.form-group>label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-    font-size: 0.95rem;
-}
-
-.form-group>input {
-    width: 89%;
-    padding: 9px 15px;
-    border: 1.5px solid var(--border-color);
-    border-radius: 12px;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border 0.2s;
-    background-color: var(--bg-light);
-}
-
-.select-input-new-registre {
-    width: 98%;
-    padding: 8px 8px;
-    border: 1.5px solid var(--border-color);
-    border-radius: 12px;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border 0.2s;
-    background-color: var(--bg-light);
-}
-
-.form-group>input::placeholder {
-    color: var(--text-muted);
-}
-
-.form-group>input:focus {
-    border-color: var(--primary-blue);
-}
-
-/* Estilo para el Selector */
-.select-wrapper {
-    position: relative;
-}
-
-.select-input-Registration{
-    appearance: none; /* Quita la flecha por defecto */
-    cursor: pointer;
-    color: var(--text-muted);
-}
-
-.custom-arrow {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: var(--text-muted);
-}
-
-/* Contenedor de Carga de Archivo */
-.file-upload-container-new-registre {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-}
-
-.file-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.preview-box {
-    width: 45px;
-    height: 45px;
-    background-color: #e5e7eb;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9ca3af;
-    font-size: 1.2rem;
-}
-
-.file-placeholder {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-}
-
-.btn-upload {
-    background-color: var(--primary-blue);
-    color: white;
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-/* Botón de Confirmación Flotante a la Derecha */
 .action-footer {
     display: flex;
     justify-content: flex-end;
-    /* margin-top: 3rem; */
+    align-items: center;
+    margin-right: 13px;
 }
 
-.btn-confirm {
-    background-color: var(--primary-blue);
-    color: white;
-    border: none;
-    padding: 7px 37px;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 600;
+        /*--------------------STYLE TOGGLE SWITCH---------------*/
+        .container-toogle-swicht {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .label-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #d8d8d8;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .knob {
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            top: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input:checked + .slider {
+            background-color: #60b8ff;
+        }
+
+        input:checked + .slider .knob {
+            transform: translateX(40px);
+        }
+
+        /*----------------INPUT STYLE-------------------------*/
+.form-group {
+    margin-bottom: 12px;
+}
+        .form-group > label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+.form-group > input, .select-input-new-registre {
+    width: 83%;
+    padding: 10px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s;
+}
+        .form-group > input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 5px rgba(43, 86, 197, 0.2);
+        }
+
+        /* Estado Deshabilitado */
+        input:disabled, select:disabled {
+            background-color: var(--bg-disabled);
+            cursor: not-allowed;
+            color: var(--text-muted);
+        }
+
+        /* Estilos de Subgrupos */
+        .sub-group-data-personal, .container-tlf-email, .sub-container-representante-tlf-email {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sub-group-data-personal > div, .container-tlf-email > div, .sub-container-representante-tlf-email > div {
+            flex: 1;
+        }
+
+        /*-----------------IMAGE UPLOAD------------------------------*/
+        .file-upload-container-new-registre {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+.image-uploader-register-studient {
+    position: relative;
+    width: 171px;
+    height: 169px;
     cursor: pointer;
+    background: #d8d8d8;
+    border-radius: 97px;
+    padding: 7px;
     display: flex;
     align-items: center;
-    gap: 12px;
 }
 
-
-.btn-confirm:hover {
-    filter: brightness(1.1);
-}
-
-/* Responsivo para móviles */
-@media (max-width: 768px) {
-    .grid-container-new-registre {
-        grid-template-columns: 1fr;
-    }
-    
-    .action-footer {
-        justify-content: center;
-    }
-    
-    .btn-confirm {
-        width: 100%;
-    }
-}
-
-/*---------toggle-switch----------------*/
-.label-title {
-  font-weight: bold;
-  color: #333;
-}
-
-/* Contenedor principal del switch */
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 80px;
-  height: 34px;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* El fondo del slider (estilo combinado) */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #d8d8d8; /* Gris base */
-  transition: .4s;
-  border-radius: 34px;
-  
-}
-
-/* El círculo que se mueve (knob) */
-.knob {
-    position: absolute;
-    height: 22px;
-    width: 22px;
-    left: 2px;
-    top: 2px;
-    padding: 4px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-    z-index: 2;
-}
-/* --- Posicionamiento de los textos SOBRE el selector --- */
-.label-text {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  z-index: 3; /* Asegura que esté por encima de todo */
-  pointer-events: none; /* Hace que el clic pase a través del texto */
-  transition: .4s;
-}
-
-.option-no {
-  right: 15px;
-  color: #333;
-}
-
-.option-yes {
-  left: 15px;
-  color: #333;
-  opacity: 0; /* Oculto por defecto */
-}
-
-/* --- Estados activos --- */
-
-/* Cuando está marcado (Sí) */
-input:checked + .slider {
-    background-color: #60b8ff;
-}
-
-input:checked + .slider .knob {
-  transform: translateX(46px);
-}
-
-/* Ajuste de color y visibilidad de los textos al activar */
-input:checked ~ .option-yes {
-  opacity: 1;
-  color: white; /* Texto blanco sobre fondo verde */
-}
-
-input:checked ~ .option-no {
-  opacity: 0;
-}
-
-/*----------------------------------*/
+        .main-circle-register-studient {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
 
 .avatar-main-register {
     width: 100%;
     height: 100%;
-    display: block;
+    object-fit: cover;
     background: blue;
 }
 
-    /*--------------------------------------------------*/
+.camera-button-register-studient {
+    position: absolute;
+    bottom: 4px;
+    right: 12px;
+    width: 35px;
+    height: 35px;
+    background-color: #d7d7d7;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid white;
+}
 
+        /*-----------------BUTTON CONFIRM--------------------*/
+        .btn-confirm {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-confirm:hover:not(:disabled) {
+            filter: brightness(1.2);
+        }
+
+        .btn-confirm:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+                /* Estilo Botón Limpiar */
+.btn-clear {
+    background-color: transparent;
+    color: var(--text-main);
+    border: 1.5px solid var(--border-color);
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-right: 10px;
+}
+        .btn-clear:hover {
+            background-color: #fceaea;
+            border-color: var(--danger-red);
+            color: var(--danger-red);
+        }
+
+        /*-modal aeptado-*/
+/*--------------VENTANA  DE NOTIFICACION---------------------*/
 .top-notification {
     position: fixed;
     top: 5px;
@@ -314,10 +256,9 @@ input:checked ~ .option-no {
     display: flex;
     align-items: center;
     gap: 0px;
-    width: 245px;
+    width: 257px;
     justify-content: space-between;
 }
-
     /* Clase para mostrar la notificación */
     .top-notification.show {
         right: 20px; /* Aparece 20px despegado del borde derecho */
@@ -338,3 +279,4 @@ input:checked ~ .option-no {
     color: white;
 
 }
+/*--------------VENTANA  DE NOTIFICACION---------------------*/

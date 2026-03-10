@@ -1,0 +1,130 @@
+:root {
+    --primary-blue: #2563eb;
+    --bg-light: #f8fafc;
+    --text-dark: #334155;
+    --border-color: #e2e8f0;
+    --status-active-bg: #dbeafe;
+    --status-active-text: #1e40af;
+    --status-inactive-bg: #fef3c7;
+    --status-inactive-text: #92400e;
+    --status-fired-bg: #fee2e2;
+    --status-fired-text: #991b1b;
+}
+
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 1.5rem;
+}
+
+/* Flexbox para controles */
+.controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.search-box {
+    position: relative;
+    flex-grow: 1;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+}
+
+.search-box span {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+/* Estilos de Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    background-color: #f1f5f9;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #64748b;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+/* Badges de Estado */
+.status {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.active { background: var(--status-active-bg); color: var(--status-active-text); }
+.inactive { background: var(--status-inactive-bg); color: var(--status-inactive-text); }
+.fired { background: var(--status-fired-bg); color: var(--status-fired-text); }
+
+/* Footer y Paginación */
+.main-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-btn, .page-arrow {
+    background: none;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.page-btn.active {
+    background: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+}
+
+.btn-primary {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-icon.edit { color: var(--primary-blue); border:none; background:none; cursor:pointer;}
+.btn-icon.delete { color: #ef4444; border:none; background:none; cursor:pointer;}

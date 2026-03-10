@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Curso - SAIA v2</title>
+    <style>
+        :root {
+            --primary-blue: #2c5282;
+            --secondary-blue: #3182ce;
+            --bg-light: #f7fafc;
+            --border-color: #e2e8f0;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-light);  
+    min-height: 100vh;
+    color: var(--text-main);
+}
+
+        /* Contenedor Principal */
+.card {
+    background: var(--white);
+    width: 100%;
+    padding: 5px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+    height: 100vh;
+}
+
+ h2 {
+    text-align: center;
+    font-weight: 600;
+    /* margin-bottom: 2rem; */
+    color: var(--text-main);
+    font-size: 1.5rem;
+}
+
+        /* Grid del Formulario */
+        .course-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.2rem;
+        }
+
+        .col-span-2 {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            background-color: var(--white);
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-blue);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        /* Grupo de Checkboxes con Flexbox */
+        .checkbox-group {
+            grid-column: span 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.75rem;
+            padding-top: 1rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Botones con Flexbox */
+        .form-actions {
+            grid-column: span 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.8rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            border: none;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-cancel {
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border: 1.5px solid var(--primary-blue);
+        }
+
+        .btn-save {
+            background-color: var(--secondary-blue);
+            color: var(--white);
+        }
+
+        .btn-save:hover {
+            background-color: var(--primary-blue);
+        }
+
+        /* Iconos simulados (puedes usar Icomoon aquí) */
+        .icon {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .course-form {
+                grid-template-columns: 1fr;
+            }
+            .col-span-2, .checkbox-group {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Nuevo Curso</h2>
+    
+    <form id="formNuevoCurso" class="course-form">
+        <div class="form-group col-span-2">
+            <label for="nombre">Nombre del Curso</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej: Maquillaje" required>
+        </div>
+
+        <div class="form-group col-span-2">
+            <label for="descripcion">Descripción</label>
+            <input type="text" id="descripcion" name="descripcion" placeholder="Ej: Curso básico de maquillaje">
+        </div>
+
+        <div class="form-group col-span-2">
+            <label for="instructor">Instructor</label>
+            <select id="instructor" name="instructor" required>
+                <option value="" disabled selected>Seleccione un instructor</option>
+                <option value="juan_perez">Juan Pérez</option>
+                <option value="maria_garcia">María García</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="horario">Horario</label>
+            <input type="text" id="horario" name="horario" placeholder="Ej: Lun-Vie 8:30 am-9:00 am">
+        </div>
+
+        <div class="form-group">
+            <label for="duracion">Duración</label>
+            <input type="text" id="duracion" name="duracion" placeholder="Ej: 2 Semanas">
+        </div>
+
+        <div class="form-group">
+            <label for="cupo">Cupo Máximo</label>
+            <input type="number" id="cupo" name="cupo" placeholder="Ej: 20">
+        </div>
+
+        <div class="form-group">
+            <label for="costo">Costo</label>
+            <input type="text" id="costo" name="costo" placeholder="Ej: 30$">
+        </div>
+
+        <div class="checkbox-group">
+            <label class="check-item">
+                <input type="checkbox" name="evaluacion_final"> Evaluación final
+            </label>
+            <label class="check-item">
+                <input type="checkbox" name="entrega_certificado"> Entrega certificado
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-cancel" onclick="resetForm()">
+                Cancelar <span class="icon">&times;</span>
+            </button>
+            <button type="submit" class="btn btn-save">
+                Guardar <span class="icon">&#10003;</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('formNuevoCurso');
+
+    // Función para procesar el formulario
+    form.addEventListener('submit', function(e) {
+        // Evita que la página se refresque
+        //e.preventDefault();
+
+        // Creamos un objeto FormData para extraer los valores fácilmente
+        const formData = new FormData(form);
+        
+        // Convertimos los datos a un objeto plano de JS
+        const cursoData = {
+            nombre: formData.get('nombre'),
+            descripcion: formData.get('descripcion'),
+            instructor: formData.get('instructor'),
+            horario: formData.get('horario'),
+            duracion: formData.get('duracion'),
+            cupo: formData.get('cupo'),
+            costo: formData.get('costo'),
+            // Los checkboxes devuelven 'on' si están marcados o null si no
+            evaluacion_final: formData.get('evaluacion_final') === 'on',
+            entrega_certificado: formData.get('entrega_certificado') === 'on',
+            fecha_registro: new Date().toISOString()
+        };
+
+        // Validación adicional (ejemplo)
+        if (cursoData.nombre.trim() === "") {
+            alert("El nombre del curso es obligatorio.");
+            return;
+        }
+
+        // Aquí es donde integrarías la lógica para guardar en MiniStock.db o enviarlo a un backend
+        console.log("Datos capturados con éxito:", cursoData);
+        
+        //alert("¡Datos del curso listos para ser procesados! Revisa la consola.");
+        
+        // Limpiar después de guardar si es necesario
+        form.reset();
+    });
+
+    // Función para el botón cancelar
+function resetForm() {
+    if (confirm("¿Estás seguro de que deseas limpiar los campos?")) {
+        form.reset();
+        // Forzamos el foco al primer input para asegurar que sea editable
+        document.getElementById('nombre').focus();
+    }
+}
+
+    /*
+    {
+    "nombre": "Computacion",
+    "descripcion": "Todo sobre pc",
+    "instructor": "maria_garcia",
+    "horario": "sdñsdf",
+    "duracion": "545",
+    "cupo": "4",
+    "costo": "500$",
+    "evaluacion_final": false,
+    "entrega_certificado": true,
+    "fecha_registro": "2026-03-06T23:49:35.911Z"
+}*/
+</script>
+
+</body>
+</html>

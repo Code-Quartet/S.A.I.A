@@ -4,20 +4,22 @@ function Dasboard(app){
 
 let template_dasboard = `<div class="dashboard-container">
 	<aside class="dashboard-sidebar">
-		<nav class="dashboard-menu">
-			<a class="menu-item ItemMenuActive"><span class="icon-user"></span> Mi Perfil </a>
-			<a class="menu-item"><span class="icon-user-plus"></span> Nueva Inscripción</a> 
-			<a class="menu-item"><span class="icon-list"></span> Ver todos los Inscritos</a>
-			<a class="menu-item"><span class="icon-search"></span> Buscar por Cédula</a>
-			<a class="menu-item"><span class="icon-book"></span> Gestionar Cursos</a>
-			<a class="menu-item"><span class="icon-instructor"></span> Gestionar Instructores</a>
-			<a class="menu-item"><span class="icon-users"></span> Gestionar Empleados</a>
-			<a class="menu-item"><span class="icon-bin"></span> Papelera</a>
-		</nav>
-		<div class="menu-footer">
-			<a class="menu-item logout"><span class="icon-exit"></span> Cerrar Sesión</a>
-			<p class="version-text">SAIA v2 - Prototipo</p>
-		</div>			
+		<section class="sub-fondo-sidebar">
+			<nav class="dashboard-menu">
+				<a class="menu-item ItemMenuActive"><span class="icon-user"></span> Mi Perfil </a>
+				<a class="menu-item"><span class="icon-user-plus"></span> Nueva Inscripción</a> 
+				<a class="menu-item"><span class="icon-list"></span> Ver todos los Inscritos</a>
+				<a class="menu-item"><span class="icon-search"></span> Buscar por Cédula</a>
+				<a class="menu-item"><span class="icon-book"></span> Gestionar Cursos</a>
+				<a class="menu-item"><span class="icon-instructor"></span> Gestionar Instructores</a>
+				<a class="menu-item"><span class="icon-users"></span> Gestionar Empleados</a>
+				<a class="menu-item"><span class="icon-bin"></span> Papelera</a>
+			</nav>
+			<div class="menu-footer">
+				<a class="menu-item logout"><span class="icon-exit"></span> Cerrar Sesión</a>
+				<p class="version-text">SAIA v2 - Prototipo</p>
+			</div>
+		</section>		
 	</aside>
 	<section class="container-admin-info" id="container-admin-info">
 		</section>
@@ -62,6 +64,18 @@ switch (index) {
 		break;
 	case 2:
 		View_all_Registered_Users(container)
+	break;
+	case 4:
+		Manage_course(container)
+	break
+	case 5:
+		Manage_Instructor(container)
+	break;	
+	case 6:
+		Manage_Employee(container)
+	break;		
+	case 7:
+		Trash(container)
 	break;	
 	case 8:
 		StatusRender("login")

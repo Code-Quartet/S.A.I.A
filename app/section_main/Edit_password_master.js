@@ -12,7 +12,7 @@ const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 const {InfoMessage,ErrorMessage} = require(path.join(__dirname,'./Message_system'));
 /*-------------SYSTEM MESSAGE----------------------------------------*/
 /*---------------------------------------------------------------*/
-const {UpdatePassword} = require(path.join(__dirname,'../DB_controls/User'))
+const {UpdatePasswordMaster} = require(path.join(__dirname,'../DB_controls/User'))
 /*---------------------------------------------------------------*/
 
 let window_Edit_password_master;
@@ -79,7 +79,7 @@ ipcMain.on("update-password-user-master",(event,data)=>{
 
     //{ success: false, message: 'Usuario no encontrado.' }
 
-    UpdatePassword(ID_user, data.afterPass, data.newPass).then((result)=>{
+   UpdatePasswordMaster(ID_user, data.afterPass, data.newPass).then((result)=>{
 
             //console.log(result)
             if(result.success==true){

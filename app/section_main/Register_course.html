@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Curso - SAIA v2 Pro</title>
+    <style>
+        :root {
+            --primary-blue: #2c5282;
+            --secondary-blue: #3182ce;
+            --bg-light: #f7fafc;
+            --border-color: #e2e8f0;
+            --text-main: #2d3748;
+            --white: #ffffff;
+            --error-red: #e53e3e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--bg-light);
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* padding: 20px; */
+}
+        .card {
+            background: var(--white);
+            width: 100%;
+            max-width: 550px;
+
+        }
+
+h2 {
+    text-align: center;
+    color: var(--text-main);
+    font-size: 1.9rem;
+}
+.course-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+    padding: 6px;
+} 
+
+   .col-span-2 { grid-column: span 2; }
+
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        label { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
+
+        input, select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        /* Estilos de error */
+        input.invalid, select.invalid { border-color: var(--error-red); background-color: #fff5f5; }
+        .error-msg { color: var(--error-red); font-size: 0.75rem; margin-top: -0.5rem; display: none; }
+
+        /* Días de la semana */
+        .days-container { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 5px; }
+        .day-pill { flex: 1; text-align: center; min-width: 45px; }
+        .day-pill input { display: none; }
+        .day-pill span {
+            display: block; padding: 10px 0; background: #edf2f7;
+            border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+        }
+        .day-pill input:checked + span { background: var(--secondary-blue); color: white; }
+
+        .input-split { display: flex; align-items: center; gap: 0.5rem; }
+        .input-split input, .input-split select { flex: 1; width: 50%; }
+
+        .form-actions { grid-column: span 2; display: flex; justify-content: space-between; margin-top: 1.5rem; }
+
+        .btn {
+            padding: 0.8rem 1.8rem; border-radius: 10px; font-weight: 600;
+            cursor: pointer; border: none; display: flex; align-items: center; gap: 10px; font-size: 0.95rem;
+        }
+
+        .btn-cancel { background: transparent; border: 1.5px solid var(--primary-blue); color: var(--primary-blue); }
+        .btn-save { background: var(--secondary-blue); color: white; transition: opacity 0.3s; }
+        
+        /* Botón desactivado visualmente */
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.5); }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Nuevo Curso</h2>
+    <form id="courseForm" class="course-form" novalidate>
+        
+        <div class="form-group col-span-2">
+            <label>Nombre del Curso *</label>
+            <input type="text" name="nombre" placeholder="Ej: Maquillaje" required>
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Descripción</label>
+            <input type="text" name="descripcion" placeholder="Ej: Curso básico profesional">
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Instructor *</label>
+            <select name="instructor" required>
+                <option value="">Seleccione un instructor</option>
+                <option value="1">Instructor 01</option>
+            </select>
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Días de Clase * (Seleccione al menos uno)</label>
+            <div class="days-container" id="daysBox">
+                <label class="day-pill"><input type="checkbox" name="dias" value="Lun"><span>Lun</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Mar"><span>Mar</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Mie"><span>Mié</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Jue"><span>Jue</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Vie"><span>Vie</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Sab"><span>Sáb</span></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Horario *</label>
+            <div class="input-split">
+                <input type="time" name="hora_inicio" required>
+                <input type="time" name="hora_fin" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Duración *</label>
+            <div class="input-split">
+                <input type="number" name="duracion_valor" placeholder="Cant." min ="0"required>
+                <select name="duracion_unidad">
+                    <option value="Semanas">Semanas</option>
+                    <option value="Meses">Meses</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-cancel" id="btnCancel">Cancelar</button>
+            <button type="submit" class="btn btn-save" id="btnSave">Guardar ✓</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('courseForm');
+    const btnSave = document.getElementById('btnSave');
+    const requiredInputs = form.querySelectorAll('[required]');
+
+    // Función para validar si todo está lleno
+    function checkFormValidity() {
+        let isFormValid = true;
+
+        // 1. Validar inputs con atributo 'required'
+        requiredInputs.forEach(input => {
+            if (!input.value.trim()) {
+                isFormValid = false;
+            }
+        });
+
+        // 2. Validar que al menos un día esté seleccionado
+        const diasSeleccionados = form.querySelectorAll('input[name="dias"]:checked');
+        if (diasSeleccionados.length === 0) {
+            isFormValid = false;
+        }
+
+        // Habilitar o deshabilitar botón
+        btnSave.disabled = !isFormValid;
+    }
+
+    // Escuchar cambios en cada input para validar en tiempo real
+    form.addEventListener('input', checkFormValidity);
+
+    // Manejo del envío
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Validación final extra por seguridad
+        if (btnSave.disabled) return;
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        data.dias = Array.from(form.querySelectorAll('input[name="dias"]:checked')).map(el => el.value);
+
+        api.send("save-new-data-course", data);
+        //console.log("Formulario validado y listo:", data);
+        //alert("¡Éxito! El curso se ha guardado correctamente.");
+    });
+
+    // Resetear formulario
+    document.getElementById('btnCancel').addEventListener('click', () => {
+        if(confirm("¿Limpiar formulario?")) {
+            form.reset();
+            checkFormValidity(); // Re-validar para desactivar el botón
+            form.querySelector('input[name="nombre"]').focus();
+        }
+    });
+
+    // Ejecutar validación inicial al cargar la página
+    checkFormValidity();
+</script>
+
+</body>
+</html>

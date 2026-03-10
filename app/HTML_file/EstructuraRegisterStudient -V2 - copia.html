@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Inscripción</title>
+<!--<link rel="stylesheet" href="https://cdn.icomoon.io/your-cdn-link/icomoon.css">
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/icomoon/1.0.0/style.css">
+
+    <style type="text/css">
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+    :root {
+    --primary-blue: #2b56c5;
+    --text-main: #374151;
+    --text-muted: #9ca3af;
+    --border-color: #d1d5db;
+    --bg-light: #ffffff;
+}
+/*--------ESTRUCTURA-----------------*/
+.container-new-registre {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 8% 83% 9%;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: 100vh;
+}
+
+.container-registration-form{
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+
+/*--------ESTRUCTURA-----------------*/
+
+.container-new-registre {
+
+   /* background:orange;*/
+
+}
+.container-title-register {
+   /* background: red;*/
+    display: flex;
+    align-items: center;
+}
+
+.container-registration-form{
+    /*background: blue;*/
+}
+.columns{
+padding: 7px;
+}
+.column1{
+    /*background: yellow;*/
+}
+.column2{
+    /*background: pink;*/
+}
+.action-footer {
+    display: flex;
+    flex-direction: row;
+    /*background: green;*/
+    justify-content: flex-end;
+}
+/*--------------------STYLE BUTON TOGLE---------------*/
+.container-toogle-swicht {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.label-title {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Contenedor principal del switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 34px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* El fondo del slider (estilo combinado) */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d8d8d8; /* Gris base */
+  transition: .4s;
+  border-radius: 34px;
+  
+}
+
+/* El círculo que se mueve (knob) */
+.knob {
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    left: 2px;
+    top: 2px;
+    padding: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    z-index: 2;
+}
+/* --- Posicionamiento de los textos SOBRE el selector --- */
+.label-text {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  z-index: 3; /* Asegura que esté por encima de todo */
+  pointer-events: none; /* Hace que el clic pase a través del texto */
+  transition: .4s;
+}
+
+.option-no {
+  right: 15px;
+  color: #333;
+}
+
+.option-yes {
+  left: 15px;
+  color: #333;
+  opacity: 0; /* Oculto por defecto */
+}
+
+/* --- Estados activos --- */
+
+/* Cuando está marcado (Sí) */
+input:checked + .slider {
+    background-color: #60b8ff;
+}
+
+input:checked + .slider .knob {
+  transform: translateX(46px);
+}
+
+/* Ajuste de color y visibilidad de los textos al activar */
+input:checked ~ .option-yes {
+  opacity: 1;
+  color: white; /* Texto blanco sobre fondo verde */
+}
+
+input:checked ~ .option-no {
+  opacity: 0;
+}
+
+/*--------------------STYLE BUTON TOGLE---------------*/
+/*----------------INPUT STYLE-------------------------*/
+.ContainerUploadImagen{
+    border-style: none;
+}
+
+
+.form-group {
+    margin-bottom: 0.2rem;
+}
+
+.form-group>label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+}
+
+.form-group>input {
+    width: 89%;
+    padding: 9px 15px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+.select-input-new-registre {
+    width: 99%;
+    padding: 8px 8px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+.form-group>input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-group>input:focus {
+    border-color: var(--primary-blue);
+}
+
+/*---------STYLE INPUT---------------------------------------*/
+/*-----------------sTYLE IMAGEN UPLOAD------------------------------*/
+/* Contenedor de Carga de Archivo */
+.file-upload-container-new-registre {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+.image-uploader-register-studient {
+    position: relative;
+    width: 135px;
+    height: 126px;
+    cursor: pointer;
+}
+
+/* Círculo con borde negro grueso */
+.main-circle-register-studient {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #d8d8d8;
+    overflow: hidden;
+
+}
+
+/* Botón de cámara superpuesto */
+.camera-button-register-studient {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    background-color: #d8d8d8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 2;
+    border-style: none;
+}
+
+.btn-select-imagen {
+    background: #ff00000f;
+    border-style: none;
+}
+
+.icon-camera {
+  font-size: 18px;
+  color: #333;
+}
+
+.avatar-main-register {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: blue;
+}
+/*-----------------sTYLE IMAGEN UPLOAD------------------------------*/
+/*-----------------BUTTON CONFIRM--------------------*/
+.btn-confirm {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 7px 37px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.btn-confirm:hover {
+    filter: brightness(1.1);
+}
+/*-----------------BUTTON CONFIRM--------------------*/
+/*--------------VENTANA  DE NOTIFICACION---------------------*/
+.top-notification {
+    position: fixed;
+    top: 5px;
+    right: -400px;
+    background-color: white;
+    color: #28a745;
+    padding: 6px 5px;
+    border-radius: 8px;
+    border: 2px solid #28a745;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: right 0.5s ease-in-out;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    width: 245px;
+    justify-content: space-between;
+}
+
+    /* Clase para mostrar la notificación */
+    .top-notification.show {
+        right: 20px; /* Aparece 20px despegado del borde derecho */
+    }
+
+    .contain-icono-message {
+    background: #4caf50;
+    border-radius: 12px;
+    padding: 17px 8px;
+    margin-right: 5px;
+}
+
+.icono-message {
+
+    padding: 10px;
+    background: #c7e6a2;
+    border-radius: 19px;
+    color: white;
+
+}
+/*--------------VENTANA  DE NOTIFICACION---------------------*/
+
+/*-SUB GRUD DATA PERSONAL-*/
+.sub-group-data-personal{
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.sub-form-group-personal-register-studient{
+
+
+
+}
+.sub-form-group-personal-register-studient>input {
+    width: 78%;
+}
+
+.container-tlf-email{
+        display:flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.sub-container-tlf-email>input {
+    width: 90%;
+}
+/*-SUB GRUD DATA PERSONAL-*/
+
+.sub-container-representante-tlf-email{ 
+
+ display:flex;
+    align-items: center;
+    justify-content: space-around;
+
+}
+.sub-container-representante-tlf-email>input{
+    width: 50%;
+}
+
+    </style>
+</head>
+<body>
+<div class="container-new-registre">
+    <div class="container-title-register">
+         <h1 class="titleRegister">Nueva Inscripción</h1>
+    </div>
+    <div class="container-registration-form">
+        <div class="columns column1">
+            <div class="form-group">
+                <div class="container-toogle-swicht">
+                    <label class="label-title">¿Es menor de edad?</label>
+                    <label class="toggle-switch">
+                            <input type="checkbox" id="ageToggle">
+                            <div class="slider">
+                              <div class="knob"><span id="text-toggle">No</span></div>
+                            </div>
+                            <span class="label-text option-yes"></span>
+                            <span class="label-text option-no"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Nombre Completo</label>
+                <input type="text" id="nombre" placeholder="Ej: Rosa María Pérez Gonzales">
+            </div>
+            <!--------->
+        <div class="sub-group-data-personal">
+                <div class="form-group sub-form-group-personal-register-studient">
+                    <label>Cédula</label>
+                    <input type="text" id="cedula" placeholder="Ej: 21783921">
+                </div>
+                <div class="form-group sub-form-group-personal-register-studient">
+                    <label>Edad</label>
+                    <input type="text" id="edad" placeholder="Ej: 20">
+                </div>
+                <div class="form-group sub-form-group-personal-register-studient">
+                    <label>Fecha de Nacimiento</label>
+                    <input type="date" id="fechanacimiento">
+                </div>
+        </div>
+            <!--------->
+            <div class="form-group">
+                <label>Dirección</label>
+                <input type="text" id="direccion" placeholder="Ej: Calle 24 entre Av. Miranda y Av. Libertador">
+            </div>
+            <!----------->
+            <div style="display:flex;justify-content: space-evenly;">
+                <div class="form-group">
+                        <label>Curso</label>
+                        <div class="select-wrapper">
+                            <select class="select-input-new-registre" id="tipoCurso">
+                                <option value="" disabled selected>Selecciona un Curso</option>
+                                <option value="1">Curso de Programación</option>
+                                <option value="2">Curso de Diseño</option>
+                            </select>
+                            <span class="icon-chevron-down custom-arrow"></span>
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label>Horario</label>
+                    <div class="select-wrapper">
+                            <select class="select-input-new-registre" id="tipoHorario">
+                                <option value="" disabled selected>Selecciona un Curso</option>
+                                <option value="1">Biurno</option>
+                                <option value="2">Despertino</option>
+                                <option value="2">nocturno</option>
+                            </select>
+                            <span class="icon-chevron-down custom-arrow"></span>
+                    </div>
+                </div> 
+            </div> 
+            <!----------->
+            <div class="form-group container-tlf-email">
+                <div class="form-group sub-container-tlf-email">
+                    <label>Correo Electrónico</label>
+                    <input type="email"  id="correo" placeholder="Ej: nombre@correo.com">
+                </div>
+                <!------------------------->
+                <div class="form-group sub-container-tlf-email">
+                        <label>Teléfono</label>
+                        <input type="tel" id="telefono" placeholder="Ej: 04163003485">
+                </div>
+            </div>
+        </div>
+        <div class="columns column2">
+                <div class="form-group ContainerUploadImagen">
+                    <div class="file-upload-container-new-registre">
+                        <label class="image-uploader-register-studient" for="fileInputregister">
+                                    <div class="main-circle-register-studient">
+                                        <img id="imagen-avatar" class="avatar-main-register" src="file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+                                    </div>
+
+                            <button class="camera-button-register-studient" id="Btn_select_image_student">
+                                <span class="icon-camera"></span>
+                            </button> 
+                        </label>
+                    </div>
+                </div>
+                        <div class="form-group"  >
+                            <label>Nombre completo del Representante</label>
+                            <input type="text" id="nombre_representante" placeholder="Ej: Roza Maria Pérez Gozales">
+                        </div>
+
+                        <div class="form-group" >
+                            <label>Cédula del Representante</label>
+                            <input type="text" id="cedula_representante" placeholder="Ej: 21783921">
+                        </div>
+                        <div class="sub-container-representante-tlf-email">
+                            <div class="form-group" >
+                                <label>Teléfono del Representante</label>
+                                <input type="tel" id="telefono_representante" placeholder="Ej: 04163003485">
+                            </div>                         
+                            <div class="form-group" >
+                              <label>Correo Electrónico del Representante<</label>
+                                 <input type="email"  id="correo" placeholder="Ej: nombre@correo.com">
+                            </div>  
+                        </div>                          
+        </div>
+    </div>
+    <div class="action-footer">
+        <button type="submit" class="btn-confirm" id="btn-confirm"> 
+            Confirmar <span class="icon-checkmark"></span> 
+        </button>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+        const ageToggle = document.getElementById('ageToggle');
+
+        ageToggle.addEventListener('change', function() {
+            //console.log(this.checked)
+          if(this.checked) {
+            console.log("Es mayor de edad: Sí");
+     
+            document.getElementById("text-toggle").innerHTML = 'Sí';
+          } else {
+           console.log("Es mayor de edad: No");
+           
+            document.getElementById("text-toggle").innerHTML = 'No';
+          }
+        });
+        /*----------control de button toggle-----------------------*/
+
+</script>
+</html>

@@ -6,81 +6,132 @@ RECIVE POR ARGUMENTO EL IDE DEL CONTENEDOR DEL DASBOARD
 function My_Profile(id){
 
 	document.getElementById(id).innerHTML=`<div class="container-user-info">
-            <header class="header-text">
-	            <div class="container-textheader">
-	                <label>Buen día,<h1 id="NameEmployee">Yris</h1><h3 id="IDEmployee"></h3></label>
-	                <p>Centro de Capacitación 3e - Escuela de Manejo</p>
-	            </div>
-            </header>
             <div class="container-form">
-	            <div class="form">
+	            <div class="form-my-profile">
 					<div class="profile-container">
-					  <label class="image-uploader" for="fileInput">
+					  <div class="image-uploader" for="fileInput">
 					    <div class="main-circle">
-					      <img id="avatarPreviewMyprofile" class="avatar-main" src="assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+					      <img id="avatarPreviewMyprofile" class="avatar-main" src="file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/business.png" alt="imagen-dasboard">
 					    </div>
 					    <button class="camera-button" id="btnCamaraMyProfile">
 					   	   <span class="icon-camera"></span> 
 					    </button>
-					  </label>
+					  </div>
+<div class="profile-title">
+	<div style="display:flex;width: 67%;align-items: center;flex-direction: column;"> 
+		<h1 id="NameEmployee" style="font-size: 50px; ">Luis duno</h1> 
+		<p id="IDEmployee">23860851420</p>
+	</div>
+	<div style="display:flex;flex-direction:row;align-items: center;">
+		<h2 id="LabelPermission">Permiso:</h2>				            
+		<h3 id="Permission" style="padding: 2px;border-radius: 8px;margin-left: 3px;">Administrador</h3>				            
+	</div>
+</div>
 					</div>
+					<div class="container-data-user">
 
-					<div class="container-data">
-						<div class="info-row">
-							<div>
-								<label class="info-label">Usuario</label>
-								<div class="info-value" id="txt-user">Yris</div>
-							</div>
-							<button class="btn-edit" id="EditarUsuario">Editar</button>
+						    <div class="info-row-credecial">
+						     <span class="section-label">Credenciales</span>
+						    </div>
+						     <div class="info-row">
+								<div>
+									<label class="info-label">Usuario</label>
+									<div class="info-value" id="txt-user">Yris</div>
+								</div>
+								<button class="btn-edit icon-pencil" id="EditarUsuario">Editar</button>
 							</div>
 							<div class="info-row">
 								<div>
 									<label class="info-label">Correo Electrónico</label>
 									<div class="info-value" id="txt-correo">yrisadmin@correo.com</div>
 								</div>
-								<button class="btn-edit" id="EditarCorreo">Editar</button>
+								<button class="btn-edit icon-pencil" id="EditarCorreo">Editar</button>
 							</div>
-							<div class="info-row">
-								<div>
-									<label class="info-label">Contraseña</label>
-									<input type="password" class="view-input" id="pass-usuario" value="contraseñasecreta" readonly>
-								</div>
-								<div class="row-right">
-									<span class="icon-eye" id="toggle-pass" onclick="toggleVisibility('pass-usuario', this)" style="cursor:pointer; color:#1a43a0"></span>
-									<button class="btn-edit" id="EditarContraseña">Editar</button>
-									</div>
-								</div>
-							</div>
-						</div>
+							<div class="footer-info-row">
+
+								<button class="btn-main-action" id="openModalBtn">
+							            <span class="icon-cog"></span> Configuración Avanzada
+							        </button>
+							</div> 
+					</div>
 				</div>
-			</div></div>`;
+			</div>
+		</div>
+		    <div class="modal-overlay" id="modalConfig">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><span class="icon-cog"></span> Ajustes Avanzados</h3>
+                <button class="close-btn" onclick="closeAdvanced()">×</button>
+            </div>
+
+            <div class="advanced-grid">
+                <div class="advanced-card" id="EditarContraseñaMaestra">
+                    <div class="card-icon" style="background: var(--brand-blue);"><span class="icon-key"></span></div>
+                    <div class="card-info">
+                        <h4>Clave Maestra</h4>
+                        <p>Cambiar acceso de nivel 2.</p>
+                    </div>
+                </div>
+
+                <div class="advanced-card" onclick="alert('Exportando a Excel...')">
+                    <div class="card-icon" style="background: var(--brand-excel);"><span class="icon-file-excel"></span></div>
+                    <div class="card-info">
+                        <h4>Exportar Todo</h4>
+                        <p>Generar reporte en Excel.</p>
+                    </div>
+                </div>
+
+                <div class="advanced-card" onclick="alert('Iniciando Backup de SAIA.db...')">
+                    <div class="card-icon" style="background: var(--brand-success);"><span class="icon-database"></span></div>
+                    <div class="card-info">
+                        <h4>Backup SQLite</h4>
+                        <p>Respaldar base de datos.</p>
+                    </div>
+                </div>
+
+    <div class="advanced-card" id="EditarContraseña">
+                    <div class="card-icon" style="background: var(--brand-blue);"><span class="icon-key"></span></div>
+                    <div class="card-info">
+                        <h4>Clave </h4>
+                        <p>Cambiar acceso de nivel 1.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
 /***********************DATOS DE BASE DE DATOS *****************************************/
 console.log(Data_user)
 
 /*
 console.log(Data_employee)
 {
-    "name": "luis",
-    "age": "20",
-    "codId": "23568923",
-    "direccion": "Xykua",
-    "telefono": "5454545",
-    "correo": "sdfsfsf",
-    "image": "file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/business.png",
-    "iduser": "7e6010fb-1dd4-4887-bc6d-e1e5b93a5046"
+    "key": "4d8b091e-e963-4ce7-92ed-307156d1d7e4",
+    "user": "admin",
+    "permission": "Administrador"
 }
 */
 document.getElementById("avatarPreviewMyprofile").src = Data_employee.image
 document.getElementById("NameEmployee").innerHTML = Data_employee.name
 document.getElementById("IDEmployee").innerHTML = Data_employee.codId
+document.getElementById("Permission").innerHTML =  Data_user.permission
 document.getElementById("txt-user").innerHTML = Data_user.user
 document.getElementById("txt-correo").innerHTML = Data_employee.correo
-document.getElementById("pass-usuario").value = Data_user.password
-/*
-document.getElementById("")
-document.getElementById("")
-document.getElementById("")
-document.getElementById("")-*
+
+
+
+if(Data_user.permission=="Administrador"){
+	
+	document.getElementById("Permission").style.color = 'white'
+	document.getElementById("Permission").style.background = 'blue'
+
+}
+if(Data_user.permission=="Empleado"){
+	document.getElementById("Permission").style.color = 'white'
+	document.getElementById("Permission").style.background = 'green'
+}
+
+//document.getElementById("pass-usuario").value = Data_user.password
+
 /***********************DATOS DE BASE DE DATOS *****************************************/
 
 /********** SISTEMAA DE BOTON DE CAMARA*******************************/
@@ -118,17 +169,41 @@ api.send("Editar-informacion-contrasena",Data_user.key)
 
 })
 
-/*----EDITAR CONTRASEÑA MASTER---
-document.getElementById("EditarContraseña").addEventListener("click",(event)=>{
+/*----EDITAR CONTRASEÑA MASTER--*/
+document.getElementById("EditarContraseñaMaestra").addEventListener("click",(event)=>{
 
 
 api.send("Editar-informacion-contrasena-maestra",Data_user.key)
 
 })
 
-*/
+     // Elementos del DOM
+        const modal = document.getElementById('modalConfig');
+        const btnOpen = document.getElementById('openModalBtn');
 
+        // Función para mostrar/ocultar contraseña
+        function toggleView(id, icon) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("icon-eye", "icon-eye-blocked");
+            } else {
+                input.type = "password";
+                icon.classList.replace("icon-eye-blocked", "icon-eye");
+            }
+        }
+
+        // Abrir Modal
+        btnOpen.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
 }
+
+        // Cerrar Modal
+        function closeAdvanced() {
+        	const modal = document.getElementById('modalConfig');
+            modal.style.display = 'none';
+        }
 
 function toggleVisibility(idInput, icono) {
     const input = document.getElementById(idInput);
@@ -146,4 +221,6 @@ function toggleVisibility(idInput, icono) {
         icono.classList.add("icon-eye");
     }
 }
+
+
 

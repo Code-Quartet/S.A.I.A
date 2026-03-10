@@ -1,0 +1,133 @@
+
+
+
+ /* --- register_course CONTENT --- */
+.register_course-content {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    height: 95vh;
+}
+      
+
+.header-magage-course{}
+.header-magage-course-title{ margin: 0 0 25px 0; font-size: 1.8rem; }
+
+        /* --- TOOLBAR (Filtro Imagen 2) --- */
+        .toolbar-course { display: flex; gap: 15px; margin-bottom: 25px; position: relative; }
+        .toolbar-course-search-wrapper { flex: 1; position: relative; }
+
+.toolbar-course-search-wrapper {
+    width: 89%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.toolbar-course-search-wrapper>input {
+    width: 89%;
+    padding: 12px 40px 12px 15px;
+    border-style: none;
+}
+
+
+        .toolbar-course-search-wrapper i { position: absolute; right: 15px; top: 14px; color: #888; }
+
+        .dropdown-course { position: relative; }
+        .btn-dropdown-course:hover {
+         background: var(--primary-blue);
+          color: white; border: none; 
+          padding: 12px 20px;
+           }
+        .btn-dropdown-course { 
+            background: white;
+                padding: 12px 20px;
+                 border-radius: 8px; 
+                 cursor: pointer;
+                  display: flex; 
+                align-items: center; 
+                gap: 8px;
+                 border: 0.2px solid var(--border);
+         }
+        .dropdown-content-course { 
+            display: none; position: absolute; top: 110%; right: 0; 
+            background: white; min-width: 200px; border-radius: 10px; 
+            box-shadow: var(--shadow); z-index: 10; padding: 15px;
+        }
+        .dropdown-content-course.show { display: block; }
+        .dropdown-content-course>.filter-opt { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 0.9rem; }
+
+        /* --- TABLA --- */
+        .table-card-course { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
+        
+.table-card-course thead {
+    display: block;
+    width: 100%;
+    background: #f3f4f6;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: capitalize;
+            color: #4b5563;
+            border-bottom: 1px solid var(--border-color);
+}
+
+.table-card-course tbody {
+    display: block;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Para mantener las celdas alineadas entre thead y tbody */
+.table-card-course thead tr, 
+.table-card-course tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Obliga a que las columnas tengan el mismo ancho */
+}
+
+/* Estilo opcional para la barra de scroll (opcional) */
+.table-card-course tbody::-webkit-scrollbar {
+    width: 8px;
+}
+.table-card-course tbody::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+
+        /* Badges */
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .bg-activo { background: #e3f2fd; color: #1976d2; }
+        .bg-pausa { background: #fff3e0; color: #ef6c00; }
+        .bg-cancel { background: #ffebee; color: #c62828; }
+
+
+        /* --- PIE DE PÁGINA (Paginación e Imagen 3) --- */
+        .table-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 20px; }
+        .pagination { display: flex; gap: 5px; }
+        .page-btn { padding: 8px 12px; border: 1px solid #ddd; background: white; border-radius: 5px; cursor: pointer; }
+        .page-btn.active { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+
+      .btn { padding: 10px 25px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+
+          .btn-pri { background: var(--primary-blue); color: white; }
+
+
+        /* Colores de Iconos */
+.btn-action-pencil {
+    color: var(--primary-blue);
+    cursor: pointer;
+    font-size: 1.1rem;
+    background: #ff000000;
+    border-style: none;
+}
+        .btn-action-bin {
+         color: #d32f2f;
+          cursor: pointer; 
+            font-size: 1.1rem;
+                background: #ff000000;
+    border-style: none; 
+        }
