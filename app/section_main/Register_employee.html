@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Empleado - Modal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- Variables y Reset --- */
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-hover: #1d4ed8;
+            --text-dark: #334155;
+            --text-light: #94a3b8;
+            --bg-main: #f1f5f9;
+            --border-color: #e2e8f0;
+            --photo-preview-bg: #e2e8f0;
+            --transition-fast: 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* --- Estilo del Botón de Prueba --- */
+        .btn-trigger {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* --- Modal Overlay --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex; /* Flexbox para centrar el modal */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1; 
+            visibility: visible;
+            transition: all var(--transition-fast);
+        }
+
+        /* --- Contenedor del Modal --- */
+        .modal-container {
+            background: white;
+            width: 90%;
+            max-width: 650px;
+            padding: 2.5rem;
+            border-radius: 16px;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Botón cerrar X arriba a la derecha */
+        .close-icon-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .modal-header h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            color: #444;
+        }
+
+        /* --- Formulario con CSS Grid --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+            column-gap: 1.5rem;
+            row-gap: 1.2rem;
+        }
+
+        /* Clases de utilidad para el Grid */
+        .span-full { grid-column: 1 / -1; }
+        .grid-left { grid-column: 1; }
+        .grid-right { grid-column: 2; }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: #333;
+        }
+
+        .form-group input, 
+        .form-group select {
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            outline: none;
+            background-color: #fff;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-light);
+        }
+
+        /* --- Especial: Nombre y Edad en la misma fila con anchos distintos --- */
+        .name-age-container {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 1.5rem;
+            grid-column: 1 / -1;
+        }
+
+        /* --- Sección Foto (Flexbox) --- */
+        .photo-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+        }
+
+        .photo-preview {
+            width: 55px;
+            height: 55px;
+            background-color: var(--photo-preview-bg);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-light);
+            overflow: hidden;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-status {
+            flex-grow: 1;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-subir {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* --- Estado Select --- */
+        .select-custom {
+            position: relative;
+        }
+        
+        .select-custom select {
+            appearance: none;
+            width: 100%;
+        }
+
+        .select-custom i {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            pointer-events: none;
+        }
+
+        /* --- Footer Acciones --- */
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .btn-cancel {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-save {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Responsividad */
+        @media (max-width: 600px) {
+            .form-grid, .name-age-container {
+                grid-template-columns: 1fr;
+            }
+            .grid-right, .grid-left {
+                grid-column: 1;
+            }
+            .modal-footer {
+                flex-direction: column-reverse;
+                gap: 1rem;
+            }
+            .btn-save, .btn-cancel {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-container">
+            <button class="close-icon-btn" onclick="cerrarModal()"><i class="fas fa-times"></i></button>
+            
+            <header class="modal-header">
+                <h2>Nuevo Empleado</h2>
+            </header>
+
+            <form class="form-grid" id="empleadoForm">
+                
+                <div class="name-age-container">
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" placeholder="Ej: Marina Paula Loza Mancha">
+                    </div>
+                    <div class="form-group">
+                        <label>Edad</label>
+                        <input type="number" placeholder="Ej: 20">
+                    </div>
+                </div>
+
+                <div class="form-group grid-left">
+                    <label>Cedula</label>
+                    <input type="text" placeholder="Ej: 14854983">
+                </div>
+                <div class="form-group grid-right">
+                    <label>Teléfono</label>
+                    <input type="text" placeholder="Ej: 0412-688-5749">
+                </div>
+
+                <div class="form-group grid-left">
+                    <label>Correo Electrónico</label>
+                    <input type="email" placeholder="Ej: correo@email.com">
+                </div>
+                <div class="form-group grid-right">
+                    <label>Dirección</label>
+                    <input type="text" placeholder="Ej: Calle 4 Av Zulia">
+                </div>
+
+                <div class="form-group grid-left">
+                    <label>Foto</label>
+                    <div class="photo-input-wrapper">
+                        <div class="photo-preview" id="previewContainer">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <span class="photo-status" id="fileName">Selecciona una imagen</span>
+                        <input type="file" id="fileInput" hidden accept="image/*">
+                        <button type="button" class="btn-subir" onclick="document.getElementById('fileInput').click()">Subir</button>
+                    </div>
+                </div>
+
+                <div class="form-group grid-right">
+                    <label>Estado</label>
+                    <div class="select-custom">
+                        <select>
+                            <option value="" disabled selected></option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <footer class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="cerrarModal()">
+                        Cancelar <i class="fas fa-times"></i>
+                    </button>
+                    <button type="submit" class="btn-save">
+                        Guardar <i class="fas fa-check"></i>
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Función para cerrar el modal
+        function cerrarModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Lógica para la previsualización de la imagen
+        const fileInput = document.getElementById('fileInput');
+        const fileNameSpan = document.getElementById('fileName');
+        const previewContainer = document.getElementById('previewContainer');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                fileNameSpan.textContent = file.name;
+                fileNameSpan.style.color = "#333";
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Manejo del formulario
+        document.getElementById('empleadoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Empleado guardado exitosamente (Simulación)");
+            cerrarModal();
+        });
+    </script>
+</body>
+</html>

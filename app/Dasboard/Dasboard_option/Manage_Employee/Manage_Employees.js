@@ -18,6 +18,9 @@ let template_manage_employee=`
                         <option value="despedido">Despedido</option>
                     </select>
             </div>
+        <button class="btn-new-data" onclick="RegisterNewEmployee()">
+            Nuevo Empleado <span class="icon-user-plus"></span>
+        </button>
         </section>
 
         <section class="container-table-manage">
@@ -72,9 +75,7 @@ let template_manage_employee=`
             <button class="page-btn active">1</button> <button class="page-btn">2</button>
             <button class="page-btn">&gt;</button>
         </nav>
-        <button class="btn-new-data">
-            Nuevo Empleado <span class="icon-user-plus"></span>
-        </button>
+
      </footer>
 </main>`;
 
@@ -83,4 +84,8 @@ function Manage_Employee(id){
 	document.getElementById(id).innerHTML=template_manage_employee;
 
 
+}
+
+function RegisterNewEmployee(){
+    api.send("Open-system-new-employee-register")
 }

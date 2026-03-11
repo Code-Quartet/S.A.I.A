@@ -27,14 +27,22 @@
     justify-content: space-evenly;
     border: 1px solid blue;
     border-radius: 10px;
-    width: 69%;
+    width: 62%;
+    padding: 2px;
 }
 
 .search-input-table-manage {
-    width: 87%;
+    width: 90%;
     padding: 10px 16px;
     outline: none;
+    background: white;
     border-style: none;
+}
+
+.btn-search-tabla-manage {
+    border-style: none;
+    background: white;
+    padding: 9px;
 }
 /*---------------------------*/
 .dropdown-table-manage{

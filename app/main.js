@@ -22,7 +22,14 @@ const Edit_password_master = require(path.join(__dirname,'./section_main/Edit_pa
 const Edit_email = require(path.join(__dirname,'./section_main/Edit_email'));
 const Edit_user = require(path.join(__dirname,'./section_main/Edit_user'));
 const Register_course = require(path.join(__dirname,'./section_main/Register_course'));
-const  Edit_course = require(path.join(__dirname,'./section_main/Edit_course'));
+const Edit_course = require(path.join(__dirname,'./section_main/Edit_course'));
+/*-----------------*/
+const Register_instructor = require(path.join(__dirname,'./section_main/Register_instructor'));
+const Edit_instructor = require(path.join(__dirname,'./section_main/Edit_instructor'));
+/*-----------------*/
+const Register_employee = require(path.join(__dirname,'./section_main/Register_employee'));
+const Edit_employee = require(path.join(__dirname,'./section_main/Edit_employee'));
+
 /*------------Modulos externos----------------*/
 
 /*--------select-system-init------------*/
@@ -258,7 +265,46 @@ ipcMain.on("Open-system-edit-course-register",(event,data)=>{
    Edit_course(mainWindow)
 
 })
+
+ipcMain.on("delete-course-register",(event,data)=>{
+ 
+   //Edit_course(mainWindow)
+
+})
+ipcMain.on("search-course-register",(event,data)=>{
+ 
+   //Edit_course(mainWindow)
+
+})
 /*****************************Register New Cource*******************************/
+/***************************Registrar nuevo instructor*************************************/
+ipcMain.on("Open-system-new-instructor-register",(event,data)=>{
+ 
+  Register_instructor(mainWindow)
+
+})
+ipcMain.on("Open-system-edit-instructor-register",(event,id)=>{
+ 
+  console.log(id)
+   Edit_instructor(mainWindow)
+
+})
+
+/***************************Registrar nuevo instructor*************************************/
+/***************************Registrar nuevo Empleado*************************************/
+ipcMain.on("Open-system-new-employee-register",(event,data)=>{
+ 
+  Register_employee(mainWindow)
+
+})
+ipcMain.on("Open-system-edit-employee-register",(event,id)=>{
+ 
+  console.log(id)
+   Edit_employee(mainWindow)
+
+})
+
+/***************************Registrar nuevo Empleado*************************************/
 /***********************DASBOARD*********************************************/
 // Evento cuando la app está lista para crear ventanas
 app.on('ready', Select_system_type, 

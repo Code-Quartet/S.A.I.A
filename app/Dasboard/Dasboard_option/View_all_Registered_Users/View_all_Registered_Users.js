@@ -6,10 +6,14 @@ let templete_View_all_Registered_Users=`
         </header>
 
         <section class="toolbar-table-manage">
-            <div class="search-box-table-manage">
-                <input class="search-input-table-manage"  type="text" placeholder="Buscar">
-                 <i class="icon-search"></i>
-            </div>
+        
+        <div class="search-box-table-manage">
+            <input id="input-search-course" class="search-input-table-manage" type="text" placeholder="Buscar">
+            <button class="btn-search-tabla-manage" id="btn-search">
+                <i class="icon-search"></i>
+            </button>
+        </div>
+
 
             <div class="dropdown-table-manage" id="drop-curso">
                 <button class="btn-dropdown-table-manage">Curso ▾</button>

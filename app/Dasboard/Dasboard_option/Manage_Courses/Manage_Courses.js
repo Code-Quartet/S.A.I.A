@@ -7,8 +7,10 @@ let template_register_course =`
 
     <section class="toolbar-table-manage">
         <div class="search-box-table-manage">
-            <input class="search-input-table-manage" type="text" placeholder="Buscar Curso...">
-            <i class="icon-search"></i>
+            <input id="input-search-course" class="search-input-table-manage" type="text" placeholder="Buscar Curso...">
+            <button class="btn-search-tabla-manage" id="btn-search">
+                <i class="icon-search"></i>
+            </button>
         </div>
 
         <div class="dropdown-table-manage">
@@ -85,6 +87,21 @@ rendertable()
     });
 
 /*-------------------------------------------------------------*/
+
+document.getElementById("btn-search").addEventListener("click",(event)=>{
+
+    SearchCourse(document.getElementById("input-search-course").value)
+
+})
+
+document.getElementById("input-search-course").addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // Evita comportamientos extraños
+        SearchCourse(document.getElementById("input-search-course").value);  
+    }
+});
+
+
 }
 
       const cursos = [
@@ -102,13 +119,20 @@ rendertable()
                     <td>${c.nombre}</td><td>${c.cupo}</td><td>${c.horario}</td><td>${c.instructor}</td>
                     <td><span class="badge ${c.estado === 'Activo' ? 'bg-activo' : 'bg-pausa'}">${c.estado}</span></td>
                     <td class="td-action">
-                        <button class="btn-edit-data-table icon-pencil"></button>
-                        <button class="btn-delete-data-table icon-bin" style="margin-left:15px"></button>
+                        <button class="btn-edit-data-table icon-pencil" onclick="EditCourse(id)"></button>
+                        <button class="btn-delete-data-table icon-bin" style="margin-left:15px" onclick="Delete_course(id)"></button>
                     </td>
                 </tr>
             `).join('');
         }
 
+
+
+function SearchCourse(data){
+
+    alert("Buscar"+data)
+
+}
 
 function OpenNewCourse(){
 
@@ -116,12 +140,15 @@ function OpenNewCourse(){
     
 }
 
-function EditCourse(){
+function EditCourse(id){
 
-  api.send("Open-system-edit-course-register")
+  api.send("Open-system-edit-course-register",id)
 
 }
 
 
-
+function Delete_course(id){
+    //api.send("delete-course-register",id)
+    alert("borrar curso")
+}
 

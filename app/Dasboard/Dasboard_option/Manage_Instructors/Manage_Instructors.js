@@ -7,10 +7,11 @@ let TemplanteManageInstructor=`
     </header>
 
     <section class="toolbar-table-manage">
-
         <div class="search-box-table-manage">
-            <input type="text" class="search-input-table-manage" id="inputSearch" placeholder="Buscar instructor...">
-            <span class="icon-search"></span>
+            <input id="input-search-course" class="search-input-table-manage" type="text" placeholder="Buscar instructor...">
+            <button class="btn-search-tabla-manage" id="btn-search">
+                <i class="icon-search"></i>
+            </button>
         </div>
             <div class="dropdown-table-manage" id="drop-curso">
                     <button class="btn-dropdown-table-manage">
@@ -41,7 +42,7 @@ let TemplanteManageInstructor=`
                 </div>
             </div>
 
-        <button class="btn-new-data">
+        <button class="btn-new-data" onclick="OpenRegisterInstructor()">
             <span class="icon-user-plus"></span> Nuevo Instructor
         </button>
 
@@ -65,7 +66,7 @@ let TemplanteManageInstructor=`
                     <td>0412-555-2134</td>
                     <td><span class="status-badge inactivo">Inactivo</span></td>
                 <td class="td-action">
-                        <button class="btn-edit-data-table icon-pencil"></button>
+                        <button class="btn-edit-data-table icon-pencil" onclick="OpenEditInstructor('Holacod')"></button>
                         <button class="btn-delete-data-table icon-bin" style="margin-left:15px"></button>
                     </td>
                 </tr>
@@ -153,3 +154,11 @@ function Manage_Instructor(id){
     function restablecerFiltros() {
         menu.querySelectorAll('input').forEach(i => i.checked = false);
     }
+
+function OpenRegisterInstructor(){
+    api.send("Open-system-new-instructor-register")
+}
+
+function OpenEditInstructor(id){
+    api.send("Open-system-edit-instructor-register",id)
+}
