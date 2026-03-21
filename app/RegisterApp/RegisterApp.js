@@ -226,7 +226,18 @@ ipcMain.on("select-image-user",(event, arg) => {
         properties: ['openFile']
       }).then(result => {
         //console.log(result.filePaths[0]);
-        window_register_app.webContents.send("Imagen-user-select",result.filePaths[0]);
+  
+      if(result.canceled==false){
+
+               window_register_app.webContents.send("Imagen-user-select",result.filePaths[0]);
+
+      }
+      
+      if(result.canceled==true){
+
+                window_register_app.webContents.send("Imagen-user-select",ImageDefault);
+
+      }
 
       }).catch(err => {
         console.log(err);
