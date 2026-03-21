@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Instructor - SAIA</title>
+    <link rel="stylesheet" href="css/icomoon.css">
+    <style>
+        :root {
+            --primary-blue: #2546d1;
+            --primary-hover: #1e3ab7;
+            --border-color: #d1d5db;
+            --text-main: #4b5563;
+            --text-label: #374151;
+            --bg-gray: #f3f4f6;
+            --white: #ffffff;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+        /* --- Contenedor Principal --- */
+.modal-card {
+    background: var(--white);
+    width: 100%;
+    max-width: 580px;
+    /* border-radius: 16px; */
+    padding: 4px;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: #444;
+            font-weight: 500;
+        }
+
+        /* --- Grid Layout --- */
+.form-container {
+
+}
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-label);
+        }
+
+        .field input {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .field input:focus {
+            border-color: var(--primary-blue);
+        }       
+
+         .field select {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .field select:focus {
+            border-color: var(--primary-blue);
+        }
+
+
+        /* --- Select Personalizado --- */
+        .custom-select {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .select-box {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #9ca3af;
+            background: var(--white);
+            min-height: 42px;
+            box-sizing: border-box;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 105%;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .dropdown-content.active { display: block; }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 12px;
+            margin-bottom: 10px;
+        }
+
+        .search-wrapper input {
+            border: none;
+            width: 100%;
+            margin-left: 10px;
+            padding: 2px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .options-list li {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .options-list li:hover {
+            background: var(--bg-gray);
+        }
+
+        .btn-add-item {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+/*-----------ESTRUCTURA DEL GESTOR PARA SUBIR IMAGEN------------------------*/
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 7px;
+}
+
+
+.image-uploader {
+    position: relative;
+    width: 135px;
+    height: 126px;
+    cursor: pointer;
+}
+
+/* Círculo con borde negro grueso */
+.main-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    overflow: hidden;
+    border: 8px solid var(--border-color);
+}
+
+/* Estilo de tu imagen específica */
+.avatar-main {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: blue;
+}
+
+/* Botón de cámara superpuesto */
+.camera-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    background-color: #d8d8d8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 2;
+    border-style: none;
+}
+
+.btn-select-imagen {
+    background: #ff00000f;
+    border-style: none;
+}
+
+.icon-camera {
+  font-size: 18px;
+  color: #333;
+}
+
+.avatar-main-register {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: blue;
+}
+/*-----------ESTRUCTURA DEL GESTOR PARA SUBIR IMAGEN------------------------*/
+
+
+
+
+        
+
+        /* --- Footer --- */
+        .footer-buttons {
+            grid-column: span 12;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn-footer {
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .btn-cancel {
+            background: white;
+            border: 1.5px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-save {
+            background: var(--primary-blue);
+            border: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="modal-card">
+    <div class="modal-header">
+        <h2>Nuevo Instructor</h2>
+    </div>
+
+    <form id="instructorForm" class="form-container">
+        <div class="field">
+            <label>Nombre Completo</label>
+            <input type="text" placeholder="Ej: Marina Paula Loza Mancha">
+        </div>
+
+                <div class="field ">
+                <div class="file-upload-container-new-registre" style="border-style: none;">
+                       <label class="image-uploader" for="fileInputregister">
+                       
+                        <div class="main-circle">
+                          <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+                        </div>
+                        
+                   <button class="camera-button" id="Btn_select_image_user" onclick="SelectImage()">
+                       <span class="icon-camera"></span>
+                   </button> 
+                       
+                      </label>
+                </div>
+        </div>
+        <div class="field ">
+            <label>Edad</label>
+            <input type="text" placeholder="Ej: 20">
+        </div>
+
+        <div class="field ">
+            <label>Cedula</label>
+            <input type="text" placeholder="Ej: 10.458.289">
+        </div>
+        <div class="field ">
+            <label>Teléfono</label>
+            <input type="text" placeholder="Ej: 0412-688-5749">
+        </div>
+
+        <div class="field ">
+            <label>Correo Electrónico</label>
+            <input type="email" placeholder="Ej: Maquillaje">
+        </div>
+        <div class="field ">
+            <label>Dirección</label>
+            <input type="text" placeholder="Ej: Calle 4 Av Pérez Casa #5">
+        </div>
+
+
+        <div class="field ">
+            <label>Estado</label>
+                     <select class="select-input-new-registre-employee" id="select-status-employee">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                        <option value="Despedido">Despedido</option>
+                    </select>
+        </div>
+
+        <div class="field ">
+            <label>Especialidad</label>
+            <input type="text" placeholder="Ej: Manejo">
+        </div>
+
+        <div class="field c">
+            <label>Certificaciones</label>
+            <input type="text" placeholder="Ej: Certificado de Conducción">
+        </div>
+
+        <div class="footer-buttons">
+            <button type="button" class="btn-footer btn-cancel">
+                Cancelar <span class="icon-cross"></span>
+            </button>
+            <button type="submit" class="btn-footer btn-save">
+                Guardar <span class="icon-checkmark"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropdown = document.getElementById('coursesDropdown');
+        const toggle = document.getElementById('dropdownToggle');
+        const menu = document.getElementById('dropdownMenu');
+        const searchInput = document.getElementById('courseInput');
+        const listItems = document.querySelectorAll('#listItems li');
+        const labelValue = document.getElementById('labelValue');
+
+        // Toggle menú
+        toggle.addEventListener('click', () => {
+            menu.classList.toggle('active');
+        });
+
+        // Selección de ítem
+        listItems.forEach(item => {
+            item.addEventListener('click', () => {
+                labelValue.textContent = item.textContent;
+                labelValue.style.color = "#333";
+                menu.classList.remove('active');
+            });
+        });
+
+        // Filtrado en tiempo real
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            listItems.forEach(li => {
+                const text = li.textContent.toLowerCase();
+                li.style.display = text.includes(val) ? 'block' : 'none';
+            });
+        });
+
+        // Cerrar al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

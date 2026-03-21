@@ -63,6 +63,39 @@ async function login_system(data) {
         throw error;
     }
 }
+
+async function loginMaster(key, masterInput, permissionInput) {
+    try {
+        // 1. Buscamos al usuario por su Key
+        const query = "SELECT * FROM User WHERE Key = ? AND Time_Deleted IS NULL";
+        const user = await DB.ejecutarConsulta(query, [key]);
+
+        // 2. Verificamos si el usuario existe
+        if (!user || user.length === 0) {
+            return { success: false, message: "Usuario no encontrado o eliminado." };
+        }
+
+        const userData = user[0];
+
+        // 3. Validación de PasswordMaster y Permission
+        if (userData.PasswordMaster === masterInput && userData.Permission === permissionInput) {
+            return {
+                success: true,
+                message: "Acceso concedido",
+                user: {
+                    username: userData.Username,
+                    permission: userData.Permission
+                }
+            };
+        } else {
+            return { success: false, message: "Credenciales o permisos incorrectos." };
+        }
+
+    } catch (error) {
+        console.error("Error en el proceso de login:", error);
+        return { success: false, message: "Error interno del servidor." };
+    }
+}
 /*----------------------------------*/
 async function UpdateUsername(key, nuevoUsername) {
     const sql = `UPDATE User SET Username = ? WHERE Key = ?`;
@@ -90,7 +123,7 @@ async function UpdatePassword(key, passwordActual, nuevaPassword) {
 
         // 1. Buscar la contraseña almacenada actualmente para esa Key
         const sqlBuscar = `SELECT Password FROM User WHERE Key = ?`;
-       // const sqlBuscar = `SELECT Password FROM User WHERE Key = ? AND Time_delet IS NULL`;
+       // const sqlBuscar = `SELECT Password FROM User WHERE Key = ? AND Time_deleted IS NULL`;
         const usuario = await DB.buscar(sqlBuscar, [key]);
 
         // 2. Validar si el usuario existe
@@ -121,21 +154,63 @@ async function UpdatePassword(key, passwordActual, nuevaPassword) {
     }
 }
 /*----------------------------------------*/
-async function UpdatePasswordMaster(key, nuevaPasswordMaster) {
-    const sql = `UPDATE User SET PasswordMaster = ? WHERE Key = ?`;
+async function UpdatePasswordMaster(key, passwordMasterActual, nuevaPasswordMaster) {
     try {
-        await DB.actualizar(sql, [nuevaPasswordMaster, key]);
-        console.log("PasswordMaster actualizada con éxito.");
+        await DB.conectar();
+
+        // 1. Buscar la contraseña actual (incluyendo filtro de borrado lógico)
+        const sqlBuscar = `SELECT PasswordMaster FROM User WHERE Key = ? AND Time_deleted IS NULL`;
+        const resultado = await DB.buscar(sqlBuscar, [key]);
+
+        // 2. Validar si el usuario existe
+        // Verificamos si el resultado es nulo o un array vacío
+        const usuario = Array.isArray(resultado) ? resultado[0] : resultado;
+
+        if (!usuario) {
+            return { success: false, message: "Usuario no encontrado o inactivo." };
+        }
+
+        // 3. Comparar contraseña (Acceso correcto a la propiedad PasswordMaster)
+        const passwordEnBD = usuario.PasswordMaster;
+
+        if (passwordMasterActual !== passwordEnBD) {
+            console.warn("Intento de cambio de clave fallido: La contraseña actual es incorrecta.");
+            return { success: false, message: "La contraseña actual no es correcta." };
+        }
+
+        // 4. Proceder a actualizar (Corrección de la variable nuevaPasswordMaster)
+        const sqlUpdate = `UPDATE User SET PasswordMaster = ? WHERE Key = ?`;
+        await DB.actualizar(sqlUpdate, [nuevaPasswordMaster, key]);
+
+        console.log("Password actualizada con éxito.");
+        return { success: true, message: "Contraseña actualizada correctamente." };
+
     } catch (error) {
-        console.error("Error al actualizar la PasswordMaster:", error);
+        console.error("Error crítico en UpdatePasswordMaster:", error);
+        return { success: false, message: "Error interno del sistema." };
     }
 }
+/*-----------------------------------------*/
+
+async function UpdateImagenAvatar(key,url){
+
+ const sql = `UPDATE Employee SET Image = ? WHERE Key = ?`;
+    try {
+        await DB.actualizar(sql, [url, key]);
+        console.log("Imagen actualizado con éxito.");
+    } catch (error) {
+        console.error("Error al actualizar el Imagen:", error);
+    }
+
+}
+/*------------------------------------------*/
 module.exports={
 		login_system:login_system,
         UpdateUsername:UpdateUsername,
         UpdateEmail:UpdateEmail,
         UpdatePassword:UpdatePassword,
-        UpdatePasswordMaster:UpdatePasswordMaster
+        UpdatePasswordMaster:UpdatePasswordMaster,
+        UpdateImagenAvatar:UpdateImagenAvatar
 }
 
 /*
@@ -158,8 +233,8 @@ let sql = `
             WHERE 
                 U.Username = ?
                 AND U.Password = ?
-                AND U.time_delet IS NULL
-                AND E.time_delet IS NULL
+                AND U.Time_deleted IS NULL
+                AND E.Time_deleted IS NULL
         `;
 
 */
@@ -179,6 +254,6 @@ let sql = `
             INNER JOIN Employee E ON U.Key = E.Id_user
             WHERE U.Username = ? 
               AND U.Password = ? 
-              AND U.Time_delet IS NULL
+              AND U.Time_deleted IS NULL
         `;s
 */

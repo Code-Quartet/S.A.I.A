@@ -5,8 +5,10 @@ const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
 /*-------------------------------------*/
+
 const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
 const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
+const DataTrialSAIA = require(path.join(__dirname,'../DataBase/DataTrialSAIA.js'))
 /*--------------LINK BASE DE DATOS ------------------------*/
 
 let window_register_app;
@@ -95,7 +97,7 @@ function Reset_data(){
 });
 
 
-
+//DataTrialSAIA()
 }
 
 
@@ -118,7 +120,7 @@ async function Adding_table_db(){
     Permission TEXT NOT NULL,              -- Permisos del usuario
     Date DATE NOT NULL,                    -- Fecha de creación
     Time TIME NOT NULL,                    -- Hora de creación
-    Time_delet DATE                        -- Fecha de eliminación lógica
+    Time_Deleted DATE                        -- Fecha de eliminación lógica
 )`);
 
 // Tabla Employee
@@ -130,65 +132,78 @@ async function Adding_table_db(){
     Tlf TEXT,                              -- Teléfono
     E_mail TEXT UNIQUE,                  -- Correo electrónico único
     Image TEXT,
+    Birthdate TEXT,
+    Status TEXT,
     Age TEXT UNICODE,
     Id_user TEXT UNIQUE,                       -- Relación con la tabla User
     Date DATE NOT NULL,                    -- Fecha de creación
     Time TIME NOT NULL,                    -- Hora de creación
-    Time_delet DATE,                       -- Fecha de eliminación lógica
+    Time_Deleted DATE,                       -- Fecha de eliminación lógica
     FOREIGN KEY (Id_user) REFERENCES User(Key) -- Clave foránea
 )`);
 
+
+// Tabla Instructor
+await DB.crearTabla(`CREATE TABLE Instructor (
+    Key TEXT PRIMARY KEY,           -- Clave primaria
+    Name TEXT NOT NULL,             -- Nombre del empleado
+    Cod_id TEXT NOT NULL UNIQUE,    -- Código único del empleado
+    Address TEXT,                   -- Dirección
+    Tlf TEXT,                       -- Teléfono
+    E_mail TEXT,             -- Correo electrónico único
+    Image TEXT,
+    Age INTEGER,                    -- Corregido: 'UNICODE' no existe. Se cambió a INTEGER.
+    Status TEXT,
+    Specialty TEXT,
+    Certifications TEXT,
+    Date DATE NOT NULL,             -- Fecha de creación
+    Time TIME NOT NULL,             -- Hora de creación
+    Time_Deleted DATE                 -- Fecha de eliminación lógica
+)`);
+
 //Tabla Alumno
-  await DB.crearTabla(`CREATE TABLE student (
+
+  await DB.crearTabla(`CREATE TABLE Student (
     Key TEXT PRIMARY KEY, -- Clave primaria
     Id_curs TEXT NOT NULL,              -- Relación con la tabla Curso
-    Id_turno TEXT NOT NULL,             -- Relación con la tabla Horarios
     Name TEXT NOT NULL,                    -- Nombre del alumno
-    Second_name TEXT NOT NULL,             -- Segundo nombre o apellido
-    Cod_id TEXT NOT NULL UNIQUE,           -- Código único del alumno
+    Cod_id TEXT NOT NULL UNIQUE,           -- Código único del alumn
+    Age TEXT,
     Address TEXT,                          -- Dirección
-    Tlf TEXT,                              -- Teléfono
+    Tlf TEXT,                             -- Teléfono
+    Birthdate TEXT,
     E_mail TEXT UNIQUE,                    -- Correo electrónico único
-    NameR TEXT,
-    Cod_idR TEXT,
-    TlfR TEXT,
+    Image TEXT,
+    Name_Representative TEXT,
+    Cod_id_Representative TEXT,
+    Tlf_Representative TEXT,
+    E_mail_Representative TEXT,
     Date DATE NOT NULL,                    -- Fecha de creación
     Time TIME NOT NULL,                    -- Hora de creación
-    Time_delet DATE,                       -- Fecha de eliminación lógica
-    FOREIGN KEY (Id_curs) REFERENCES Curso(Key), -- Clave foránea
-    FOREIGN KEY (Id_turno) REFERENCES Horarios(Key) -- Clave foránea
+    Time_Deleted DATE,                       -- Fecha de eliminación lógica
+    FOREIGN KEY (Id_curs) REFERENCES Curso(Key) -- Clave foránea
+
 )`);
 
 //Tabla Curso
   await DB.crearTabla(`CREATE TABLE Course (
-    Key TEXT PRIMARY KEY,                 -- UUID o Código único
+    Key TEXT PRIMARY KEY,                 -- UUID
     Name TEXT NOT NULL UNIQUE,            -- Nombre del curso
-    Description TEXT,                     -- Descripción detallada
-    Instructor_ID TEXT NOT NULL,          -- Relación con tabla de instructores
-    Days TEXT NOT NULL,                   -- Días (Ej: "Lun,Mie,Vie")
-    Start_Time TIME NOT NULL,             -- Hora de inicio (Ej: "08:30")
-    End_Time TIME NOT NULL,               -- Hora de fin (Ej: "10:30")
-    Duration_Value INTEGER NOT NULL,      -- Cantidad (Ej: 2)
-    Duration_Unit TEXT NOT NULL,          -- Unidad (Ej: "Semanas")
-    Capacity INTEGER,                     -- Cupo máximo (Ej: 20)
-    Cost TEXT,                            -- Costo (Ej: "30$")
-    Has_Evaluation BOOLEAN DEFAULT 0,     -- 1 = Sí, 0 = No
-    Has_Certificate BOOLEAN DEFAULT 0,    -- 1 = Sí, 0 = No
-    Status TEXT DEFAULT 'Activo',         -- Activo, Inactivo, Completado, etc.
-    Date_Created DATE NOT NULL,           -- Fecha de creación
-    Time_Created TIME NOT NULL,           -- Hora de creación
-    Time_Deleted DATE                     -- Borrado lógico
-);`);
-
-//Tabla Horarios
-  await DB.crearTabla(`CREATE TABLE Schedule (
-    Key TEXT PRIMARY KEY, -- Clave primaria
-    Name TEXT NOT NULL UNIQUE,           -- Nombre del horario
-    Description TEXT,                      -- Descripción del horario
-    Schedule TEXT NOT NULL,                 -- Detalles del horario
-    Date DATE NOT NULL,                    -- Fecha de creación
-    Time TIME NOT NULL,                    -- Hora de creación
-    Time_delet DATE                        -- Fecha de eliminación lógica
+    Description TEXT,                     -- Descripción
+    Instructor_ID TEXT NOT NULL,          -- Relación UUID Instructor
+    Days TEXT NOT NULL,                   -- "Lun,Mar"
+    Start_Time TIME NOT NULL,             -- "00:00"
+    End_Time TIME NOT NULL,               -- "00:00"
+    Duration_Value INTEGER NOT NULL,      -- 2
+    Duration_Unit TEXT NOT NULL,          -- "Semanas"
+    Capacity INTEGER DEFAULT 0,           -- Cupo
+    Cost TEXT,                            -- "20"
+    Has_Evaluation BOOLEAN DEFAULT 0,     -- 1 o 0
+    Has_Certificate BOOLEAN DEFAULT 0,    -- 1 o 0
+    Status TEXT DEFAULT 'Activo',
+    Date_Created DATE NOT NULL,
+    Time_Created TIME NOT NULL,
+    Time_Deleted DATE                     -- Para borrado lógico
 )`);
 
 
@@ -221,7 +236,8 @@ ipcMain.on("select-image-user",(event, arg) => {
 
 
 /*******CREA LA BASE DE DATOS SI NO ESTA Y SE CONECTA****************/
-async function Adding_data_Admin_default(data) {
+async function Adding_data_Admin_data(data){
+    
     const ID_USER = uuidv4();
     const ID_EMPLOYEE = uuidv4();
 
@@ -238,8 +254,8 @@ async function Adding_data_Admin_default(data) {
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
-            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Image,  Id_user, Date, Time) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date, Time) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 ID_EMPLOYEE, 
                 data.Employee.nombre, 
@@ -248,7 +264,9 @@ async function Adding_data_Admin_default(data) {
                 data.Employee.tlf, 
                 data.Employee.edad,
                 data.Employee.correo, 
-                data.Employee.image, 
+                data.Employee.fechanacimiento, 
+                data.Employee.image,
+                "Activo",
                 ID_USER, 
                 data.fecha, 
                 data.hora
@@ -323,7 +341,7 @@ ipcMain.on('message-campos-vacios', async (event,text) => {
 
 console.log(path.join(__dirname,"../.config.json"))
 
-ipcMain.on('Instalar-app', async (event,data) => {  
+ipcMain.on('Instalar-app', async (event,data) => { 
 
         let hostname = os_system.hostname().toString();
         let platform = os_system.platform().toString();
@@ -338,7 +356,7 @@ ipcMain.on('Instalar-app', async (event,data) => {
 
         let obj = JSON.stringify(info);
         
-        await Adding_data_Admin_default(data).then(()=>{
+        await Adding_data_Admin_data(data).then(()=>{
        
             fs.writeFile(path.join(__dirname,"../.config.json"),obj, function(err){
                     if (err) throw err;

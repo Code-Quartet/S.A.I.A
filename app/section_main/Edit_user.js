@@ -18,11 +18,13 @@ let ID_User="";
 module.exports = function Edit_user(parentWindow,dataID) {
   window_edit_user = new BrowserWindow({
         width:500,
-        height:300,
+        height:260,
         modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../favicon.ico'),
+        resizable:false,
+       frame:false,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
@@ -37,7 +39,7 @@ module.exports = function Edit_user(parentWindow,dataID) {
     window_edit_user.loadFile('app/section_main/Edit_user.html');
 
     // Herramientas de desarrollo
-   // window_edit_user.webContents.openDevTools();
+   //window_edit_user.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_user.webContents.setWindowOpenHandler(() => {
@@ -50,27 +52,51 @@ module.exports = function Edit_user(parentWindow,dataID) {
 
 }
 
-ipcMain.on("Campo-usuario-vacio",async(event,data)=>{
+ipcMain.on("Campo-usuario-vacio-btn",async(event,text)=>{
 
-dialog.showMessageBox({
-  title: 'Notificación',
-  type:'none',
-  message: 'Porfavor Complete los Campos',
-  icon: 'info',
-  buttons: ['Aceptar'],
-  defaultId: 0,
-  cancelId: 1,
-  noLink: true
-}).then(result => {
-  
+  console.log("Campo-usuario-vacio-btn",text)
 
-}).catch(err => {
-  console.log(err);
-});
+    dialog.showMessageBox({
+        title: 'Notificación',
+        type:'none',
+        message: 'Porfavor Complete los Campos'+text,
+        icon: 'info',
+        buttons: ['Aceptar'],
+        defaultId: 0,
+        cancelId: 1,
+        noLink: true
+    }).then(result => {
+      
 
-
+    }).catch(err => {
+      console.log(err);
+    });
+    
 
 })
+
+
+ipcMain.on("Campo-usuario-vacio-click",async(event,text)=>{
+
+    dialog.showMessageBox({
+      title: 'Notificación',
+      type:'none',
+      message: 'Porfavor Complete los Campos'+text,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    }).then(result => {
+      
+
+    }).catch(err => {
+      console.log(err);
+    });
+
+})
+
+
 ipcMain.on("save-new-username",async(event,data)=>{
 
 console.log("id-USER",ID_User)

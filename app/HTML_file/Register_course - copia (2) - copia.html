@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Curso - SAIA v2 Pro</title>
+    <style>
+        :root {
+            --primary-blue: #2c5282;
+            --secondary-blue: #3182ce;
+            --bg-light: #f7fafc;
+            --border-color: #e2e8f0;
+            --text-main: #2d3748;
+            --white: #ffffff;
+            --error-red: #e53e3e;
+            --success-green: #28a745;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-light);
+            display: flex; /* Activado para centrado */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--white);
+            width: 100%;
+            max-width: 550px;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--text-main);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+
+        .col-span-2 { grid-column: span 2; }
+
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        
+        label { 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        input, select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--secondary-blue);
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .check-item input { width: auto; cursor: pointer; }
+
+        /* Días de la semana */
+        .days-container { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 5px; }
+        .day-pill { flex: 1; text-align: center; min-width: 45px; }
+        .day-pill input { display: none; }
+        .day-pill span {
+            display: block; padding: 10px 0; background: #edf2f7;
+            border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+            transition: 0.2s;
+        }
+        .day-pill input:checked + span { background: var(--secondary-blue); color: white; }
+        .day-pill:hover span { background: #e2e8f0; }
+
+        .input-split { display: flex; align-items: center; gap: 0.5rem; }
+        .input-split input, .input-split select { flex: 1; }
+
+        /* Botones Mejorados */
+        .form-actions { 
+            grid-column: span 2; 
+            display: flex; 
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.2rem; 
+            border-radius: 10px; 
+            font-weight: 600;
+            cursor: pointer; 
+            border: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 8px; 
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .btn-cancel { 
+            background: #f1f5f9; 
+            color: #64748b; 
+        }
+        .btn-cancel:hover { background: #e2e8f0; }
+
+        .btn-clean {
+            background: transparent;
+            border: 1.5px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .btn-save { 
+            background: var(--secondary-blue); 
+            color: white; 
+            flex-grow: 2; /* El botón guardar es el más importante */
+        }
+        
+        .btn-save:hover:not(:disabled) { background: #2b6cb0; }
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Notification */
+        .top-notification {
+            position: fixed; top: 20px; right: -400px;
+            background: white; padding: 15px 25px; border-radius: 10px;
+            border-left: 5px solid var(--success-green); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            z-index: 9999;
+        }
+        .top-notification.show { right: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Nuevo Curso</h2>
+    <form id="courseForm" class="course-form" novalidate>
+        
+        <div class="form-group col-span-2">
+            <label>Nombre del Curso *</label>
+            <input type="text" name="nombre" id="firstInput" placeholder="Ej: Maquillaje" required>
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Descripción</label>
+            <input type="text" name="descripcion" placeholder="Ej: Curso básico profesional">
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Instructor *</label>
+            <select name="instructor" id="selectinstructor" required>
+                <option value="" disabled selected>Cargando instructores...</option>
+            </select>
+        </div>
+
+        <div class="form-group col-span-2">
+            <label>Días de Clase * <small>(Seleccione al menos uno)</small></label>
+            <div class="days-container" id="daysBox">
+                <label class="day-pill"><input type="checkbox" name="dias" value="Lun"><span>Lun</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Mar"><span>Mar</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Mie"><span>Mié</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Jue"><span>Jue</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Vie"><span>Vie</span></label>
+                <label class="day-pill"><input type="checkbox" name="dias" value="Sab"><span>Sáb</span></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Horario *</label>
+            <div class="input-split">
+                <input type="time" name="hora_inicio" required title="Hora de inicio">
+                <input type="time" name="hora_fin" required title="Hora de fin">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Duración *</label>
+            <div class="input-split">
+                <input type="number" name="duracion_valor" placeholder="Cant." min="1" required>
+                <select name="duracion_unidad">
+                    <option value="Semanas">Semanas</option>
+                    <option value="Meses">Meses</option>
+                </select>
+            </div>
+        </div> 
+ 
+        <div class="form-group">
+            <label>Costo</label>
+            <input type="text" name="costo" placeholder="Ej: 30$">
+        </div>
+
+        <div class="checkbox-group">
+            <label class="check-item"><input type="checkbox" name="evaluacion"> Evaluación final</label>
+            <label class="check-item"><input type="checkbox" name="certificado"> Entrega certificado</label>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-cancel" id="btnClose">Cerrar</button>
+            <button type="button" class="btn btn-clean" id="btnLimpiar">Limpiar</button>
+            <button type="submit" class="btn btn-save" id="btnSave" disabled>Guardar ✓</button>
+        </div>
+    </form>
+</div>
+
+<div class="top-notification" id="topNotif">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="color: var(--success-green); font-size: 1.5rem;">✔</span>
+        <div>
+            <h4 style="margin: 0; color: var(--text-main);">¡Éxito!</h4>
+            <p style="margin: 0; font-size: 0.8rem; color: #718096;">El curso ha sido registrado.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('courseForm');
+    const btnSave = document.getElementById('btnSave');
+    const selectInstructor = document.getElementById("selectinstructor");
+
+    // Inicialización
+    window.onload = () => {
+        if(typeof api !== 'undefined') {
+            api.send("Get-list-instructor");
+        } else {
+            // Demo por si se prueba en navegador
+            selectInstructor.innerHTML = '<option value="" disabled selected>Seleccione un instructor</option>';
+        }
+    }
+
+    // Recibir Instructores
+    if(typeof api !== 'undefined') {
+        api.receive("Data-list-intructor", (event, data) => {
+            selectInstructor.innerHTML = `<option value="" disabled selected>Seleccione un instructor</option>`;
+            data.forEach((instructor) => {
+                const option = document.createElement('option');
+                option.value = instructor.Key;
+                option.textContent = instructor.Name;
+                selectInstructor.appendChild(option);
+            });
+        });
+    }
+
+    // Validación Robusta
+    function checkFormValidity() {
+        const requiredInputs = form.querySelectorAll('[required]');
+        let isFormValid = true;
+
+        requiredInputs.forEach(input => {
+            if (!input.value || input.value.trim() === "") {
+                isFormValid = false;
+            }
+        });
+
+        // Validar Checkboxes de días
+        const diasSeleccionados = form.querySelectorAll('input[name="dias"]:checked');
+        if (diasSeleccionados.length === 0) {
+            isFormValid = false;
+        }
+
+        btnSave.disabled = !isFormValid;
+    }
+
+    // Eventos de entrada
+    form.addEventListener('input', checkFormValidity);
+    form.addEventListener('change', checkFormValidity);
+
+    // Envío del Formulario
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (btnSave.disabled) return;
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        // Manejo manual de checkboxes (días)
+        data.dias = Array.from(form.querySelectorAll('input[name="dias"]:checked')).map(el => el.value);
+        // Manejo de booleanos
+        data.evaluacion = form.querySelector('input[name="evaluacion"]').checked;
+        data.certificado = form.querySelector('input[name="certificado"]').checked;
+
+        if(typeof api !== 'undefined') {
+            api.send("save-new-data-course", data);
+        } else {
+            console.log("Datos a guardar:", data);
+            mostrarNotificacion();
+        }
+        
+        resetFormUI();
+    });
+
+    // Resetear Formulario
+    function resetFormUI() {
+        form.reset();
+        checkFormValidity();
+        document.getElementById('firstInput').focus();
+    }
+
+    document.getElementById('btnLimpiar').addEventListener('click', resetFormUI);
+
+    document.getElementById('btnClose').addEventListener('click', () => {
+        if(typeof api !== 'undefined') {
+            window.close();
+        } else {
+            alert("Cerrando ventana...");
+        }
+    });
+
+    // Notificaciones
+    if(typeof api !== 'undefined') {
+        api.receive("open-modal-register-course", () => {
+            mostrarNotificacion();
+        });
+    }
+
+    function mostrarNotificacion() {
+        const notif = document.getElementById('topNotif');
+        notif.classList.add('show');
+        setTimeout(() => notif.classList.remove('show'), 3500);
+    }
+</script>
+
+</body>
+</html>

@@ -62,7 +62,11 @@ function Login(app){
     </div>
   </div>
 </div>`;
-	document.getElementById(app).innerHTML=template_login;	
+document.getElementById(app).innerHTML=template_login;	
+
+    setTimeout(()=>{document.getElementById('username-input').focus()
+
+},1500)
 
 /*---------------funcion buttob eyes---------------------------*/
 
@@ -72,25 +76,25 @@ function Login(app){
 
   toggleBtn.addEventListener('click', () => {
     // 1. Cambiamos el tipo de input
-    const isPassword = passwordInput.type === 'password';
-    passwordInput.type = isPassword ? 'text' : 'password';
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
 
     // 2. Intercambiamos las clases de Icomoon
-    if (isPassword) {
-      eyeIcon.classList.remove('icon-eye');
-      eyeIcon.classList.add('icon-eye-blocked');
-    } else {
-      eyeIcon.classList.remove('icon-eye-blocked');
-      eyeIcon.classList.add('icon-eye');
-    }
+      if (isPassword) {
+        eyeIcon.classList.remove('icon-eye');
+        eyeIcon.classList.add('icon-eye-blocked');
+      } else {
+        eyeIcon.classList.remove('icon-eye-blocked');
+        eyeIcon.classList.add('icon-eye');
+      }
+
   });
 
-  /*---------------funcion butto eyes---------------------------*/
+/*---------------funcion butto eyes---------------------------*/
 /*-----------------Validar campos de formulario---------------------------------*/
- const form = document.querySelector('.form-login-system');
-
-  document.getElementById("Btn-Ingresar-login").addEventListener("click",()=>{
-      // 1. Prevenimos la recarga de la página
+const form = document.querySelector('.form-login-system');
+document.getElementById("Btn-Ingresar-login").addEventListener("click",()=>{
+      
       event.preventDefault();
 
       // 2. Capturamos los inputs
@@ -101,9 +105,9 @@ function Login(app){
       if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
         //  alert("Por favor, complete todos los campos.");
          
-
        api.send("message-campos-vacios-login","Por favor, complete todos los campos.")
        return; // Detenemos la ejecución si hay campos vacíos
+      
       }
 
       // 4. Si pasa la validación, aquí puedes proceder con el envío (fetch, axios, etc.)
@@ -112,8 +116,8 @@ function Login(app){
       console.log("Password:", passwordInput.value);
 
 
+
       api.send("Login-user-app",{username:usernameInput.value,password:passwordInput.value})
-   //
 
 });
 
@@ -124,29 +128,27 @@ passwordInputClick.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault(); // Previene comportamientos por defecto del formulario
         
-              // 2. Capturamos los inputs
-      const usernameInput = document.getElementById('username-input');
-      const passwordInput = document.getElementById('password');
+            // 2. Capturamos los inputs
+            const usernameInput = document.getElementById('username-input');
+            const passwordInput = document.getElementById('password');
 
-      // 3. Validamos si están vacíos (usando .trim() para evitar espacios en blanco)
-      if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
-          alert("Por favor, complete todos los campos.");
-          return; // Detenemos la ejecución si hay campos vacíos
-      }
+            // 3. Validamos si están vacíos (usando .trim() para evitar espacios en blanco)
+            if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
+                 api.send("message-campos-vacios-login","Por favor, complete todos los campos.")
+                return; // Detenemos la ejecución si hay campos vacíos
+            }
 
-      // 4. Si pasa la validación, aquí puedes proceder con el envío (fetch, axios, etc.)
-      console.log("Formulario válido. Enviando datos...");
-      console.log("Usuario:", usernameInput.value);
-      console.log("Password:", passwordInput.value);
+            // 4. Si pasa la validación, aquí puedes proceder con el envío (fetch, axios, etc.)
+            console.log("Formulario válido. Enviando datos...");
+            console.log("Usuario:", usernameInput.value);
+            console.log("Password:", passwordInput.value); 
 
-
-      api.send("Login-user-app",{username:usernameInput.value,password:passwordInput.value})
-
+           api.send("Login-user-app",{username:usernameInput.value,password:passwordInput.value})
 
         }
 });
 
-
+/*---------------------------------------------------------------*/
 api.receive("Data-user-employee",(event,data)=>{
 
  // console.log(data)
@@ -193,6 +195,8 @@ console.log(Data_user)
 console.log(Data_employee)
 */
 document.getElementById("ImagenLogin").src=data.employee.image
+document.getElementById('username-input').value="";
+document.getElementById('password').value="";
 
 setTimeout(()=>{
 
@@ -249,6 +253,7 @@ function cerrarModal() {
   resetearModal();
 }
 
+/*-------------------------------------*/
 function iniciarVerificacion() {
   const clave = document.getElementById("claveMaestra").value;
   

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Curso - SAIA v2</title>
     <style>
-        :root {
+     :root {
             --primary-blue: #2c5282;
             --secondary-blue: #3182ce;
             --bg-light: #f7fafc;
@@ -19,40 +19,40 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--bg-light);
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* padding: 20px; */
+}
         .card {
             background: var(--white);
             width: 100%;
             max-width: 550px;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
         }
 
-        h2 {
-            text-align: center;
-            color: var(--text-main);
-            font-size: 1.9rem;
-            margin-bottom: 1.5rem;
-        }
+h2 {
+    text-align: center;
+    color: var(--text-main);
+    font-size: 1.9rem;
+}
+.course-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0px;
+    padding: 4px;
+}
+   .col-span-2 { grid-column: span 2; }
 
-        .course-form {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        } 
-
-        .col-span-2 { grid-column: span 2; }
-
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+       .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
         label { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
 
         input, select {
@@ -64,7 +64,35 @@
             transition: all 0.2s;
         }
 
-        input:focus, select:focus { border-color: var(--secondary-blue); box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1); }
+
+.checkbox-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0.6rem;
+    align-items: center;
+}
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        /* Estilos de error */
+        input.invalid, select.invalid { border-color: var(--error-red); background-color: #fff5f5; }
+        .error-msg { color: var(--error-red); font-size: 0.75rem; margin-top: -0.5rem; display: none; }
+
+        /* Días de la semana */
+        .days-container { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 5px; }
+        .day-pill { flex: 1; text-align: center; min-width: 45px; }
+        .day-pill input { display: none; }
+        .day-pill span {
+            display: block; padding: 10px 0; background: #edf2f7;
+            border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+        }
+        .day-pill input:checked + span { background: var(--secondary-blue); color: white; }
 
         /* Días de la semana y Estado */
         .pill-container { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 5px; }
@@ -84,8 +112,12 @@
         .input-split { display: flex; align-items: center; gap: 0.5rem; }
         .input-split input, .input-split select { flex: 1; width: 50%; }
 
-        .form-actions { grid-column: span 2; display: flex; justify-content: space-between; margin-top: 1.5rem; }
-
+.form-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
         .btn {
             padding: 0.8rem 1.8rem; border-radius: 10px; font-weight: 600;
             cursor: pointer; border: none; display: flex; align-items: center; gap: 10px; font-size: 0.95rem;
@@ -93,7 +125,18 @@
 
         .btn-cancel { background: transparent; border: 1.5px solid var(--primary-blue); color: var(--primary-blue); }
         .btn-save { background: var(--secondary-blue); color: white; transition: opacity 0.3s; }
-        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Botón desactivado visualmente */
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.5); }
+
+                /* Notification */
+        .top-notification {
+            position: fixed; top: 20px; right: -400px;
+            background: white; padding: 15px 25px; border-radius: 10px;
+            border-left: 5px solid #28a745; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.5s; z-index: 9999;
+        }
+        .top-notification.show { right: 20px; }
     </style>
 </head>
 <body>
@@ -115,9 +158,7 @@
         <div class="form-group col-span-2">
             <label>Instructor *</label>
             <select name="instructor" required id="instructorSelect">
-                <option value="">Seleccione un instructor</option>
-                <option value="1">Instructor 01</option>
-                <option value="2">Instructor 02</option>
+                
             </select>
         </div>
 
@@ -133,24 +174,7 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Horario *</label>
-            <div class="input-split">
-                <input type="time" name="hora_inicio" required>
-                <input type="time" name="hora_fin" required>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Duración *</label>
-            <div class="input-split">
-                <input type="number" name="duracion_valor" min="0" required>
-                <select name="duracion_unidad">
-                    <option value="Semanas">Semanas</option>
-                    <option value="Meses">Meses</option>
-                </select>
-            </div>
-        </div>
+ 
 
         <div class="form-group col-span-2">
             <label>Estado del Curso</label>
@@ -164,81 +188,204 @@
                     <span class="status-pause">Pausa</span>
                 </label>
                 <label class="pill-item">
-                    <input type="radio" name="estado" value="Inactivo">
-                    <span class="status-inactive">Inactivo</span>
+                    <input type="radio" name="estado" value="Cancelado">
+                    <span class="status-inactive">Cancelado</span>
+                </label>
+                <label class="pill-item">
+                    <input type="radio" name="estado" value="Completado">
+                    <span class="status-inactive">Completado</span>
                 </label>
             </div>
         </div>
 
+             <div class="form-group">
+            <label>Horario *</label>
+            <div class="input-split">
+                <input type="time" name="hora_inicio" required>
+                <input type="time" name="hora_fin" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Duración *</label>
+            <div class="input-split">
+                <input type="number" name="duracion_valor" placeholder="Cant." min ="0"required>
+                <select name="duracion_unidad">
+                    <option value="Semanas">Semanas</option>
+                    <option value="Meses">Meses</option>
+                </select>
+            </div>
+        </div> 
+ 
+        <div class="form-group">
+            <label for="cupo">Cupo Máximo</label>
+            <input type="number" id="cupo" name="cupo" placeholder="Ej: 20">
+        </div>
+        <div class="form-group">
+            <label>Costo</label>
+            <input type="text" name="costo" placeholder="Ej: 30$">
+
+        </div>
+
+        <div class="checkbox-group form-group col-span-2">
+            <label class="check-item"><input type="checkbox" name="evaluacion"> Evaluación final</label>
+            <label class="check-item"><input type="checkbox" name="certificado"> Entrega certificado</label>
+        </div>
+
         <div class="form-actions">
-            <button type="button" class="btn btn-cancel" id="btnCancel">Descartar</button>
-            <button type="submit" class="btn btn-save" id="btnSave">Actualizar ✓</button>
+            <button type="button" class="btn btn-cancel" id="btnClose">Cerrar</button>
+         <div style="width: 50%; display: flex; justify-content: space-evenly; ">           <button type="button" class="btn btn-cancel" id="btnLimpiar">Limpiar</button>
+                 <button type="submit" class="btn btn-save" id="btnSave" disabled="">Guardar ✓</button>
+            </div>
         </div>
     </form>
 </div>
-
+<div class="top-notification" id="topNotif">
+    <span class="icon-checkmark"></span>
+    <h3>¡Datos Guardados!</h3>
+</div>
 <script>
-    const form = document.getElementById('editCourseForm');
-    const btnSave = document.getElementById('btnSave');
 
-    function cargarDatosDelCurso(curso) {
-        form.nombre.value = curso.nombre;
-        form.descripcion.value = curso.descripcion;
-        form.instructor.value = curso.instructorId;
-        form.hora_inicio.value = curso.h_inicio;
-        form.hora_fin.value = curso.h_fin;
-        form.duracion_valor.value = curso.dur_val;
-        form.duracion_unidad.value = curso.dur_uni;
-        
-        curso.dias.forEach(dia => {
-            const check = form.querySelector(`input[name="dias"][value="${dia}"]`);
-            if(check) check.checked = true;
-        });
+window.onload=function(){
+    api.send("Get-data-course-update")
+}
 
-        const radioStatus = form.querySelector(`input[name="estado"][value="${curso.estado}"]`);
-        if(radioStatus) radioStatus.checked = true;
+api.receive("data-update-course",(event,course)=>{
 
-        checkFormValidity();
-    }
+    console.log(course)
 
-    function checkFormValidity() {
-        const requiredFields = form.querySelectorAll('[required]');
-        let isValid = true;
+    DataUpdatecourse(course)
 
-        requiredFields.forEach(f => { if (!f.value.trim()) isValid = false; });
+})
+const form = document.getElementById('editCourseForm');
+const btnSave = document.getElementById('btnSave');
+let currentCourseKey = null; // Variable global para persistir la Key
 
-        const dias = form.querySelectorAll('input[name="dias"]:checked');
-        if (dias.length === 0) isValid = false;
+// Esta es la función que recibe el objeto de la base de datos
+function DataUpdatecourse(curso) {
+    if (!curso) return;
 
-        btnSave.disabled = !isValid;
-    }
+    // 1. Guardar la Key de forma segura
+    currentCourseKey = curso.Key;
 
-    form.addEventListener('input', checkFormValidity);
+    // 2. Asignación de valores directos (usando los nombres del objeto recibido)
+    form.nombre.value = curso.Name;
+    form.descripcion.value = curso.Description;
+    //form.instructor.value = curso.Instructor_ID;
+    form.hora_inicio.value = curso.Start_Time;
+    form.hora_fin.value = curso.End_Time;
+    form.duracion_valor.value = curso.Duration_Value;
+    form.duracion_unidad.value = curso.Duration_Unit;
+    form.cupo.value = curso.Capacity;
+    form.costo.value = curso.Cost;
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const updatedData = Object.fromEntries(formData.entries());
-        updatedData.dias = Array.from(form.querySelectorAll('input[name="dias"]:checked')).map(el => el.value);
 
-        console.log("Datos actualizados para la DB:", updatedData);
-        alert("Cambios guardados con éxito.");
-    });
 
-    document.getElementById('btnCancel').addEventListener('click', () => {
-        if(confirm("¿Descartar los cambios realizados?")) {
-            window.location.reload();
-        }
-    });
-
-    // Para probar la opción pausa, podrías descomentar esto:
-    // cargarDatosDelCurso({ 
-    //    nombre: "Diseño Web", descripcion: "HTML y CSS Pro", instructorId: "1",
-    //    h_inicio: "14:00", h_fin: "16:00", dur_val: "4", dur_uni: "Semanas",
-    //    dias: ["Lun", "Mie"], estado: "Pausa"
-    // });
+/*-------------------------*/
+ const select = document.getElementById("instructorSelect");
+ select.innerHTML += `<option value="${curso.Instructor_ID}">${curso.Nombre_Instructor}</option>`;
     
+    /*------------------------*/
+    // 3. Manejo de Días (Convertir "Lun,Mar" en checks marcados)
+    if (curso.Days) {
+        const diasArray = curso.Days.split(',');
+        diasArray.forEach(dia => {
+            const check = form.querySelector(`input[name="dias"][value="${dia}"]`);
+            if (check) check.checked = true;
+        });
+    }
+
+    // 4. Manejo de Estado (Radio)
+    const radioStatus = form.querySelector(`input[name="estado"][value="${curso.Status}"]`);
+    if (radioStatus) radioStatus.checked = true;
+
+    // 5. Manejo de Checkboxes (Booleanos: 1 o 0)
+    form.evaluacion.checked = curso.Has_Evaluation === 1;
+    form.certificado.checked = curso.Has_Certificate === 1;
+
+    // Validar el botón al terminar de cargar
     checkFormValidity();
+
+    api.send("Get-list-instructor-update")
+}
+
+
+api.receive("Data-list-intructor-update", (event, data) => {
+    const select = document.getElementById("instructorSelect");
+    // 3. Iteramos solo con el objeto 'instructor'
+    data.forEach((instructor) => {
+        // Usamos += para ir sumando las opciones
+        select.innerHTML += `<option value="${instructor.Key}">${instructor.Name}</option>`;
+    });
+});
+
+
+
+// Lógica de captura de datos para enviar a la DB
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const updatedData = Object.fromEntries(formData.entries());
+
+    // Agregamos la Key que guardamos al inicio
+    updatedData.Key = currentCourseKey;
+
+    // Formateamos los campos especiales
+    updatedData.dias = Array.from(form.querySelectorAll('input[name="dias"]:checked')).map(el => el.value).join(',');
+    updatedData.evaluacion = form.evaluacion.checked ? 1 : 0;
+    updatedData.certificado = form.certificado.checked ? 1 : 0;
+
+    //console.log("Objeto listo para enviar a la DB:", updatedData);
+   api.send("save-update-data-course", updatedData);
+
+  // ClearForm()
+    
+    // Aquí llamarías a tu API: api.send("Update-course", updatedData)
+});
+
+// --- Funciones de soporte ---
+
+function checkFormValidity() {
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+
+    requiredFields.forEach(f => { if (!f.value.trim()) isValid = false; });
+
+    const dias = form.querySelectorAll('input[name="dias"]:checked');
+    if (dias.length === 0) isValid = false;
+
+    btnSave.disabled = !isValid;
+}
+
+form.addEventListener('input', checkFormValidity);
+
+document.getElementById('btnLimpiar').addEventListener('click', () => {
+    
+ClearForm()
+
+});
+
+
+function ClearForm(){
+    form.reset();
+    checkFormValidity();
+    form.querySelector('input[name="nombre"]').focus();
+}
+document.getElementById('btnClose').addEventListener('click', () => { window.close(); });
+
+
+/*------------------------------------*/
+
+    api.receive("open-modal-register-course", (event, data) => {
+        mostrarNotificacion();
+    });
+
+    function mostrarNotificacion() {
+        const notif = document.getElementById('topNotif');
+        notif.classList.add('show');
+        setTimeout(() => notif.classList.remove('show'), 3000);
+    }
 </script>
 
 </body>

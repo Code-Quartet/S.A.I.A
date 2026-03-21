@@ -20,10 +20,12 @@ let ID_user="";
 module.exports = function Edit_password(parentWindow,iduser) {
   window_edit_password = new BrowserWindow({
         width:470,
-        height:490,
+        height:430,
         modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
+      resizable:false,
+        frame:false,              
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {
             nodeIntegration: false,
@@ -74,10 +76,6 @@ ipcMain.on("sms-alert-system-pass",(event,sms)=>{
 
 })
 ipcMain.on("update-password-user",(event,data)=>{
-
-   // console.log("ID_user",ID_user)
-
-    //{ success: false, message: 'Usuario no encontrado.' }
 
     UpdatePassword(ID_user, data.afterPass, data.newPass).then((result)=>{
 

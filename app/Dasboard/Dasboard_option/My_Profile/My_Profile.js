@@ -73,15 +73,30 @@ function My_Profile(id){
                     </div>
                 </div>
 
-                <div class="advanced-card" onclick="alert('Exportando a Excel...')">
+                <div class="advanced-card" id="EditarContraseña">
+                    <div class="card-icon" style="background: var(--brand-blue);"><span class="icon-key"></span></div>
+                    <div class="card-info">
+                        <h4>Clave </h4>
+                        <p>Cambiar acceso de nivel 1.</p>
+                    </div>
+                </div>
+
+                <div class="advanced-card" id="ExcelExportar">
                     <div class="card-icon" style="background: var(--brand-excel);"><span class="icon-file-excel"></span></div>
                     <div class="card-info">
                         <h4>Exportar Todo</h4>
                         <p>Generar reporte en Excel.</p>
                     </div>
                 </div>
+                <div class="advanced-card" id="ExcelImportar">
+                    <div class="card-icon" style="background: var(--brand-excel);"><span class="icon-file-excel"></span></div>
+                    <div class="card-info">
+                        <h4>Importar Todo</h4>
+                        <p>Generar reporte en Excel.</p>
+                    </div>
+                </div>
 
-                <div class="advanced-card" onclick="alert('Iniciando Backup de SAIA.db...')">
+                <div class="advanced-card" id="BackupSQLITE">
                     <div class="card-icon" style="background: var(--brand-success);"><span class="icon-database"></span></div>
                     <div class="card-info">
                         <h4>Backup SQLite</h4>
@@ -89,121 +104,243 @@ function My_Profile(id){
                     </div>
                 </div>
 
-    <div class="advanced-card" id="EditarContraseña">
-                    <div class="card-icon" style="background: var(--brand-blue);"><span class="icon-key"></span></div>
+                <div class="advanced-card" id="ImportarSQLITE">
+                    <div class="card-icon" style="background: var(--brand-success);"><span class="icon-database"></span></div>
                     <div class="card-info">
-                        <h4>Clave </h4>
-                        <p>Cambiar acceso de nivel 1.</p>
+                        <h4>Importar Backup SQLite</h4>
+                        <p>Cargar base de datos.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>`;
+    </div>
+<div class="top-notification" id="topNotif">
+        <span class="contain-icono-message">
+            <span class="icon-checkmark icono-message">
+            </span>
+        </span>
+        <h3>¡Operación Realizada!</h3>
+</div>
+    `;
 /***********************DATOS DE BASE DE DATOS *****************************************/
-console.log(Data_user)
-
-/*
-console.log(Data_employee)
-{
-    "key": "4d8b091e-e963-4ce7-92ed-307156d1d7e4",
-    "user": "admin",
-    "permission": "Administrador"
-}
-*/
-document.getElementById("avatarPreviewMyprofile").src = Data_employee.image
-document.getElementById("NameEmployee").innerHTML = Data_employee.name
-document.getElementById("IDEmployee").innerHTML = Data_employee.codId
-document.getElementById("Permission").innerHTML =  Data_user.permission
-document.getElementById("txt-user").innerHTML = Data_user.user
-document.getElementById("txt-correo").innerHTML = Data_employee.correo
+    console.log(Data_user)
 
 
+    document.getElementById("avatarPreviewMyprofile").src = Data_employee.image
+    document.getElementById("NameEmployee").innerHTML = Data_employee.name
+    document.getElementById("IDEmployee").innerHTML = Data_employee.codId
+    document.getElementById("Permission").innerHTML =  Data_user.permission
+    document.getElementById("txt-user").innerHTML = Data_user.user
+    document.getElementById("txt-correo").innerHTML = Data_employee.correo
 
-if(Data_user.permission=="Administrador"){
-	
-	document.getElementById("Permission").style.color = 'white'
-	document.getElementById("Permission").style.background = 'blue'
+    api.receive('notification-my-profile', async (event,imagen) => {
 
-}
-if(Data_user.permission=="Empleado"){
-	document.getElementById("Permission").style.color = 'white'
-	document.getElementById("Permission").style.background = 'green'
-}
+       mostrarNotificacion()
 
-//document.getElementById("pass-usuario").value = Data_user.password
+    })
 
-/***********************DATOS DE BASE DE DATOS *****************************************/
+    if(Data_user.permission=="Administrador"){
+    	
+    	document.getElementById("Permission").style.color = 'white'
+    	document.getElementById("Permission").style.background = 'blue'
 
-/********** SISTEMAA DE BOTON DE CAMARA*******************************/
-document.getElementById("btnCamaraMyProfile").addEventListener("click",(event)=>{
+    }
 
-	api.send("Image-select-my-profile")
+    if(Data_user.permission=="Sub-Administrador"){
+    	document.getElementById("Permission").style.color = 'white'
+    	document.getElementById("Permission").style.background = 'green'
+    }
 
-})
+    //document.getElementById("pass-usuario").value = Data_user.password
 
-api.receive('Imagen-user-select-my-profile', async (event,imagen) => {
+    /***********************DATOS DE BASE DE DATOS *****************************************/
 
-	document.getElementById("avatarPreviewMyprofile").src=imagen
-})
+    /********** SISTEMAA DE BOTON DE CAMARA*******************************/
+    document.getElementById("btnCamaraMyProfile").addEventListener("click",(event)=>{
 
-/********** SISTEMAA DE BOTON DE CAMARA*******************************/
-/*----EDITAR usuario----*/
-document.getElementById("EditarUsuario").addEventListener("click",(event)=>{
-
-	api.send("Editar-informacion-usuario",Data_user.key)
-})
-
-/*----EDITAR CORREO----*/
-document.getElementById("EditarCorreo").addEventListener("click",(event)=>{
-
-	api.send("Editar-informacion-correo",Data_employee.key)
-})
-
-
-/*----EDITAR CONTRASEÑA----*/
-document.getElementById("EditarContraseña").addEventListener("click",(event)=>{
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"imageMyprofile",
+                    key:Data_employee.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
 
 
-api.send("Editar-informacion-contrasena",Data_user.key)
+    })
+
+    api.receive('Imagen-user-select-my-profile', async (event,imagen) => {
+
+    	document.getElementById("avatarPreviewMyprofile").src=imagen
+
+    })
+
+    /********** SISTEMAA DE BOTON DE CAMARA*******************************/
+    /*----EDITAR usuario----*/
+    document.getElementById("EditarUsuario").addEventListener("click",(event)=>{
+
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"EditUser",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
+
+    })
+
+    /*----EDITAR CORREO----*/
+    document.getElementById("EditarCorreo").addEventListener("click",(event)=>{
 
 
-})
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"EditEmail",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
 
-/*----EDITAR CONTRASEÑA MASTER--*/
-document.getElementById("EditarContraseñaMaestra").addEventListener("click",(event)=>{
+    })
 
 
-api.send("Editar-informacion-contrasena-maestra",Data_user.key)
+    /*----EDITAR CONTRASEÑA----*/
+    document.getElementById("EditarContraseña").addEventListener("click",(event)=>{
 
-})
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"EditPass",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
+    })
+
+    /*----EDITAR CONTRASEÑA MASTER--*/
+    document.getElementById("EditarContraseñaMaestra").addEventListener("click",(event)=>{
+
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"EditPassMaster",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
+    })   
+
+
+/*---------------ExcelExportar-----------------------*/
+    document.getElementById("ExcelExportar").addEventListener("click",(event)=>{
+
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"ExcelExportar",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
+
+    })   
+/*----------------ExcelImportar----------------------*/
+    document.getElementById("ExcelImportar").addEventListener("click",(event)=>{
+
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"ExcelImportar",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
+       
+
+    })
+
+    /*--------------ImportarSQLITE-----------------------*/
+    document.getElementById("ImportarSQLITE").addEventListener("click",(event)=>{
+
+         let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"ImportarSQLITEDB",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
+    })   
+/*----------------BackupSQLITE----------------------*/
+    document.getElementById("BackupSQLITE").addEventListener("click",(event)=>{
+
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"ExportarSQLITEDB",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
+
+    })
+/*----------------------------------------------------*/
 
      // Elementos del DOM
-        const modal = document.getElementById('modalConfig');
-        const btnOpen = document.getElementById('openModalBtn');
+    const modal = document.getElementById('modalConfig');
+    const btnOpen = document.getElementById('openModalBtn');
 
-        // Función para mostrar/ocultar contraseña
-        function toggleView(id, icon) {
-            const input = document.getElementById(id);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace("icon-eye", "icon-eye-blocked");
-            } else {
-                input.type = "password";
-                icon.classList.replace("icon-eye-blocked", "icon-eye");
-            }
+    // Función para mostrar/ocultar contraseña
+    function toggleView(id, icon) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace("icon-eye", "icon-eye-blocked");
+        } else {
+            input.type = "password";
+            icon.classList.replace("icon-eye-blocked", "icon-eye");
         }
+    }
 
-        // Abrir Modal
-        btnOpen.addEventListener('click', () => {
-            modal.style.display = 'flex';
-        });
+            // Abrir Modal
+    btnOpen.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
 }
 
-        // Cerrar Modal
-        function closeAdvanced() {
-        	const modal = document.getElementById('modalConfig');
-            modal.style.display = 'none';
-        }
+function MessageAlert(sms){
+
+    api.send("MessageAlertMyProfile",sms)
+
+}
+
+// Cerrar Modal
+function closeAdvanced() {
+	const modal = document.getElementById('modalConfig');
+    modal.style.display = 'none';
+}
+
 
 function toggleVisibility(idInput, icono) {
     const input = document.getElementById(idInput);
@@ -222,5 +359,21 @@ function toggleVisibility(idInput, icono) {
     }
 }
 
+/*-----CONTROL DE VENTANA DE Notificacion-------*/
+function mostrarNotificacion() {
+    const overlay = document.getElementById('modal-message-register');
+    const btnClose = document.getElementById('closeModal');
 
+    const notif = document.getElementById('topNotif');
+    notif.classList.add('show');
 
+    setTimeout(() => {
+    cerrarNotificacion();
+    }, 4000);
+}
+
+function cerrarNotificacion() {
+    const notif = document.getElementById('topNotif');
+    notif.classList.remove('show');
+}
+/*--------------------------------------*/

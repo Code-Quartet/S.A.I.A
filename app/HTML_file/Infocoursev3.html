@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>S.A.I.A - Ficha de Curso</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #334155;
+            --border: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--text);
+        }
+
+        .course-container {
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 300px; /* Columna principal y barra lateral */
+            gap: 20px;
+        }
+
+        /* BLOQUES COMUNES */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* ENCABEZADO (OCUPA TODA LA FILA) */
+        .course-header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid var(--accent);
+        }
+
+        .course-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .course-id {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--accent);
+            background: #eff6ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* COLUMNA PRINCIPAL */
+        .main-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* GRID INTERNO DE DETALLES */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-node {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .detail-node span {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .detail-node strong {
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        /* BARRA LATERAL (ADMINISTRACIÓN) */
+        .side-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .price-box {
+            text-align: center;
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        .price-box h2 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-secondary { background: #f1f5f9; color: var(--primary); border: 1px solid var(--border); }
+
+        /* INDICADORES SI/NO */
+        .check-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #cbd5e1;
+        }
+
+        .dot.active { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+
+    </style>
+</head>
+<body>
+
+<div class="course-container">
+    
+    <header class="glass-card course-header">
+        <div>
+            <span class="course-id" id="val-key">UUID-8829-X</span>
+            <h1 id="val-name">Nombre del Curso</h1>
+        </div>
+        <div style="text-align: right;">
+            <div id="val-status" style="font-weight: bold; color: #22c55e;">● Activo</div>
+            <small id="val-date" style="color: #94a3b8;">Creado: 20/03/2026</small>
+        </div>
+    </header>
+
+    <div class="main-info">
+        <section class="glass-card">
+            <div class="section-title"><span class="icon-info"></span> Información Académica</div>
+            <div class="details-grid">
+                <div class="detail-node">
+                    <span>Instructor</span>
+                    <strong id="val-instructor">---</strong>
+                </div>
+                <div class="detail-node">
+                    <span>Días</span>
+                    <strong id="val-days">---</strong>
+                </div>
+                <div class="detail-node">
+                    <span>Horario</span>
+                    <strong id="val-time">---</strong>
+                </div>
+                <div class="detail-node">
+                    <span>Duración</span>
+                    <strong id="val-duration">---</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <div class="section-title"><span class="icon-file-text"></span> Contenido y Descripción</div>
+            <p id="val-description" style="line-height: 1.6; color: #64748b;">
+                No hay descripción disponible.
+            </p>
+        </section>
+    </div>
+
+    <div class="side-info">
+        <div class="price-box">
+            <span>Costo Total</span>
+            <h2 id="val-cost">$0.00</h2>
+            <small>Pago único</small>
+        </div>
+
+        <div class="glass-card">
+            <div class="section-title">Requisitos</div>
+            <div class="check-item">
+                <span>Evaluación Final</span>
+                <div id="check-eval" class="dot"></div>
+            </div>
+            <div class="check-item">
+                <span>Entrega Certificado</span>
+                <div id="check-cert" class="dot"></div>
+            </div>
+            <div class="check-item" style="margin-top: 15px; border:none;">
+                <span>Cupo: <strong id="val-capacity">0</strong></span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary"><span class="icon-pencil"></span> Modificar</button>
+            <button class="btn btn-secondary"><span class="icon-bin"></span> Archivar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Datos simulados de la tabla Course
+    const curso = {
+        Key: "C-99201",
+        Name: "Excel Avanzado para Contadores",
+        Description: "Domina tablas dinámicas, macros en VBA y automatización de reportes financieros financieros con casos prácticos reales.",
+        Instructor: "Lic. María García",
+        Days: "Sábados",
+        Start_Time: "08:00 AM",
+        End_Time: "12:00 PM",
+        Duration_Value: 4,
+        Duration_Unit: "Semanas",
+        Capacity: 12,
+        Cost: "35.00",
+        Has_Evaluation: 1,
+        Has_Certificate: 1,
+        Status: "Activo",
+        Date_Created: "15/02/2026"
+    };
+
+    function loadData(c) {
+        document.getElementById('val-key').innerText = c.Key;
+        document.getElementById('val-name').innerText = c.Name;
+        document.getElementById('val-instructor').innerText = c.Instructor;
+        document.getElementById('val-days').innerText = c.Days;
+        document.getElementById('val-time').innerText = `${c.Start_Time} - ${c.End_Time}`;
+        document.getElementById('val-duration').innerText = `${c.Duration_Value} ${c.Duration_Unit}`;
+        document.getElementById('val-description').innerText = c.Description;
+        document.getElementById('val-cost').innerText = `$${c.Cost}`;
+        document.getElementById('val-capacity').innerText = c.Capacity;
+        document.getElementById('val-date').innerText = `Registrado: ${c.Date_Created}`;
+
+        if(c.Has_Evaluation) document.getElementById('check-eval').classList.add('active');
+        if(c.Has_Certificate) document.getElementById('check-cert').classList.add('active');
+    }
+
+    loadData(curso);
+</script>
+
+</body>
+</html>

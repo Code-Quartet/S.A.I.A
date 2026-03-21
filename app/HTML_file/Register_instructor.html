@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Instructor - SAIA</title>
+    <link rel="stylesheet" href="css/icomoon.css">
+    <style>
+/* Contenedor Principal */
+.modal-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    width: 100%;
+    max-width: 650px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modal-header h2 {
+    text-align: center;
+    color: #444;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Formulario en Grid */
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas */
+    gap: 15px 20px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+/* El campo de nombre ocupa las dos columnas para verse como en la imagen */
+.field:first-child {
+    grid-column: 1 / 2;
+}
+
+.field label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+}
+
+.field input, .field select {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.field input:focus {
+    border-color: #4a90e2;
+}
+
+/* Estilo para el Avatar Circular (Referencia Imagen 1) */
+.file-upload-container-new-registre {
+    grid-column: 1 / 3; /* Centrado o ajustado según prefieras */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.image-uploader {
+    position: relative;
+    cursor: pointer;
+}
+
+.main-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #0000ff; /* Azul de la imagen 1 */
+    border: 2px solid #eee;
+}
+
+.avatar-main-register {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.camera-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #ccc;
+    border: none;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Botones Footer (Referencia Imagen 2) */
+.footer-buttons {
+    grid-column: 1 / 3;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-footer {
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+}
+
+/* Botón Cancelar - Estilo delineado azul */
+.btn-cancel {
+    background: transparent;
+    border: 2px solid #4a90e2;
+    color: #4a90e2;
+}
+
+.btn-cancel:hover {
+    background: #f0f7ff;
+}
+
+/* Botón Guardar - Estilo sólido azul */
+.btn-save {
+    background: #2d58d1;
+    border: none;
+    color: white;
+}
+
+.btn-save:hover {
+    background: #1e3fa3;
+    box-shadow: 0 4px 12px rgba(45, 88, 209, 0.3);
+}
+
+/* Ajuste de iconos Icomoon */
+.icon-cross, .icon-checkmark {
+    font-size: 18px;
+}
+    </style>
+</head>
+<body>
+
+<div class="modal-card">
+    <div class="modal-header">
+        <h2>Nuevo Instructor</h2>
+    </div>
+
+    <form id="instructorForm" class="form-container">
+        <div class="field">
+            <label>Nombre Completo</label>
+            <input type="text" placeholder="Ej: Marina Paula Loza Mancha">
+        </div>
+
+        <div class="field ">
+                <div class="file-upload-container-new-registre" style="border-style: none;">
+                      <label class="image-uploader" for="fileInputregister">
+                          <div class="main-circle">
+                              <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+                           </div>                       
+                           <button class="camera-button" id="Btn_select_image_user" onclick="SelectImage()">
+                               <span class="icon-camera"></span>
+                           </button>                       
+                      </label>
+                </div>
+        </div>
+        <div class="field ">
+            <label>Edad</label>
+            <input type="text" placeholder="Ej: 20">
+        </div>
+
+        <div class="field ">
+            <label>Cedula</label>
+            <input type="text" placeholder="Ej: 10.458.289">
+        </div>
+        <div class="field ">
+            <label>Teléfono</label>
+            <input type="text" placeholder="Ej: 0412-688-5749">
+        </div>
+
+        <div class="field ">
+            <label>Correo Electrónico</label>
+            <input type="email" placeholder="Ej: Maquillaje">
+        </div>
+        <div class="field ">
+            <label>Dirección</label>
+            <input type="text" placeholder="Ej: Calle 4 Av Pérez Casa #5">
+        </div>
+
+
+        <div class="field ">
+            <label>Estado</label>
+                     <select class="select-input-new-registre-employee" id="select-status-employee">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                        <option value="Despedido">Despedido</option>
+                    </select>
+        </div>
+
+        <div class="field ">
+            <label>Especialidad</label>
+            <input type="text" placeholder="Ej: Manejo">
+        </div>
+
+        <div class="field c">
+            <label>Certificaciones</label>
+            <input type="text" placeholder="Ej: Certificado de Conducción">
+        </div>
+
+        <div class="footer-buttons">
+            <button type="button" class="btn-footer btn-cancel">
+                Cancelar <span class="icon-cross"></span>
+            </button>
+            <button type="submit" class="btn-footer btn-save">
+                Guardar <span class="icon-checkmark"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropdown = document.getElementById('coursesDropdown');
+        const toggle = document.getElementById('dropdownToggle');
+        const menu = document.getElementById('dropdownMenu');
+        const searchInput = document.getElementById('courseInput');
+        const listItems = document.querySelectorAll('#listItems li');
+        const labelValue = document.getElementById('labelValue');
+
+        // Toggle menú
+        toggle.addEventListener('click', () => {
+            menu.classList.toggle('active');
+        });
+
+        // Selección de ítem
+        listItems.forEach(item => {
+            item.addEventListener('click', () => {
+                labelValue.textContent = item.textContent;
+                labelValue.style.color = "#333";
+                menu.classList.remove('active');
+            });
+        });
+
+        // Filtrado en tiempo real
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            listItems.forEach(li => {
+                const text = li.textContent.toLowerCase();
+                li.style.display = text.includes(val) ? 'block' : 'none';
+            });
+        });
+
+        // Cerrar al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -4,258 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nuevo Instructor - SAIA</title>
-    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
     <style>
-        :root {
-            --primary-blue: #2546d1;
-            --primary-hover: #1e3ab7;
-            --border-color: #d1d5db;
-            --text-main: #4b5563;
-            --text-label: #374151;
-            --bg-gray: #f3f4f6;
-            --white: #ffffff;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
+        * { padding: 0; margin: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #777; /* Fondo neutro para resaltar el modal */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+.modal-card {
+    background: white;
+    padding: 4px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 800px;
+    margin: auto;
+}
+        .modal-header h2 { text-align: center; margin-bottom: 20px; color: #333; }
 
-        /* --- Contenedor Principal --- */
-        .modal-card {
-            background: var(--white);
-            width: 100%;
-            max-width: 580px;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: var(--shadow);
-            position: relative;
-        }
+.form-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 3px;
+}
 
-        .btn-close-x {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            background: #e5e7eb;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        /* Áreas del Grid mejoradas para legibilidad */
+        .field-grid1 { grid-column: span 6; display: flex; justify-content: center; }
+        .field-grid2 { grid-column: span 2; }
+        .field-grid3 { grid-column: span 2; }
+        .field-grid4 { grid-column: span 2; }
+        .field-grid5 { grid-column: span 6; }
+        .field-grid6 { grid-column: span 2; }
+        .field-grid7 { grid-column: span 2; }
+        .field-grid8 { grid-column: span 2; }
+        .field-grid9 { grid-column: span 3; }
+        .field-grid10 { grid-column: span 3; }
+        .field-grid11 { grid-column: span 6; }
 
-        .modal-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+        /* Avatar */
+.main-circle {
+    width: 141px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #2d58d1;
+    border: 4px solid #f0f2f5;
+    position: relative;
+}
 
-        .modal-header h2 {
-            margin: 0;
-            font-size: 1.6rem;
-            color: #444;
-            font-weight: 500;
-        }
+.avatar-main-register { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- Grid Layout --- */
-        .form-container {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 12px 18px;
-        }
+.camera-button {
+    position: relative;
+    top: 91px;
+    right: 37px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border: 2px solid #fff;
+    cursor: pointer;
+}
 
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .field label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-label);
-        }
-
-        .field input {
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .field input:focus {
-            border-color: var(--primary-blue);
-        }
-
-        /* Span de Columnas */
-        .col-12 { grid-column: span 12; }
-        .col-9 { grid-column: span 9; }
-        .col-8 { grid-column: span 8; }
-        .col-6 { grid-column: span 6; }
-        .col-4 { grid-column: span 4; }
-        .col-3 { grid-column: span 3; }
-
-        /* --- Input de Foto --- */
-        .upload-group {
-            display: flex;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-            height: 42px;
-        }
-
-        .icon-thumb {
-            background: #e5e7eb;
-            width: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #9ca3af;
-            font-size: 1.2rem;
-        }
-
-        .upload-group input {
-            flex-grow: 1;
-            border: none;
-            background: transparent;
-            color: #9ca3af;
-        }
-
-        .btn-blue-action {
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 0 20px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* --- Select Personalizado --- */
-        .custom-select {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .select-box {
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-            color: #9ca3af;
-            background: var(--white);
-            min-height: 42px;
-            box-sizing: border-box;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 105%;
-            left: 0;
-            width: 100%;
-            background: var(--white);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            z-index: 100;
+        /* Inputs y Labels */
+        .field { display: flex; flex-direction: column; gap: 5px; }
+        .field label { font-weight: 600; font-size: 14px; color: #555; }
+        .field input, .field select {
             padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .dropdown-content.active { display: block; }
-
-        .search-wrapper {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--border-color);
+            border: 1.5px solid #e0e0e0;
             border-radius: 8px;
-            padding: 6px 12px;
-            margin-bottom: 10px;
+            font-size: 14px;
         }
 
-        .search-wrapper input {
-            border: none;
-            width: 100%;
-            margin-left: 10px;
-            padding: 2px;
-        }
+        .field input:focus { border-color: #2d58d1; outline: none; }
 
-        .options-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        .options-list li {
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            color: var(--text-main);
-        }
-
-        .options-list li:hover {
-            background: var(--bg-gray);
-        }
-
-        .btn-add-item {
-            width: 100%;
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-
-        /* --- Footer --- */
+        /* Botones y Efecto Disable */
         .footer-buttons {
-            grid-column: span 12;
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            padding-top: 20px;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
         }
 
         .btn-footer {
-            padding: 12px 30px;
-            border-radius: 12px;
+            padding: 10px 25px;
+            border-radius: 8px;
             font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.2s;
+            gap: 8px;
+            transition: all 0.3s;
         }
 
-        .btn-cancel {
-            background: white;
-            border: 1.5px solid var(--primary-blue);
-            color: var(--primary-blue);
+        .btn-save { background: #2d58d1; color: white; border: none; }
+        
+        /* ESTILO DESHABILITADO */
+        .btn-save:disabled {
+            background: #ccc;
+            color: #888;
+            cursor: not-allowed;
+            transform: none !important;
+            opacity: 0.7;
         }
 
-        .btn-save {
-            background: var(--primary-blue);
-            border: none;
-            color: white;
+        .btn-save:not(:disabled):hover { background: #1e3fa3; transform: translateY(-2px); }
+
+        .btn-cancel { background: transparent; border: 2px solid #2d58d1; color: #2d58d1; }
+
+        /* Notification */
+        .top-notification {
+            position: fixed; top: 20px; right: -400px;
+            background: white; padding: 15px 25px; border-radius: 10px;
+            border-left: 5px solid #28a745; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.5s; z-index: 9999;
         }
+        .top-notification.show { right: 20px; }
     </style>
 </head>
 <body>
@@ -266,133 +126,143 @@
     </div>
 
     <form id="instructorForm" class="form-container">
-        <div class="field col-9">
+        <div class="field-grid1">
+            <div class="main-circle">
+                <img id="imagen" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="avatar">
+           
+            </div>
+                 <button type="button" class="camera-button" onclick="SelectImagenInstructor()">
+                    <span class="icon-camera"></span>
+                </button>
+        </div>
+
+        <div class="field field-grid2">
             <label>Nombre Completo</label>
-            <input type="text" placeholder="Ej: Marina Paula Loza Mancha">
+            <input id="Name" type="text" placeholder="Ej: Marina Paula" required>
         </div>
-        <div class="field col-3">
+
+        <div class="field field-grid3">
             <label>Edad</label>
-            <input type="text" placeholder="Ej: 20">
+            <input id="Age" type="number" placeholder="Ej: 20" required>
         </div>
 
-        <div class="field col-6">
-            <label>Cedula</label>
-            <input type="text" placeholder="Ej: 10.458.289">
-        </div>
-        <div class="field col-6">
-            <label>Teléfono</label>
-            <input type="text" placeholder="Ej: 0412-688-5749">
+        <div class="field field-grid4">
+            <label>Cédula</label>
+            <input id="Codpersona" type="text" placeholder="Ej: 10.458.289" required>
         </div>
 
-        <div class="field col-6">
-            <label>Correo Electrónico</label>
-            <input type="email" placeholder="Ej: Maquillaje">
-        </div>
-        <div class="field col-6">
+        <div class="field field-grid5">
             <label>Dirección</label>
-            <input type="text" placeholder="Ej: Calle 4 Av Pérez Casa #5">
+            <input id="Address" type="text" placeholder="Ej: Calle 4 Av Pérez" required>
         </div>
 
-        <div class="field col-8">
-            <label>Foto</label>
-            <div class="upload-group">
-                <div class="icon-thumb"><span class="icon-image"></span></div>
-                <input type="text" readonly placeholder="Selecciona una imagen">
-                <button type="button" class="btn-blue-action">Subir</button>
-            </div>
+        <div class="field field-grid6">
+            <label>Correo Electrónico</label>
+            <input id="Email" type="email" placeholder="correo@ejemplo.com" required>
         </div>
-        <div class="field col-4">
+
+        <div class="field field-grid7">
+            <label>Teléfono</label>
+            <input id="Phone" type="text" placeholder="Ej: 0412-000-0000" required>
+        </div>
+
+        <div class="field field-grid8">
             <label>Estado</label>
-            <div class="custom-select">
-                <div class="select-box">
-                    <span>Seleccionar</span>
-                    <span class="icon-chevron-down"></span>
-                </div>
-            </div>
+            <select id="status" required>
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+                <option value="Despedido">Despedido</option>
+            </select>
         </div>
 
-        <div class="field col-6">
+        <div class="field field-grid9">
             <label>Especialidad</label>
-            <input type="text" placeholder="Ej: Manejo">
-        </div>
-        <div class="field col-6">
-            <label>Cursos Asignados</label>
-            <div class="custom-select" id="coursesDropdown">
-                <div class="select-box" id="dropdownToggle">
-                    <span id="labelValue">Seleccionar</span>
-                    <span class="icon-chevron-down"></span>
-                </div>
-                
-                <div class="dropdown-content" id="dropdownMenu">
-                    <div class="search-wrapper">
-                        <span class="icon-search"></span>
-                        <input type="text" id="courseInput" placeholder="Buscar Cursos">
-                    </div>
-                    <ul class="options-list" id="listItems">
-                        <li>Dibujo</li>
-                        <li>Baile</li>
-                        <li>Inglés</li>
-                    </ul>
-                    <button type="button" class="btn-add-item">Agregar Nuevo Curso</button>
-                </div>
-            </div>
+            <input id="Specialty" type="text" placeholder="Ej: Manejo" required>
         </div>
 
-        <div class="field col-12">
+        <div class="field field-grid10">
             <label>Certificaciones</label>
-            <input type="text" placeholder="Ej: Certificado de Conducción">
+            <input id="Certification" type="text" placeholder="Ej: Certificado A" required>
         </div>
 
-        <div class="footer-buttons">
-            <button type="button" class="btn-footer btn-cancel">
-                Cancelar <span class="icon-cross"></span>
-            </button>
-            <button type="submit" class="btn-footer btn-save">
+        <div class="footer-buttons field-grid11">
+            <button type="button" class="btn-footer btn-cancel" onclick="Close()">Cancelar</button>
+            <button type="button" class="btn-footer btn-cancel" onclick="LimpiarFormulario()">Limpiar</button>
+            <button type="button" id="btnGuardar" class="btn-footer btn-save" onclick="ValoresFormulario()" disabled>
                 Guardar <span class="icon-checkmark"></span>
             </button>
         </div>
     </form>
 </div>
 
+<div class="top-notification" id="topNotif">
+    <span class="icon-checkmark"></span>
+    <h3>¡Datos Guardados!</h3>
+</div>
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const dropdown = document.getElementById('coursesDropdown');
-        const toggle = document.getElementById('dropdownToggle');
-        const menu = document.getElementById('dropdownMenu');
-        const searchInput = document.getElementById('courseInput');
-        const listItems = document.querySelectorAll('#listItems li');
-        const labelValue = document.getElementById('labelValue');
+    const form = document.getElementById('instructorForm');
+    const btnGuardar = document.getElementById('btnGuardar');
+    
+    // Lista de IDs de campos obligatorios
+    const camposObligatorios = ['Name', 'Age', 'Codpersona', 'Address', 'Email', 'Phone', 'status', 'Specialty', 'Certification'];
 
-        // Toggle menú
-        toggle.addEventListener('click', () => {
-            menu.classList.toggle('active');
+    // Escuchar cambios en el formulario
+    form.addEventListener('input', validarFormulario);
+
+    function validarFormulario() {
+        const todosLlenos = camposObligatorios.every(id => {
+            const el = document.getElementById(id);
+            return el.value.trim() !== "";
         });
 
-        // Selección de ítem
-        listItems.forEach(item => {
-            item.addEventListener('click', () => {
-                labelValue.textContent = item.textContent;
-                labelValue.style.color = "#333";
-                menu.classList.remove('active');
-            });
-        });
+        btnGuardar.disabled = !todosLlenos;
+    }
 
-        // Filtrado en tiempo real
-        searchInput.addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase();
-            listItems.forEach(li => {
-                const text = li.textContent.toLowerCase();
-                li.style.display = text.includes(val) ? 'block' : 'none';
-            });
-        });
+    function SelectImagenInstructor() {
+        api.send("Select-new-imagen-instructor");
+    }
 
-        // Cerrar al hacer click fuera
-        document.addEventListener('click', (e) => {
-            if (!dropdown.contains(e.target)) {
-                menu.classList.remove('active');
-            }
-        });
+    api.receive("Image-select-new-instructor", (even, urlImage) => {
+        document.getElementById("imagen").src = urlImage;
     });
+
+    function LimpiarFormulario() {
+        form.reset();
+        document.getElementById('imagen').src = '../assets/imagen/ImageLogin3.png';
+        validarFormulario(); // Deshabilita el botón tras limpiar
+    }
+
+    function Close() { window.close(); }
+
+    function ValoresFormulario() {
+        const valores = {
+            imagen: document.getElementById('imagen').src,
+            nombre: document.getElementById('Name').value.trim(),
+            edad: document.getElementById('Age').value,
+            cedula: document.getElementById('Codpersona').value,
+            direccion: document.getElementById('Address').value,
+            correo: document.getElementById('Email').value,
+            telefono: document.getElementById('Phone').value,
+            estado: document.getElementById('status').value,
+            especialidad: document.getElementById('Specialty').value,
+            certificaciones: document.getElementById('Certification').value
+        };
+
+        api.send('Save-data-new-instructor', valores);
+        LimpiarFormulario();
+    }
+
+    api.receive("open-modal-register-instructor", (event, data) => {
+        mostrarNotificacion();
+    });
+
+    function mostrarNotificacion() {
+        const notif = document.getElementById('topNotif');
+        notif.classList.add('show');
+        setTimeout(() => notif.classList.remove('show'), 3000);
+    }
 </script>
 
 </body>

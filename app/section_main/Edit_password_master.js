@@ -20,10 +20,12 @@ let ID_user="";
 module.exports = function Edit_password_master(parentWindow,iduser) {
   window_Edit_password_master = new BrowserWindow({
         width:470,
-        height:490,
+        height:430,
         modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
+        resizable:false,
+frame:false,    
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {
             nodeIntegration: false,
@@ -39,7 +41,7 @@ console.log("Isuerpass",iduser)
     window_Edit_password_master.loadFile('app/section_main/Edit_password_master.html');
 
     // Herramientas de desarrollo
-    window_Edit_password_master.webContents.openDevTools();
+    //window_Edit_password_master.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Edit_password_master.webContents.setWindowOpenHandler(() => {

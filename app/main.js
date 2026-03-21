@@ -6,14 +6,17 @@ const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
 const config = require(path.join(__dirname,".config.json"));
 
-/*----------------*/
+/*---------------------------------------------------------*/
 const SAIADB = require(path.join(__dirname,'./DataBase/SAIA_manager.js'))
 const DB = new SAIADB(path.join(__dirname,'./DataBase/SAIA.db'));
-/*--------------LINK BASE DE DATOS ------------------------*/
-const {InfoMessage,ErrorMessage} = require(path.join(__dirname,'./section_main/Message_system'));
 
+/*--------------LINK BASE DE DATOS ------------------------*/
+const ImageDefault = path.join(__dirname,"./assets/imagen/ImageLogin3.png")
+//console.log(ImageDefault)
+const {InfoMessage,ErrorMessage} = require(path.join(__dirname,'./section_main/Message_system'));
 /*---------------------------------------------------------------*/
-const {login_system} = require(path.join(__dirname,'./DB_controls/User'))
+const {login_system,UpdateImagenAvatar} = require(path.join(__dirname,'./DB_controls/User'))
+const Login_password_master =  require(path.join(__dirname,'./section_main/LoginMaster'));
 /*---------------------------------------------------------------*/
 /*------------Modulos externos----------------*/
 const Register_App = require(path.join(__dirname,'./RegisterApp/RegisterApp'));
@@ -21,14 +24,29 @@ const Edit_password = require(path.join(__dirname,'./section_main/Edit_password'
 const Edit_password_master = require(path.join(__dirname,'./section_main/Edit_password_master'));
 const Edit_email = require(path.join(__dirname,'./section_main/Edit_email'));
 const Edit_user = require(path.join(__dirname,'./section_main/Edit_user'));
+/*-------------------------------------*/
+const {GetCoursePaged,SearchCourse,DeleteCourse,SearchCourseByStatus} = require(path.join(__dirname,'./DB_controls/Course'));
 const Register_course = require(path.join(__dirname,'./section_main/Register_course'));
 const Edit_course = require(path.join(__dirname,'./section_main/Edit_course'));
-/*-----------------*/
+const Info_course = require(path.join(__dirname,'./section_main/Info_course'));
+/*------------------------------------*/
+const {GetStudentPaged,SearchStudentPagedName,SearchStudentPagedData,DeleteStudentLogical} = require(path.join(__dirname,'./DB_controls/Student'));
+const Register_student = require(path.join(__dirname,'./section_main/Register_student'));
+const Update_student = require(path.join(__dirname,'./section_main/Update_student'));
+const Info_student = require(path.join(__dirname,'./section_main/Info_student'));
+
+/*--------------------------------------*/
+const {GetInstructorsPaged,InsertInstructor,SearchInstructor,searchInstructorByStatus, DeleteInstructor} = require(path.join(__dirname,'./DB_controls/Instructor'));
 const Register_instructor = require(path.join(__dirname,'./section_main/Register_instructor'));
 const Edit_instructor = require(path.join(__dirname,'./section_main/Edit_instructor'));
+const Info_instructor = require(path.join(__dirname,'./section_main/Info_instructor'));
 /*-----------------*/
+/*---------------------------------------------------------------*/
+const {searchEmployee,SearchFilterEmployee,RegistreEmployee,GetEmployeesPaged,DeleteEmployeeLogical,DeleteEmployeePermanent} = require(path.join(__dirname,'./DB_controls/Employee'))
 const Register_employee = require(path.join(__dirname,'./section_main/Register_employee'));
 const Edit_employee = require(path.join(__dirname,'./section_main/Edit_employee'));
+const Info_employee = require(path.join(__dirname,'./section_main/Info_employee'));
+/*-----------------------------------------------------------*/
 
 /*------------Modulos externos----------------*/
 
@@ -39,13 +57,13 @@ function Select_system_type(){
 if(config.state==false && config.plataform=="" && config.cpu=="" && config.hostname==""){
   console.log("register app")
   Register_App()
-  //createWindow()
 }
 
 if(config.state==true && config.plataform!=="" && config.cpu!=="" && config.hostname!==""){
   console.log("Open system")
 
   createWindow()
+
 }
 
 }
@@ -77,10 +95,11 @@ function createWindow() {
 
       });
 
-    // Evento cuando se cierra la ventana
-    mainWindow.on('closed', () => {
-          mainWindow = null;
-    });
+      // Evento cuando se cierra la ventana
+      mainWindow.on('closed', () => {
+            mainWindow = null;
+      });
+
 
 }
 
@@ -88,9 +107,16 @@ function createWindow() {
 /****************************LOGIN SYSTEM APP******************************************************/
 /*LOGIM SYSTEM APP*/
 /*LOGIM DEL SYSTEMA APLICACION*/
-ipcMain.on('Login-user-app',async(event,data) => {
+ipcMain.on('Login-user-master-permission',async(event,data) => {
 
-  console.log(data)
+  //console.log(data)
+
+  Login_password_master(mainWindow,data);
+
+
+})
+
+ipcMain.on('Login-user-app',async(event,data) => {
 
      await login_system(data).then((result)=>{
 
@@ -164,7 +190,7 @@ ipcMain.on('message-campos-vacios-login', async (event,text) => {
 /**********************************LOGIN SYSTEM APP********************************/
 /***********************DASBOARD*********************************************/
 /***********************MY-PROFILE******************************************/
-ipcMain.on('Image-select-my-profile',(event,text) => {
+ipcMain.on('Image-select-my-profile',(event,id) => {
 
       dialog.showOpenDialog(mainWindow,{
         title: 'Seleccionar archivo',
@@ -173,13 +199,36 @@ ipcMain.on('Image-select-my-profile',(event,text) => {
           { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
         ],
         properties: ['openFile']
-      }).then(result => {
-        
-        //console.log(result.filePaths[0]);
-        mainWindow.webContents.send("Imagen-user-select-my-profile",result.filePaths[0]);
+      }).then((result) => {
 
-      }).catch(err => {
-        console.log(err);
+      if(result.canceled==false){
+
+          mainWindow.webContents.send("Imagen-user-select-my-profile",result.filePaths[0]);
+      }
+      
+      if(result.canceled==true){
+
+          mainWindow.webContents.send("Imagen-user-select-my-profile",ImageDefault);
+      }
+
+      
+        /*--------------------*/
+        UpdateImagenAvatar(id,result.filePaths[0]).then((result)=>{
+
+          mainWindow.webContents.send("notification-my-profile")
+
+
+
+
+        }).catch((err)=>{
+
+
+        })
+        /*-----*/
+      }).catch((err) => {
+        
+         console.log(err)
+
       });
 
 })
@@ -187,7 +236,7 @@ ipcMain.on('Image-select-my-profile',(event,text) => {
 
 ipcMain.on('Editar-informacion-contrasena',(event,id) => {
 
-  Edit_password(mainWindow,id);
+  Edit_password(mainWindow,id)
 
 })
 
@@ -204,107 +253,565 @@ ipcMain.on('Editar-informacion-usuario',(event,id) => {
 
 
 })
+
 ipcMain.on('Editar-informacion-correo',(event,id) => {
 
-  Edit_email(mainWindow,id);
+  Edit_email(mainWindow,id)
 
 })
-/***********************MY-PROFILE******************************************/
-/*************************NEW INSCRIPTCION**********************************/
-ipcMain.on("select-Image-new-student",(even,data)=>{
 
-   dialog.showOpenDialog(mainWindow,{
-        title: 'Seleccionar archivo',
-        buttonLabel: 'Abrir',
+
+/*-------------------------------------------------*/
+
+ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
+
+console.log('Iniciando Excel-Exportar');
+
+    // Generamos fecha y hora para el nombre por defecto
+    const ahora = new Date();
+    const fecha = ahora.toISOString().split('T')[0];
+    const hora = String(ahora.getHours()).padStart(2, '0') + '-' + String(ahora.getMinutes()).padStart(2, '0');
+    
+    const options = {
+        title: 'Exportar a Excel',
+        buttonLabel: 'Exportar',
+        defaultPath: `Reporte_General_${fecha}_${hora}.xlsx`, // Nombre sugerido
         filters: [
-          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+            { name: 'Excel Workbook', extensions: ['xlsx'] }
+        ]
+    };
+
+    // USAMOS showSaveDialog porque estamos creando/exportando un archivo
+    dialog.showSaveDialog(mainWindow, options)
+        .then(result => {
+            // Verificamos que no haya cancelado y que exista una ruta
+            if (!result.canceled && result.filePath) {
+                console.log("Exportando Excel en:", result.filePath);
+                
+                // Llamamos a tu función de base de datos pasando la ruta elegida
+                DB.exportarTablaAExcel(tabla,result.filePath);
+            }
+        })
+        .catch(err => {
+            console.error("Error al exportar Excel:", err);
+        });
+
+})
+
+
+/*-------------------------------------------------*/
+
+
+
+
+ipcMain.on('Excel-Exportar', (event, id) => {
+    console.log('Iniciando Excel-Exportar');
+
+    // Generamos fecha y hora para el nombre por defecto
+    const ahora = new Date();
+    const fecha = ahora.toISOString().split('T')[0];
+    const hora = String(ahora.getHours()).padStart(2, '0') + '-' + String(ahora.getMinutes()).padStart(2, '0');
+    
+    const options = {
+        title: 'Exportar a Excel',
+        buttonLabel: 'Exportar',
+        defaultPath: `Reporte_General_${fecha}_${hora}.xlsx`, // Nombre sugerido
+        filters: [
+            { name: 'Excel Workbook', extensions: ['xlsx'] }
+        ]
+    };
+
+    // USAMOS showSaveDialog porque estamos creando/exportando un archivo
+    dialog.showSaveDialog(mainWindow, options)
+        .then(result => {
+            // Verificamos que no haya cancelado y que exista una ruta
+            if (!result.canceled && result.filePath) {
+                console.log("Exportando Excel en:", result.filePath);
+                
+                // Llamamos a tu función de base de datos pasando la ruta elegida
+                DB.exportarTodoAExcel(result.filePath);
+            }
+        })
+        .catch(err => {
+            console.error("Error al exportar Excel:", err);
+        });
+});
+
+ipcMain.on('Excel-Importar', (event, id) => {
+    console.log('Iniciando Excel-Importar');
+
+    const options = {
+        title: 'Seleccionar archivo de Excel',
+        defaultPath: 'C:/',
+        buttonLabel: 'Importar',
+        filters: [
+            { name: 'Libros de Excel', extensions: ['xlsx', 'xls'] }
         ],
         properties: ['openFile']
-      }).then(result => {
-        
-        //console.log(result.filePaths[0]);
-        mainWindow.webContents.send("Image-select-new-student",result.filePaths[0]);
+    };
 
-      }).catch(err => {
-        console.log(err);
-      });
+    dialog.showOpenDialog(mainWindow, options)
+        .then(result => {
+            // 1. Validar si el usuario canceló la selección
+            if (result.canceled || result.filePaths.length === 0) {
+                console.log("Importación cancelada");
+                return;
+            }
 
+            // 2. CORRECCIÓN: Usar filePaths[0] (es un array)
+            const rutaSeleccionada = result.filePaths[0];
+
+            console.log("Archivo seleccionado para importar:", rutaSeleccionada);
+            
+            // Llamamos a tu función de base de datos
+            DB.importarTodoDesdeExcel(rutaSeleccionada);
+
+        })
+        .catch(err => {
+            console.error("Error al abrir el diálogo de importación:", err);
+        });
+});
+
+/*-*/
+ipcMain.on('Importar-SQLITE-DB', (event, id) => {
+    console.log('Iniciando Importar-SQLITE-DB');
+
+    const options = {
+        title: 'Seleccionar Base de Datos para Importar',
+        buttonLabel: 'Importar', // Cambiado de 'Guardar' a 'Importar' por claridad
+        filters: [
+            { name: 'SQLite Database', extensions: ['db'] }
+        ],
+        // 'promptToCreate' no es válido para abrir archivos, solo 'openFile'
+        properties: ['openFile'] 
+    };
+
+    dialog.showOpenDialog(mainWindow, options)
+        .then(result => {
+            // CRÍTICO: Verificar si el usuario cerró la ventana sin elegir nada
+            if (result.canceled || result.filePaths.length === 0) {
+                console.log("Importación cancelada por el usuario");
+                return;
+            }
+
+            const address = result.filePaths[0];
+            console.log("Ruta cargada:", address);
+
+            // Ejecutar la lógica de importación
+            DB.importarArchivoDB(address);
+            
+        })
+        .catch(err => {
+            console.error("Error al abrir el diálogo de importación:", err);
+        });
+});
+
+ipcMain.on('Exportar-SQLITE-DB', (event, id) => {
+    // 1. Obtener la fecha y hora local
+    const ahora = new Date();
+    
+    // Formatear: YYYY-MM-DD (Ej: 2026-03-19)
+    const fecha = ahora.toISOString().split('T')[0];
+    
+    // Formatear: HH-mm (Ej: 18-30) 
+    // Usamos padStart para asegurar que siempre haya 2 dígitos (ej: 09 en vez de 9)
+    const horas = String(ahora.getHours()).padStart(2, '0');
+    const minutos = String(ahora.getMinutes()).padStart(2, '0');
+    
+    const nombreSugerido = `respaldo_db_${fecha}_${horas}_${minutos}.db`;
+
+    const options = {
+        title: 'Exportar Base de Datos',
+        buttonLabel: 'Exportar',
+        defaultPath: nombreSugerido, 
+        filters: [
+            { name: 'SQLite Database', extensions: ['db'] }
+        ]
+    };
+
+    dialog.showSaveDialog(mainWindow, options)
+        .then(result => {
+            if (!result.canceled && result.filePath) {
+                console.log("Ruta seleccionada:", result.filePath);
+                DB.respaldarArchivoDB(result.filePath);
+            }
+        })
+        .catch(err => {
+            console.error("Error en el diálogo:", err);
+        });
+});
+/***********************MY-PROFILE******************************************/
+/***********************************************************************
+/*************************NEW INSCRIPTCION**********************************/
+
+ipcMain.on("Get-data-Student-list",async(event,data)=>{
+
+    let result = await GetStudentPaged();
+    mainWindow.webContents.send("Data-list-Student",result);
 
 })
 
-ipcMain.on("Register-new-data-student-representante",(even,data)=>{
+ipcMain.on("Search-Student-data",async(event,data)=>{
 
+     let result = await SearchStudentPagedName(data);
+     mainWindow.webContents.send("Data-list-Student-serach",result);
 
-console.log("Register-new-data-student-representante",data)
+})
 
+ipcMain.on("Search-Student-filter-data",async(event,data)=>{
+
+  let result = await SearchStudentPagedData(data);
+  mainWindow.webContents.send("Data-list-Student-serach",result);
 
 })
 
-ipcMain.on("Register-new-data-student",(even,data)=>{
+ipcMain.on("search-data-pagination-student",async(even,pos)=>{
 
+    let result = await GetStudentPaged(pos)
+    mainWindow.webContents.send("Data-list-Student",result)
+})
 
-console.log("Register-new-data-student",data)
+ipcMain.on("Open-registre-new-Student",(event,data)=>{
 
+    Register_student()
 
 })
-ipcMain.on("message-campos-vacios-register-inscripcion",(even,text)=>{
 
-
-InfoMessage("Notificación",text)
+ipcMain.on("Open-system-edit-student-register",(event,id)=>{
+ 
+  Update_student(mainWindow,id)
 
 })
+
+ipcMain.on("Open-system-info-student-register",(event,id)=>{
+ 
+   Info_student(mainWindow,id)
+
+})
+
+ipcMain.on("Deleted-student-register",(event,id)=>{
+
+  console.log("Deleted-employee-register",id)
+ 
+  DeleteStudentLogical(id).then((result)=>{
+     console.log(result)
+
+    dialog.showMessageBox({
+                title:"Notificación",
+                message:"Estudiante Eliminado",
+                icon: 'error',
+                 type:'error',
+                buttons: ['Aceptar'],
+                defaultId: 0,
+                cancelId: 1
+          }).then(result => {
+              
+                console.log(result.response);
+
+          }).catch(err => {
+              
+              console.log(err);
+        });
+
+
+   }).catch((err)=>{
+
+   })
+
+})
+
 /*************************NEW INSCRIPTCION**********************************/
 /*****************************Register New Cource*******************************/
+ipcMain.on("search-data-registre-course",async(event,data)=>{
+  
+   let result = await SearchCourse(data)
+   mainWindow.webContents.send("Data-list-course-search",result);
+
+})
+
+ipcMain.on("search-data-registre-course-by-status",async(event,data)=>{
+
+   let result = await SearchCourseByStatus(data)
+   mainWindow.webContents.send("Data-list-course-search",result);
+
+})
+
+ipcMain.on("Select-course-list",async(event,data)=>{
+
+     let result = await GetCoursePaged() 
+     mainWindow.webContents.send("Data-list-course",result);
+
+})
+
+ipcMain.on("search-paginationCourse",async(event,data)=>{
+
+     let result = await GetCoursePaged(data) 
+     mainWindow.webContents.send("Data-list-course-search",result);
+
+})
+
 ipcMain.on("Open-system-new-course-register",(event,data)=>{
  
   Register_course(mainWindow)
 
 })
-ipcMain.on("Open-system-edit-course-register",(event,data)=>{
+
+ipcMain.on("Open-system-edit-course-register",(event,id)=>{
  
-   Edit_course(mainWindow)
+   Edit_course(mainWindow,id)
 
 })
 
-ipcMain.on("delete-course-register",(event,data)=>{
+ipcMain.on("Open-system-info-course-register",(event,id)=>{
  
-   //Edit_course(mainWindow)
+
+   Info_course(mainWindow,id)
 
 })
-ipcMain.on("search-course-register",(event,data)=>{
- 
-   //Edit_course(mainWindow)
+
+ipcMain.on("Delete-course-register",(event,id)=>{
+
+   DeleteCourse(id).then((result)=>{
+
+          dialog.showMessageBox({
+                      title:"Notificación",
+                      message:"Curso Eliminado",
+                      icon: 'error',
+                       type:'error',
+                      buttons: ['Aceptar'],
+                      defaultId: 0,
+                      cancelId: 1
+          }).then(result => {
+                    
+                      console.log(result.response);
+
+                }).catch(err => {
+                    
+                    console.log(err);
+              });
+
+             }).catch((err)=>{
+
+             })
 
 })
+
 /*****************************Register New Cource*******************************/
 /***************************Registrar nuevo instructor*************************************/
+
+ipcMain.on("Get-data-instrutor-list",async (event,data)=>{
+
+  let result = await GetInstructorsPaged()
+ 
+  mainWindow.webContents.send("data-list-instructor",result);
+
+})
+
+ipcMain.on("search-data-registre-instructor-by-status",async(event,data)=>{
+
+   let result = await searchInstructorByStatus(data)
+   mainWindow.webContents.send("data-list-instructor-search",result);
+
+
+})
+
+ipcMain.on("search-pagination-Instructor",async(event,data)=>{
+
+ let result = await GetInstructorsPaged(data)
+ 
+  mainWindow.webContents.send("data-list-instructor",result);
+
+
+})
+
+ipcMain.on("search-data-registre-instructor",async(event,data)=>{
+
+   let result = await SearchInstructor(data)
+   mainWindow.webContents.send("data-list-instructor-search",result);
+
+
+})
+
 ipcMain.on("Open-system-new-instructor-register",(event,data)=>{
  
   Register_instructor(mainWindow)
 
 })
+
 ipcMain.on("Open-system-edit-instructor-register",(event,id)=>{
  
-  console.log(id)
-   Edit_instructor(mainWindow)
+   Edit_instructor(mainWindow,id)
 
 })
 
+ipcMain.on("Open-system-info-instructor-register",(event,id)=>{
+ 
+   Info_instructor(mainWindow,id)
+   console.log("Open-system-info-instructor-register",id)
+
+})
+
+ipcMain.on("Deleted-instructor-register",(event,id)=>{
+ 
+   DeleteInstructor(id).then((result)=>{
+
+    console.log(result)
+
+          dialog.showMessageBox({
+                      title:"Notificación",
+                      message:"Instructor Eliminado",
+                      icon: 'error',
+                       type:'error',
+                      buttons: ['Aceptar'],
+                      defaultId: 0,
+                      cancelId: 1
+                }).then(result => {
+                    
+                      console.log(result.response);
+
+                }).catch(err => {
+                    
+                    console.log(err);
+              });
+
+   }).catch((err)=>{
+
+   })
+
+})
+
+
+
+
 /***************************Registrar nuevo instructor*************************************/
 /***************************Registrar nuevo Empleado*************************************/
+
+
+ipcMain.on("Get-data-registre-employee",async(even,data)=>{
+    
+    let result = await GetEmployeesPaged()
+   // console.log(result)
+    mainWindow.webContents.send("Render-data-employee-list",result)
+
+})
+
+ipcMain.on("search-data-registre-employee",async(even,data)=>{
+  //console.log("search",data)
+  let result = await searchEmployee(data)
+  //console.log("result",result )
+  mainWindow.webContents.send("Render-data-employee-list-search",result)
+
+})
+
+
+ipcMain.on("search-data-registre-employee-filter",async(even,data)=>{
+
+  let result = await SearchFilterEmployee(data)
+  //console.log(result)
+  mainWindow.webContents.send("Render-data-employee-list-search",result)
+
+})
+
+ipcMain.on("search-pagination-employee",async(even,pos)=>{
+
+  console.log("search page-employee")
+    
+    let result = await GetEmployeesPaged(pos)
+
+    mainWindow.webContents.send("Render-data-employee-list",result)
+
+})
+
+
 ipcMain.on("Open-system-new-employee-register",(event,data)=>{
  
   Register_employee(mainWindow)
 
 })
+
+
 ipcMain.on("Open-system-edit-employee-register",(event,id)=>{
  
-  console.log(id)
-   Edit_employee(mainWindow)
+   Edit_employee(mainWindow,id)
+
+})
+
+ipcMain.on("Open-system-info-employee-register",(event,id)=>{
+ 
+   Info_employee(mainWindow,id)
+
+})
+
+ipcMain.on("Deleted-employee-register",(event,id)=>{
+
+
+  console.log("Deleted-employee-register",id)
+ 
+  DeleteEmployeeLogical(id).then((result)=>{
+    //DeleteEmployeePermanent(id).then((result)=>{
+
+    console.log(result)
+
+    dialog.showMessageBox({
+                title:"Notificación",
+                message:"Empleado Eliminado",
+                icon: 'error',
+                 type:'error',
+                buttons: ['Aceptar'],
+                defaultId: 0,
+                cancelId: 1
+          }).then(result => {
+              
+                console.log(result.response);
+
+          }).catch(err => {
+              
+              console.log(err);
+        });
+
+
+   }).catch((err)=>{
+
+   })
 
 })
 
 /***************************Registrar nuevo Empleado*************************************/
+/*********************************TRASH***************************************************/
+ipcMain.on("Get-data-instrutor-list-trash",async (event,data)=>{
+
+  let result = await GetInstructorsPaged()
+ 
+  mainWindow.webContents.send("data-list-instructor-trash",result);
+
+})
+
+ipcMain.on("Get-data-registre-employee-trash",async (event,data)=>{
+
+  let result = await GetEmployeesPaged()
+ 
+  mainWindow.webContents.send("data-list-employee-trash",result);
+
+})
+
+
+ipcMain.on("Get-data-Student-list-trash",async (event,data)=>{
+
+  let result = await GetStudentPaged()
+ 
+  mainWindow.webContents.send("data-list-Student-trash",result);
+
+})
+
+ipcMain.on("Get-data-Course-list-trash",async (event,data)=>{
+
+  let result = await GetCoursePaged()
+ 
+  mainWindow.webContents.send("data-list-Course-trash",result);
+
+})
+
+/*********************************TRASH***************************************************/
 /***********************DASBOARD*********************************************/
 // Evento cuando la app está lista para crear ventanas
 app.on('ready', Select_system_type, 

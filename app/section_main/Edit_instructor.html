@@ -3,272 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Instructor</title>
-    <link rel="stylesheet" href="https://releases.icomoon.io/h9S9Ym/style.css">
+    <title>Nuevo Instructor - SAIA</title>
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
     <style>
-        /* --- ESTILOS GENERALES --- */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+        * { padding: 0; margin: 0; box-sizing: border-box; }
 
-        .modal-container {
-            background-color: #fff;
-            width: 90%;
-            max-width: 650px;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            position: relative;
-        }
+.modal-card {
+    background: white;
+    padding: 4px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 800px;
+    margin: auto;
+}
+        .modal-header h2 { text-align: center; margin-bottom: 20px; color: #333; }
 
-        /* Botón de cerrar (X) */
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #e0e0e0;
-            color: #666;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 14px;
-        }
+.form-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 3px;
+}
 
-        h2 {
-            text-align: center;
-            color: #444;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
+        /* Áreas del Grid mejoradas para legibilidad */
+        .field-grid1 { grid-column: span 6; display: flex; justify-content: center; }
+        .field-grid2 { grid-column: span 2; }
+        .field-grid3 { grid-column: span 2; }
+        .field-grid4 { grid-column: span 2; }
+        .field-grid5 { grid-column: span 6; }
+        .field-grid6 { grid-column: span 2; }
+        .field-grid7 { grid-column: span 2; }
+        .field-grid8 { grid-column: span 2; }
+        .field-grid9 { grid-column: span 3; }
+        .field-grid10 { grid-column: span 3; }
+        .field-grid11 { grid-column: span 6; }
 
-        /* --- ESTRUCTURA CSS GRID --- */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
-            gap: 15px 20px;
-        }
+        /* Avatar */
+.main-circle {
+    width: 141px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #2d58d1;
+    border: 4px solid #f0f2f5;
+    position: relative;
+}
+        .avatar-main-register { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Elementos que ocupan todo el ancho */
-        .full-width {
-            grid-column: span 2;
-        }
+.camera-button {
+    position: relative;
+    top: 91px;
+    right: 37px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border: 2px solid #fff;
+    cursor: pointer;
+}
 
-        /* Ajuste específico para nombre y edad */
-        .name-field { grid-column: span 1; }
-        .age-field { width: 80px; justify-self: end; }
-
-        /* --- ESTILOS DE INPUTS --- */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 6px;
-        }
-
-        input, select {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
+        /* Inputs y Labels */
+        .field { display: flex; flex-direction: column; gap: 5px; }
+        .field label { font-weight: 600; font-size: 14px; color: #555; }
+        .field input, .field select {
+            padding: 10px;
+            border: 1.5px solid #e0e0e0;
             border-radius: 8px;
             font-size: 14px;
-            color: #666;
-            outline: none;
-            transition: border-color 0.3s;
         }
 
-        input:focus {
-            border-color: #2b59c3;
-        }
+        .field input:focus { border-color: #2d58d1; outline: none; }
 
-        /* Estilo para los selectores personalizados */
-        .select-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .select-wrapper select {
-            width: 100%;
-            appearance: none;
-            background-color: #fff;
-        }
-
-        .select-wrapper i {
-            position: absolute;
-            right: 15px;
-            pointer-events: none;
-            color: #999;
-        }
-
-        /* --- CAMPO DE FOTO (FLEXBOX) --- */
-        .upload-container {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 5px;
-            gap: 10px;
-        }
-
-        .photo-placeholder {
-            width: 40px;
-            height: 40px;
-            background-color: #e0e0e0;
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #999;
-        }
-
-        .upload-text {
-            flex-grow: 1;
-            color: #aaa;
-            font-size: 13px;
-        }
-
-        .btn-upload {
-            background-color: #2b59c3;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-/* --- ACCIONES FINALES (FLEXBOX) --- */
-        .form-actions {
+        /* Botones y Efecto Disable */
+        .footer-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
+            padding-top: 20px;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
         }
 
-        .btn {
+        .btn-footer {
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 25px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            transition: all 0.3s;
         }
 
-        .btn:hover { opacity: 0.9; }
-
-        .btn-cancel {
-            background-color: #fff;
-            color: #2b59c3;
-            border: 1px solid #2b59c3;
+        .btn-save { background: #2d58d1; color: white; border: none; }
+        
+        /* ESTILO DESHABILITADO */
+        .btn-save:disabled {
+            background: #ccc;
+            color: #888;
+            cursor: not-allowed;
+            transform: none !important;
+            opacity: 0.7;
         }
 
-        .btn-save {
-            background-color: #2b59c3;
-            color: white;
-            border: none;
-        }
+        .btn-save:not(:disabled):hover { background: #1e3fa3; transform: translateY(-2px); }
 
+        .btn-cancel { background: transparent; border: 2px solid #2d58d1; color: #2d58d1; }
+
+        /* Notification */
+        .top-notification {
+            position: fixed; top: 20px; right: -400px;
+            background: white; padding: 15px 25px; border-radius: 10px;
+            border-left: 5px solid #28a745; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.5s; z-index: 9999;
+        }
+        .top-notification.show { right: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="modal-container">
-        <h2>Editar Instructor</h2>
-        <form>
-            <div class="form-grid">
-                <div class="form-group name-field">
-                    <label>Nombre Completo</label>
-                    <input type="text" value="Cristian Luis Blanco Toyota">
-                </div>
-                <div class="form-group age-field">
-                    <label>Edad</label>
-                    <input type="number" value="29">
-                </div>
-
-                <div class="form-group">
-                    <label>Cedula</label>
-                    <input type="text" value="10.234.543">
-                </div>
-                <div class="form-group">
-                    <label>Teléfono</label>
-                    <input type="text" value="0412-389-5783">
-                </div>
-
-                <div class="form-group">
-                    <label>Correo Electrónico</label>
-                    <input type="email" value="c.blanco@correo.com">
-                </div>
-                <div class="form-group">
-                    <label>Dirección</label>
-                    <input type="text" value="Calle 24 Av Bolívar">
-                </div>
-
-                <div class="form-group">
-                    <label>Foto</label>
-                    <div class="upload-container">
-                        <div class="photo-placeholder"><i class="icon-image"></i></div>
-                        <span class="upload-text">Selecciona una imagen</span>
-                        <button type="button" class="btn-upload">Subir</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Estado</label>
-                    <div class="select-wrapper">
-                        <select>
-                            <option>Activo</option>
-                            <option>Inactivo</option>
-                        </select>
-                        <i class="icon-chevron-down"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Especialidad</label>
-                    <input type="text" value="Fotógrafo">
-                </div>
-                <div class="form-group">
-                    <label>Cursos Asignados</label>
-                    <div class="select-wrapper">
-                        <select>
-                            <option>Fotografía</option>
-                            <option>Diseño</option>
-                        </select>
-                        <i class="icon-chevron-down"></i>
-                    </div>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>Certificaciones</label>
-                    <input type="text" value="Instructor certificado por Escuela de Fotografía">
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="button" class="btn btn-cancel">
-Cancelar <i class="icon-cross"></i>
-                </button>
-                <button type="submit" class="btn btn-save">
-                    Guardar <i class="icon-checkmark"></i>
-                </button>
-            </div>
-        </form>
+<div class="modal-card">
+    <div class="modal-header">
+        <h2>Actualizar Instructor</h2>
     </div>
+
+    <form id="instructorForm" class="form-container">
+        <div class="field-grid1">
+            <div class="main-circle">
+                <img id="imagen" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="avatar">
+           
+            </div>
+                 <button type="button" class="camera-button" onclick="SelectImagenInstructor()">
+                    <span class="icon-camera"></span>
+                </button>
+        </div>
+
+        <div class="field field-grid2">
+            <label>Nombre Completo</label>
+            <input id="Name" type="text" placeholder="Ej: Marina Paula" required>
+        </div>
+
+        <div class="field field-grid3">
+            <label>Edad</label>
+            <input id="Age" type="number" placeholder="Ej: 20" required>
+        </div>
+
+        <div class="field field-grid4">
+            <label>Cédula</label>
+            <input id="Codpersona" type="text" placeholder="Ej: 10.458.289" required>
+        </div>
+
+        <div class="field field-grid5">
+            <label>Dirección</label>
+            <input id="Address" type="text" placeholder="Ej: Calle 4 Av Pérez" required>
+        </div>
+
+        <div class="field field-grid6">
+            <label>Correo Electrónico</label>
+            <input id="Email" type="email" placeholder="correo@ejemplo.com" required>
+        </div>
+
+        <div class="field field-grid7">
+            <label>Teléfono</label>
+            <input id="Phone" type="text" placeholder="Ej: 0412-000-0000" required>
+        </div>
+
+        <div class="field field-grid8">
+            <label>Estado</label>
+            <select id="status" required>
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+                <option value="Despedido">Despedido</option>
+            </select>
+        </div>
+
+        <div class="field field-grid9">
+            <label>Especialidad</label>
+            <input id="Specialty" type="text" placeholder="Ej: Manejo" required>
+        </div>
+
+        <div class="field field-grid10">
+            <label>Certificaciones</label>
+            <input id="Certification" type="text" placeholder="Ej: Certificado A" required>
+        </div>
+
+        <div class="footer-buttons field-grid11">
+            <button type="button" class="btn-footer btn-cancel" onclick="Close()">Cancelar</button>
+            <button type="button" class="btn-footer btn-cancel" onclick="LimpiarFormulario()">Limpiar</button>
+            <button type="button" id="btnGuardar" class="btn-footer btn-save" onclick="ValoresFormulario()" disabled>
+                Guardar <span class="icon-checkmark"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="top-notification" id="topNotif">
+    <span class="icon-checkmark"></span>
+    <h3>¡Datos Guardados!</h3>
+</div>
+
+<script>
+const form = document.getElementById('instructorForm');
+const btnGuardar = document.getElementById('btnGuardar');
+const imgElement = document.getElementById('imagen');
+
+// Lista de IDs de campos obligatorios
+const camposObligatorios = ['Name', 'Age', 'Codpersona', 'Address', 'Email', 'Phone', 'status', 'Specialty', 'Certification'];
+
+// 1. Cargar datos al iniciar
+window.addEventListener('DOMContentLoaded', () => {
+    api.send("get-data-instructor");
+});
+
+// 2. Recibir datos y llenar el formulario
+let key_intsructor=null;
+api.receive("data-instructor", (event, data) => {
+    if (!data) return;
+    key_intsructor=data.Key;
+    document.getElementById('imagen').src = data.image || "../assets/imagen/ImageLogin3.png";
+    document.getElementById('Name').value = data.Name || "";
+    document.getElementById('Age').value = data.Age || "";
+    document.getElementById('Codpersona').value = data.Cod_id || "";
+    document.getElementById('Address').value = data.Address || "";
+    document.getElementById('Email').value = data.E_mail || "";
+    document.getElementById('Phone').value = data.Tlf || "";
+    document.getElementById('status').value = data.Status || "";
+    document.getElementById('Specialty').value = data.Specialty || "";
+    document.getElementById('Certification').value = data.Certifications || "";
+
+    // IMPORTANTE: Validar apenas se cargan los datos para habilitar el botón
+    validarFormulario();
+});
+
+// 3. Validación lógica
+function validarFormulario() {
+    const todosLlenos = camposObligatorios.every(id => {
+        const el = document.getElementById(id);
+        return el && el.value.trim() !== "";
+    });
+
+    btnGuardar.disabled = !todosLlenos;
+}
+
+// Escuchar cambios en los inputs
+form.addEventListener('input', validarFormulario);
+
+// 4. Gestión de Imagen
+function SelectImagenInstructor() {
+    api.send("Select-update-imagen-instructor");
+}
+
+api.receive("Image-select-update-instructor", (even, urlImage) => {
+    imgElement.src = urlImage;
+    validarFormulario(); // Re-validar por si la imagen era lo único pendiente
+});
+
+// 5. Acciones del Formulario
+function LimpiarFormulario() {
+    form.reset();
+    imgElement.src = '../assets/imagen/ImageLogin3.png';
+    validarFormulario(); 
+}
+
+function Close() { 
+    window.close(); 
+}
+
+function ValoresFormulario() {
+    // Evitamos enviar si el botón está deshabilitado por seguridad
+    if (btnGuardar.disabled) return;
+
+    const valores = {
+        key:key_intsructor,
+        imagen: imgElement.src,
+        nombre: document.getElementById('Name').value.trim(),
+        edad: document.getElementById('Age').value,
+        cedula: document.getElementById('Codpersona').value,
+        direccion: document.getElementById('Address').value,
+        correo: document.getElementById('Email').value,
+        telefono: document.getElementById('Phone').value,
+        estado: document.getElementById('status').value,
+        especialidad: document.getElementById('Specialty').value,
+        certificaciones: document.getElementById('Certification').value
+    };
+
+    api.send('Save-data-update-instructor', valores);
+    
+    // Opcional: No limpiar inmediatamente si es una "Actualización" 
+    // para que el usuario vea que terminó, o cerrar la ventana.
+    mostrarNotificacion();
+}
+
+// 6. Notificaciones
+api.receive("open-modal-update-instructor", (event, data) => {
+    mostrarNotificacion();
+});
+
+function mostrarNotificacion() {
+    const notif = document.getElementById('topNotif');
+    notif.classList.add('show');
+    setTimeout(() => {
+        notif.classList.remove('show');
+    }, 3000);
+}
+</script>
 
 </body>
 </html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>S.A.I.A - Vista Detalle Lateral</title>
+    <style>
+        :root {
+            --sidebar-width: 350px;
+            --accent: #6366f1;
+            --bg-main: #f8fafc;
+            --white: #ffffff;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        /* CONTENEDOR TIPO PANEL */
+        .detail-panel {
+            background: var(--white);
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        /* LADO IZQUIERDO: RESUMEN VISUAL */
+        .panel-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #4f46e5 0%, #6366f1 100%);
+            padding: 40px 30px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .course-icon-large {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .price-tag {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 20px 0;
+        }
+
+        .badge-status {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* LADO DERECHO: DATOS TÉCNICOS */
+        .panel-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-info h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.75rem;
+            color: var(--text-dark);
+        }
+
+        .instructor-line {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        /* GRID DE ESPECIFICACIONES */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .spec-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* DIVISOR Y DESCRIPCIÓN */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        .desc-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            margin-bottom: auto; /* Empuja los botones al final */
+        }
+
+        /* BOTONES DE ACCIÓN */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-main { background: var(--accent); color: white; }
+        .btn-main:hover { opacity: 0.9; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-light); }
+        .btn-outline:hover { background: #f1f5f9; }
+
+    </style>
+</head>
+<body>
+
+    <div class="detail-panel">
+        <aside class="panel-sidebar">
+            <div class="course-icon-large">
+                <span class="icon-graduation-cap"></span> </div>
+            <div class="badge-status">Cupo Disponible</div>
+            <div class="price-tag" id="view-cost">$0.00</div>
+            <div style="font-size: 0.8rem; opacity: 0.8;">Costo Total del Curso</div>
+        </aside>
+
+        <main class="panel-content">
+            <div class="header-info">
+                <h1 id="view-name">Nombre del Curso</h1>
+                <div class="instructor-line">
+                    <span class="icon-user"></span>
+                    <span id="view-instructor">Instructor No Asignado</span>
+                </div>
+            </div>
+
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <span class="spec-label">Horario y Días</span>
+                    <span class="spec-value" id="view-schedule">---</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Duración Estimada</span>
+                    <span class="spec-value" id="view-duration">---</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Capacidad Máxima</span>
+                    <span class="spec-value" id="view-capacity">---</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Evaluación / Certificado</span>
+                    <span class="spec-value" id="view-extras">---</span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            
+            <div class="desc-text" id="view-description">
+                Cargando descripción detallada del curso...
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-outline" onclick="window.print()">
+                    <span class="icon-printer"></span> Imprimir
+                </button>
+                <button class="btn btn-outline">
+                    <span class="icon-pencil"></span> Editar
+                </button>
+                <button class="btn btn-main">
+                    <span class="icon-user-plus"></span> Inscribir Alumno
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Datos de ejemplo basados en tu tabla Course
+        const data = {
+            Name: "Técnicas de Base de Datos SQL",
+            Instructor: "Duno Castellano",
+            Days: "Sábados",
+            Start: "08:00",
+            End: "12:00",
+            Duration: "4 Meses",
+            Capacity: 15,
+            Cost: "120.00",
+            Evaluation: "Sí",
+            Certificate: "Sí",
+            Description: "Este curso cubre desde la creación de tablas y relaciones hasta optimización de consultas complejas y mantenimiento de integridad referencial en SQLite y MySQL."
+        };
+
+        // Función para renderizar
+        function init() {
+            document.getElementById('view-name').innerText = data.Name;
+            document.getElementById('view-instructor').innerText = `Por: ${data.Instructor}`;
+            document.getElementById('view-schedule').innerText = `${data.Days} (${data.Start} - ${data.End})`;
+            document.getElementById('view-duration').innerText = data.Duration;
+            document.getElementById('view-capacity').innerText = `${data.Capacity} personas`;
+            document.getElementById('view-cost').innerText = `$${data.Cost}`;
+            document.getElementById('view-extras').innerText = `Eval: ${data.Evaluation} / Cert: ${data.Certificate}`;
+            document.getElementById('view-description').innerText = data.Description;
+        }
+
+        init();
+    </script>
+</body>
+</html>

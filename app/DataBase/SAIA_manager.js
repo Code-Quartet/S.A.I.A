@@ -1,306 +1,306 @@
 const sqlite3 = require('sqlite3').verbose();
-const path = require('path')
-const fs = require('fs')
+const path = require('path');
+const fs = require('fs');
+const XLSX = require('xlsx'); // Nueva dependencia para Excel
 
 
-class SAIADB{
+class SAIADB {
+    constructor(dbPath = './SAIA.db') {
+        this.dbPath = dbPath;
+        this.db = null;
+        this.inTransaction = false;
+    }
 
-        constructor(dbPath = './SAIA.db') {
-            this.dbPath = dbPath;
-            this.db = null;
-            this.inTransaction = false;
-        }
+    // --- MÉTODOS DE CONEXIÓN Y NÚCLEO ---
 
-        // Método Privado: Garantiza que la conexión esté abierta
-        async _ensureConnection() {
-            if (this.db) {
-                // Ya conectado, devolvemos inmediatamente
-                return true;
+    async _ensureConnection() {
+        if (this.db) return true;
+        await this.conectar();
+        if (!this.db) throw new Error("Fallo al conectar a la BD.");
+        return true;
+    }
+
+    conectar() {
+        return new Promise((resolve, reject) => {
+            if (this.db) return resolve(true);
+            this.db = new sqlite3.Database(this.dbPath, (err) => {
+                if (err) { this.db = null; reject(err); }
+                else resolve(true);
+            });
+        });
+    }
+
+    async desconectar() {
+        return new Promise((resolve, reject) => {
+            if (!this.db) return resolve(true);
+            this.db.close((err) => {
+                if (err) reject(err);
+                else { this.db = null; this.inTransaction = false; resolve(true); }
+            });
+        });
+    }
+
+    // --- MÉTODOS DE CONSULTA (INTERNAL) ---
+
+    async _runQuery(sql, params = []) {
+        await this._ensureConnection();
+        return new Promise((resolve, reject) => {
+            this.db.run(sql, params, function(err) {
+                if (err) reject(err);
+                else resolve(this.lastID || this.changes);
+            });
+        });
+    }
+
+    async _allQuery(sql, params = []) {
+        await this._ensureConnection();
+        return new Promise((resolve, reject) => {
+            this.db.all(sql, params, (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+    }
+
+    async _getQuery(sql, params = []) {
+        await this._ensureConnection();
+        return new Promise((resolve, reject) => {
+            this.db.get(sql, params, (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
+    }
+
+    // --- MANEJO DE TRANSACCIONES ---
+
+    async beginTransaction() {
+        await this._ensureConnection();
+        if (this.inTransaction) return;
+        await this._runQuery('BEGIN TRANSACTION;');
+        this.inTransaction = true;
+    }
+
+    async commit() {
+        if (!this.inTransaction) throw new Error("No hay transacción activa.");
+        await this._runQuery('COMMIT;');
+        this.inTransaction = false;
+    }
+
+    async rollback() {
+        if (!this.inTransaction) return;
+        await this._runQuery('ROLLBACK;').catch(() => {});
+        this.inTransaction = false;
+    }
+
+    // --- FUNCIONES DE UTILIDAD ---
+
+    async listarTablas() {
+        const query = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';";
+        const rows = await this._allQuery(query);
+        return rows.map(row => row.name);
+    }
+
+    async vaciarBaseDeDatos() {
+        const tablas = await this.listarTablas();
+        await this.beginTransaction();
+        try {
+            for (const tabla of tablas) {
+                await this._runQuery(`DELETE FROM ${tabla}`);
+                await this._runQuery(`DELETE FROM sqlite_sequence WHERE name='${tabla}'`).catch(() => {});
             }
-
-            // Si no está conectado, llamamos a this.conectar()
-            await this.conectar();
-            
-            if (!this.db) {
-                throw new Error("Fallo en el intento de conectar a la base de datos.");
-            }
+            await this.commit();
             return true;
+        } catch (error) {
+            await this.rollback();
+            throw error;
         }
+    }
 
-        /**
-         * Conectar a la base de datos (crea el archivo si no existe).
-         * @returns {Promise<boolean>} Resuelve a true si la conexión fue exitosa.
-         */
-        conectar() {
-            return new Promise((resolve, reject) => {
-                // Evitamos intentar conectar si ya estamos en una transacción o conectados
-                if (this.db) {
-                    return resolve(true); 
-                }
-                
-                this.db = new sqlite3.Database(this.dbPath, (err) => {
-                    if (err) {
-                        this.db = null; // Si falla, aseguramos que db es null
-                        reject(err);
-                    } else {
-                        resolve(true);
-                    }
-                });
-            });
-        }
+    // --- GESTIÓN DE ARCHIVOS .DB ---
 
-        async desconectar() {
-          
-            return this.cerrar();
-        }
+    async respaldarArchivoDB(destino) {
+        const dir = path.dirname(destino);
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         
-        // -------------------------------------------
-        // MÉTODOS DE TRANSACCIONES (Requieren conexión)
-        // -------------------------------------------
+        await this.desconectar();
+        fs.copyFileSync(this.dbPath, destino);
+        await this.conectar();
+        return { success: true, path: destino };
+    }
 
-        async beginTransaction() {
-            await this._ensureConnection(); // **Garantizamos conexión**
-            return new Promise((resolve, reject) => {
-                if (this.inTransaction) {
-                    return resolve(); 
-                }
-                this.db.run('BEGIN TRANSACTION;', (err) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        this.inTransaction = true;
-                        resolve();
-                    }
-                });
-            });
-        }
-        
-        async commit() {
-            if (!this.inTransaction) {
-                 // Opcional: Podríamos llamar a _ensureConnection() aquí si el error de commit
-                 // fuera un problema de conexión, pero el error lógico es la transacción ausente.
-                 return Promise.reject(new Error("No hay transacción activa para confirmar."));
+    async importarArchivoDB(origen) {
+        if (!fs.existsSync(origen)) throw new Error("Archivo no encontrado.");
+        await this.desconectar();
+        fs.copyFileSync(origen, this.dbPath);
+        await this.conectar();
+        return { success: true };
+    }
+
+    // --- IMPORTAR / EXPORTAR JSON ---
+
+    async exportarJSON(filePath) {
+        const tablas = await this.listarTablas();
+        const data = {};
+        for (const t of tablas) data[t] = await this._allQuery(`SELECT * FROM ${t}`);
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        return { success: true };
+    }
+
+    async importarJSON(filePath) {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        await this.beginTransaction();
+        try {
+            for (const tabla in data) {
+                if (data[tabla].length === 0) continue;
+                const cols = Object.keys(data[tabla][0]).join(', ');
+                const placeholders = Object.keys(data[tabla][0]).map(() => '?').join(', ');
+                const sql = `INSERT OR REPLACE INTO ${tabla} (${cols}) VALUES (${placeholders})`;
+                for (const fila of data[tabla]) await this._runQuery(sql, Object.values(fila));
             }
-            return new Promise((resolve, reject) => {
-                // No necesitamos await _ensureConnection() aquí porque commit solo se llama 
-                // después de beginTransaction, lo que garantiza la conexión.
-                this.db.run('COMMIT;', (err) => {
-                    this.inTransaction = false;
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                });
-            });
-        }
-        
-        async rollback() {
-            if (!this.inTransaction) {
-                return Promise.resolve();
+            await this.commit();
+            return { success: true };
+        } catch (e) { await this.rollback(); throw e; }
+    }
+
+     // --- EXPORTAR E IMPORTAR EXCEL (.xlsx / .xls) ---
+
+    /**
+     * Exporta TODA la base de datos a un solo archivo Excel.
+     * Cada tabla de la BD se convierte en una pestaña (Sheet) diferente.
+     */
+    async exportarTodoAExcel(destPath) {
+        const tablas = await this.listarTablas();
+        const wb = XLSX.utils.book_new();
+
+        for (const tabla of tablas) {
+            const rows = await this._allQuery(`SELECT * FROM ${tabla}`);
+            if (rows.length > 0) {
+                const ws = XLSX.utils.json_to_sheet(rows);
+                XLSX.utils.book_append_sheet(wb, ws, tabla);
             }
-            return new Promise((resolve, reject) => {
-                this.db.run('ROLLBACK;', (err) => {
-                    this.inTransaction = false;
-                    if (err) {
-                        //console.error("Error durante el ROLLBACK:", err);
-                        resolve(); // Preferimos resolver para terminar el flujo
-                    } else {
-                        resolve();
-                    }
-                });
-            });
         }
 
-        // ... (isTransactionActive se mantiene igual)
-        isTransactionActive(){
+        XLSX.writeFile(wb, destPath);
+        return { success: true, path: destPath };
+    }
 
-            return this.inTransaction;
+    // --- IMPORTAR / EXPORTAR CSV ---
+    /**
+     * Exporta una tabla específica a un archivo Excel.
+     */
+    async exportarTablaAExcel(tabla, destPath) {
+        const rows = await this._allQuery(`SELECT * FROM ${tabla}`);
+        if (rows.length === 0) throw new Error(`La tabla ${tabla} está vacía o no existe.`);
 
-        }
-        // -------------------------------------------
-        // MÉTODOS DE LECTURA/ESCRITURA CON GARANTÍA DE CONEXIÓN
-        // -------------------------------------------
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(rows);
+        XLSX.utils.book_append_sheet(wb, ws, tabla);
 
-        // Usado internamente para CREATE/UPDATE/DELETE
-        async _runQuery(sql, params = []) {
-            await this._ensureConnection(); // **Garantizamos conexión**
-            return new Promise((resolve, reject) => {
-                this.db.run(sql, params, function(err) {
-                    if (err) reject(err);
-                    else resolve(this.lastID || this.changes); 
-                });
-            });
-        }
-        
-        // Usado internamente para buscar 1 registro
-        async _getQuery(sql, params = []) {
-            await this._ensureConnection(); // **Garantizamos conexión**
-            return new Promise((resolve, reject) => {
-                this.db.get(sql, params, (err, row) => {
-                    if (err) reject(err);
-                    else resolve(row);
-                });
-            });
-        }
-        
-        // Usado internamente para buscar TODOS los registros
-        async _allQuery(sql, params = []) {
-            await this._ensureConnection(); // **Garantizamos conexión**
-            return new Promise((resolve, reject) => {
-                this.db.all(sql, params, (err, rows) => {
-                    // Aquí es donde ocurría el error: this.db.all(...)
-                    // Ahora, _ensureConnection() garantiza que this.db no es null.
-                    if (err) reject(err);
-                    else resolve(rows);
-                });
-            });
-        }
+        XLSX.writeFile(wb, destPath);
+        return { success: true, path: destPath };
+    }
 
-        /* -------------------------------------------
-        | MÉTODOS PÚBLICOS SIMPLIFICADOS
-        * -------------------------------------------*/
-        // Crear tabla
-        async crearTabla(sql){
+    /**
+     * Importa datos desde un Excel a la BD.
+     * Cada pestaña del Excel debe coincidir con el nombre de una tabla en la BD.
+     */
+ async importarTodoDesdeExcel(filePath) {
+    if (!fs.existsSync(filePath)) throw new Error("Archivo no encontrado.");
+    
+    const workbook = XLSX.readFile(filePath);
+    await this.beginTransaction();
 
-            return this._runQuery(sql);
-        
-        }
-        
-        // Insertar (CREATE)
-        async crear(sql, params = []) {
-         
-            return this._runQuery(sql, params); 
-        }
-
-        // Leer (Buscar varios registros)
-        async leer(sql, params = []) {
-        
-            return this._allQuery(sql, params); 
-        }
-
-        // Buscar un solo registro (READ)
-        async buscar(sql, params = []) {
+    try {
+        for (const sheetName of workbook.SheetNames) {
+            // raw: false ayuda a que las fechas y números se lean como texto legible
+            const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: "" }); 
             
-            return this._getQuery(sql, params);
+            if (rows.length === 0) continue;
+
+            // Obtenemos los nombres de las columnas reales de la tabla en la BD
+            const tableInfo = await this._allQuery(`PRAGMA table_info(${sheetName})`);
+            const validColumns = tableInfo.map(c => c.name);
+
+            for (const row of rows) {
+                // Filtramos la fila del Excel para que solo tenga columnas que existan en la BD
+                const cleanRow = {};
+                validColumns.forEach(col => {
+                    // Si el Excel no tiene la columna, le ponemos un valor por defecto 
+                    // para evitar el error de NOT NULL (especialmente en 'Date')
+                    cleanRow[col] = row[col] !== undefined && row[col] !== "" ? row[col] : null;
+                    
+                    // PARCHE ESPECÍFICO: Si la columna es 'Date' y sigue nula, le ponemos la fecha actual
+                    if ((col.toLowerCase() === 'date' || col.toLowerCase() === 'fecha') && !cleanRow[col]) {
+                        cleanRow[col] = new Date().toISOString().split('T')[0];
+                    }
+                });
+
+                const cols = Object.keys(cleanRow).join(', ');
+                const placeholders = Object.keys(cleanRow).map(() => '?').join(', ');
+                const sql = `INSERT OR REPLACE INTO ${sheetName} (${cols}) VALUES (${placeholders})`;
+
+                await this._runQuery(sql, Object.values(cleanRow));
+            }
         }
+        await this.commit();
+        return { success: true };
+    } catch (error) {
+        await this.rollback();
+        console.error("Error detallado en importación:", error);
+        throw error;
+    }
+}
 
-        // Buscar todos los registros (READ)
-        async buscarTodo(sql, params = []) {
-            // Este es el método que causaba el problema, ahora usa la función garantizada.
-            return this._allQuery(sql, params);
+    /* -------------------------------------------
+    | MÉTODOS PÚBLICOS SIMPLIFICADOS
+    * -------------------------------------------*/
+    
+    async crearTabla(sql) {
+        return this._runQuery(sql);
+    }
+    
+    async crear(sql, params = []) {
+        return this._runQuery(sql, params); 
+    }
+
+    async leer(sql, params = []) {
+        return this._allQuery(sql, params); 
+    }
+
+    async buscar(sql, params = []) {
+        return this._getQuery(sql, params);
+    }
+
+    async buscarTodo(sql, params = []) {
+        return this._allQuery(sql, params);
+    }
+
+    async actualizar(sql, params = []) {
+        return this._runQuery(sql, params); 
+    }
+
+    async borrar(sql, params = []) {
+        return this._runQuery(sql, params);
+    }
+
+    async borrarTablas() {
+        const tablas = await this.listarTablas();
+        for (const tabla of tablas) {
+            await this._runQuery(`DROP TABLE IF EXISTS ${tabla};`);
         }
-
-        // Actualizar registros (UPDATE)
-        async actualizar(sql, params = []) {
-          
-            return this._runQuery(sql, params); 
-        }
-
-        // Borrar registros (DELETE)
-        async borrar(sql, params = []) {
-          
-            return this._runQuery(sql, params);
-        }
-
-        async borrarTablas(){
-
-            return new Promise((resolve, reject) => {
-
-                this.listarTablas()
-                    .then(tablas => {
-                        if (tablas.length === 0) return resolve();
-                        let pendientes = tablas.length;
-                        tablas.forEach(tabla => {
-                            this.db.run(`DROP TABLE ${tabla};`, [], (err) => {
-                                if (err) reject(err);
-                                pendientes--;
-                                if (pendientes === 0) resolve();
-                            });
-                        });
-                    })
-                    .catch(reject);
-           });
-        }
+        return true;
+    }
 
     async existsData(tableName) {
-            // Garantizar la conexión antes de la consulta
-            await this._ensureConnection(); 
-
-            const sql = `SELECT COUNT(*) AS count FROM ${tableName};`;
-            
-            return new Promise((resolve, reject) => {
-                // Usamos .get() porque solo esperamos una fila (el conteo)
-                this.db.get(sql, [], (err, row) => {
-                    if (err) {
-                        // Si hay un error (ej: la tabla no existe), rechazamos la Promesa
-                        reject(err);
-                    } else {
-                        // Si el conteo (row.count) es mayor que 0, devolvemos true.
-                        // SQLite devuelve el conteo como un número.
-                        const exists = row.count > 0;
-                        resolve(exists);
-                    }
-                });
-            });
+        const sql = `SELECT COUNT(*) AS count FROM ${tableName};`;
+        const row = await this._getQuery(sql);
+        return row && row.count > 0;
     }
 
-
-    // Listar todas las tablas
-    async listarTablas() {
-            const query = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';";
-            return this._allQuery(query).then(rows => rows.map(row => row.name));
+    async cerrar() {
+        return this.desconectar();
     }
-
-        // Cerrar la conexión (Se mantiene igual, pero es importante que this.db = null)
-    cerrar() {
-            return new Promise((resolve, reject) => {
-                if (!this.db) return resolve(true);
-
-                this.db.close((err) => {
-                    if (err) reject(err);
-                    else {
-                        this.db = null;
-                        this.inTransaction = false; 
-                        resolve(true);
-                    }
-                });
-            });
-    }
-        
-        // ... (El resto de los métodos se pueden adaptar para usar _runQuery o _allQuery)
-
 }
 
 module.exports = SAIADB;
-/*******************************************/
-/****
-
-db.verificarOCrearDB(async (dbInstance) => {
-    // Crear tabla si la base de datos es nueva
-    await dbInstance.crearTabla(`CREATE TABLE IF NOT EXISTS productos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT,
-        cantidad INTEGER
-    )`);
-    console.log('Tabla productos creada.');
-}).then((existe) => {
-    if (existe) {
-        console.log('La base de datos ya existía.');
-    } else {
-        console.log('La base de datos fue creada y se inicializó.');
-    }
-});
-
-
-db.verificarOCrearDB().then(() => {
-    db.limpiarTablas()
-      .then(() => console.log('¡Todas las tablas han sido vaciadas!'))
-      .catch(err => console.error('Error al limpiar tablas:', err));
-});
-
-INSERT INTO productos (cod,cod.E,Nombre,precio,iva,descuento,image,categoria,cant,informacion_adicional ) VALUES ('LPT-001A', '9998877665544', 'Monitor 4K Curvo', 399.99, 12.50, 10.00, '/img/monitor_4k.png', 'Periféricos', 25, 'Pantalla de 32 pulgadas, 144Hz de tasa de refresco.')
-
-
-
-*****/

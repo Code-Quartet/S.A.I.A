@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Empleado - Modal</title>
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
+    
+    <style>
+        /* --- Variables y Reset --- */
+:root {
+    --primary-blue: #2b56c5;
+    --text-main: #374151;
+    --text-muted: #9ca3af;
+    --border-color: #d1d5db;
+    --bg-light: #ffffff;
+}
+
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+/*------------------------------------*/
+.body-employee{
+    padding: 5px;
+}
+.grid-container-new-registre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+ 
+}
+
+/* Sistema de Grid para dos columnas */
+.grid-container-new-registre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+   /* background: purple;*/
+    height: 100%;
+    grid-column-gap: 7px;
+}
+
+.container-form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+     .column1{
+        /*background: orange;*/
+     }
+     .column2{
+        /*background: pink;*/
+     }
+
+
+.sub-form-group{
+    
+}
+
+.sub-form-group>input {
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    width: 88%;
+}
+
+.sub-form-group {
+    font-weight: bold;
+}
+
+.form-group>label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    font-size: 17px;
+    margin-top: 0.4rem;
+}
+
+.form-group>input {
+    width: 79%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+.select-input-new-registre-employee {
+    width: 95%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+.form-group>input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-group>input:focus {
+    border-color: var(--primary-blue);
+}
+
+/* Estilo para el Selector */
+.select-wrapper {
+    position: relative;
+}
+
+.select-input-new-registre{
+    appearance: none; /* Quita la flecha por defecto */
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.custom-arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-muted);
+}
+
+/* Contenedor de Carga de Archivo */
+.file-upload-container-new-registre {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    /* padding: 8px 12px; */
+    width: 99%;
+    background-color: var(--bg-light);
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.preview-box {
+    width: 45px;
+    height: 45px;
+    background-color: #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 1.2rem;
+}
+
+.file-placeholder {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+/*-----------------------------------------------*/
+/*-----------ESTRUCTURA DEL GESTOR PARA SUBIR IMAGEN------------------------*/
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 7px;
+}
+
+.image-uploader {
+    position: relative;
+    width: 160px;
+    height: 147px;
+    cursor: pointer;
+}
+
+/* Círculo con borde negro grueso */
+.main-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    overflow: hidden;
+    border: 8px solid var(--border-color);
+}
+/* Estilo de tu imagen específica */
+.avatar-main {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: blue;
+}
+
+/* Botón de cámara superpuesto */
+.camera-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    background-color: #d8d8d8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 2;
+    border-style: none;
+}
+
+.btn-select-imagen {
+    background: #ff00000f;
+    border-style: none;
+}
+
+.icon-camera {
+  font-size: 18px;
+  color: #333;
+}
+
+.avatar-main-register {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: blue;
+}
+/*-----------ESTRUCTURA DEL GESTOR PARA SUBIR IMAGEN------------------------*/
+
+/*------------------------------------------------------*/
+.sub-container-password {
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    width: 95%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+#password {
+    border-style: none;
+    width: 80%;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+#Mpassword{
+    border-style: none;
+     width: 80%;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    background-color: var(--bg-light);
+}
+
+#toggleBtn {
+    background: #ff000000;
+    font-size: 20px;
+    border-style: none;
+}
+/*----------MODAL PASSWORD MASTER--------------*/
+
+.footer-register-employee {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 18px;
+}
+
+.btn-modal {
+    width: fit-content;
+    color: white;
+    padding: 10px 20px;
+    font-size: 17px;
+    border-radius: 9px;
+    font-weight: bold;
+}
+
+.Register {
+    background: blue;
+    color: white;
+    border: 0.2px solid blue;
+}
+/*
+.Register:hover{
+     background:green;
+    color:white;
+    border: 0.2px solid white;
+}
+*/
+.Close{
+    background:white;
+    color:red;
+    border: 0.2px solid red;
+}
+/*
+.Close:hover{
+    background:red;
+    color:white;
+    border: 0.2px solid white;
+}*/
+/*---------------------------------------------*/
+/*--------------VENTANA  DE NOTIFICACION---------------------*/
+.top-notification {
+    position: fixed;
+    top: 5px;
+    right: -400px;
+    background-color: white;
+    color: #28a745;
+    padding: 6px 5px;
+    border-radius: 8px;
+    border: 2px solid #28a745;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: right 0.5s ease-in-out;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    width: 257px;
+    justify-content: space-between;
+}
+    /* Clase para mostrar la notificación */
+    .top-notification.show {
+        right: 20px; /* Aparece 20px despegado del borde derecho */
+    }
+
+    .contain-icono-message {
+    background: #4caf50;
+    border-radius: 12px;
+    padding: 17px 8px;
+    margin-right: 5px;
+}
+
+.icono-message {
+
+    padding: 10px;
+    background: #c7e6a2;
+    border-radius: 19px;
+    color: white;
+
+}
+/*--------------VENTANA  DE NOTIFICACION---------------------*/
+/*--------------VENTANA  DE NOTIFICACION---------------------*/
+.top-notification {
+    position: fixed;
+    top: 5px;
+    right: -400px;
+    background-color: white;
+    color: #28a745;
+    padding: 6px 5px;
+    border-radius: 8px;
+    border: 2px solid #28a745;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: right 0.5s ease-in-out;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    width: 257px;
+    justify-content: space-between;
+}
+    /* Clase para mostrar la notificación */
+    .top-notification.show {
+        right: 20px; /* Aparece 20px despegado del borde derecho */
+    }
+
+    .contain-icono-message {
+    background: #4caf50;
+    border-radius: 12px;
+    padding: 17px 8px;
+    margin-right: 5px;
+}
+
+.icono-message {
+
+    padding: 10px;
+    background: #c7e6a2;
+    border-radius: 19px;
+    color: white;
+
+}
+/*--------------VENTANA  DE NOTIFICACION---------------------*/
+
+/*---------------------------------------------*/
+
+</style>
+</head>
+<body class="body-employee">
+        <div class="container-employee">            
+            <header class="header-employee">
+              
+                <h2>Nuevo Empleado</h2>
+            </header>
+            <div class="grid-container-new-registre">
+                      <div class="column1">
+                                <div class="form-group">
+                    <label>Nombre Completo</label>
+                  <input type="text" id="nombre" placeholder="Ej: Rosa María Pérez Gonzales" style="
+                    width: 95%;
+                ">
+                </div>
+
+                <div class="container-form-group">
+                      <div class="sub-form-group">
+                          <label>Cédula</label>
+                          <input type="text" id="ci" placeholder="Ej: 21783921">
+                      </div>
+                       <div class="sub-form-group">
+                              <label>Edad</label>
+                              <input type="text" id="edad" placeholder="Ej:20">
+                      </div>
+                      <div class="sub-form-group">
+                         <label>Fecha de Nacimiento</label>
+                        <input type="date" id="fechanacimiento">
+                      </div>
+                </div>
+ <div class="container-form-group">
+                  <div class="sub-form-group">
+                      <label>Teléfono</label>
+                      <input id="telefono" type="tel" placeholder="Ej: 04163003485" style="
+    width: 90%;
+">
+                  </div>
+
+                  <div class="sub-form-group">
+                      <label>Correo Electrónico</label>
+                      <input id="correo" type="email" placeholder="Ej: nombre@correo.com" style="
+    width: 90%;
+">
+                  </div>
+</div>
+
+        <div class="form-group">
+                    <label>Dirección</label>
+                   <input id="direccion" type="text" placeholder="Ej: Calle 24 entre Av. Miranda y Av. Libertador" style="
+    width: 95%;
+">
+                </div>
+                 <div class="form-group">
+                    <label>Seleccionar Permiso</label>
+                    <select class="select-input-new-registre-employee" id="tipoPermiso" required>
+                        <option value="" disabled selected>Seleccionar...</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Sub-Administrador">Sub-Administrador</option>
+                    </select>
+                </div>
+              
+            </div>
+
+            <div class="column2">
+                <div class="form-group ContainerUploadImagen" >
+
+                    <div class="file-upload-container-new-registre" style="border-style: none;">
+                       <label class="image-uploader" for="fileInputregister">
+                        <div class="main-circle">
+                          <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+                        </div>
+                        
+                           <button class="camera-button" id="Btn_select_image_user" onclick="SelectImage()">
+                            <span class="icon-camera"></span>
+                           </button> 
+                       
+                      </label>
+                    </div>
+              </div>         
+              <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                   <input type="text" id="usuario" value="Subadmin" placeholder="Rosa María Pérez Gonzales" style="
+    width: 90%;
+">
+              </div>
+              <div class="form-group">
+                    <label>Contraseña</label>
+                    <div class="sub-container-password">
+                        <span  class="icon-lock"></span>   
+                        <input  type="password" id="password"placeholder="Ingrese su Contraseña" value="1596321">
+                        <button type="button" id="toggleBtn">
+                          <span id="eyeIcon" class="icon-eye"></span>
+                        </button>
+                    </div>
+              </div>
+              <div class="form-group">
+                    <label>Estado</label>
+                     <select class="select-input-new-registre-employee" id="select-status-employee">
+                        <option value="">Estado</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                        <option value="Despedido">Despedido</option>
+                    </select>
+              </div>            
+            </div>
+            </div>
+        <div class="footer-register-employee"> 
+              <button class="btn-modal Close" id="CloseModal" onclick="Close()">Cerrar</button>
+            <div>
+              <button class="btn-modal Close" id="CloseModal" onclick="clearform()">Limpiar</button>
+              <button class="btn-modal Register" id="RegisterData" onclick="DatosRegistro()">Registrar</button>
+            </div>
+        </div>
+
+        </div>
+
+        <div class="top-notification" id="topNotif">
+        <span class="contain-icono-message">
+            <span class="icon-checkmark icono-message">
+            </span>
+        </span>
+        <h3>¡Datos Guardado!</h3>
+</div>
+</body>
+    <script>
+
+const passwordInput = document.getElementById('password');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const eyeIcon = document.getElementById('eyeIcon');
+
+   toggleBtn.addEventListener('click', () => {
+    // 1. Cambiamos el tipo de input
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+
+    // 2. Intercambiamos las clases de Icomoon
+    if (isPassword) {
+      eyeIcon.classList.remove('icon-eye');
+      eyeIcon.classList.add('icon-eye-blocked');
+    } else {
+      eyeIcon.classList.remove('icon-eye-blocked');
+      eyeIcon.classList.add('icon-eye');
+    }
+  });
+
+
+
+function SelectImage(){
+
+      api.send("select-Image-new-employee")
+
+}
+
+
+
+api.receive('Image-select-new-employee', async (event,imagen) => {
+
+    document.getElementById("imagen-avatar").src=imagen
+})
+/*------------------------------------*/
+function DatosRegistro(){
+
+  let fecha = new Date();
+  let formatofecha = fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear();
+  /*--------------------------*/
+  const ahora = new Date();
+  const horaActual = ahora.getHours().toString().padStart(2, '0') + ':' +
+                     ahora.getMinutes().toString().padStart(2, '0') + ':' +
+                     ahora.getSeconds().toString().padStart(2, '0');
+
+    if(document.getElementById("nombre").value!="" && document.getElementById("ci").value!="" && document.getElementById("edad").value!="" && document.getElementById("fechanacimiento").value!="" && document.getElementById("usuario").value!="" && document.getElementById("password").value && document.getElementById("correo").value && document.getElementById("telefono").value && document.getElementById("direccion").value){
+
+                 let objData={
+                        Employee:{nombre:document.getElementById("nombre").value,
+                          ci:document.getElementById("ci").value,
+                          edad:document.getElementById("edad").value,
+                          fechanacimiento:document.getElementById("fechanacimiento").value,
+                          correo:document.getElementById("correo").value,
+                          tlf:document.getElementById("telefono").value,
+                          direccion:document.getElementById("direccion").value,
+                          image:document.getElementById("imagen-avatar").src,
+                          status:document.getElementById("select-status-employee").value
+                        },
+                        User:{
+                          usuario:document.getElementById("usuario").value,
+                          clave:document.getElementById("password").value,
+                           Mclave:"null",
+                           Permission:document.getElementById("tipoPermiso").value,
+                        },
+                        fecha:formatofecha,
+                        hora:horaActual
+                    }
+
+                    console.log(objData)
+                    api.send("save-data-registre-employee",objData)
+
+    }
+    else{
+        api.send("message-campos-vacios-employee","complete todo los campos")
+    }
+
+}
+/*----------------------------------------------------*/
+
+
+/*-----CONTROL DE VENTANA DE Notificacion-------*/
+
+api.receive("open-modal-register-employee",(event,data)=>{
+
+    mostrarNotificacion()
+
+})
+
+        function mostrarNotificacion() {
+             const overlay = document.getElementById('modal-message-register');
+        const btnClose = document.getElementById('closeModal');
+        
+        const notif = document.getElementById('topNotif');
+            notif.classList.add('show');
+            clearform()
+        setTimeout(() => {
+             cerrarNotificacion();
+            }, 4000);
+        }
+
+        function cerrarNotificacion() {
+             const notif = document.getElementById('topNotif');
+            notif.classList.remove('show');
+        }
+
+function clearform(){
+
+
+document.getElementById("nombre").value="";
+document.getElementById("ci").value="";
+document.getElementById("edad").value="";
+document.getElementById("fechanacimiento").value="";
+document.getElementById("correo").value="";
+document.getElementById("telefono").value="";
+document.getElementById("direccion").value="";
+document.getElementById("imagen-avatar").src="../assets/imagen/ImageLogin3.png";
+
+document.getElementById("usuario").value="";
+document.getElementById("password").value="";
+document.getElementById("tipoPermiso").value="";
+
+
+
+}
+
+function Close(){
+    window.close();
+}
+/*
+{
+    "Employee": {
+        "nombre": "luis  dno",
+        "ci": "2356865",
+        "edad": "10",
+        "fechanacimiento": "19995-10-05",
+        "correo": "454540",
+        "tlf": "0144505",
+        "direccion": "gvg",
+        "image": "file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/ImageLogin3.png"
+    },
+    "User": {
+        "usuario": "admin4",
+        "clave": "1234567895",
+        "Mclave": "1234567896"
+    },
+    "fecha": "11/3/2026",
+    "hora": "23:31:00"
+}
+
+
+*/
+    </script>
+</html>

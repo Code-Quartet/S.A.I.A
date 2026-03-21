@@ -32,7 +32,9 @@
     "electron-builder": "^24.4.0"
   },
   "dependencies": {
+    "fast-csv": "^5.0.5",
     "sqlite3": "^5.1.7",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "xlsx": "^0.18.5"
   }
 }

@@ -1,0 +1,55 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 12px;
+}
+
+thead {
+    display: block;
+    background: #f1f1f1;
+    padding: 12px 16px;
+    text-align: left;
+    text-transform: capitalize;
+    border-bottom: 1px solid var(--border-color);
+}
+
+tbody {
+    display: block;
+    width: 100%;
+    max-height: 63vh;
+    overflow-y: auto;
+}
+
+/* Para mantener las celdas alineadas entre thead y tbody */
+thead tr, tbody tr {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+}
+/* Estilo opcional para la barra de scroll (opcional) */
+tbody::-webkit-scrollbar {
+    width: 8px;
+}
+tbody::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+th {
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: #4b5563;
+    text-align: center;
+}
+
+td {
+    padding: 9px 6px;
+    font-size: 14px;
+    color: #374151;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+

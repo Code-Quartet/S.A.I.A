@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
+    <style>
+        :root {
+            --primary-blue: #3b82f6;
+            --dark-blue: #2563eb;
+            --danger-red: #c53030;
+            --bg-gray: #f3f4f6;
+            --text-main: #1e293b;
+            --text-label: #4a5568;
+            --border-color: #e2e8f0;
+            --input-bg: #f8fafc;
+        }
+
+        * { padding: 0px; margin: 0px;}
+
+body {
+    /* font-family: 'Segoe UI', system-ui, sans-serif; */
+   /* background-color: #666;*/
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* gap: 50px; */
+    /* padding: 50px 0; */
+    height: 100vh;
+    justify-content: center;
+}
+
+        /* --- 2. DISEÑO: CONTRASEÑA MAESTRA --- */
+.master-login {
+    max-width: 540px;
+    background: white;
+    padding: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 60px 7px 7px 60px;
+    border: 0.2px solid #c5c5c5;
+}
+.login-content {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    height: 119px;
+}
+        /* Candado dibujado con CSS */
+
+ .lock-container{
+    background: #dadada;
+    padding: 20px;
+    border-radius: 100px;
+}
+.icono {
+    text-align: center;
+    font-size: 80px;
+    margin-left: 29px;
+}
+  .login-content {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-content h1 {
+    font-family: 'Times New Roman', serif;
+    font-size: 2rem;
+    color: #374151;
+    text-align: center;
+}
+
+.input-container-password{
+   border: 0.5px solid #b9defb;
+    border-radius: 8px;
+}
+
+.master-input {
+    padding: 10px;
+
+    font-size: 17px;
+    outline: none;
+    width: 86%;
+    border-style: none;
+}
+
+.message{
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.btn-group-master {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-m {
+    /* flex: 1; */
+    border-radius: 40px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+    width: 40%;
+    padding: 4px 19px;
+    font-size: 20px;
+}
+        .btn-close-m { background-color: var(--danger-red); }
+        .btn-enter-m { background-color: var(--primary-blue); }
+
+    </style>
+</head>
+<body>
+
+    <div class="modal-card master-login">
+        <div class="lock-container" id="lock-container">
+            <span class="icono icon-lock" id="icon-lock"></span>
+            <span class="icono icon-unlocked" id="icon-unlocked" style="display: none"></span>
+        </div>      
+        <div class="login-content">
+            <h1>Contraseña Maestra</h1>
+            <!---------------------->
+    <div class="input-container-password" id="container-pass"  >
+          <input type="password" id="input-password" class="master-input" placeholder="Ingrese Contraseña">
+        <span class="icon-eye toggle-password" onclick="toggleVisibility('input-password', this)"></span>
+    </div>
+    <label class="message"id="sms" style="display: none">Credenciales incorrectos.</label>
+            <!---------------------->  
+            <div class="btn-group-master">
+                <button class="btn-m btn-close-m" id="cerrar">cerrar</button>
+                <button class="btn-m btn-enter-m" id="Ingresar">Ingresar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload=function(){
+            document.getElementById("input-password").focus();
+        }
+        document.getElementById("Ingresar").addEventListener("click",(event)=>{
+
+                api.send("verify_master_password",document.getElementById("input-password").value)
+
+        })
+
+        document.getElementById("cerrar").addEventListener("click",(event)=>{
+            
+                window.close()
+            
+        })
+document.getElementById("input-password").focus();
+document.getElementById("input-password").addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+          api.send("verify_master_password",document.getElementById("input-password").value)
+
+    }
+});
+        api.receive("message-password-master",(event,data)=>{
+
+
+       if(data.sms.success==true){
+                console.log(sms.message)
+                document.getElementById("lock-container").style.background = 'blue';
+                document.getElementById("icon-lock").style.display="block";
+                document.getElementById("icon-lock").style.color="white";
+                document.getElementById("icon-unlocked").style.display="none";
+                document.getElementById("sms").innerHTML = data.sms.message;
+                document.getElementById("sms").style.color="blue";
+
+                document.getElementById("sms").style.display = 'block';
+                document.getElementById("container-pass").style.display = 'none';
+
+                setTimeout(()=>{
+                       window.close()
+                   },5000)
+            }
+            if(data.sms.success==false){
+                console.log(sms.message)
+                document.getElementById("lock-container").style.background = 'red';
+                document.getElementById("icon-lock").style.display="none";
+                document.getElementById("icon-unlocked").style.display="block";
+                document.getElementById("icon-unlocked").style.color="white";
+                document.getElementById("sms").innerHTML = data.sms.message;
+                document.getElementById("sms").style.color="red";
+    
+                document.getElementById("sms").style.display = 'block';
+                document.getElementById("container-pass").style.display = 'none';
+
+                setTimeout(()=>{
+                          document.getElementById("sms").style.display = 'none';
+                    document.getElementById("container-pass").style.display = 'block';
+                },3000)
+            }
+       
+            console.log(data)
+
+            /*
+{
+    "action": "imageMyprofile",
+    "key": "eff6c89d-9c34-40c2-ac16-a7c11ab3bcdd",
+    "sms": {
+        "success": true,
+        "message": "Acceso concedido"
+    }
+}            */
+        SelectAction(data.action,data.key)
+
+        })
+/*-----------------------------------*/
+function toggleVisibility(inputId, iconElement) {
+    const input = document.getElementById(inputId);
+    
+    if (input.type === "password") {
+        // Cambiar a texto para mostrar
+        input.type = "text";
+        // Cambiamos el icono a "ojo tachado" (ajusta la clase según tu pack de Icomoon)
+        iconElement.classList.remove('icon-eye');
+        iconElement.classList.add('icon-eye-blocked'); 
+    } else {
+        // Volver a password para ocultar
+        input.type = "password";
+        // Volver al icono original
+        iconElement.classList.remove('icon-eye-blocked');
+        iconElement.classList.add('icon-eye');
+    }
+}
+/*-----------------------------------------*/
+function SelectAction(Action,key){
+
+if(Action=="imageMyprofile"){
+
+    api.send("Image-select-my-profile",key)
+  
+}
+
+if(Action=="EditUser"){
+
+    api.send("Editar-informacion-usuario",key)
+
+  
+}   
+if(Action=="EditPass"){
+
+    api.send("Editar-informacion-contrasena",key)
+
+  
+}
+if(Action=="EditPassMaster"){
+
+    api.send("Editar-informacion-contrasena-maestra",key)
+
+  
+}
+
+if(Action=="EditEmail"){
+   
+    api.send("Editar-informacion-correo",key)     
+} 
+/****************EXPORTAR********************************/
+
+if(Action=="ExcelExportar"){
+   
+    api.send("Excel-Exportar")
+  
+}
+if(Action=="ExcelImportar"){
+   
+    api.send("Excel-Importar")
+  
+} 
+
+if(Action=="ExportarSQLITEDB"){
+   
+        api.send("Exportar-SQLITE-DB")
+  
+}
+if(Action=="ImportarSQLITEDB"){
+   
+     api.send("Importar-SQLITE-DB")
+  
+} 
+  /*--------------------------------------*/
+
+if(Action=="Deleted-student-register"){
+
+    api.send("Deleted-student-register",key)
+
+}
+if(Action=="Deleted-employee-register"){
+
+       api.send("Deleted-employee-register",key)
+}
+
+if(Action=="Deleted-student-register"){
+
+       api.send("Deleted-student-register",key)
+}
+
+if(Action=="Delete-course-register"){
+
+       api.send("Delete-course-register",key)
+}
+if(Action=="Deleted-instructor-register"){
+
+       api.send("Deleted-instructor-register",key)
+}
+
+
+
+
+}
+
+
+    </script>
+</body>
+</html>

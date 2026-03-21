@@ -7,15 +7,17 @@ let template_manage_employee=`
 
         <section class="toolbar-table-manage">
             <div class="search-box-table-manage">
-                <input type="text" class="search-input-table-manage" id="inputSearch" placeholder="Buscar employee...">
+                <input type="search" class="search-input-table-manage" id="inputSearchEmployee" placeholder="Buscar employee...">
+                <button class="btn-search-tabla-manage" id="Searchemployee">
                 <span class="icon-search"></span>
+                </button>
             </div>
             <div class="select-filter-box">
                     <select class="select-dropdown-filter" id="select-dropdown-filter">
-                        <option value="">Estado</option>
-                        <option value="activo">Activo</option>
-                        <option value="inactivo">Inactivo</option>
-                        <option value="despedido">Despedido</option>
+                        <option value="" disabled selected>Estado</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                        <option value="Despedido">Despedido</option>
                     </select>
             </div>
         <button class="btn-new-data" onclick="RegisterNewEmployee()">
@@ -35,57 +37,259 @@ let template_manage_employee=`
                     </tr>
                 </thead>
                 <tbody id="employee-body">
-                    <tr>
-                        <td>Carlos Alexander Soto Fuentes</td>
-                        <td>carlos17@correo.com</td>
-                        <td>0412-555-2345</td>
-                        <td><span class="status inactive">Inactivo</span></td>
-                 <td class="td-action">
-                        <button class="btn-edit-data-table icon-pencil"></button>
-                        <button class="btn-delete-data-table icon-bin" style="margin-left:15px"></button>
-                    </td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Alexander Soto Fuentes</td>
-                        <td>carlos17@correo.com</td>
-                        <td>0412-555-2345</td>
-                        <td><span class="status inactive">Inactivo</span></td>
-           <td class="td-action">
-                        <button class="btn-edit-data-table icon-pencil"></button>
-                        <button class="btn-delete-data-table icon-bin" style="margin-left:15px"></button>
-                    </td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Alexander Soto Fuentes</td>
-                        <td>carlos17@correo.com</td>
-                        <td>0412-555-2345</td>
-                        <td><span class="status inactive">Inactivo</span></td>
-                 <td class="td-action">
-                        <button class="btn-edit-data-table icon-pencil"></button>
-                        <button class="btn-delete-data-table icon-bin" style="margin-left:15px"></button>
-                    </td>
-                    </tr>
-                    </tbod>
-                 </table>
+  
+                </tbod>
+        </table>
         </section>
 
-        <footer class="footer-table-manage">
-        <nav class="pagination">
-            <button class="page-btn">&lt;</button>
-            <button class="page-btn active">1</button> <button class="page-btn">2</button>
-            <button class="page-btn">&gt;</button>
-        </nav>
+    <footer class="footer-table-manage">
+          <nav class=sub-container-pagination-table-manage>
+            <div class="pagination-table-manage" id="PaginationRender">
 
-     </footer>
+            </div>
+        </nav>
+        <button class="btn-export" onclick="exexportarAExcelEmployee()">
+            Exportar Listado 📄
+        </button>
+    </footer>
 </main>`;
 
 function Manage_Employee(id){
 
 	document.getElementById(id).innerHTML=template_manage_employee;
 
+    api.send("Get-data-registre-employee")
 
+    document.getElementById("Searchemployee").addEventListener("click",(e)=>{
+
+        SearchEmployee(document.getElementById("inputSearchEmployee").value)
+
+    })
+
+    document.getElementById("select-dropdown-filter").addEventListener("change",(e)=>{
+
+        api.send("search-data-registre-employee-filter",document.getElementById("select-dropdown-filter").value)
+
+    })
+
+    document.getElementById("inputSearchEmployee").addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Evita comportamientos extraños
+            SearchEmployee(document.getElementById("inputSearchEmployee").value);  
+        }
+    })
+
+    const searchInput = document.getElementById('inputSearchEmployee');
+    searchInput.focus()
+    searchInput.addEventListener('search', function(event) {
+          if (this.value === '') {
+           // console.log('El campo fue limpiado con la X o Enter');
+                api.send("Get-data-registre-employee")
+
+          }
+        });
+
+
+}
+
+
+api.receive("Render-data-employee-list",(event,info)=>{
+
+    console.log("Render-data-employee-list",info)
+
+    document.getElementById("employee-body").innerHTML=""
+
+        if(info.success==true){
+            info.data.forEach((employee,index)=>{
+
+                document.getElementById("employee-body").innerHTML+=`<tr>
+                                    <td>${employee.Name}</td>
+                                    <td>${employee.E_mail}</td>
+                                    <td>${employee.Tlf}</td>
+                                    <td ><span class="${employee.Status}">${employee.Status}</span></td>
+                                  
+                                <td class="td-action">
+                                    <button class="btn-edit-data-table icon-info" onclick="InfoEmployee('${employee.Key}')"></button>
+                                    <button class="btn-edit-data-table icon-pencil" onclick="UpdateEmployee('${employee.Key}')"></button>
+                                    <button class="btn-delete-data-table icon-bin"  onclick="DeleteEmployee('${employee.Key}')"></button>
+                                </td>
+                                </tr>`;
+
+            })
+        }
+       if(info.success==false){
+
+             document.getElementById("employee-body").innerHTML+=`<tr>
+            <td colspan="3" style="text-align: center; padding: 20px; color: gray;">
+            ${info.message}</td></tr>`
+
+       }
+
+
+    if(info.pagination["isPaged"]==false){
+        document.getElementById("PaginationRender").style.display="none"
+    }
+    
+    if(info.pagination["isPaged"]==true){
+            document.getElementById("PaginationRender").style.display="flex"
+
+           renderPaginationEmployee(info.pagination)
+
+    }
+
+
+})
+
+api.receive("Render-data-employee-list-search",(event,info)=>{
+
+    document.getElementById("employee-body").innerHTML=""
+    if(info.success==true){
+
+    info.data.forEach((employee,index)=>{
+
+        document.getElementById("employee-body").innerHTML+=`<tr>
+                            <td>${employee.Name}</td>
+                            <td>${employee.E_mail}</td>
+                            <td>${employee.Tlf}</td>
+                            <td><span class="${employee.Status}">${employee.Status}</sapn></td>
+                          
+                        <td class="td-action">
+                            <button class="btn-edit-data-table icon-info" onclick="InfoEmployee('${employee.Key}')"></button>
+                            <button class="btn-edit-data-table icon-pencil" onclick="UpdateEmployee('${employee.Key}')"></button>
+                            <button class="btn-delete-data-table icon-bin"  onclick="DeleteEmployee('${employee.Key}')"></button>
+                        </td>
+                        </tr>`;
+
+        })
+    }
+       if(info.success==false){
+
+             document.getElementById("employee-body").innerHTML+=`<tr>
+            <td colspan="3" style="text-align: center; padding: 20px; color: gray;">
+            ${info.message}</td></tr>`
+
+       }
+
+})
+
+
+
+function SearchEmployee(data){
+
+
+api.send("search-data-registre-employee",data)
+
+
+}
+
+function renderPaginationEmployee(data) {
+            
+            const container = document.getElementById('PaginationRender');
+            container.innerHTML = ''; // Limpiar antes de re-dibujar
+
+            // 1. Botón "Anterior"
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerText = '«';
+            prevBtn.disabled = data.currentPage === 1;
+            prevBtn.onclick = () => SearchPaginationEmployee(data.currentPage - 1);
+            container.appendChild(prevBtn);
+
+            // 2. Botones de Números
+            for (let i = 1; i <= data.totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.innerText = i;
+                pageBtn.className ="page-btn";
+                
+                if (i === data.currentPage) {
+                    pageBtn.classList.add('active-page');
+                }
+
+                pageBtn.onclick = () => SearchPaginationEmployee(i);
+                container.appendChild(pageBtn);
+            }
+
+            // 3. Botón "Siguiente"
+            const nextBtn = document.createElement('button');
+            nextBtn.innerText = '»';
+            nextBtn.className = 'page-btn';
+            nextBtn.disabled = data.currentPage === data.totalPages;
+            nextBtn.onclick = () => SearchPaginationEmployee(data.currentPage + 1);
+            container.appendChild(nextBtn);
+}
+
+
+function SearchPaginationEmployee(index){
+
+    api.send("search-pagination-employee",index)
+
+}
+
+function InfoEmployee(id){
+
+    console.log(id)
+    api.send("Open-system-info-employee-register",id)
+
+}
+
+function UpdateEmployee(id){
+
+    console.log(id)
+    api.send("Open-system-edit-employee-register",id)
+
+}
+
+function DeleteEmployee(id){
+
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"Deleted-employee-register",
+                    key:id
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
 }
 
 function RegisterNewEmployee(){
     api.send("Open-system-new-employee-register")
 }
+
+function exexportarAExcelEmployee() {
+    api.send('Exportar-excel-tabla-unica',"Employee")
+}
+
+
+/*
+toma en cuneta la siguiente tabla // Tabla User
+  await DB.crearTabla(`CREATE TABLE User (
+    Key TEXT PRIMARY KEY, -- Clave primaria
+    Username TEXT NOT NULL UNIQUE,         -- Nombre de usuario único
+    Password TEXT NOT NULL,                -- Contraseña
+    PasswordMaster TEXT NOT NULL,                -- Contraseña
+    Permission TEXT NOT NULL,              -- Permisos del usuario
+    Date DATE NOT NULL,                    -- Fecha de creación
+    Time TIME NOT NULL,                    -- Hora de creación
+    Time_delet DATE                        -- Fecha de eliminación lógica
+)`);
+
+// Tabla Employee
+  await DB.crearTabla(`CREATE TABLE Employee (
+    Key TEXT PRIMARY KEY, -- Clave primaria
+    Name TEXT NOT NULL,                    -- Nombre del empleado
+    Cod_id TEXT NOT NULL UNIQUE,           -- Código único del empleado
+    Address TEXT,                          -- Dirección
+    Tlf TEXT,                              -- Teléfono
+    E_mail TEXT UNIQUE,                  -- Correo electrónico único
+    Image TEXT,
+    Age TEXT UNICODE,
+    Id_user TEXT UNIQUE,                       -- Relación con la tabla User
+    Date DATE NOT NULL,                    -- Fecha de creación
+    Time TIME NOT NULL,                    -- Hora de creación
+    Time_delet DATE,                       -- Fecha de eliminación lógica
+    FOREIGN KEY (Id_user) REFERENCES User(Key) -- Clave foránea
+)`);  y dame una función en código que me permita el borrado logico de un employee y a la vez al borrar el employee desactive el usuario q que esa relacionado tambien dame una para borrado permanente 
+
+*/

@@ -126,46 +126,9 @@ position: relative;
 /*--------tabla----------------*/
 
 /*--------tabla----------------*/
-.footer-wiev-user {
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
 /*-----------PAGINACION-------------------*/
 
-        .pagination {
-            display: flex;
-            gap: 6px;
-        }
-
-        .page-btn {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--border-color);
-            background: white;
-            border-radius: 6px;
-            color: var(--text-muted);
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .page-btn:hover:not(.active) {
-            border-color: var(--primary-blue);
-            color: var(--primary-blue);
-        }
-
-        /* Efecto Active solicitado */
-        .page-btn.active {
-            background: var(--primary-blue);
-            color: white;
-            border-color: var(--primary-blue);
-            font-weight: bold;
-        }
 /*-----------PAGINACION-------------------*/
 /*-btn export-*/
 .btn-export {

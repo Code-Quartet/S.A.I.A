@@ -17,10 +17,12 @@ let ID_User="";
 module.exports = function Edit_email(parentWindow,id) {
   window_edit_email = new BrowserWindow({
         width:680,
-        height:240,
+        height:200,
         modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
+resizable:false,
+frame:false,              
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {
             nodeIntegration: false,
@@ -36,7 +38,7 @@ module.exports = function Edit_email(parentWindow,id) {
     window_edit_email.loadFile('app/section_main/Edit_email.html');
 
     // Herramientas de desarrollo
-   // window_edit_email.webContents.openDevTools();
+  //window_edit_email.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_email.webContents.setWindowOpenHandler(() => {
@@ -49,7 +51,7 @@ module.exports = function Edit_email(parentWindow,id) {
 
 }
 
-ipcMain.on("Campo-email-vacio",async(event,data)=>{
+ipcMain.on("Campo-email-vacio-btn",async(event,data)=>{
 
     dialog.showMessageBox({
 
@@ -70,9 +72,31 @@ ipcMain.on("Campo-email-vacio",async(event,data)=>{
 
     });
 
+})
 
+ipcMain.on("Campo-email-vacio-click",async(event,data)=>{
+
+    dialog.showMessageBox({
+
+          title: 'Notificación',
+          type:'none',
+          message: 'Porfavor Complete los Campos',
+          icon: 'info',
+          buttons: ['Aceptar'],
+          defaultId: 0,
+          cancelId: 1,
+          noLink: true
+
+    }).then(result => {
+      
+    }).catch(err => {
+     
+      console.log(err);
+
+    });
 
 })
+
 ipcMain.on("save-new-email",async(event,data)=>{
 /*
 console.log("id-email",ID_User)

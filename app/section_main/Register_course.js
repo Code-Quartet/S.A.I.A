@@ -9,15 +9,17 @@ const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
 const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
 /*---------------------------------------------------------------*/
-const {insertarCurso} = require(path.join(__dirname,'../DB_controls/Course'))
+const {GetAllKeyNameInnstructor,InsertCourse} = require(path.join(__dirname,'../DB_controls/Course'))
 /*---------------------------------------------------------------*/
 
 let window_register_course;
 
 module.exports = function Register_course(parentWindow) {
   window_register_course = new BrowserWindow({
-        width:550,
-        height:540,
+        width:540,
+        height:580,
+       resizable:false, 
+        frame:false,
         modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
@@ -33,7 +35,7 @@ module.exports = function Register_course(parentWindow) {
     window_register_course.loadFile('app/section_main/Register_course.html');
 
     // Herramientas de desarrollo
-   window_register_course.webContents.openDevTools();
+ //  window_register_course.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_course.webContents.setWindowOpenHandler(() => {
@@ -45,6 +47,14 @@ module.exports = function Register_course(parentWindow) {
     });
 
 }
+
+ipcMain.on("Get-list-instructor",async(event,data)=>{
+
+let result = await GetAllKeyNameInnstructor() 
+ window_register_course.webContents.send("Data-list-intructor",result)
+
+})
+
 
 ipcMain.on("Campo-usuario-vacio",async(event,data)=>{
 
@@ -65,26 +75,12 @@ ipcMain.on("Campo-usuario-vacio",async(event,data)=>{
       });
 
 })
+
 ipcMain.on("save-new-data-course",async(event,data)=>{
 
-      await insertarCurso(data).then((resutl)=>{
+    await InsertCourse(data).then((resutl)=>{
 
-      dialog.showMessageBox({
-        title: 'Notificación',
-        type:'none',
-        message: 'Nombre de Usuario Actualizado',
-        icon: 'info',
-        buttons: ['Aceptar'],
-        defaultId: 0,
-        cancelId: 1,
-        noLink: true
-      }).then(result => {
-        //console.log(result.response);
-        window_register_course.send("close-window-updane-user")
-
-      }).catch(err => {
-        console.log(err);
-      });
+      window_register_course.webContents.send("open-modal-register-course")
 
 })
 .catch((err)=>{
@@ -93,3 +89,19 @@ ipcMain.on("save-new-data-course",async(event,data)=>{
 })
 
 })
+
+/****
+{
+    "nombre": "Computación",
+    "descripcion": "Todo sobre computacion",
+    "instructor": "617dda98-9b56-4003-94d2-20aa67d571c8",
+    "dias": [
+        "Lun",
+        "Mie",
+        "Vie"
+    ],
+    "hora_inicio": "07:00",
+    "hora_fin": "12:00",
+    "duracion_valor": "4",
+    "duracion_unidad": "Semanas"
+}******/

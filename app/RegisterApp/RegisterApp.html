@@ -48,48 +48,60 @@
 	<!-----------MODAL SYSTEM---------------->
 
     <div id="modalRegisterAppOverlay" class="modalRegisterApp-overlay-RegisterApp">
-        <div class="modalRegisterApp-content-RegisterApp">
+  <div class="modalRegisterApp-content-RegisterApp">
 			<div class="div1">
 				<h1 style="text-align: center;">Registre Informacion del Aministrador</h1>
 			</div>
 	    <div class="registration-form">
         <div class="grid-container-new-registre">
-            <div class="column">
-                <div class="form-group">
+            <div class="column1">
+                                <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" id="nombre" placeholder="Ej: Rosa María Pérez Gonzales">
+                  <input type="text" id="nombre" placeholder="Ej: Rosa María Pérez Gonzales" style="
+                    width: 90%;
+                ">
                 </div>
 
-                <div class="form-group">
-                    <label>Cédula</label>
-                    <input type="text" id="ci" placeholder="Ej: 21783921">
-                </div>
-
-                 <div class="form-group">
-                        <label>Edad</label>
-                        <input type="text" id="edad" placeholder="Ej: 20" style="width:50px">
-                </div>
-
-                <div class="form-group">
+                <div class="container-form-group">
+                      <div class="sub-form-group">
+                          <label>Cédula</label>
+                          <input type="text" id="ci" placeholder="Ej: 21783921">
+                      </div>
+                       <div class="sub-form-group">
+                              <label>Edad</label>
+                              <input type="text" id="edad" placeholder="Ej:20">
+                      </div>
+                      <div class="sub-form-group">
                         <label>Fecha de Nacimiento</label>
                         <input type="date" id="fechanacimiento">
+                    </div>
                 </div>
 
+          
                 <div class="form-group">
                     <label>Dirección</label>
-                    <input id="direccion" type="text" placeholder="Ej: Calle 24 entre Av. Miranda y Av. Libertador">
+                   <input id="direccion" type="text" placeholder="Ej: Calle 24 entre Av. Miranda y Av. Libertador" style="
+    width: 90%;
+">
                 </div>
+                  <div class="form-group">
+                      <label>Teléfono</label>
+                      <input id="telefono" type="tel" placeholder="Ej: 04163003485" style="
+    width: 90%;
+">
+                  </div>
 
-                <div class="form-group">
-                    <label>Teléfono</label>
-                    <input id="telefono" type="tel" placeholder="Ej: 04163003485">
-                </div>
-
+                  <div class="form-group">
+                      <label>Correo Electrónico</label>
+                      <input id="correo" type="email" placeholder="Ej: nombre@correo.com" style="
+    width: 90%;
+">
+                  </div>
+              
             </div>
 
-            <div class="column">
-            	<div class="form-group ContainerUploadImagen" >
-                    <label>Foto</label>
+            <div class="column2">
+                <div class="form-group ContainerUploadImagen" >
                     <div class="file-upload-container-new-registre" style="border-style: none;">
                        <label class="image-uploader" for="fileInputregister">
                         <div class="main-circle">
@@ -102,22 +114,20 @@
                        
                       </label>
                     </div>
-              </div>         
-                <div class="form-group">
-                    <label>Correo Electrónico</label>
-                    <input id="correo" type="email" placeholder="Ej: nombre@correo.com">
-                </div>
+                </div>         
               <div class="form-group">
                     <label>Nombre de Usuario</label>
-                    <input type="text" id="usuario" value="admin" placeholder="Rosa María Pérez Gonzales">
+                   <input type="text" id="usuario" value="admin" placeholder="Rosa María Pérez Gonzales" style="
+    width: 90%;
+">
               </div>
               <div class="form-group">
                     <label>Contraseña</label>
                     <div class="sub-container-password">
                         <span  class="icon-lock"></span>   
-                        <input  type="password" id="password"placeholder="Ingrese su Contraseña" value="123456789">
-                        <button type="button" id="toggleBtn">
-                          <span id="eyeIcon" class="icon-eye"></span>
+                        <input  type="password" id="password" placeholder="Ingrese su Contraseña" value="123456789">
+                        <button type="button" id="toggleBtn1">
+                          <span id="eyeIcon1" class="icon-eye"></span>
                         </button>
                     </div>
               </div>
@@ -125,18 +135,18 @@
                     <label>Contraseña Maestra</label>
                     <div class="sub-container-password">
                         <span  class="icon-lock"></span>   
-                        <input  type="password" id="Mpassword"placeholder="Ingrese su Contraseña" value="123456789">
-                        <button type="button" id="toggleBtn">
-                          <span id="eyeIcon" class="icon-eye"></span>
+                        <input  type="password" id="Mpassword" placeholder="Ingrese su Contraseña" value="123456789">
+                        <button type="button" id="toggleBtn2">
+                          <span id="eyeIcon2" class="icon-eye"></span>
                         </button>
                     </div>
-              </div>
+              </div>            
             </div>
         </div>
     </div>
 			<div class="div3"> 
-				<button class="btn-modal Register" id="RegisterData">Registrar</button>
-				<button class="btn-modal Close" id="CloseModal">Cerrar</button>
+          <button class="btn-modal Close" id="CloseModal">Cerrar</button>
+          <button class="btn-modal Register" id="RegisterData">Registrar</button>
 			</div>
         </div>
     </div>
@@ -263,7 +273,7 @@ function obtenerYValidarDatosRegistro(){
                }
             }
 
-            if(document.getElementById("usuario").value=="admin" && document.getElementById("password").value=="123456789"){
+if(document.getElementById("usuario").value=="admin" && document.getElementById("password").value=="123456789"){
 
               api.send('open-message-system-user-pass-default',"Mantiene los datos usuario / contraseñas por defecto")
 
@@ -324,22 +334,41 @@ api.receive("Completed-Saving-data",(event,data)=>{
 
 /*---------------funcion button eyes---------------------------*/
 
-  const passwordInput = document.getElementById('password');
-  const toggleBtn = document.getElementById('toggleBtn');
-  const eyeIcon = document.getElementById('eyeIcon');
+  const passwordInput1 = document.getElementById('password1');
+  const toggleBtn1 = document.getElementById('toggleBtn1');
+  const eyeIcon1 = document.getElementById('eyeIcon1');
 
-  toggleBtn.addEventListener('click', () => {
+  toggleBtn1.addEventListener('click', () => {
     // 1. Cambiamos el tipo de input
-    const isPassword = passwordInput.type === 'password';
-    passwordInput.type = isPassword ? 'text' : 'password';
+    const isPassword = passwordInput1.type === 'password';
+    passwordInput1.type = isPassword ? 'text' : 'password';
 
     // 2. Intercambiamos las clases de Icomoon
     if (isPassword) {
-      eyeIcon.classList.remove('icon-eye');
-      eyeIcon.classList.add('icon-eye-blocked');
+      eyeIcon1.classList.remove('icon-eye');
+      eyeIcon1.classList.add('icon-eye-blocked');
     } else {
-      eyeIcon.classList.remove('icon-eye-blocked');
-      eyeIcon.classList.add('icon-eye');
+      eyeIcon1.classList.remove('icon-eye-blocked');
+      eyeIcon1.classList.add('icon-eye');
+    }
+  }); 
+
+const passwordInput2 = document.getElementById('Mpassword2');
+  const toggleBtn2 = document.getElementById('toggleBtn2');
+  const eyeIcon2 = document.getElementById('eyeIcon2');
+
+   toggleBtn2.addEventListener('click', () => {
+    // 1. Cambiamos el tipo de input
+    const isPassword = passwordInput2.type === 'password';
+    passwordInput2.type = isPassword ? 'text' : 'password';
+
+    // 2. Intercambiamos las clases de Icomoon
+    if (isPassword) {
+      eyeIcon2.classList.remove('icon-eye');
+      eyeIcon2.classList.add('icon-eye-blocked');
+    } else {
+      eyeIcon2.classList.remove('icon-eye-blocked');
+      eyeIcon2.classList.add('icon-eye');
     }
   });
 

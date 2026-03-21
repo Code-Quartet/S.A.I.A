@@ -6,7 +6,7 @@
     <title>Editar Nombre</title>
     <link rel="stylesheet" href="../assets/iconos/icomoon/style.css">
    <style type="text/css">
-       :root {
+:root {
     --primary-blue: #2b56c5;
     --text-dark: #000000;
     --text-gray: #6b7280;
@@ -140,32 +140,63 @@ button:active {
         <div class="div-group">
             <label>Nombre</label>
             <div class="input-container">
-                <span class="icon-pencil"></span> <input  id="UserNewData" type="text" placeholder="Ingrese nuevo cambio">
+                <span class="icon-pencil"></span> <input  id="UserNewData" type="text" placeholder="Nuevo Nombre de usuario">
             </div>
         </div>
 
         <div class="button-group">
-            <button class="btn-outline" id="Btn-Cancel">
-                Cancelar <span class="icon-cross"></span> </button>
-            <button class="btn-primary" id="Btn-Save">
-                Confirmar <span class="icon-checkmark"></span> </button>
+            <button class="btn-outline" id="Btn-Cancel"> Cancelar <span class="icon-cross"></span></button>
+            <button class="btn-primary" id="Btn-Save"> Confirmar <span class="icon-checkmark"></span> </button>
         </div>
     </div>
 </div>
 
 </body>
 <script type="text/javascript">
-    
-    document.getElementById("Btn-Save").addEventListener("click",(event)=>{
-    if(document.getElementById("UserNewData").value!=""){
-        let dataInput = document.getElementById("UserNewData").value
-        //console.log("save-new-username",dataInput)
-        api.send("save-new-username",dataInput)
-    }else{
-        api.send("Campo-usuario-vacio")
+    window.onload=function(){
+
+        document.getElementById("UserNewData").focus()
     }
 
+
+      document.getElementById("Btn-Save").addEventListener("click",(event)=>{
+            if(document.getElementById("UserNewData").value!=""){
+               
+                let dataInput = document.getElementById("UserNewData").value
+              
+                api.send("save-new-username",dataInput)
+               //console.log("Envio data btn",dataInput)
+
+            }else{
+                
+                //console.log("campo vacion btn")
+
+                api.send("Campo-usuario-vacio-btn","btn")
+
+            }
+    }) 
+
+    document.getElementById("UserNewData").addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+                e.preventDefault(); 
+                    if(document.getElementById("UserNewData").value!=""){
+                       
+                    let dataInput = document.getElementById("UserNewData").value
+                    
+                    api.send("save-new-username",dataInput)
+                     //   console.log("enviodata click",dataInput)
+                    
+                    }else{
+
+                       // console.log("Campo vacio click")
+
+                        api.send("Campo-usuario-vacio-click","click")
+
+                    }
+        }
     })
+
+
 
     document.getElementById("Btn-Cancel").addEventListener("click",(event)=>{
 

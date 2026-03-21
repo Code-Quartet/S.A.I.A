@@ -9,15 +9,17 @@ const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
 const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
 /*---------------------------------------------------------------*/
-//const {UpdateUsername} = require(path.join(__dirname,'../DB_controls/User'))
+const {UpdateCourse,SelectUpdateCourseKey,GetAllKeyNameInnstructor} = require(path.join(__dirname,'../DB_controls/Course'))
 /*---------------------------------------------------------------*/
 
 let window_edit_course;
-
-module.exports = function Edit_course(parentWindow) {
+let Key_course="";
+module.exports = function Edit_course(parentWindow,key) {
   window_edit_course = new BrowserWindow({
-        width:550,
+        width:540,
         height:580,
+       resizable:false, 
+        frame:false,
         modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
@@ -30,10 +32,12 @@ module.exports = function Edit_course(parentWindow) {
         }
     });
 
+  Key_course=key
+
     window_edit_course.loadFile('app/section_main/Edit_course.html');
 
     // Herramientas de desarrollo
-    window_edit_course.webContents.openDevTools();
+   // window_edit_course.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_course.webContents.setWindowOpenHandler(() => {
@@ -46,50 +50,59 @@ module.exports = function Edit_course(parentWindow) {
 
 }
 
+ipcMain.on("Get-data-course-update",async(event,data)=>{
+
+    let result = await SelectUpdateCourseKey(Key_course)
+
+    window_edit_course.webContents.send("data-update-course",result)
+
+    //console.log(result)
+
+
+})
+
+ipcMain.on("Get-list-instructor-update",async(event,data)=>{
+
+let result = await GetAllKeyNameInnstructor() 
+ window_edit_course.webContents.send("Data-list-intructor-update",result)
+
+})
+
+
 ipcMain.on("Campo-usuario-vacio",async(event,data)=>{
 
       dialog.showMessageBox({
-        title: 'Notificación',
-        type:'none',
-        message: 'Porfavor Complete los Campos',
-        icon: 'info',
-        buttons: ['Aceptar'],
-        defaultId: 0,
-        cancelId: 1,
-        noLink: true
+            title: 'Notificación',
+            type:'none',
+            message: 'Porfavor Complete los Campos',
+            icon: 'info',
+            buttons: ['Aceptar'],
+            defaultId: 0,
+            cancelId: 1,
+            noLink: true
       }).then(result => {
         
 
       }).catch(err => {
+        
         console.log(err);
+
       });
 
 })
-ipcMain.on("save-new-username",async(event,data)=>{
 
-      await UpdateUsername(ID_User,data).then((resutl)=>{
+ipcMain.on("save-update-data-course",async(event,data)=>{
 
-      dialog.showMessageBox({
-        title: 'Notificación',
-        type:'none',
-        message: 'Nombre de Usuario Actualizado',
-        icon: 'info',
-        buttons: ['Aceptar'],
-        defaultId: 0,
-        cancelId: 1,
-        noLink: true
-      }).then(result => {
-        //console.log(result.response);
-        window_edit_course.send("close-window-updane-user")
+//console.log("save-update-data-course",data)
+    await UpdateCourse(data.Key,data).then((resutl)=>{
 
-      }).catch(err => {
-        console.log(err);
-      });
+      window_edit_course.webContents.send("open-modal-register-course")
 
 })
 .catch((err)=>{
 
     console.log("ERROR",err)
 })
+
 
 })

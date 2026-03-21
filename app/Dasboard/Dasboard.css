@@ -95,6 +95,7 @@
 	grid-area: 1 / 2 / 2 / 3;
 }
 
-.ItemMenuActive{
-    border-bottom:0.5px solid white;
+.ItemMenuActive {
+    border-bottom: 0.5px solid white;
+    font-size: 17px;
 }

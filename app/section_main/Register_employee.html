@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuevo Empleado - Modal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Nuevo Empleado - SAIA v2</title>
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
     
     <style>
-        /* --- Variables y Reset --- */
         :root {
-            --primary-blue: #2563eb;
-            --primary-blue-hover: #1d4ed8;
-            --text-dark: #334155;
-            --text-light: #94a3b8;
-            --bg-main: #f1f5f9;
-            --border-color: #e2e8f0;
-            --photo-preview-bg: #e2e8f0;
-            --transition-fast: 0.2s ease;
+            --primary-blue: #2b56c5;
+            --secondary-blue: #1e40af;
+            --text-main: #374151;
+            --text-muted: #9ca3af;
+            --border-color: #d1d5db;
+            --bg-light: #ffffff;
+            --danger: #ef4444;
+            --success: #28a745;
         }
 
         * {
@@ -26,352 +25,407 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-dark);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+body {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+}
 
-        /* --- Estilo del Botón de Prueba --- */
-        .btn-trigger {
-            background-color: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
+.container-employee {
+    background: white;
+    padding: 4px;
+    width: 100%;
+    height: 100vh;
+}
+header h2 {
+    margin-bottom: 10px;
+    color: var(--text-main);
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 14px;
+    text-align: center;
+}
+        /* --- Grid Layout --- */
+.grid-container-new-registre {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+    padding: 5px;
+}
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label {
+            display: block;
             font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-main);
+            font-size: 0.9rem;
         }
 
-        /* --- Modal Overlay --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .container-form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* --- Inputs e Inputs Especiales --- */
+        input, select {
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            display: flex; /* Flexbox para centrar el modal */
-            justify-content: center;
+            padding: 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(43, 86, 197, 0.1);
+        }
+
+        /* --- Password Field --- */
+        .sub-container-password {
+            display: flex;
             align-items: center;
-            z-index: 1000;
-            opacity: 1; 
-            visibility: visible;
-            transition: all var(--transition-fast);
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--bg-light);
         }
 
-        /* --- Contenedor del Modal --- */
-        .modal-container {
-            background: white;
-            width: 90%;
-            max-width: 650px;
-            padding: 2.5rem;
-            border-radius: 16px;
-            position: relative;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
+        .sub-container-password input { border: none; flex: 1; border-color:white; box-shadow: none;}
+        .sub-container-password input:focus {outline: none; }  
 
-        /* Botón cerrar X arriba a la derecha */
-        .close-icon-btn {
-            position: absolute;
-            top: 1.2rem;
-            right: 1.2rem;
+/* Cuando el input dentro de .sub-container-password tiene el foco */
+.sub-container-password:has(#password:focus) {
+    box-shadow: 0 0 8px rgba(43, 86, 197, 0.3); /* Sombra azul suave */
+    border-color: var(--primary-blue); /* También podemos cambiar el borde */
+    transition: all 0.3s ease; /* Para que el efecto sea fluido */
+}
+
+.sub-container-password:focus-within {
+    box-shadow: 0 0 8px rgba(43, 86, 197, 0.3);
+    border-color: var(--primary-blue);
+    transition: all 0.3s ease;
+}
+        #toggleBtn {
             background: none;
             border: none;
-            font-size: 1.4rem;
-            color: var(--text-light);
+            padding: 0 15px;
             cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-muted);
         }
 
-        .modal-header h2 {
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            font-weight: 600;
-            color: #444;
-        }
-
-        /* --- Formulario con CSS Grid --- */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
-            column-gap: 1.5rem;
-            row-gap: 1.2rem;
-        }
-
-        /* Clases de utilidad para el Grid */
-        .span-full { grid-column: 1 / -1; }
-        .grid-left { grid-column: 1; }
-        .grid-right { grid-column: 2; }
-
-        .form-group {
+        /* --- Image Uploader --- */
+        .profile-container {
             display: flex;
             flex-direction: column;
-        }
-
-        .form-group label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 0.6rem;
-            color: #333;
-        }
-
-        .form-group input, 
-        .form-group select {
-            padding: 0.85rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 0.95rem;
-            outline: none;
-            background-color: #fff;
-        }
-
-        .form-group input:focus {
-            border-color: var(--primary-blue);
-        }
-
-        .form-group input::placeholder {
-            color: var(--text-light);
-        }
-
-        /* --- Especial: Nombre y Edad en la misma fila con anchos distintos --- */
-        .name-age-container {
-            display: grid;
-            grid-template-columns: 3fr 1fr;
-            gap: 1.5rem;
-            grid-column: 1 / -1;
-        }
-
-        /* --- Sección Foto (Flexbox) --- */
-        .photo-input-wrapper {
-            display: flex;
             align-items: center;
-            gap: 1rem;
-            border: 1px solid var(--border-color);
-            padding: 0.6rem 1rem;
-            border-radius: 10px;
+            gap: 15px;
         }
 
-        .photo-preview {
-            width: 55px;
-            height: 55px;
-            background-color: var(--photo-preview-bg);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-light);
-            overflow: hidden;
+        .image-uploader {
+            position: relative;
+            width: 150px;
+            height: 150px;
         }
 
-        .photo-preview img {
+.main-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #2b56c5;
+    overflow: hidden;
+    border: 5px solid var(--border-color);
+}
+
+        .avatar-main-register {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .photo-status {
-            flex-grow: 1;
-            font-size: 0.9rem;
-            color: var(--text-light);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+.camera-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    background-color: #a8b0b7;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
 
-        .btn-subir {
-            background-color: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 0.7rem 1.4rem;
-            border-radius: 8px;
-            font-weight: 600;
+        /* --- Buttons --- */
+.footer-register-employee {
+    display: flex;
+    justify-content: space-between;
+}
+
+        .btn-modal {
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
             cursor: pointer;
+            border: none;
+            transition: 0.3s;
         }
 
-        /* --- Estado Select --- */
-        .select-custom {
-            position: relative;
-        }
-        
-        .select-custom select {
-            appearance: none;
-            width: 100%;
+        .Register { background: var(--primary-blue); color: white; }
+        .Register:disabled {
+            background-color: #d1d5db;
+            color: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.7;
         }
 
-        .select-custom i {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-            pointer-events: none;
-        }
+        .Close { background: white; color: var(--danger); border: 1.5px solid var(--danger); }
+        .Close:hover { background: var(--danger); color: white; }
 
-        /* --- Footer Acciones --- */
-        .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
-            grid-column: 1 / -1;
-        }
-
-        .btn-cancel {
+        /* --- Notification --- */
+        .top-notification {
+            position: fixed;
+            top: 20px;
+            right: -400px;
             background: white;
-            border: 1px solid var(--border-color);
-            padding: 0.8rem 1.5rem;
+            padding: 15px 25px;
             border-radius: 10px;
-            font-weight: 600;
-            color: #444;
-            cursor: pointer;
+            border-left: 5px solid var(--success);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.5s;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 15px;
+            z-index: 9999;
         }
-
-        .btn-save {
-            background-color: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Responsividad */
-        @media (max-width: 600px) {
-            .form-grid, .name-age-container {
-                grid-template-columns: 1fr;
-            }
-            .grid-right, .grid-left {
-                grid-column: 1;
-            }
-            .modal-footer {
-                flex-direction: column-reverse;
-                gap: 1rem;
-            }
-            .btn-save, .btn-cancel {
-                width: 100%;
-                justify-content: center;
-            }
-        }
+        .top-notification.show { right: 20px; }
+        .icono-message { color: var(--success); font-size: 1.5rem; }
     </style>
 </head>
 <body>
 
-    <div class="modal-overlay" id="modal">
-        <div class="modal-container">
-            <button class="close-icon-btn" onclick="cerrarModal()"><i class="fas fa-times"></i></button>
-            
-            <header class="modal-header">
-                <h2>Nuevo Empleado</h2>
-            </header>
+    <div class="container-employee">            
+        <header>
+            <h2>Nuevo Empleado</h2>
+        </header>
 
-            <form class="form-grid" id="empleadoForm">
-                
-                <div class="name-age-container">
+        <div class="grid-container-new-registre">
+            <div class="column1">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="nombre" placeholder="Ej: Rosa María Pérez Gonzales">
+                </div>
+
+                <div class="container-form-group">
                     <div class="form-group">
-                        <label>Nombre Completo</label>
-                        <input type="text" placeholder="Ej: Marina Paula Loza Mancha">
+                        <label>Cédula</label>
+                        <input type="text" id="ci" placeholder="21783921">
                     </div>
                     <div class="form-group">
                         <label>Edad</label>
-                        <input type="number" placeholder="Ej: 20">
+                        <input type="number" id="edad" placeholder="20">
+                    </div>
+                    <div class="form-group">
+                        <label>Nacimiento</label>
+                        <input type="date" id="fechanacimiento">
                     </div>
                 </div>
 
-                <div class="form-group grid-left">
-                    <label>Cedula</label>
-                    <input type="text" placeholder="Ej: 14854983">
-                </div>
-                <div class="form-group grid-right">
-                    <label>Teléfono</label>
-                    <input type="text" placeholder="Ej: 0412-688-5749">
+                <div class="container-form-group">
+                    <div class="form-group" style="grid-column: span 1;">
+                        <label>Teléfono</label>
+                        <input id="telefono" type="tel" placeholder="04120000000">
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Correo Electrónico</label>
+                        <input id="correo" type="email" placeholder="nombre@correo.com">
+                    </div>
                 </div>
 
-                <div class="form-group grid-left">
-                    <label>Correo Electrónico</label>
-                    <input type="email" placeholder="Ej: correo@email.com">
-                </div>
-                <div class="form-group grid-right">
+                <div class="form-group">
                     <label>Dirección</label>
-                    <input type="text" placeholder="Ej: Calle 4 Av Zulia">
+                    <input id="direccion" type="text" placeholder="Ej: Calle 24 entre Av. Miranda...">
                 </div>
 
-                <div class="form-group grid-left">
-                    <label>Foto</label>
-                    <div class="photo-input-wrapper">
-                        <div class="photo-preview" id="previewContainer">
-                            <i class="fas fa-image"></i>
+                <div class="form-group">
+                    <label>Seleccionar Permiso</label>
+                    <select id="tipoPermiso">
+                        <option value="" disabled selected>Seleccionar...</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Sub-Administrador">Sub-Administrador</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="column2">
+                <div class="profile-container">
+                    <div class="image-uploader">
+                        <div class="main-circle">
+                            <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="Avatar">
                         </div>
-                        <span class="photo-status" id="fileName">Selecciona una imagen</span>
-                        <input type="file" id="fileInput" hidden accept="image/*">
-                        <button type="button" class="btn-subir" onclick="document.getElementById('fileInput').click()">Subir</button>
+                        <button class="camera-button" onclick="SelectImage()">
+                            <span class="icon-camera"></span>
+                        </button> 
                     </div>
                 </div>
 
-                <div class="form-group grid-right">
+                <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" id="usuario" placeholder="Ej: subadmin_rosa">
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <div class="sub-container-password">
+                        <span class="icon-lock"></span>   
+                        <input type="password" id="password" placeholder="Ingrese clave">
+                        <button type="button" id="toggleBtn">
+                            <span id="eyeIcon" class="icon-eye"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label>Estado</label>
-                    <div class="select-custom">
-                        <select>
-                            <option value="" disabled selected></option>
-                            <option value="activo">Activo</option>
-                            <option value="inactivo">Inactivo</option>
-                        </select>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
+                    <select id="select-status-employee">
+                        <option value="" disabled selected>Estado...</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                        <option value="Despedido">Despedido</option>
+                    </select>
                 </div>
+            </div>
+        </div>
 
-                <footer class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="cerrarModal()">
-                        Cancelar <i class="fas fa-times"></i>
-                    </button>
-                    <button type="submit" class="btn-save">
-                        Guardar <i class="fas fa-check"></i>
-                    </button>
-                </footer>
-            </form>
+        <div class="footer-register-employee"> 
+            <button class="btn-modal Close" onclick="Close()">Cerrar</button>
+            <div>
+                <button class="btn-modal Close" style="border-color: #9ca3af; color: #4b5563;" onclick="clearform()">Limpiar</button>
+                <button class="btn-modal Register" id="RegisterData" onclick="DatosRegistro()" disabled>Registrar</button>
+            </div>
         </div>
     </div>
 
+    <div class="top-notification" id="topNotif">
+        <span class="icon-checkmark icono-message"></span>
+        <h3>¡Datos Guardados!</h3>
+    </div>
+
     <script>
-        // Función para cerrar el modal
-        function cerrarModal() {
-            document.getElementById('modal').style.display = 'none';
+        // --- Referencias ---
+        const btnRegistrar = document.getElementById('RegisterData');
+        const passwordInput = document.getElementById('password');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        // IDs de campos obligatorios para el bloqueo del botón
+        const camposObligatorios = [
+            'nombre', 'ci', 'edad', 'fechanacimiento', 
+            'telefono', 'correo', 'direccion', 
+            'tipoPermiso', 'usuario', 'password', 'select-status-employee'
+        ];
+
+        // --- Validación en tiempo real ---
+        function validarFormulario() {
+            const formularioCompleto = camposObligatorios.every(id => {
+                const el = document.getElementById(id);
+                return el.value.trim() !== "";
+            });
+            btnRegistrar.disabled = !formularioCompleto;
         }
 
-        // Lógica para la previsualización de la imagen
-        const fileInput = document.getElementById('fileInput');
-        const fileNameSpan = document.getElementById('fileName');
-        const previewContainer = document.getElementById('previewContainer');
-
-        fileInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const file = this.files[0];
-                fileNameSpan.textContent = file.name;
-                fileNameSpan.style.color = "#333";
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-                }
-                reader.readAsDataURL(file);
-            }
+        // Asignar eventos de escucha
+        camposObligatorios.forEach(id => {
+            const input = document.getElementById(id);
+            input.addEventListener('input', validarFormulario);
+            input.addEventListener('change', validarFormulario);
         });
 
-        // Manejo del formulario
-        document.getElementById('empleadoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert("Empleado guardado exitosamente (Simulación)");
-            cerrarModal();
+        // --- Mostrar/Ocultar Password ---
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            eyeIcon.classList.toggle('icon-eye', !isPassword);
+            eyeIcon.classList.toggle('icon-eye-blocked', isPassword);
         });
+
+        // --- Manejo de Imágenes ---
+        function SelectImage() {
+            if(window.api) api.send("select-Image-new-employee");
+        }
+
+        if(window.api) {
+            api.receive('Image-select-new-employee', (event, imagen) => {
+                document.getElementById("imagen-avatar").src = imagen;
+            });
+        }
+
+        // --- Registro de Datos ---
+        function DatosRegistro() {
+            const fecha = new Date();
+            const formatofecha = `${fecha.getDate()}/${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+            const horaActual = fecha.toLocaleTimeString('it-IT');
+
+            const objData = {
+                Employee: {
+                    nombre: document.getElementById("nombre").value,
+                    ci: document.getElementById("ci").value,
+                    edad: document.getElementById("edad").value,
+                    fechanacimiento: document.getElementById("fechanacimiento").value,
+                    correo: document.getElementById("correo").value,
+                    tlf: document.getElementById("telefono").value,
+                    direccion: document.getElementById("direccion").value,
+                    image: document.getElementById("imagen-avatar").src,
+                    status: document.getElementById("select-status-employee").value
+                },
+                User: {
+                    usuario: document.getElementById("usuario").value,
+                    clave: document.getElementById("password").value,
+                    Mclave: "null",
+                    permission: document.getElementById("tipoPermiso").value,
+                },
+                fecha: formatofecha,
+                hora: horaActual
+            };
+
+            console.log("Objeto enviado:", objData);
+            if(window.api) api.send("save-data-registre-employee", objData);
+        }
+
+        // --- Notificaciones ---
+        if(window.api) {
+            api.receive("open-modal-register-employee", (event, data) => {
+                mostrarNotificacion();
+            });
+        }
+
+        function mostrarNotificacion() {
+            const notif = document.getElementById('topNotif');
+            notif.classList.add('show');
+            clearform();
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 3000);
+        }
+
+        function clearform() {
+            camposObligatorios.forEach(id => {
+                document.getElementById(id).value = "";
+            });
+            document.getElementById("imagen-avatar").src = "../assets/imagen/ImageLogin3.png";
+            validarFormulario();
+        }
+
+        function Close() {
+            window.close();
+        }
     </script>
 </body>
 </html>

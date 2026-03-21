@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil SAIA v2 - Dinámico</title>
+    <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
+    <style>
+        :root {
+            --blue-main: #1a73e8;
+            --red-main: #d93025;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --bg-light: #f8f9fa;
+            --border-color: #dadce0;
+        }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f1f3f4;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* padding: 40px 20px; */
+    margin: 0;
+}
+.card {
+    background: white;
+    /* border-radius: 12px; */
+    /* box-shadow: 0 4px 20px rgba(0,0,0,0.08); */
+    width: 100%;
+    max-width: 600px;
+    padding: 14px;
+}
+
+        /* Flexbox Header */
+        .profile-header {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Grid para datos */
+        .section-container { margin-bottom: 25px; }
+        
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--blue-main);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: block;
+            border-left: 4px solid var(--blue-main);
+            padding-left: 10px;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-item { font-size: 0.9rem; color: var(--text-gray); }
+        .info-item strong { color: var(--text-dark); }
+
+        /* Grid de Cursos */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .grid-head { font-weight: bold; font-size: 0.8rem; color: var(--text-gray); }
+        
+        .status-pill {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            background: #e8f0fe;
+            color: var(--blue-main);
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .btn-edit { border: 1.5px solid var(--blue-main); color: var(--blue-main); background: white; }
+        .btn-delete { border: 1.5px solid var(--red-main); color: var(--red-main); background: white; }
+    </style>
+</head>
+<body>
+
+    <div id="student-card-container">
+        </div>
+
+    <script>
+
+
+    window.onload=function(){
+        api.send("Get-data-student-info")
+    }
+        // El objeto que recibes del backend/base de datos
+        const studentData = {
+            Key: 'bff93532-52f2-4b4f-a702-4256a969e9f5',
+            Name: 'Carme',
+            Cod_id: '244545',
+            Address: 'Zulia',
+            Tlf: '45435464',
+            E_mail: 'Carme@mail.com',
+            Image: 'win.png', // Simplificado para el ejemplo
+            Age: '20',
+            Birthdate: '1985-04-12',
+            Name_Representative: null, // Cambia esto a un nombre para ver cómo aparece
+            Cod_id_Representative: null,
+            Tlf_Representative: null,
+            E_mail_Representative: null,
+            Date: '2026-03-19',
+            Time: '15:32:01',
+            Id_curs: 'a8ae429a-9d87-4bd0-aa56-5903998f3203',
+            CourseName: 'Manejo'
+        };
+
+        function renderStudentProfile(data) {
+            const container = document.getElementById('student-card-container');
+
+            // Lógica para la sección del representante
+            let representativeHTML = '';
+            if (data.Name_Representative) {
+                representativeHTML = `
+                    <div class="section-container">
+                        <span class="section-title">Información del Representante</span>
+                        <div class="data-grid">
+                            <div class="info-item"><strong>Nombre:</strong> ${data.Name_Representative}</div>
+                            <div class="info-item"><strong>Cédula:</strong> ${data.Cod_id_Representative || 'N/A'}</div>
+                            <div class="info-item"><strong>Teléfono:</strong> ${data.Tlf_Representative || 'N/A'}</div>
+                            <div class="info-item"><strong>Correo:</strong> ${data.E_mail_Representative || 'N/A'}</div>
+                        </div>
+                    </div>`;
+            }
+
+            // Inyección del HTML
+            container.innerHTML = `
+                <div class="card">
+                    <header class="profile-header">
+                        <img src="${data.Image}" alt="Perfil" class="profile-img" onerror="this.src='default-avatar.png'">
+                        <div class="info-group">
+                            <h2 style="margin:0">${data.Name}</h2>
+                            <div class="info-item"><strong>ID:</strong> ${data.Cod_id}</div>
+                            <div class="info-item"><strong>Edad:</strong> ${data.Age} años</div>
+                            <div class="info-item"><strong>Ubicación:</strong> ${data.Address}</div>
+                        </div>
+                    </header>
+
+                    ${representativeHTML}
+
+                    <div class="section-container">
+                        <span class="section-title">Cursos e Inscripción</span>
+                        <div class="courses-grid">
+                            <div class="grid-head">Curso</div>
+                            <div class="grid-head">Fecha</div>
+                            <div class="grid-head">Estado</div>
+
+                            <div class="grid-cell">${data.CourseName.replace('┬║', '')}</div>
+                            <div class="grid-cell">${data.Date}</div>
+                            <div class="grid-cell"><span class="status-pill">Inscrito</span></div>
+                        </div>
+                    </div>
+
+                    <footer class="actions">
+            
+                        <button class="btn btn-delete" id="btn-close"><i class="icon-trash"></i>Cerrar</button>
+                    </footer>
+                </div>
+            `;
+
+
+            document.getElementById("btn-close").addEventListener("click",(e)=>{
+                window.close();
+            })
+        }
+
+        // Ejecutar la función al cargar
+     
+        api.receive("data-student-information",(event,data)=>{
+
+                   renderStudentProfile(data);
+
+        })
+
+
+    </script>
+</body>
+</html>

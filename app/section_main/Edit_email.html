@@ -138,39 +138,65 @@ button:active {
             <label>Correo</label>
             <div class="input-container">
                 <span class="icon-pencil"></span>
-                 <input type="text" placeholder="Ingrese nuevo cambio" id="emailInput">
+                 <input type="text" placeholder="NuevoCorreo@correo.com" id="emailInput">
             </div>
         </div>
 
         <div class="button-group">
-            <button type="button" class="btn-outline" >
-                Cancelar <span class="icon-cross" id="Btn-Cancel"></span> </button>
-            <button type="submit" class="btn-primary"  id="Btn-Save">
+            <button class="btn-outline" id="Btn-Cancel">
+                Cancelar <span class="icon-cross" ></span> </button>
+            <button class="btn-primary"  id="Btn-Save">
                 Confirmar <span class="icon-checkmark" ></span> </button>
         </div>
     </div>
 </div>
 <script type="text/javascript">
+
+    window.onload=function(){
+
+        document.getElementById("emailInput").focus()
+    }
     
     document.getElementById("Btn-Save").addEventListener("click",(event)=>{
    
-    if(document.getElementById("emailInput").value!=""){
+            if(document.getElementById("emailInput").value!=""){
 
-        let dataInput = document.getElementById("emailInput").value
+                let dataInput = document.getElementById("emailInput").value
 
-        api.send("save-new-email",dataInput)
+                api.send("save-new-email",dataInput)
 
-    }else{
+            }else{
 
-        api.send("Campo-email-vacio")
+                api.send("Campo-email-vacio-btn")
 
-    }
+            }
+    })
 
+   document.getElementById("emailInput").addEventListener('keydown', (e) => {
+
+        if (e.key === 'Enter') {
+            
+            e.preventDefault(); 
+   
+            if(document.getElementById("emailInput").value!=""){
+
+                let dataInput = document.getElementById("emailInput").value
+
+                api.send("save-new-email",dataInput)
+
+            }else{
+
+                api.send("Campo-email-vacio-click")
+
+            }
+
+        }
     })
 
     document.getElementById("Btn-Cancel").addEventListener("click",(event)=>{
 
         window.close();
+    
     })
 
     api.receive("close-window-updane-email",(event,data)=>{

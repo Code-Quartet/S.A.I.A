@@ -8,16 +8,21 @@ const { v4: uuidv4 } = require('uuid');
 const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
 const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
+const ImageDefault = path.join(__dirname,"../assets/imagen/ImageLogin3.png")
 /*---------------------------------------------------------------*/
-//const {UpdateUsername} = require(path.join(__dirname,'../DB_controls/User'))
+const {InsertInstructor, DeleteInstructor} = require(path.join(__dirname,'../DB_controls/Instructor'));
 /*---------------------------------------------------------------*/
 
 let window_register_instructor;
 
 module.exports = function Register_instructor(parentWindow) {
   window_register_instructor = new BrowserWindow({
-        width:550,
-        height:580,
+        width:480,
+        height:540,
+        maxWidth:480,    
+        maxHeight:540,
+        resizable:true,
+        frame:false,
         modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
@@ -33,7 +38,7 @@ module.exports = function Register_instructor(parentWindow) {
     window_register_instructor.loadFile('app/section_main/Register_instructor.html');
 
     // Herramientas de desarrollo
-    window_register_instructor.webContents.openDevTools();
+    //window_register_instructor.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_instructor.webContents.setWindowOpenHandler(() => {
@@ -46,3 +51,47 @@ module.exports = function Register_instructor(parentWindow) {
 
 }
 
+
+ipcMain.on("Select-new-imagen-instructor",(event,data)=>{
+
+ dialog.showOpenDialog(window_register_instructor,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+          window_register_instructor.send("Image-select-new-instructor",result.filePaths[0]);
+      }
+      
+      if(result.canceled==true){
+
+          window_register_instructor.send("Image-select-new-instructor",ImageDefault);
+      }
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+
+
+})
+
+ipcMain.on("Save-data-new-instructor",async(event,data)=>{
+
+ await InsertInstructor(data).then((result)=>{
+       
+       window_register_instructor.webContents.send("open-modal-register-instructor");
+        
+      }).catch((error)=>{
+        
+        console.log("ERROR DATA SAVE REGISTRO",error)
+
+      })
+
+})
