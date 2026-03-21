@@ -39,12 +39,13 @@
 			</div>
 		</section>
 		<section class="container-info-btn">
-			<!--
-			<label class="info-install-app">Usuario y contaseña por defecto Admin/123456789</label>-->
-			<button class="btn-pulse" id="btn-install-system">Agregar información</button>
+			
+			<button class="btn-trial" id="btn-trial-system">Activar modo Prueba</button>
+      <button class="btn-pulse" id="btn-install-system">Agregar información</button>
 		</section>
 	</section>
-
+<!--
+      <label class="info-install-app">Usuario y contaseña por defecto Admin/123456789</label>-->
 	<!-----------MODAL SYSTEM---------------->
 
     <div id="modalRegisterAppOverlay" class="modalRegisterApp-overlay-RegisterApp">
@@ -198,9 +199,15 @@ function showSlides() {
 
 }
 
-document.getElementById("btn-install-system").addEventListener("click",()=>{
+document.getElementById("btn-trial-system").addEventListener("click",()=>{
 	
-	Modal_register_data_admin()
+	api.send("Activate-system-trial")
+
+
+})
+document.getElementById("btn-install-system").addEventListener("click",()=>{
+  
+  Modal_register_data_admin()
 
 
 })

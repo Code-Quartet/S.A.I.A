@@ -61,7 +61,7 @@
 .container-info-btn {
     display: flex;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
     height: -webkit-fill-available;
     justify-content: space-around;
 }
@@ -574,3 +574,11 @@ width: 100%;
             animation: fadeIn 0.3s ease;
         }
 /*----------MODAL PASSWORD MASTER--------------*/
+
+.btn-trial {
+    padding: 10px 20px;
+    background: blue;
+    color: white;
+    border-style: none;
+    border-radius: 30px;
+}

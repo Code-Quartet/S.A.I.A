@@ -8,8 +8,11 @@ const { v4: uuidv4 } = require('uuid');
 
 const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
 const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
-const DataTrialSAIA = require(path.join(__dirname,'../DataBase/DataTrialSAIA.js'))
+const { DataTrialSAIA } = require(path.join(__dirname,'../DataBase/DataTrialSAIA'))
 /*--------------LINK BASE DE DATOS ------------------------*/
+/*--------------LINK BASE DE DATOS ------------------------*/
+const ImageDefault = path.join(__dirname,"../assets/imagen/business.png")
+/*-----------------------------------*/
 
 let window_register_app;
 
@@ -97,7 +100,7 @@ function Reset_data(){
 });
 
 
-//DataTrialSAIA()
+
 }
 
 
@@ -381,7 +384,129 @@ ipcMain.on('Instalar-app', async (event,data) => {
 });
 
 
-/*   
-
-*/
 /********************************************************************************************/
+
+
+async function Adding_data_Admin_trial(){
+    
+    const ID_USER = uuidv4();
+    const ID_EMPLOYEE = uuidv4();
+
+    // Iniciamos la conexión
+    DB.conectar();
+
+    // Retornamos la promesa para poder encadenar .then() y .catch() afuera si es necesario
+    return Promise.all([
+        // Inserción en tabla User
+        DB.crear(
+            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date, Time) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [ID_USER, "Admin", "123456789", "123456789", 'Administrador', "0/0/0000","00-00"]
+        ),
+        // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
+        DB.crear(
+            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date, Time) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             [  
+             ID_EMPLOYEE, 
+               "TrialNombreAdmin", 
+                "1010101010", 
+                "TrialWord", 
+                "01014577854", 
+                "200",
+                "Trial@mail.com", 
+                "00/00/0000", 
+                ImageDefault,
+                "Activo",
+                ID_USER, 
+                "00/0/0000", 
+                "00-00"
+                ]
+
+        )
+    ])
+    .then(() => {
+        console.log("Registro exitoso del Administrador y Empleado");
+        return { success: true, message: "Datos insertados correctamente" };
+    })
+    .catch((error) => {
+        console.error("Error al insertar datos:", error);
+        throw error; // Relanzamos para que quien llame a la función sepa que falló
+    })
+    .finally(() => {
+        // Cerramos la base de datos siempre, sin importar si hubo éxito o error
+        DB.cerrar();
+    });
+}
+
+
+ipcMain.on('Activate-system-trial', async (event,data) => { 
+
+let adminTrial=false
+let DBTrial=false
+await Adding_data_Admin_trial().then((result)=>{
+
+
+adminTrial=result.success;
+
+}).catch((err)=>{
+    console.log(err)
+})
+await DataTrialSAIA().then((result)=>{
+
+DBTrial=result.success;
+
+
+}).catch((err)=>{
+    console.log(err)
+})
+
+
+if(adminTrial==true  && DBTrial==true){
+
+    dialog.showMessageBox({
+          title: 'Notificación',
+          type:'info',
+          message: "DATOS DE PRUEBA CARGADOS 'Usuario:Admin | Clave:123456789'",
+          icon: 'info',
+          buttons: ['Aceptar'],
+          defaultId: 0,
+          cancelId: 1,
+          noLink: true
+    }).then(result => {
+      //console.log(result.response);
+        let hostname = os_system.hostname().toString();
+        let platform = os_system.platform().toString();
+        let cpu = os_system.cpus()[0].model.toString();
+
+        const info = {
+            "state":true,
+            "hostname":hostname,
+            "plataform":platform,
+            "cpu":cpu                 
+        }
+
+        let obj = JSON.stringify(info);
+        
+            fs.writeFile(path.join(__dirname,"../.config.json"),obj, function(err){
+                    if (err) throw err;
+
+                    //console.log('Saved data install!');
+
+                     window_register_app.webContents.send("Completed-Saving-data");
+                     setTimeout(()=>{
+
+                        app.relaunch();
+                        app.quit();
+
+                     },3000)
+                    
+            });
+
+    }).catch(err => {
+      console.log(err);
+    });
+
+}
+
+})

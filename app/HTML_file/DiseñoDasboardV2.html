@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAIA | Analytics Dashboard</title>
+    <link rel="stylesheet" href="icomoon/style.css">
+    
+    <style>
+        :root {
+            --bg-body: #f0f2f5;
+            --sidebar-color: #1a1c24;
+            --card-bg: #ffffff;
+            --primary: #4e73df;
+            --success: #1cc88a;
+            --info: #36b9cc;
+            --warning: #f6c23e;
+            --text-title: #495057;
+            --text-body: #6e707e;
+            --sidebar-width: 250px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { background-color: var(--bg-body); display: flex; }
+
+        /* --- SIDEBAR (Flexbox) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-color);
+            color: #fff;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+
+        .brand {
+            padding: 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 1px solid #ffffff10;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 1rem 0;
+            list-style: none;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: #a1a1a1;
+            text-decoration: none;
+            gap: 12px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .nav-item a:hover, .nav-item.active a {
+            color: #fff;
+            background: #ffffff0a;
+            border-right: 4px solid var(--primary);
+        }
+
+        /* --- CONTENIDO (Grid) --- */
+        .main-container {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 2rem;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Rejilla Principal de Datos */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Tarjetas de Resumen */
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 4px;
+        }
+        .stat-card.blue::after { background: var(--primary); }
+        .stat-card.green::after { background: var(--success); }
+        .stat-card.yellow::after { background: var(--warning); }
+
+        .stat-title { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem; }
+        .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--text-title); }
+
+        /* Rejilla de Gráficos (CSS Grid) */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-gap: 1.5rem;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            min-height: 350px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+
+        .chart-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;
+        }
+
+        /* Gráfico Simulado con CSS */
+        .bar-chart-mockup {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            height: 200px;
+            padding-top: 20px;
+        }
+        .bar { width: 30px; background: var(--primary); border-radius: 5px 5px 0 0; transition: 0.3s; }
+        .bar:hover { filter: brightness(1.2); }
+
+        /* Estilos de Tabla */
+        .table-custom {
+            width: 100%; border-collapse: collapse; margin-top: 1rem;
+        }
+        .table-custom th { text-align: left; font-size: 0.85rem; color: var(--text-muted); padding: 10px; }
+        .table-custom td { padding: 12px 10px; border-top: 1px solid #eee; font-size: 0.9rem; }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">SAIA <span style="color:white">2.0</span></div>
+        <ul class="nav-menu">
+            <li class="nav-item active"><a href="#"><span class="icon-meter"></span> Dashboard</a></li>
+            <li class="nav-item"><a href="#"><span class="icon-library"></span> Cursos</a></li>
+            <li class="nav-item"><a href="#"><span class="icon-users"></span> Alumnos</a></li>
+            <li class="nav-item"><a href="#"><span class="icon-user-tie"></span> Instructores</a></li>
+            <li class="nav-item"><a href="#"><span class="icon-coin-dollar"></span> Finanzas</a></li>
+        </ul>
+        <div style="padding: 20px; font-size: 12px; color: #555;">SISTEMA DE GESTIÓN v2.0</div>
+    </aside>
+
+    <main class="main-container">
+        
+        <div class="header-flex">
+            <h1 style="color: var(--text-title)">Panel Informativo</h1>
+            <button style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                <span class="icon-download"></span> Generar Reporte
+            </button>
+        </div>
+
+        <section class="dashboard-grid">
+            <div class="stat-card blue">
+                <span class="stat-title">Ingresos Mensuales</span>
+                <span class="stat-value">$4,200.00</span>
+            </div>
+            <div class="stat-card green">
+                <span class="stat-title">Alumnos Nuevos</span>
+                <span class="stat-value">+150</span>
+            </div>
+            <div class="stat-card yellow">
+                <span class="stat-title">Cursos Pendientes</span>
+                <span class="stat-value">5</span>
+            </div>
+            <div class="stat-card blue">
+                <span class="stat-title">Capacidad Total</span>
+                <span class="stat-value">85%</span>
+            </div>
+        </section>
+
+        <section class="charts-grid">
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 style="font-size: 1rem;">Inscripciones por Mes</h3>
+                    <span class="icon-stats-bars" style="color: #ccc;"></span>
+                </div>
+                <div class="bar-chart-mockup">
+                    <div class="bar" style="height: 40%;"></div>
+                    <div class="bar" style="height: 60%;"></div>
+                    <div class="bar" style="height: 90%;"></div>
+                    <div class="bar" style="height: 55%;"></div>
+                    <div class="bar" style="height: 75%;"></div>
+                    <div class="bar" style="height: 95%;"></div>
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 10px; color: #888; font-size: 12px;">
+                    <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 style="font-size: 1rem;">Especialidades</h3>
+                </div>
+                <table class="table-custom">
+                    <tr>
+                        <td>Diseño</td>
+                        <td style="text-align: right; font-weight: bold;">35%</td>
+                    </tr>
+                    <tr>
+                        <td>Programación</td>
+                        <td style="text-align: right; font-weight: bold;">45%</td>
+                    </tr>
+                    <tr>
+                        <td>Idiomas</td>
+                        <td style="text-align: right; font-weight: bold;">20%</td>
+                    </tr>
+                </table>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <span class="icon-pie-chart" style="font-size: 80px; color: #f4f7f9;"></span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="chart-container" style="margin-top: 1.5rem;">
+            <div class="chart-header">
+                <h3>Detalle de Instructores (Activos)</h3>
+            </div>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Instructor</th>
+                        <th>Especialidad</th>
+                        <th>Código ID</th>
+                        <th>Estatus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Prof. Alexander G.</td>
+                        <td>Base de Datos</td>
+                        <td>INST-990</td>
+                        <td><span style="color: var(--success)">● Disponible</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dra. Elena Rivas</td>
+                        <td>Inteligencia Artificial</td>
+                        <td>INST-442</td>
+                        <td><span style="color: var(--warning)">● En Clase</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+</body>
+</html>

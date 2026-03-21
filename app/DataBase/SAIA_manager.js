@@ -93,6 +93,13 @@ class SAIADB {
         this.inTransaction = false;
     }
 
+            // ... (isTransactionActive se mantiene igual)
+      async isTransactionActive(){
+
+            return this.inTransaction;
+
+        }
+
     // --- FUNCIONES DE UTILIDAD ---
 
     async listarTablas() {
