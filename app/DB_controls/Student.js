@@ -127,7 +127,7 @@ async function SearchStudentPagedName(searchTerm) {
         const search = `%${termClean}%`;
 
         // 2. Pasamos solo los 2 parámetros de búsqueda
-        const students = await DB.buscar(sqlData, [search, search]);
+        const students = await DB.buscarTodo(sqlData, [search, search]);
 
         if (!students || students.length === 0) {
             return {
@@ -138,7 +138,7 @@ async function SearchStudentPagedName(searchTerm) {
 
         return {
             success: true,
-            data:[students], // Retorna el array directo de resultados
+            data:students, // Retorna el array directo de resultados
         };
 
     } catch (error) {
@@ -361,11 +361,6 @@ async function DeleteStudentLogical(key) {
 }
 
 
-
-async function HardDeleteStudent(key) {
-    const sql = `DELETE FROM Student WHERE Key = ?`;
-    return await DB.borrar(sql, [key]);
-}
 /*---------------------------------------------------------*/
 module.exports={
     GetdataStudent:GetdataStudent,

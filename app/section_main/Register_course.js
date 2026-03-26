@@ -20,8 +20,8 @@ module.exports = function Register_course(parentWindow) {
         height:580,
        resizable:false, 
         frame:false,
-        modal: true,
-        parent: parentWindow, // Si quieres que sea modal, necesita un padre
+        //modal: true,
+       // parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {
@@ -35,7 +35,7 @@ module.exports = function Register_course(parentWindow) {
     window_register_course.loadFile('app/section_main/Register_course.html');
 
     // Herramientas de desarrollo
- //  window_register_course.webContents.openDevTools();
+   // window_register_course.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_course.webContents.setWindowOpenHandler(() => {

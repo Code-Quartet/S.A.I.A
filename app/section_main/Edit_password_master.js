@@ -90,6 +90,7 @@ ipcMain.on("update-password-user-master",(event,data)=>{
                       title: 'Notificación',
                       type:'info',
                       message: result.message,
+                      detail: 'Retorno al Login para establecer información',
                       icon: 'info',
                       buttons: ['Aceptar'],
                       defaultId: 0,

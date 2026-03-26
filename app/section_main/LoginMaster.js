@@ -54,30 +54,7 @@ module.exports = function Login_password_master(parentWindow,obj) {
 
 }
 
-/*{
-                key:Data_user.key,
-                permission:Data_user.permission,
-                method:{
-                    action:"imageMyprofile",
-                    key:Data_employee.key,
-                    
-                }
-            }*/
-
 ipcMain.on("verify_master_password",async (event,PasswordMaster)=>{
-
-
-console.log(objAction)
-/*
-{
-  key: '48708335-ca94-4760-83b4-01c4159b2f28',
-  permission: 'Administrador',
-  method: {
-    action: 'imageMyprofile',
-    key: 'eff6c89d-9c34-40c2-ac16-a7c11ab3bcdd'
-  }
-}
-*/
 
   await loginMaster(objAction.key, PasswordMaster, objAction.permission).then((result)=>{
     

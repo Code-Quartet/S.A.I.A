@@ -424,7 +424,11 @@ header h2 {
         }
 
         function Close() {
-            window.close();
+            
+            api.send("Reload-dasboard-system-data-Employee")
+        setTimeout(function(){
+     window.close();
+    },1800)
         }
     </script>
 </body>

@@ -107,6 +107,7 @@ dialog.showMessageBox({
   title: 'Notificación',
   type:'none',
   message: 'Nombre de Usuario Actualizado',
+  detail: 'Retorno al Login para establecer información',
   icon: 'info',
   buttons: ['Aceptar'],
   defaultId: 0,

@@ -60,6 +60,7 @@ async function UpdateCourse(key, formData) {
         Duration_Value = ?, 
         Duration_Unit = ?,
         Cost = ?,
+         Status = ?, 
         Capacity = ?,
         Has_Evaluation = ?,
         Has_Certificate = ?
@@ -77,6 +78,7 @@ async function UpdateCourse(key, formData) {
         parseInt(formData.duracion_valor) || 0,
         formData.duracion_unidad,
         formData.costo,
+               formData.estado,
         parseInt(formData.cupo) || 0, // <--- ERROR CORREGIDO: Faltaba este valor en params
         // Lógica para capturar booleanos de checkboxes:
         (formData.evaluacion === 'on' || formData.evaluacion === 1 || formData.evaluacion === true) ? 1 : 0,
@@ -116,18 +118,30 @@ async function SelectUpdateCourseKey(key){
         return result
 }
 /******************************************************/
+
+
 async function GetCoursePaged(page = 1, limit = 10) {
     try {
         await DB.conectar();
         
-        const currentPage = Math.max(1, parseInt(page));
-        const currentLimit = Math.max(1, parseInt(limit));
-        const offset = (currentPage - 1) * currentLimit;
-
+        // 1. Get Total Count
         const sqlCount = `SELECT COUNT(*) as total FROM Course WHERE Time_Deleted IS NULL`;
         const resCount = await DB.buscar(sqlCount);
-        const totalElements = resCount[0]?.total || 0;
+        const totalElements = resCount?.total ?? 0;
 
+        // 2. Adaptive Logic
+        let finalLimit = limit;
+        let finalOffset = (page - 1) * limit;
+        let finalPage = page;
+
+        // If total is small, disable pagination by returning everything on page 1
+        if (totalElements <= 20) {
+            finalLimit = 20; 
+            finalOffset = 0;
+            finalPage = 1;
+        }
+
+        // 3. Fetch Data
         const sqlData = `
             SELECT 
                 C.Key, C.Name, C.Capacity, C.Start_Time, C.End_Time, 
@@ -140,19 +154,49 @@ async function GetCoursePaged(page = 1, limit = 10) {
             ORDER BY C.Date_Created DESC, C.Name ASC 
             LIMIT ? OFFSET ?`;
 
-        const courses = await DB.buscarTodo(sqlData, [currentLimit, offset]);
-        const totalPages = Math.ceil(totalElements / currentLimit);
+        const courses = await DB.buscarTodo(sqlData, [finalLimit, finalOffset]);
+        const totalPages = Math.ceil(totalElements / finalLimit);
+
+        // 4. Unified Response
+        if (!courses || courses.length === 0) {
+            return {
+                success: false,
+                message: "No se encontraron cursos",
+                data: [],
+                pagination: {
+                    totalElements,
+                    totalPages: 0,
+                    currentPage: finalPage,
+                    limit: finalLimit,
+                    isPaged: totalElements > 20
+                }
+            };
+        }
 
         return {
             success: true,
             data: courses,
-            pagination: { totalElements, totalPages, currentPage, limit: currentLimit, hasNext: currentPage < totalPages, hasPrev: currentPage > 1 }
+            pagination: {
+                totalElements,
+                totalPages,
+                currentPage: finalPage,
+                limit: finalLimit,
+                hasNext: finalPage < totalPages,
+                hasPrev: finalPage > 1,
+                isPaged: totalElements > 20
+            }
         };
+
     } catch (error) {
         console.error("Error en GetCoursePaged:", error);
-        return { success: false, data: [], message: "Error al obtener cursos." };
+        return { 
+            success: false, 
+            data: [], 
+            message: "Error interno al obtener cursos." 
+        };
     }
 }
+
 
 
 async function GetAllKeyNameInnstructor(){
@@ -236,6 +280,53 @@ async function InformationCourseSelect(key){
     return await DB.buscar(sql, [key]);
 }
 
+
+async function GetTopCourses() {
+    try {
+        await DB.conectar();
+
+        // Seleccionamos los campos principales
+        // Limitamos a 10 y ordenamos por fecha de creación (los más recientes primero)
+        const sql = `
+            SELECT 
+                Key, 
+                Name, 
+                Description, 
+                Days, 
+                Start_Time, 
+                End_Time, 
+                Capacity,
+                Cost, 
+                Status, 
+                Date_Created
+            FROM Course
+            WHERE Time_Deleted IS NULL
+            ORDER BY Date_Created DESC, Time_Created DESC
+            LIMIT 10`;
+
+        const results = await DB.buscarTodo(sql);
+
+        if (!results || results.length === 0) {
+            return {
+                success: false,
+                message: "No se encontraron cursos registrados."
+            };
+        }
+
+        return {
+            success: true,
+            data: results
+        };
+
+    } catch (error) {
+        console.error("Error al obtener los cursos:", error);
+        return {
+            success: false,
+            message: "Error al intentar recuperar la lista de cursos."
+        };
+    }
+}
+
 module.exports={
     InsertCourse:InsertCourse,
     UpdateCourse:UpdateCourse,
@@ -245,7 +336,8 @@ module.exports={
     SelectUpdateCourseKey:SelectUpdateCourseKey,
     GetCoursePaged:GetCoursePaged,
     SearchCourseByStatus:SearchCourseByStatus,
-    InformationCourseSelect:InformationCourseSelect
+    InformationCourseSelect:InformationCourseSelect,
+    GetTopCourses:GetTopCourses
 }
 
     /*

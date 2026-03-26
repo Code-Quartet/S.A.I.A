@@ -536,7 +536,14 @@ allInputs.forEach(input => {
 btnClear.addEventListener('click', LimpiarForm);
 
 document.getElementById("btn-close").addEventListener("click", () => {
-    window.close();
+
+    api.send("Reload-dasboard-system-data-Student")
+  setTimeout(function(){
+     window.close();
+    },1800)
+
+
+
 });
 
 /*--- NOTIFICACIONES ---*/
@@ -546,8 +553,8 @@ api.receive("Open-modal-message-student", (event, datas) => {
 
 document.getElementById("info-course-student").addEventListener("click",(e) =>{
     
-let courseSelect = document.getElementById('tipoCurso').value
-api.send("Open-system-info-course-register",courseSelect)
+    let courseSelect = document.getElementById('tipoCurso').value
+    api.send("Open-system-info-course-register",courseSelect)
 
 
 })

@@ -38,7 +38,7 @@ frame:false,
     window_edit_email.loadFile('app/section_main/Edit_email.html');
 
     // Herramientas de desarrollo
-  //window_edit_email.webContents.openDevTools();
+  window_edit_email.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_email.webContents.setWindowOpenHandler(() => {
@@ -98,16 +98,17 @@ ipcMain.on("Campo-email-vacio-click",async(event,data)=>{
 })
 
 ipcMain.on("save-new-email",async(event,data)=>{
-/*
+
 console.log("id-email",ID_User)
 console.log("id-email",data)
-*/
+
 await UpdateEmail(ID_User,data).then((resutl)=>{
 
         dialog.showMessageBox({
               title: 'Notificación',
               type:'none',
               message: 'Correo de Usuario Actualizado',
+              detail: 'Retorno al Login para establecer información',
               icon: 'info',
               buttons: ['Aceptar'],
               defaultId: 0,
@@ -115,6 +116,8 @@ await UpdateEmail(ID_User,data).then((resutl)=>{
               noLink: true
 
         }).then(result => {
+
+          console.log("result",result)
       
             window_edit_email.send("close-window-updane-email")
 

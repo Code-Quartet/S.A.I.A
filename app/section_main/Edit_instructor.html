@@ -107,6 +107,13 @@
 
         .btn-cancel { background: transparent; border: 2px solid #2d58d1; color: #2d58d1; }
 
+            .btn-cancel:hover {
+    background: #e69d9d42;
+    border: 2px solid #f44336;
+    color: #f44336;
+}
+
+
         /* Notification */
         .top-notification {
             position: fixed; top: 20px; right: -400px;
@@ -264,7 +271,10 @@ function LimpiarFormulario() {
 }
 
 function Close() { 
-    window.close(); 
+    api.send("Reload-dasboard-system-data-Instructor")
+  setTimeout(function(){
+     window.close();
+    },1800)
 }
 
 function ValoresFormulario() {

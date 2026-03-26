@@ -1,0 +1,135 @@
+        :root {
+            --dashboard-primary-blue: #0056b3;
+            --dashboard-secondary-blue: #e7f1ff;
+            --dashboard-dark-blue: #003366;
+            --dashboard-white: #ffffff;
+            --dashboard-gray-bg: #f8f9fa;
+            --dashboard-text-main: #33475b;
+            --dashboard-border-color: #dee2e6;
+            --dashboard-sidebar-width: 250px;
+            /* Colores para estados */
+            --status-active: #28a745;
+            --status-pause: #ffc107;
+            --status-danger: #dc3545;
+            --status-info: #17a2b8;
+        }
+
+        .dashboard-body { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--dashboard-gray-bg); 
+            color: var(--dashboard-text-main); 
+            display: flex; min-height: 100vh;
+        }
+
+        .dashboard-body * { box-sizing: border-box; }
+
+.dashboard-main-container {
+    /* margin-left: var(--dashboard-sidebar-width); */
+    /* width: calc(100% - var(--dashboard-sidebar-width)); */
+    padding: 16px;
+    background: #efefef;
+}
+
+
+
+        .dashboard-top-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+        }
+
+        .dashboard-search-bar {
+            background: var(--dashboard-white); display: flex; align-items: center;
+            padding: 10px 20px; border-radius: 8px; width: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid var(--dashboard-border-color);
+        }
+
+        .dashboard-search-bar input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 0.9rem; }
+
+        /* MÉTRICAS (GRID) */
+.dashboard-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+        .dashboard-metric-card {
+            background: var(--dashboard-white); padding: 20px; border-radius: 12px;
+            border-bottom: 4px solid var(--dashboard-primary-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .dashboard-metric-card h3 { font-size: 0.8rem; color: #6c757d; text-transform: uppercase; margin-bottom: 10px; }
+        .dashboard-metric-card p { font-size: 1.8rem; font-weight: bold; color: var(--dashboard-dark-blue); margin: 0; }
+
+        /* SECCIÓN DE GRÁFICAS (NUEVA) */
+        .dashboard-charts-section {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 30px;
+        }
+
+        /* SECCIÓN INFERIOR */
+.dashboard-charts-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-bottom: 7px;
+}
+
+
+.dashboard-panel {
+    background: var(--dashboard-white);
+    border-radius: 12px;
+    padding: 7px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    border: 1px solid var(--dashboard-border-color);
+}
+        .dashboard-panel-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+        }
+
+        .dashboard-panel h2 { font-size: 1.1rem; margin: 0; color: var(--dashboard-dark-blue); }
+
+        .dashboard-panel table { width: 100%; border-collapse: collapse; }
+        .dashboard-panel th { text-align: left; padding: 12px; font-size: 0.85rem; color: #6c757d; border-bottom: 2px solid var(--dashboard-gray-bg); }
+        .dashboard-panel td { padding: 12px; border-bottom: 1px solid var(--dashboard-gray-bg); font-size: 0.9rem; }
+
+        .dashboard-session-item {
+            display: flex; align-items: center; gap: 15px; padding: 12px 0;
+            border-bottom: 1px solid var(--dashboard-gray-bg);
+        }
+
+        .dashboard-event-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dashboard-login { background: #28a745; }
+        .dashboard-logout { background: #dc3545; }
+        .dashboard-session-info span { display: block; font-size: 0.8rem; color: #6c757d; }
+
+        /* Ajuste para los canvas de las gráficas */
+        canvas { max-width: 100%; height: 250px !important; }
+
+.dashboard-information-section {
+    height: 70vh;
+    overflow-y: scroll;
+    padding: 0px;
+}
+
+.dashboard-data-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 8px;
+
+    height: 54vh;
+}
+
+.tr-data-table {
+    /* display: flex; */
+    /* flex-direction: row; */
+    /* align-items: center; */
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+}
+
+.dashboard-session-history {
+    overflow-y: scroll;
+    height: 66vh;
+}
+.Table-Course-Dasboard{}

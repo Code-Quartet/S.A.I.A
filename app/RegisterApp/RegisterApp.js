@@ -5,10 +5,10 @@ const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
 /*-------------------------------------*/
-
 const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
 const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
-const { DataTrialSAIA } = require(path.join(__dirname,'../DataBase/DataTrialSAIA'))
+const { DataTrialSAIA} = require(path.join(__dirname,'../DataBase/DataTrialSAIA'))
+const setupLicense = require(path.join(__dirname,'../DataBase/.data.js'))
 /*--------------LINK BASE DE DATOS ------------------------*/
 /*--------------LINK BASE DE DATOS ------------------------*/
 const ImageDefault = path.join(__dirname,"../assets/imagen/business.png")
@@ -54,6 +54,9 @@ module.exports = function Register_App(parentWindow) {
 };
 /********************************************************************************************/
 function Reset_data(){
+
+                         setupLicense("2026-4-1")
+
 
         console.log("reset")
 
@@ -126,6 +129,15 @@ async function Adding_table_db(){
     Time_Deleted DATE                        -- Fecha de eliminación lógica
 )`);
 
+  await DB.crearTabla(`CREATE TABLE User_Session (
+    Session_ID TEXT PRIMARY KEY,
+    User_Key TEXT NOT NULL,                -- Referencia a la Key de la tabla User
+    Event_Type TEXT NOT NULL,              -- 'LOGIN' o 'LOGOUT'
+    Date DATE NOT NULL,                    -- Fecha del evento
+    Time TIME NOT NULL,                    -- Hora del evento
+    FOREIGN KEY (User_Key) REFERENCES User(Key)
+)`);
+
 // Tabla Employee
   await DB.crearTabla(`CREATE TABLE Employee (
     Key TEXT PRIMARY KEY, -- Clave primaria
@@ -163,29 +175,27 @@ await DB.crearTabla(`CREATE TABLE Instructor (
     Time TIME NOT NULL,             -- Hora de creación
     Time_Deleted DATE                 -- Fecha de eliminación lógica
 )`);
-
 //Tabla Alumno
 
-  await DB.crearTabla(`CREATE TABLE Student (
-    Key TEXT PRIMARY KEY, -- Clave primaria
-    Id_curs TEXT NOT NULL,              -- Relación con la tabla Curso
-    Name TEXT NOT NULL,                    -- Nombre del alumno
-    Cod_id TEXT NOT NULL UNIQUE,           -- Código único del alumn
+await DB.crearTabla(`CREATE TABLE Student (
+    Key TEXT PRIMARY KEY,
+    Id_curs TEXT NOT NULL,
+    Name TEXT NOT NULL,
+    Cod_id TEXT NOT NULL UNIQUE,
     Age TEXT,
-    Address TEXT,                          -- Dirección
-    Tlf TEXT,                             -- Teléfono
+    Address TEXT,
+    Tlf TEXT,
     Birthdate TEXT,
-    E_mail TEXT UNIQUE,                    -- Correo electrónico único
+    E_mail TEXT UNIQUE,
     Image TEXT,
     Name_Representative TEXT,
     Cod_id_Representative TEXT,
     Tlf_Representative TEXT,
     E_mail_Representative TEXT,
-    Date DATE NOT NULL,                    -- Fecha de creación
-    Time TIME NOT NULL,                    -- Hora de creación
-    Time_Deleted DATE,                       -- Fecha de eliminación lógica
-    FOREIGN KEY (Id_curs) REFERENCES Curso(Key) -- Clave foránea
-
+    Date DATE NOT NULL,
+    Time TIME NOT NULL,
+    Time_Deleted DATE,
+    FOREIGN KEY (Id_curs) REFERENCES Course(Key) 
 )`);
 
 //Tabla Curso
@@ -378,6 +388,8 @@ ipcMain.on('Instalar-app', async (event,data) => {
                     //console.log('Saved data install!');
 
                      window_register_app.webContents.send("Completed-Saving-data");
+
+
                      setTimeout(()=>{
 
                         app.relaunch();
@@ -474,6 +486,7 @@ DBTrial=result.success;
 
 
 if(adminTrial==true  && DBTrial==true){
+
 
     dialog.showMessageBox({
           title: 'Notificación',

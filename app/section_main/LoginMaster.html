@@ -121,18 +121,18 @@ body {
 <body>
 
     <div class="modal-card master-login">
-        <div class="lock-container" id="lock-container">
-            <span class="icono icon-lock" id="icon-lock"></span>
-            <span class="icono icon-unlocked" id="icon-unlocked" style="display: none"></span>
-        </div>      
-        <div class="login-content">
-            <h1>Contraseña Maestra</h1>
-            <!---------------------->
-    <div class="input-container-password" id="container-pass"  >
-          <input type="password" id="input-password" class="master-input" placeholder="Ingrese Contraseña">
-        <span class="icon-eye toggle-password" onclick="toggleVisibility('input-password', this)"></span>
-    </div>
-    <label class="message"id="sms" style="display: none">Credenciales incorrectos.</label>
+            <div class="lock-container" id="lock-container">
+                <span class="icono icon-lock" id="icon-lock"></span>
+                <span class="icono icon-unlocked" id="icon-unlocked" style="display: none"></span>
+            </div>      
+            <div class="login-content">
+                <h1>Contraseña Maestra</h1>
+                <!---------------------->
+            <div class="input-container-password" id="container-pass"  >
+                  <input type="password" id="input-password" class="master-input" placeholder="Ingrese Contraseña">
+                <span class="icon-eye toggle-password" onclick="toggleVisibility('input-password', this)"></span>
+            </div>
+            <label class="message"id="sms" style="display: none">Credenciales incorrectos.</label>
             <!---------------------->  
             <div class="btn-group-master">
                 <button class="btn-m btn-close-m" id="cerrar">cerrar</button>
@@ -156,38 +156,41 @@ body {
                 window.close()
             
         })
-document.getElementById("input-password").focus();
-document.getElementById("input-password").addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-          api.send("verify_master_password",document.getElementById("input-password").value)
+        document.getElementById("input-password").focus();
+        document.getElementById("input-password").addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                  api.send("verify_master_password",document.getElementById("input-password").value)
 
-    }
-});
+            }
+        });
         api.receive("message-password-master",(event,data)=>{
 
 
        if(data.sms.success==true){
                 console.log(sms.message)
                 document.getElementById("lock-container").style.background = 'blue';
-                document.getElementById("icon-lock").style.display="block";
-                document.getElementById("icon-lock").style.color="white";
-                document.getElementById("icon-unlocked").style.display="none";
+                document.getElementById("icon-lock").style.display="none";
+                document.getElementById("icon-unlocked").style.color="white";
+                document.getElementById("icon-unlocked").style.display="block";
                 document.getElementById("sms").innerHTML = data.sms.message;
                 document.getElementById("sms").style.color="blue";
 
                 document.getElementById("sms").style.display = 'block';
                 document.getElementById("container-pass").style.display = 'none';
 
+                SelectAction(data.action,data.key)
+
                 setTimeout(()=>{
                        window.close()
-                   },5000)
+                },5000)
+
             }
             if(data.sms.success==false){
                 console.log(sms.message)
                 document.getElementById("lock-container").style.background = 'red';
-                document.getElementById("icon-lock").style.display="none";
-                document.getElementById("icon-unlocked").style.display="block";
-                document.getElementById("icon-unlocked").style.color="white";
+                document.getElementById("icon-lock").style.display="block";
+                document.getElementById("icon-unlocked").style.display="none";
+                document.getElementById("icon-lock").style.color="white";
                 document.getElementById("sms").innerHTML = data.sms.message;
                 document.getElementById("sms").style.color="red";
     
@@ -195,8 +198,12 @@ document.getElementById("input-password").addEventListener('keydown', (event) =>
                 document.getElementById("container-pass").style.display = 'none';
 
                 setTimeout(()=>{
-                          document.getElementById("sms").style.display = 'none';
-                    document.getElementById("container-pass").style.display = 'block';
+                    document.getElementById("lock-container").style.background = "#dadada";
+                        document.getElementById("sms").style.display = 'none';
+                        document.getElementById("container-pass").style.display = 'block';
+                        document.getElementById("icon-lock").style.display="block";
+                        document.getElementById("icon-unlocked").style.display="none";
+                        document.getElementById("icon-lock").style.color="black";
                 },3000)
             }
        
@@ -211,7 +218,7 @@ document.getElementById("input-password").addEventListener('keydown', (event) =>
         "message": "Acceso concedido"
     }
 }            */
-        SelectAction(data.action,data.key)
+       
 
         })
 /*-----------------------------------*/
@@ -235,90 +242,134 @@ function toggleVisibility(inputId, iconElement) {
 /*-----------------------------------------*/
 function SelectAction(Action,key){
 
-if(Action=="imageMyprofile"){
+        if(Action=="imageMyprofile"){
 
-    api.send("Image-select-my-profile",key)
-  
+            api.send("Image-select-my-profile",key)
+          
+        }
+
+        if(Action=="EditUser"){
+
+            api.send("Editar-informacion-usuario",key)
+
+          
+        }   
+        if(Action=="EditPass"){
+
+            api.send("Editar-informacion-contrasena",key)
+
+          
+        }
+        if(Action=="EditPassMaster"){
+
+            api.send("Editar-informacion-contrasena-maestra",key)
+
+          
+        }
+
+        if(Action=="EditEmail"){
+           
+            api.send("Editar-informacion-correo",key)     
+        } 
+        /****************EXPORTAR********************************/
+
+        if(Action=="ExcelExportar"){
+           
+            api.send("Excel-Exportar")
+          
+        }
+        if(Action=="ExcelImportar"){
+           
+            api.send("Excel-Importar")
+          
+        } 
+
+        if(Action=="ExportarSQLITEDB"){
+           
+                api.send("Exportar-SQLITE-DB")
+          
+        }
+        if(Action=="ImportarSQLITEDB"){
+           
+             api.send("Importar-SQLITE-DB")
+          
+        } 
+          /*--------------------------------------*/
+
+        if(Action=="Deleted-student-register"){
+
+            api.send("Deleted-student-register",key)
+
+        }
+        if(Action=="Deleted-employee-register"){
+
+               api.send("Deleted-employee-register",key)
+        }
+
+        if(Action=="Delete-course-register"){
+
+               api.send("Delete-course-register",key)
+        }
+        if(Action=="Deleted-instructor-register"){
+
+               api.send("Deleted-instructor-register",key)
+        }
+        /*-------------------------------------------------------*/
+
+        if(Action=="RestoreStudent"){
+
+               api.send("Restore-Student-system",key)
+        }
+        if(Action=="RestoreInstructor"){
+
+               api.send("Restore-Instructor-system",key)
+        }
+        if(Action=="RestoreCourse"){
+
+               api.send("Restore-Course-system",key)
+        }
+        if(Action=="RestoreEmployee"){
+
+               api.send("Restore-Employee-system",key)
+        }
+        /*-----------------------------------------------------------*/
+        
+
+        if(Action=="PermanentlyDeleteInstructor"){
+
+               api.send("Permanently-Delete-Instructor-system",key)
+               CloseAlertWindow()
+        }
+        if(Action=="PermanentlyDeleteCourse"){
+
+               api.send("Permanently-Delete-Course-system",key)
+               CloseAlertWindow()
+        }
+        if(Action=="PermanentlyDeleteEmployee"){
+
+               api.send("Permanently-Delete-Employee-system",key)
+               CloseAlertWindow()
+        }
+        if(Action=="PermanentlyDeleteStudent"){
+
+               api.send("Permanently-Delete-Student-system",key)
+               CloseAlertWindow()
+        }
+        
+        if(Action=="ClearTrashDataBase"){
+
+               api.send("Clear-Trash-all-data-base")
+        }
+
+
 }
 
-if(Action=="EditUser"){
+function CloseAlertWindow(){
 
-    api.send("Editar-informacion-usuario",key)
-
-  
-}   
-if(Action=="EditPass"){
-
-    api.send("Editar-informacion-contrasena",key)
-
-  
-}
-if(Action=="EditPassMaster"){
-
-    api.send("Editar-informacion-contrasena-maestra",key)
-
-  
-}
-
-if(Action=="EditEmail"){
-   
-    api.send("Editar-informacion-correo",key)     
-} 
-/****************EXPORTAR********************************/
-
-if(Action=="ExcelExportar"){
-   
-    api.send("Excel-Exportar")
-  
-}
-if(Action=="ExcelImportar"){
-   
-    api.send("Excel-Importar")
-  
-} 
-
-if(Action=="ExportarSQLITEDB"){
-   
-        api.send("Exportar-SQLITE-DB")
-  
-}
-if(Action=="ImportarSQLITEDB"){
-   
-     api.send("Importar-SQLITE-DB")
-  
-} 
-  /*--------------------------------------*/
-
-if(Action=="Deleted-student-register"){
-
-    api.send("Deleted-student-register",key)
-
-}
-if(Action=="Deleted-employee-register"){
-
-       api.send("Deleted-employee-register",key)
-}
-
-if(Action=="Deleted-student-register"){
-
-       api.send("Deleted-student-register",key)
-}
-
-if(Action=="Delete-course-register"){
-
-       api.send("Delete-course-register",key)
-}
-if(Action=="Deleted-instructor-register"){
-
-       api.send("Deleted-instructor-register",key)
+    api.send("Close-alert-system")
 }
 
 
-
-
-}
-
-
-    </script>
+</script>
 </body>
 </html>

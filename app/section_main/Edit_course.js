@@ -20,8 +20,8 @@ module.exports = function Edit_course(parentWindow,key) {
         height:580,
        resizable:false, 
         frame:false,
-        modal: true,
-        parent: parentWindow, // Si quieres que sea modal, necesita un padre
+        //modal: true,
+        //parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {
@@ -93,7 +93,7 @@ ipcMain.on("Campo-usuario-vacio",async(event,data)=>{
 
 ipcMain.on("save-update-data-course",async(event,data)=>{
 
-//console.log("save-update-data-course",data)
+console.log("save-update-data-course",data)
     await UpdateCourse(data.Key,data).then((resutl)=>{
 
       window_edit_course.webContents.send("open-modal-register-course")

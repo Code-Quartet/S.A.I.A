@@ -41,7 +41,7 @@ console.log("Isuerpass",iduser)
     window_edit_password.loadFile('app/section_main/Edit_password.html');
 
     // Herramientas de desarrollo
-    //window_edit_password.webContents.openDevTools();
+    window_edit_password.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_password.webContents.setWindowOpenHandler(() => {
@@ -86,6 +86,7 @@ ipcMain.on("update-password-user",(event,data)=>{
                       title: 'Notificación',
                       type:'info',
                       message: result.message,
+                      detail: 'Retorno al Login para establecer información',
                       icon: 'info',
                       buttons: ['Aceptar'],
                       defaultId: 0,

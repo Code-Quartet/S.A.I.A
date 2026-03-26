@@ -41,9 +41,6 @@ let template_register_course =`
                     </div>
             </div>
 
-
-
-
         <button class="btn-new-data btn-pri" onclick="OpenNewCourse()">
             Nuevo Curso <i class="icon-plus"></i>
         </button>
@@ -154,9 +151,7 @@ function Manage_course(id){
 
     /*-------------------------------------------------------------------------------*/
 
-
     api.send("Select-course-list")
-
 
 }
 

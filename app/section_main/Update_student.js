@@ -19,10 +19,10 @@ module.exports = function Update_studient(parentWindow,key){
   window_Update_studient = new BrowserWindow({
         width:990,
         height:530,
-       modal: true,
+      // modal: true,
         resizable:false, 
         frame:false,
-        parent: parentWindow, // Si quieres que sea modal, necesita un padre
+      //  parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {
@@ -36,7 +36,7 @@ module.exports = function Update_studient(parentWindow,key){
     window_Update_studient.loadFile('app/section_main/Update_student.html');
 
     // Herramientas de desarrollo
-   window_Update_studient.webContents.openDevTools();
+   //window_Update_studient.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Update_studient.webContents.setWindowOpenHandler(() => {
@@ -63,11 +63,11 @@ ipcMain.on("Get-data-list-course-student-update",async(event,data)=>{
 
 ipcMain.on("Get-data-student-update",async(event,data)=>{
 
-  //  console.log("Get-data-student-update")
+      //console.log("Get-data-student-update")
 
-    let result = await GetdataStudent(key_student)
+      let result = await GetdataStudent(key_student)
 
-  window_Update_studient.webContents.send("data-student-information",result);
+      window_Update_studient.webContents.send("data-student-information",result);
 
 
 })
@@ -103,7 +103,7 @@ ipcMain.on("select-Image-new-student-update",(even,data)=>{
 
 ipcMain.on("Register-update-data-student",(even,data)=>{
    
-   //console.log("Register-update-data-student",data)
+    console.log("Register-update-data-student",data)
 
     UpdateStudent(data.Key,data).then((result)=>{
                   
@@ -116,5 +116,4 @@ ipcMain.on("Register-update-data-student",(even,data)=>{
 
     })
 
- 
 })

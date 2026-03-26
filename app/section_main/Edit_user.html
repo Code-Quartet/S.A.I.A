@@ -203,10 +203,12 @@ button:active {
         window.close();
     })
 
-    api.receive("close-window-updane-user",(event,data)=>{
+    api.receive("close-window-updane-user",async (event,data)=>{
 
+           await api.send("Reload-dasboard-system-data-MyProfile")
+            setTimeout(function(){
              window.close();
-
+            },1800)
     })
 </script>
 </html>

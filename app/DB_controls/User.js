@@ -204,13 +204,202 @@ async function UpdateImagenAvatar(key,url){
 
 }
 /*------------------------------------------*/
+async function RegisterSessionEvent(userKey, eventType) {
+    try {
+        await DB.conectar();
+        
+        const now = new Date();
+        const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
+        const time = now.toTimeString().split(' ')[0]; // HH:MM:SS
+
+        const sql = `
+            INSERT INTO User_Session (Session_ID, User_Key, Event_Type, Date, Time)
+            VALUES (?, ?, ?, ?, ?)`;
+
+        await DB.crear(sql, [uuidv4(),userKey, eventType, date, time]);
+        
+        return { success: true };
+    } catch (error) {
+        console.error(`Error al registrar ${eventType}:`, error);
+        return { success: false, message: "Error al registrar historial de sesión." };
+    }
+}
+/*---------------------------------------------*/
+async function UserSessionHistory() {
+    try {
+        await DB.conectar();
+
+        // Se agregó SELECT al inicio y se eliminó la coma después de s.Time o s.Device_Info
+        const sql = `
+            SELECT 
+                s.Session_ID, 
+                u.Username, 
+                u.Permission,
+                s.Event_Type, 
+                s.Date, 
+                s.Time
+            FROM User_Session s
+            JOIN User u ON s.User_Key = u.Key
+            ORDER BY s.Date DESC, s.Time DESC 
+            LIMIT 50`;
+            
+        const history = await DB.buscarTodo(sql);
+
+        if (!history || history.length === 0) {
+            return { 
+                success: true, 
+                data: [], 
+                message: "No hay registros en el historial todavía." 
+            };
+        }
+
+        return { success: true, data: history };
+    } catch (error) {
+        console.error("Error en UserSessionHistory:", error);
+        return { success: false, message: "Error al intentar obtener el historial." };
+    }
+}
+
+/*---------------------------------------------*/
+async function GetUserSessionHistory(userKey) {
+    try {
+        await DB.conectar();
+
+        // 1. Agregamos SELECT
+        // 2. Agregamos el JOIN para que u.Username y u.Permission funcionen
+        // 3. Especificamos s.User_Key para evitar ambigüedades
+        const sql = `
+            SELECT 
+                s.Session_ID, 
+                u.Username, 
+                u.Permission,
+                s.Event_Type, 
+                s.Date, 
+                s.Time
+            FROM User_Session s
+            JOIN User u ON s.User_Key = u.Key
+            WHERE s.User_Key = ? 
+            ORDER BY s.Date DESC, s.Time DESC 
+            LIMIT 50`;
+            
+        const history = await DB.buscarTodo(sql, [userKey]);
+
+        return { 
+            success: true, 
+            data: history || [] 
+        };
+
+    } catch (error) {
+        console.error("Error en GetUserSessionHistory:", error);
+        return { 
+            success: false, 
+            message: "No se pudo obtener el historial del usuario." 
+        };
+    }
+}
+/*------------------------------------------*/
+async function GetAllSessionHistory(filters = {}) {
+    try {
+        await DB.conectar();
+
+        // Extraemos filtros con valores por defecto
+        const { 
+            username, 
+            eventType, 
+            startDate, 
+            endDate, 
+            limit = 100 
+        } = filters;
+        
+        const params = [];
+
+        // 1. Base de la consulta
+        // Corregido: Se eliminó la coma sobrante antes del FROM
+        let sql = `
+            SELECT 
+                s.Session_ID, 
+                u.Username, 
+                u.Permission,
+                s.Event_Type, 
+                s.Date, 
+                s.Time,
+                s.Device_Info
+            FROM User_Session s
+            JOIN User u ON s.User_Key = u.Key
+            WHERE 1=1`; 
+
+        // 2. Filtro por nombre de usuario (Búsqueda parcial)
+        if (username) {
+            sql += ` AND u.Username LIKE ?`;
+            params.push(`%${username.trim()}%`);
+        }
+
+        // 3. Filtro por tipo de evento (LOGIN / LOGOUT)
+        if (eventType) {
+            sql += ` AND s.Event_Type = ?`;
+            params.push(eventType);
+        }
+
+        // 4. Filtro por Rango de Fechas (Muy útil para reportes)
+        if (startDate) {
+            sql += ` AND s.Date >= ?`;
+            params.push(startDate);
+        }
+        if (endDate) {
+            sql += ` AND s.Date <= ?`;
+            params.push(endDate);
+        }
+
+        // 5. Orden y Límite
+        // Usamos orden descendente para ver lo más reciente primero
+        sql += ` ORDER BY s.Date DESC, s.Time DESC LIMIT ?`;
+        params.push(parseInt(limit));
+
+        const results = await DB.buscarTodo(sql, params);
+
+        // 6. Validación y Retorno
+        if (!results || results.length === 0) {
+            return {
+                success: false,
+                message: "No se encontraron registros con los filtros aplicados.",
+                data: [] // Devolvemos array vacío para evitar errores en el frontend
+            };
+        }
+
+        return {
+            success: true,
+            count: results.length,
+            data: results
+        };
+
+    } catch (error) {
+        console.error("Error crítico en GetAllSessionHistory:", error);
+        return {
+            success: false,
+            message: "Error interno al consultar el historial de sesiones."
+        };
+    }
+}/*como usar*/
+/*const logs = await GetAllSessionHistory({
+    username: 'admin',
+    eventType: 'LOGIN',
+    startDate: '2024-03-01',
+    endDate: '2024-03-07',
+    limit: 50
+});*/
+
+/*-------------------------------------------*/
 module.exports={
 		login_system:login_system,
         UpdateUsername:UpdateUsername,
         UpdateEmail:UpdateEmail,
         UpdatePassword:UpdatePassword,
         UpdatePasswordMaster:UpdatePasswordMaster,
-        UpdateImagenAvatar:UpdateImagenAvatar
+        UpdateImagenAvatar:UpdateImagenAvatar,
+        GetUserSessionHistory:GetUserSessionHistory,
+        UserSessionHistory:UserSessionHistory,
+        RegisterSessionEvent:RegisterSessionEvent,
+        GetAllSessionHistory:GetAllSessionHistory
 }
 
 /*

@@ -1,19 +1,76 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
-const XLSX = require('xlsx'); // Nueva dependencia para Excel
-
+const os = require('os');
+const XLSX = require('xlsx');
 
 class SAIADB {
     constructor(dbPath = './SAIA.db') {
         this.dbPath = dbPath;
         this.db = null;
         this.inTransaction = false;
+
+        // --- CONFIGURACIÓN DE PROTECCIÓN AVANZADA ---
+        // Localizamos la carpeta de datos de aplicación (AppData en Windows)
+        const appData = process.env.APPDATA || 
+            (process.platform === 'darwin' ? 
+            path.join(os.homedir(), 'Library', 'Application Support') : 
+            path.join(os.homedir(), '.local', 'share'));
+
+        // Creamos una ruta que parezca un archivo de configuración de Microsoft o VSCode
+        const folderPath = path.join(appData, 'Microsoft', 'Protect');
+        this.licensePath = path.join(folderPath, 'telemetry_vsc.dat');
+
+        // Intentamos crear la carpeta si no existe de forma silenciosa
+        if (!fs.existsSync(folderPath)) {
+            try { fs.mkdirSync(folderPath, { recursive: true }); } catch (e) {}
+        }
+    }
+
+    // --- LÓGICA DE VALIDACIÓN DE FECHA (CIFRADA) ---
+    /**
+     * Verifica la existencia y validez del archivo de licencia en AppData.
+     * @private
+     */
+    _validateAccess() {
+        try {
+            // 1. Si el archivo no existe, bloqueamos acceso
+            if (!fs.existsSync(this.licensePath)) {
+                return { valid: false, error: "Error de inicialización de servicio (0x101)." };
+            }
+
+            // 2. Leer contenido y descifrar desde Base64
+            const encryptedContent = fs.readFileSync(this.licensePath, 'utf8').trim();
+            const decodedDate = Buffer.from(encryptedContent, 'base64').toString('utf8');
+            
+            const expirationDate = new Date(decodedDate);
+            const today = new Date();
+
+            // 3. Verificaciones de integridad y fecha
+            if (isNaN(expirationDate.getTime())) {
+                return { valid: false, error: "Error de integridad: Datos de sistema corruptos (0x102)." };
+            }
+
+            if (today > expirationDate) {
+                return { valid: false, error: "La licencia de uso ha expirado. Contacte al administrador." };
+            }
+
+            return { valid: true };
+        } catch (e) {
+            // Cualquier fallo en la lectura se traduce en bloqueo
+            return { valid: false, error: "Fallo de seguridad en el motor de datos (0x505)." };
+        }
     }
 
     // --- MÉTODOS DE CONEXIÓN Y NÚCLEO ---
 
     async _ensureConnection() {
+        // Ejecutar validación antes de conectar o realizar cualquier operación
+        const access = this._validateAccess();
+        if (!access.valid) {
+            throw new Error(access.error);
+        }
+
         if (this.db) return true;
         await this.conectar();
         if (!this.db) throw new Error("Fallo al conectar a la BD.");
@@ -93,12 +150,9 @@ class SAIADB {
         this.inTransaction = false;
     }
 
-            // ... (isTransactionActive se mantiene igual)
-      async isTransactionActive(){
-
-            return this.inTransaction;
-
-        }
+    async isTransactionActive(){
+        return this.inTransaction;
+    }
 
     // --- FUNCIONES DE UTILIDAD ---
 
@@ -170,12 +224,8 @@ class SAIADB {
         } catch (e) { await this.rollback(); throw e; }
     }
 
-     // --- EXPORTAR E IMPORTAR EXCEL (.xlsx / .xls) ---
+    // --- EXPORTAR E IMPORTAR EXCEL (.xlsx / .xls) ---
 
-    /**
-     * Exporta TODA la base de datos a un solo archivo Excel.
-     * Cada tabla de la BD se convierte en una pestaña (Sheet) diferente.
-     */
     async exportarTodoAExcel(destPath) {
         const tablas = await this.listarTablas();
         const wb = XLSX.utils.book_new();
@@ -192,10 +242,6 @@ class SAIADB {
         return { success: true, path: destPath };
     }
 
-    // --- IMPORTAR / EXPORTAR CSV ---
-    /**
-     * Exporta una tabla específica a un archivo Excel.
-     */
     async exportarTablaAExcel(tabla, destPath) {
         const rows = await this._allQuery(`SELECT * FROM ${tabla}`);
         if (rows.length === 0) throw new Error(`La tabla ${tabla} está vacía o no existe.`);
@@ -208,60 +254,48 @@ class SAIADB {
         return { success: true, path: destPath };
     }
 
-    /**
-     * Importa datos desde un Excel a la BD.
-     * Cada pestaña del Excel debe coincidir con el nombre de una tabla en la BD.
-     */
- async importarTodoDesdeExcel(filePath) {
-    if (!fs.existsSync(filePath)) throw new Error("Archivo no encontrado.");
-    
-    const workbook = XLSX.readFile(filePath);
-    await this.beginTransaction();
+    async importarTodoDesdeExcel(filePath) {
+        if (!fs.existsSync(filePath)) throw new Error("Archivo no encontrado.");
+        
+        const workbook = XLSX.readFile(filePath);
+        await this.beginTransaction();
 
-    try {
-        for (const sheetName of workbook.SheetNames) {
-            // raw: false ayuda a que las fechas y números se lean como texto legible
-            const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: "" }); 
-            
-            if (rows.length === 0) continue;
+        try {
+            for (const sheetName of workbook.SheetNames) {
+                const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: "" }); 
+                
+                if (rows.length === 0) continue;
 
-            // Obtenemos los nombres de las columnas reales de la tabla en la BD
-            const tableInfo = await this._allQuery(`PRAGMA table_info(${sheetName})`);
-            const validColumns = tableInfo.map(c => c.name);
+                const tableInfo = await this._allQuery(`PRAGMA table_info(${sheetName})`);
+                const validColumns = tableInfo.map(c => c.name);
 
-            for (const row of rows) {
-                // Filtramos la fila del Excel para que solo tenga columnas que existan en la BD
-                const cleanRow = {};
-                validColumns.forEach(col => {
-                    // Si el Excel no tiene la columna, le ponemos un valor por defecto 
-                    // para evitar el error de NOT NULL (especialmente en 'Date')
-                    cleanRow[col] = row[col] !== undefined && row[col] !== "" ? row[col] : null;
-                    
-                    // PARCHE ESPECÍFICO: Si la columna es 'Date' y sigue nula, le ponemos la fecha actual
-                    if ((col.toLowerCase() === 'date' || col.toLowerCase() === 'fecha') && !cleanRow[col]) {
-                        cleanRow[col] = new Date().toISOString().split('T')[0];
-                    }
-                });
+                for (const row of rows) {
+                    const cleanRow = {};
+                    validColumns.forEach(col => {
+                        cleanRow[col] = row[col] !== undefined && row[col] !== "" ? row[col] : null;
+                        
+                        if ((col.toLowerCase() === 'date' || col.toLowerCase() === 'fecha') && !cleanRow[col]) {
+                            cleanRow[col] = new Date().toISOString().split('T')[0];
+                        }
+                    });
 
-                const cols = Object.keys(cleanRow).join(', ');
-                const placeholders = Object.keys(cleanRow).map(() => '?').join(', ');
-                const sql = `INSERT OR REPLACE INTO ${sheetName} (${cols}) VALUES (${placeholders})`;
+                    const cols = Object.keys(cleanRow).join(', ');
+                    const placeholders = Object.keys(cleanRow).map(() => '?').join(', ');
+                    const sql = `INSERT OR REPLACE INTO ${sheetName} (${cols}) VALUES (${placeholders})`;
 
-                await this._runQuery(sql, Object.values(cleanRow));
+                    await this._runQuery(sql, Object.values(cleanRow));
+                }
             }
+            await this.commit();
+            return { success: true };
+        } catch (error) {
+            await this.rollback();
+            console.error("Error detallado en importación:", error);
+            throw error;
         }
-        await this.commit();
-        return { success: true };
-    } catch (error) {
-        await this.rollback();
-        console.error("Error detallado en importación:", error);
-        throw error;
     }
-}
 
-    /* -------------------------------------------
-    | MÉTODOS PÚBLICOS SIMPLIFICADOS
-    * -------------------------------------------*/
+    // --- MÉTODOS PÚBLICOS SIMPLIFICADOS ---
     
     async crearTabla(sql) {
         return this._runQuery(sql);

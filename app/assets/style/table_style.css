@@ -18,10 +18,9 @@ thead {
 tbody {
     display: block;
     width: 100%;
-    max-height: 63vh;
+    max-height: 50vh;
     overflow-y: auto;
 }
-
 /* Para mantener las celdas alineadas entre thead y tbody */
 thead tr, tbody tr {
     display: grid;
@@ -38,7 +37,7 @@ tbody::-webkit-scrollbar-thumb {
 
 th {
     text-align: left;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     text-transform: capitalize;
     color: #4b5563;

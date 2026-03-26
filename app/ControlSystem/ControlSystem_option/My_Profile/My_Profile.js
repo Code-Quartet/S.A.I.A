@@ -204,7 +204,7 @@ function My_Profile(id){
                 permission:Data_user.permission,
                 method:{
                     action:"EditEmail",
-                    key:Data_user.key
+                    key:Data_employee.key
                     
                 }
             }

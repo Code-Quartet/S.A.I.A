@@ -1,5 +1,5 @@
 
-.dashboard-container {
+.ControlSystem-container {
     display: grid;
     grid-template-columns: 17% 83%;
     grid-template-rows: 1fr;
@@ -9,11 +9,11 @@
 }
 
 /* Sidebar */
-.dashboard-sidebar {
+.ControlSystem-sidebar {
   
      grid-area: 1 / 1 / 2 / 2;
      /*-------------------------*/
-       background-image:url('../assets/imagen/fondo.jpg');
+    background-image:url('../assets/imagen/fondo.jpg');
     background-position:;
     background-size: cover;
     background-repeat: no-repeat;  
@@ -27,7 +27,7 @@
     height: 100%;
 }
 
-.dashboard-menu {
+.ControlSystem-menu {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -52,7 +52,7 @@
 }
 
 .menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1); border-left: 6px solid #f3f3f3;
 }
 
 /* Pie del Sidebar */
@@ -98,4 +98,5 @@
 .ItemMenuActive {
     border-bottom: 0.5px solid white;
     font-size: 17px;
+    border-left: 6px solid #f3f3f3;
 }

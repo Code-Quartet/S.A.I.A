@@ -34,7 +34,7 @@ async function GetEmployeeWithUser(employeeKey) {
                 U.Date AS UserDate
             FROM Employee E
             INNER JOIN User U ON E.Id_user = U.Key
-            WHERE E.Key = ? AND E.Time_deleted IS NULL AND U.Time_deleted IS NULL
+            WHERE E.Key = ? AND E.Time_Deleted IS NULL AND U.Time_Deleted IS NULL
         `;
 
         const resultado = await DB.buscar(sql, [employeeKey]);
@@ -65,7 +65,7 @@ async function GetEmployeesPaged(page = 1, limit = 10) {
         await DB.conectar();
         
         // 1. Obtener el total de elementos activos
-        const sqlCount = `SELECT COUNT(*) as total FROM Employee WHERE Time_deleted IS NULL`;
+        const sqlCount = `SELECT COUNT(*) as total FROM Employee WHERE Time_Deleted IS NULL`;
         const resCount = await DB.buscar(sqlCount);
         const totalElements = Array.isArray(resCount) ? resCount[0].total : resCount.total;
 
@@ -83,7 +83,7 @@ async function GetEmployeesPaged(page = 1, limit = 10) {
         const sqlData = `
             SELECT Key, Name, E_mail, Tlf, Status
             FROM Employee 
-            WHERE Time_deleted IS NULL 
+            WHERE Time_Deleted IS NULL 
             ORDER BY Name ASC 
             LIMIT ? OFFSET ?`;
 
@@ -135,7 +135,7 @@ async function searchEmployee(filters = {}) {
         let sql = `
             SELECT Key, Name, E_mail, Tlf, Status, Cod_id
             FROM Employee 
-            WHERE Time_deleted IS NULL`;
+            WHERE Time_Deleted IS NULL`;
 
         const params = [];
 
@@ -153,7 +153,7 @@ async function searchEmployee(filters = {}) {
 
         sql += ` ORDER BY Name ASC`;
 
-        const results = await DB.buscar(sql, params);
+        const results = await DB.buscarTodo(sql, params);
 
         // Validación de resultados
         if (!results || results.length === 0) {
@@ -165,7 +165,7 @@ async function searchEmployee(filters = {}) {
 
         return {
             success: true,
-            data:[results] 
+            data:results 
         };
 
     } catch (error) {
@@ -187,7 +187,7 @@ async function SearchFilterEmployee(status) {
         const sql = `
             SELECT Key, Name, Cod_id, E_mail, Tlf, Status
             FROM Employee 
-            WHERE Status = ? AND Time_deleted IS NULL 
+            WHERE Status = ? AND Time_Deleted IS NULL 
             ORDER BY Name ASC`;
 
         // 3. Ejecución de la búsqueda pasando el parámetro
@@ -289,7 +289,7 @@ async function UpdateEmployee(employeeKey, updatedData) {
                 Image = ?,
                 Birthdate = ?,
                 Status = ?
-            WHERE Key = ? AND Time_deleted IS NULL`;
+            WHERE Key = ? AND Time_Deleted IS NULL`;
 
         const paramsEmployee = [
             updatedData.Employee.nombre, 
@@ -318,7 +318,7 @@ async function UpdateEmployee(employeeKey, updatedData) {
                     Username = ?, 
                     Permission = ?,
                     Password = ?
-                WHERE Key = ? AND Time_deleted IS NULL`;
+                WHERE Key = ? AND Time_Deleted IS NULL`;
             
             await DB.actualizar(sqlUpdateUser, [
                 updatedData.User.usuario, 
@@ -344,7 +344,7 @@ async function DeleteEmployeeLogical(employeeKey) {
         await DB.beginTransaction();
 
         // 1. Obtener el Id_user (Garantizamos que el empleado existe)
-        const sqlFindUser = `SELECT Id_user FROM Employee WHERE Key = ? AND Time_deleted IS NULL`;
+        const sqlFindUser = `SELECT Id_user FROM Employee WHERE Key = ? AND Time_Deleted IS NULL`;
         const employee = await DB.buscar(sqlFindUser, [employeeKey]);
         
         if (!employee) {
@@ -356,12 +356,12 @@ async function DeleteEmployeeLogical(employeeKey) {
         const fechaActual = new Date().toISOString().split('T')[0];
 
         // 2. Marcar borrado lógico en Employee
-        const sqlDelEmployee = `UPDATE Employee SET Time_deleted = ? WHERE Key = ?`;
+        const sqlDelEmployee = `UPDATE Employee SET Time_Deleted = ? WHERE Key = ?`;
         await DB.actualizar(sqlDelEmployee, [fechaActual, employeeKey]);
 
         // 3. Marcar borrado lógico en User si existe
         if (userKey) {
-            const sqlDelUser = `UPDATE User SET Time_deleted = ? WHERE Key = ?`;
+            const sqlDelUser = `UPDATE User SET Time_Deleted = ? WHERE Key = ?`;
             await DB.actualizar(sqlDelUser, [fechaActual, userKey]);
         }
 

@@ -481,8 +481,10 @@ let Key=null;
         input.addEventListener('input', validateForm);
     });
 
-    registrationForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+/*--- ENVIAR DATOS ---*/
+btnConfirm.addEventListener('click', (e) => {
+    e.preventDefault(); // Importante: evita que el formulario intente hacer un submit tradicional
+
         const formData = {
             Key,
             estudiante: {
@@ -504,6 +506,7 @@ let Key=null;
                 correo: document.getElementById('correo_representante').value
             } : null
         };
+        console.log("Register-update-data-student", formData);
         api.send("Register-update-data-student", formData);
     });
 
@@ -512,9 +515,7 @@ let Key=null;
         let courseSelect = document.getElementById('tipoCurso').value
         api.send("Open-system-info-course-register",courseSelect)
 
-
     })
-
 
     document.getElementById("btn-clear").addEventListener("click", () => {
         registrationForm.reset();
@@ -524,7 +525,14 @@ let Key=null;
         validateForm();
     });
 
-    document.getElementById("btn-close").addEventListener("click", () => window.close());
+    document.getElementById("btn-close").addEventListener("click", () => {
+      
+        api.send("Reload-dasboard-system-data-Student")
+
+            setTimeout(function(){
+                 window.close();
+            },1800)
+    });
 
     document.getElementById("Btn_select_image_student").addEventListener("click", () => {
         api.send("select-Image-new-student-update");

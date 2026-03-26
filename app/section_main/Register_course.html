@@ -15,6 +15,7 @@
             --error-red: #e53e3e;
             --success-green: #48bb78;
             --warning-orange: #ed8936; /* Color para Pausa */
+              --danger-red: #ef4444;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,16 +56,15 @@ h2 {
 }
         label { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
 
-        input, select {
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-
+input, select {
+    padding: 0.68rem;
+    border: 0.5px solid #3198ea;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s;
+    width: 99%;
+}
 .checkbox-group {
     display: flex;
     flex-direction: row;
@@ -107,10 +107,18 @@ h2 {
         .pill-item input:checked + span.day { background: var(--secondary-blue); color: white; }
         .pill-item input:checked + span.status-active { background: var(--success-green); color: white; }
         .pill-item input:checked + span.status-pause { background: var(--warning-orange); color: white; }
-        .pill-item input:checked + span.status-inactive { background: var(--error-red); color: white; }
+        .pill-item input:checked + span.status-inactive {
+         background: var(--primary-blue); color: white; 
 
-        .input-split { display: flex; align-items: center; gap: 0.5rem; }
-        .input-split input, .input-split select { flex: 1; width: 50%; }
+     }
+
+       .input-split {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2px;
+}
+        .input-split input, .input-split select { flex: 1; width: 48%; }
 
 .form-actions {
     grid-column: span 2;
@@ -123,7 +131,32 @@ h2 {
             cursor: pointer; border: none; display: flex; align-items: center; gap: 10px; font-size: 0.95rem;
         }
 
-        .btn-cancel { background: transparent; border: 1.5px solid var(--primary-blue); color: var(--primary-blue); }
+        .btn-cancel { 
+            background: transparent;
+             border: 1.5px solid var(--primary-blue); 
+             color: var(--primary-blue); 
+         }  
+
+         .btn-cancel:hover { 
+            background-color: #fceaea;
+            border-color: var(--danger-red);
+            color: var(--danger-red);
+         }
+
+         .btn-clear {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+           
+        }
+
+        .btn-clear:hover {
+            background-color: #fceaea;
+            border-color: var(--danger-red);
+            color: var(--danger-red);
+        }
+
+
         .btn-save { background: var(--secondary-blue); color: white; transition: opacity 0.3s; }
         
         /* Botón desactivado visualmente */
@@ -225,7 +258,7 @@ h2 {
 
         <div class="form-actions">
             <button type="button" class="btn btn-cancel" id="btnClose">Cerrar</button>
-         <div style="width: 50%; display: flex; justify-content: space-evenly; ">           <button type="button" class="btn btn-cancel" id="btnLimpiar">Limpiar</button>
+         <div style="width: 50%; display: flex; justify-content: space-evenly; ">           <button type="button" class="btn btn-clear" id="btnLimpiar">Limpiar</button>
                  <button type="submit" class="btn btn-save" id="btnSave" disabled="">Guardar ✓</button>
             </div>
         </div>
@@ -310,7 +343,11 @@ api.receive("Data-list-intructor", (event, data) => {
 //cerrar
     document.getElementById('btnClose').addEventListener('click', () => {
        
-        window.close()
+        api.send("Reload-dasboard-system-data-Course")
+        setTimeout(function(){
+     window.close();
+    },1800)
+
 
     });
 

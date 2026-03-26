@@ -16,7 +16,7 @@ async function SearchInstructor(query) {
     const sql = `
         SELECT * FROM Instructor 
         WHERE (Name LIKE ? OR Cod_id LIKE ? OR Specialty LIKE ?) 
-        AND Time_deleted IS NULL`;
+        AND Time_Deleted IS NULL`;
     const term = `%${query}%`;
     return await db.leer(sql, [term, term, term]);
 }
@@ -39,12 +39,12 @@ async function SearchInstructor(term) {
             SELECT Key, Name, Specialty, Tlf, Status
             FROM Instructor
             WHERE (Name LIKE ? OR Cod_id = ?) 
-            AND Time_deleted IS NULL 
+            AND Time_Deleted IS NULL 
             ORDER BY Name ASC`;
 
         // 3. Ejecutamos la búsqueda
         // Pasamos %term% para el LIKE y el término limpio para el =
-        const results = await db.buscar(sql, [`%${searchTerm}%`, searchTerm]);
+        const results = await db.buscarTodo(sql, [`%${searchTerm}%`, searchTerm]);
 
         // 4. Verificación de resultados
         if (!results || results.length === 0) {
@@ -57,7 +57,7 @@ async function SearchInstructor(term) {
         // 5. Retorno de la data (Sin envolver en [] adicionales para evitar errores de lectura)
         return {
             success: true,
-            data: [results] 
+            data: results 
         };
 
     } catch (error) {
@@ -72,7 +72,7 @@ async function SearchInstructor(term) {
  * Obtiene Name, Specialty, Tlf y Status de todos los instructores activos.
  */
 async function SelectInstructor(key) {
-    const sql = `SELECT * FROM Instructor WHERE key=? AND Time_deleted IS NULL`;
+    const sql = `SELECT * FROM Instructor WHERE key=? AND Time_Deleted IS NULL`;
     return await db.buscar(sql,[key]);
 }
 
@@ -80,7 +80,7 @@ async function SelectInstructor(key) {
 async function GetInstructorsPaged(page = 1, limit = 10) {
     try {
         // 1. Obtener el total de instructores activos (sin borrado lógico)
-        const sqlCount = `SELECT COUNT(*) as total FROM Instructor WHERE Time_deleted IS NULL`;
+        const sqlCount = `SELECT COUNT(*) as total FROM Instructor WHERE Time_Deleted IS NULL`;
         const resCount = await db.buscar(sqlCount);
         
         // Manejo de respuesta según como retorne el objeto tu método .buscar()
@@ -100,7 +100,7 @@ async function GetInstructorsPaged(page = 1, limit = 10) {
         const sqlData = `
             SELECT Key, Name, Specialty, Tlf, Status
             FROM Instructor 
-            WHERE Time_deleted IS NULL 
+            WHERE Time_Deleted IS NULL 
             ORDER BY Name ASC 
             LIMIT ? OFFSET ?`;
 
@@ -164,7 +164,7 @@ async function searchInstructorByStatus(statusArray) {
             SELECT Key, Name, Cod_id, Tlf, Status, Specialty
             FROM Instructor 
             WHERE Status IN (${placeholders}) 
-            AND Time_deleted IS NULL 
+            AND Time_Deleted IS NULL 
             ORDER BY Name ASC`;
 
         // Pasamos el arreglo de estados directamente como parámetros
@@ -237,7 +237,7 @@ async function UpdateInstructor(key, data) {
  * Borrado Inteligente (Lógico): Registra la fecha de eliminación.
  */
 async function DeleteInstructor(key) {
-    const sql = `UPDATE Instructor SET Time_deleted = date('now') WHERE Key = ?`;
+    const sql = `UPDATE Instructor SET Time_Deleted = date('now') WHERE Key = ?`;
     return await db.actualizar(sql, [key]);
 }
 

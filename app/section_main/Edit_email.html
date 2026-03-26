@@ -199,9 +199,14 @@ button:active {
     
     })
 
-    api.receive("close-window-updane-email",(event,data)=>{
+    api.receive("close-window-updane-email",async(event,data)=>{
 
-             window.close();
+           await  api.send("Reload-dasboard-system-data-MyProfile")
+          
+setTimeout(function(){
+ window.close();
+},1000)
+         
 
     })
 </script>

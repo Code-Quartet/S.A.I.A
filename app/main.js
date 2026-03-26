@@ -7,25 +7,29 @@ const { v4: uuidv4 } = require('uuid');
 const config = require(path.join(__dirname,".config.json"));
 
 /*---------------------------------------------------------*/
+
 const SAIADB = require(path.join(__dirname,'./DataBase/SAIA_manager.js'))
 const DB = new SAIADB(path.join(__dirname,'./DataBase/SAIA.db'));
-
+const {LimpiarBaseDeDatos } = require(path.join(__dirname,'./DataBase/DataTrialSAIA'))
 /*--------------LINK BASE DE DATOS ------------------------*/
 const ImageDefault = path.join(__dirname,"./assets/imagen/ImageLogin3.png")
 //console.log(ImageDefault)
 const {InfoMessage,ErrorMessage} = require(path.join(__dirname,'./section_main/Message_system'));
 /*---------------------------------------------------------------*/
-const {login_system,UpdateImagenAvatar} = require(path.join(__dirname,'./DB_controls/User'))
+const {UserSessionHistory,login_system,RegisterSessionEvent,UpdateImagenAvatar,GetAllSessionHistory} = require(path.join(__dirname,'./DB_controls/User'))
 const Login_password_master =  require(path.join(__dirname,'./section_main/LoginMaster'));
 /*---------------------------------------------------------------*/
 /*------------Modulos externos----------------*/
 const Register_App = require(path.join(__dirname,'./RegisterApp/RegisterApp'));
+/*--------------------------------------------------------------------------------------*/
+const {GetDashboardStats}= require(path.join(__dirname,'./DB_controls/Dasboard'));
+/*--------------------------------------------------------------------------------------*/
 const Edit_password = require(path.join(__dirname,'./section_main/Edit_password'));
 const Edit_password_master = require(path.join(__dirname,'./section_main/Edit_password_master'));
 const Edit_email = require(path.join(__dirname,'./section_main/Edit_email'));
 const Edit_user = require(path.join(__dirname,'./section_main/Edit_user'));
 /*-------------------------------------*/
-const {GetCoursePaged,SearchCourse,DeleteCourse,SearchCourseByStatus} = require(path.join(__dirname,'./DB_controls/Course'));
+const {GetTopCourses,GetCoursePaged,SearchCourse,DeleteCourse,SearchCourseByStatus} = require(path.join(__dirname,'./DB_controls/Course'));
 const Register_course = require(path.join(__dirname,'./section_main/Register_course'));
 const Edit_course = require(path.join(__dirname,'./section_main/Edit_course'));
 const Info_course = require(path.join(__dirname,'./section_main/Info_course'));
@@ -42,15 +46,21 @@ const Edit_instructor = require(path.join(__dirname,'./section_main/Edit_instruc
 const Info_instructor = require(path.join(__dirname,'./section_main/Info_instructor'));
 /*-----------------*/
 /*---------------------------------------------------------------*/
-const {searchEmployee,SearchFilterEmployee,RegistreEmployee,GetEmployeesPaged,DeleteEmployeeLogical,DeleteEmployeePermanent} = require(path.join(__dirname,'./DB_controls/Employee'))
+const {searchEmployee,SearchFilterEmployee,RegistreEmployee,GetEmployeesPaged,DeleteEmployeeLogical} = require(path.join(__dirname,'./DB_controls/Employee'))
 const Register_employee = require(path.join(__dirname,'./section_main/Register_employee'));
 const Edit_employee = require(path.join(__dirname,'./section_main/Edit_employee'));
 const Info_employee = require(path.join(__dirname,'./section_main/Info_employee'));
 /*-----------------------------------------------------------*/
-
+const {GlobalSearchTrash, GetCoursePagedTrash, GetStudentPagedTrash, GetEmployeesPagedTrash, GetInstructorsPagedTrash } = require(path.join(__dirname,'./DB_controls/Trash'))
+const {RestoreCourse, RestoreStudent, RestoreEmployee, RestoreInstructor } = require(path.join(__dirname,'./DB_controls/Restore')) 
 /*------------Modulos externos----------------*/
-
+const {ClearAllTrash, DeleteInstructorPermanent, DeleteEmployeePermanent, DeleteStudentPermanent, DeleteCoursePermanent }= require(path.join(__dirname,'./DB_controls/PermanentDelete'))
+const AlertDeletedPermanet =  require(path.join(__dirname,'./section_main/AlertDeletedPermanet'))
 /*--------select-system-init------------*/
+
+/*----Variable del systema ---*/
+let User_sesion_login = null;
+/*----Variable del systema ---*/
 function Select_system_type(){
 
 //
@@ -105,6 +115,7 @@ function createWindow() {
 
 
 /****************************LOGIN SYSTEM APP******************************************************/
+
 /*LOGIM SYSTEM APP*/
 /*LOGIM DEL SYSTEMA APLICACION*/
 ipcMain.on('Login-user-master-permission',async(event,data) => {
@@ -116,14 +127,18 @@ ipcMain.on('Login-user-master-permission',async(event,data) => {
 
 })
 
+
 ipcMain.on('Login-user-app',async(event,data) => {
 
-     await login_system(data).then((result)=>{
+     await login_system(data).then(async (result)=>{
 
         if(result!=null){
 
+          User_sesion_login=result;
+
           mainWindow.send("Data-user-employee",result)
-          //console.log("result",result)
+         // console.log("result",result.user.key)
+          await RegisterSessionEvent(result.user.key, 'LOGIN');
 
         }else{
 
@@ -148,6 +163,8 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
      })
      .catch((error) => {
+
+      console.log(error)
       
          dialog.showMessageBox({
                 title: 'Notificación',
@@ -168,6 +185,15 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
 })
 
+ipcMain.on("Login-out-user-register",async(event,data) => {
+
+  console.log(User_sesion_login.user.key)
+
+ await RegisterSessionEvent(User_sesion_login.user.key, 'LOGOUT');
+
+})
+
+
 ipcMain.on('message-campos-vacios-login', async (event,text) => {
 
     dialog.showMessageBox({
@@ -187,8 +213,64 @@ ipcMain.on('message-campos-vacios-login', async (event,text) => {
   
 
 })
+
+
 /**********************************LOGIN SYSTEM APP********************************/
 /***********************DASBOARD*********************************************/
+ipcMain.on("Get-data-stats-dasboard",async(event,data)=>{
+let result = await GetDashboardStats()
+
+console.log("StatsDasboard",result)
+  mainWindow.webContents.send("Data-stats-dasboard",result);
+
+  /*--------------------------------------*/
+     let resultcourse = await GetTopCourses()
+     console.log("course",resultcourse) 
+     mainWindow.webContents.send("Data-list-course-dasboard",resultcourse);
+     /*------------------------------------*/
+     let resultHistory = await UserSessionHistory()
+     console.log("HistoryUser",resultHistory)
+     mainWindow.webContents.send("List-history-data-user",resultHistory);
+
+})
+/***********************DASBOARD*********************************************/
+/********************************System Reload Dasboard***********************************************/
+ipcMain.on("Reload-dasboard-system-data-MyProfile",(event,data)=>{
+
+  mainWindow.webContents.send("reload-user-data-modif",User_sesion_login);
+
+})
+
+ipcMain.on("Reload-dasboard-system-data-Instructor",async(event,data)=>{
+
+
+  let result = await GetInstructorsPaged()
+  mainWindow.webContents.send("data-list-instructor",result);
+
+})
+
+ipcMain.on("Reload-dasboard-system-data-Course",async(event,data)=>{
+
+     let result = await GetCoursePaged() 
+     mainWindow.webContents.send("Data-list-course",result);
+
+})
+
+ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
+
+
+    let result = await GetStudentPaged();
+    mainWindow.webContents.send("Data-list-Student",result);
+
+})
+
+ipcMain.on("Reload-dasboard-system-data-Employee",async(event,data)=>{
+
+    let result = await GetEmployeesPaged()
+    mainWindow.webContents.send("Render-data-employee-list",result)
+
+})
+/********************************System Reload Dasboard***********************************************/
 /***********************MY-PROFILE******************************************/
 ipcMain.on('Image-select-my-profile',(event,id) => {
 
@@ -215,9 +297,9 @@ ipcMain.on('Image-select-my-profile',(event,id) => {
         /*--------------------*/
         UpdateImagenAvatar(id,result.filePaths[0]).then((result)=>{
 
-          mainWindow.webContents.send("notification-my-profile")
+                 mainWindow.webContents.send("notification-my-profile")
 
-
+                  mainWindow.webContents.send("reload-user-data-modif")
 
 
         }).catch((err)=>{
@@ -265,7 +347,7 @@ ipcMain.on('Editar-informacion-correo',(event,id) => {
 
 ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
 
-console.log('Iniciando Excel-Exportar');
+  console.log('Iniciando Excel-Exportar');
 
     // Generamos fecha y hora para el nombre por defecto
     const ahora = new Date();
@@ -300,9 +382,6 @@ console.log('Iniciando Excel-Exportar');
 
 
 /*-------------------------------------------------*/
-
-
-
 
 ipcMain.on('Excel-Exportar', (event, id) => {
     console.log('Iniciando Excel-Exportar');
@@ -504,9 +583,12 @@ ipcMain.on("Deleted-student-register",(event,id)=>{
                 buttons: ['Aceptar'],
                 defaultId: 0,
                 cancelId: 1
-          }).then(result => {
+          }).then(async result => {
               
                 console.log(result.response);
+                    let resultgetStudent = await GetStudentPaged();
+                   await mainWindow.webContents.send("Data-list-Student",resultgetStudent);
+
 
           }).catch(err => {
               
@@ -522,6 +604,15 @@ ipcMain.on("Deleted-student-register",(event,id)=>{
 
 /*************************NEW INSCRIPTCION**********************************/
 /*****************************Register New Cource*******************************/
+
+
+ipcMain.on("Select-course-list",async(event,data)=>{
+
+     let result = await GetCoursePaged() 
+     mainWindow.webContents.send("Data-list-course",result);
+
+})
+
 ipcMain.on("search-data-registre-course",async(event,data)=>{
   
    let result = await SearchCourse(data)
@@ -533,13 +624,6 @@ ipcMain.on("search-data-registre-course-by-status",async(event,data)=>{
 
    let result = await SearchCourseByStatus(data)
    mainWindow.webContents.send("Data-list-course-search",result);
-
-})
-
-ipcMain.on("Select-course-list",async(event,data)=>{
-
-     let result = await GetCoursePaged() 
-     mainWindow.webContents.send("Data-list-course",result);
 
 })
 
@@ -581,9 +665,14 @@ ipcMain.on("Delete-course-register",(event,id)=>{
                       buttons: ['Aceptar'],
                       defaultId: 0,
                       cancelId: 1
-          }).then(result => {
+          }).then(async result => {
                     
-                      console.log(result.response);
+                     // console.log(result.response);
+
+
+   let resultgetCourse = await GetCoursePaged() 
+   mainWindow.webContents.send("Data-list-course-search",resultgetCourse);
+
 
                 }).catch(err => {
                     
@@ -665,9 +754,13 @@ ipcMain.on("Deleted-instructor-register",(event,id)=>{
                       buttons: ['Aceptar'],
                       defaultId: 0,
                       cancelId: 1
-                }).then(result => {
+                }).then(async result => {
                     
-                      console.log(result.response);
+                      //console.log(result.response);
+                        let resultgetInstructor = await GetInstructorsPaged()
+ 
+                  mainWindow.webContents.send("data-list-instructor",resultgetInstructor);
+
 
                 }).catch(err => {
                     
@@ -690,15 +783,14 @@ ipcMain.on("Deleted-instructor-register",(event,id)=>{
 ipcMain.on("Get-data-registre-employee",async(even,data)=>{
     
     let result = await GetEmployeesPaged()
-   // console.log(result)
     mainWindow.webContents.send("Render-data-employee-list",result)
 
 })
 
 ipcMain.on("search-data-registre-employee",async(even,data)=>{
-  //console.log("search",data)
+
   let result = await searchEmployee(data)
-  //console.log("result",result )
+  console.log("result",result )
   mainWindow.webContents.send("Render-data-employee-list-search",result)
 
 })
@@ -760,9 +852,12 @@ ipcMain.on("Deleted-employee-register",(event,id)=>{
                 buttons: ['Aceptar'],
                 defaultId: 0,
                 cancelId: 1
-          }).then(result => {
+          }).then(async result => {
               
-                console.log(result.response);
+                //console.log(result.response);
+                    let resultgetEmployee = await GetEmployeesPaged()
+                 mainWindow.webContents.send("Render-data-employee-list",resultgetEmployee)
+
 
           }).catch(err => {
               
@@ -780,7 +875,7 @@ ipcMain.on("Deleted-employee-register",(event,id)=>{
 /*********************************TRASH***************************************************/
 ipcMain.on("Get-data-instrutor-list-trash",async (event,data)=>{
 
-  let result = await GetInstructorsPaged()
+  let result = await GetInstructorsPagedTrash()
  
   mainWindow.webContents.send("data-list-instructor-trash",result);
 
@@ -788,7 +883,7 @@ ipcMain.on("Get-data-instrutor-list-trash",async (event,data)=>{
 
 ipcMain.on("Get-data-registre-employee-trash",async (event,data)=>{
 
-  let result = await GetEmployeesPaged()
+  let result = await GetEmployeesPagedTrash()
  
   mainWindow.webContents.send("data-list-employee-trash",result);
 
@@ -797,7 +892,7 @@ ipcMain.on("Get-data-registre-employee-trash",async (event,data)=>{
 
 ipcMain.on("Get-data-Student-list-trash",async (event,data)=>{
 
-  let result = await GetStudentPaged()
+  let result = await GetStudentPagedTrash()
  
   mainWindow.webContents.send("data-list-Student-trash",result);
 
@@ -805,11 +900,303 @@ ipcMain.on("Get-data-Student-list-trash",async (event,data)=>{
 
 ipcMain.on("Get-data-Course-list-trash",async (event,data)=>{
 
-  let result = await GetCoursePaged()
+  let result = await GetCoursePagedTrash()
  
   mainWindow.webContents.send("data-list-Course-trash",result);
 
 })
+
+
+ipcMain.on("Get-data-page-list-trash",async (event,data)=>{
+  let result="";
+   switch (data.action) {
+      case "Student":
+        result = await GetStudentPagedTrash(data.pos)
+        mainWindow.webContents.send("data-list-Student-trash",result);    
+      break;  
+      case "Instructor":
+        result = await GetInstructorsPagedTrash(data.pos)
+        mainWindow.webContents.send("data-list-instructor-trash",result);
+      break;
+      case "Course":
+         result = await GetCoursePagedTrash(data.pos)
+         mainWindow.webContents.send("data-list-Course-trash",result);
+      break;
+      case "Employee":
+        result = await GetEmployeesPagedTrash(data.pos) 
+        mainWindow.webContents.send("data-list-employee-trash",result); 
+      break;
+     default:
+       // statements_def
+       break;
+   }
+})
+
+ipcMain.on("Restore-Student-system",async(event,key)=>{
+
+            RestoreStudent(key).then(async(result)=>{
+
+                Message(result)
+
+                  let resultrestoreStudent = await GetStudentPagedTrash()
+ 
+                  mainWindow.webContents.send("data-list-Student-trash",resultrestoreStudent);
+
+
+
+             }).catch((err)=>{
+
+
+             })
+})
+
+ipcMain.on("Restore-Instructor-system",(event,key)=>{
+        
+          RestoreInstructor(key).then(async(result)=>{
+
+                Message(result)
+                  let resultrestoreInstructor = await GetInstructorsPagedTrash()
+ 
+                mainWindow.webContents.send("data-list-instructor-trash",resultrestoreInstructor);
+
+
+
+          }).catch((err)=>{
+
+
+          })
+
+})
+
+ipcMain.on("Restore-Course-system",(event,key)=>{
+
+          RestoreCourse(key).then(async(result)=>{
+
+                 Message(result)
+
+                   let resultrestoreCourse = await GetCoursePagedTrash()
+ 
+                  mainWindow.webContents.send("data-list-Course-trash",resultrestoreCourse);
+
+
+          }).catch((err)=>{
+
+
+          })
+})
+
+ipcMain.on("Restore-Employee-system",(event,key)=>{
+
+   RestoreEmployee(key).then(async(result)=>{
+
+        Message(result)
+
+          let resultrestoreEmployee = await GetEmployeesPagedTrash()
+ 
+        mainWindow.webContents.send("data-list-employee-trash",resultrestoreEmployee);
+
+
+
+   }).catch((err)=>{
+
+
+   })
+
+})
+
+/*--------------------------------------------------------------------*/
+ipcMain.on("Open-alert-message-modal",(event,data)=>{
+
+  AlertDeletedPermanet(mainWindow,data)
+
+})
+
+/*-----------------------------------------------------------------*/
+ipcMain.on("Permanently-Delete-Employee-system",(event,key)=>{
+  
+    DeleteEmployeePermanent(key).then(async (result)=>{
+
+          Message(result)
+          let result_employee = await GetEmployeesPagedTrash()
+          mainWindow.webContents.send("data-list-employee-trash",result_employee);
+
+
+     }).catch((err)=>{
+      console.log("Proceso deleted",err)
+
+
+     })
+
+})
+
+ipcMain.on("Permanently-Delete-Student-system",(event,key)=>{
+  
+     DeleteStudentPermanent(key).then(async(result)=>{
+
+          Message(result)
+
+            let resultStudent = await GetStudentPagedTrash()
+ 
+         mainWindow.webContents.send("data-list-Student-trash",resultStudent);
+
+
+
+     }).catch((err)=>{
+      console.log("Proceso deleted",err)
+
+
+     })
+
+})
+
+ipcMain.on("Permanently-Delete-Instructor-system",(event,key)=>{
+  
+     DeleteInstructorPermanent(key).then(async(result)=>{
+
+          Message(result)
+
+            let resultInstructor = await GetInstructorsPagedTrash()
+ 
+           mainWindow.webContents.send("data-list-instructor-trash",resultInstructor);
+
+
+
+     }).catch((err)=>{
+      console.log("Proceso deleted",err)
+
+
+     })
+
+})   
+
+ipcMain.on("Permanently-Delete-Course-system",(event,key)=>{
+  
+     DeleteCoursePermanent(key).then(async(result)=>{
+
+          Message(result)
+
+            let resultCourse = await GetCoursePagedTrash()
+ 
+          mainWindow.webContents.send("data-list-Course-trash",resultCourse);
+
+
+
+     }).catch((err)=>{
+      console.log("Proceso deleted",err)
+
+
+     })
+
+})
+
+/*-------------------------------------------------------------------------*/
+ipcMain.on("Search-data-trash",async(event,data)=>{
+
+      let result = await GlobalSearchTrash(data.tabla,data.terms).then((result)=>{
+        console.log("Search-data-trash",result)
+        mainWindow.webContents.send("Search-data-trash-send",result)
+
+      }).catch((err)=>{
+
+
+      })
+
+})
+/*-------------------------------------------------------------------------*/
+
+ipcMain.on("Open-message-alert-clear-trash",async(event,data)=>{
+
+    dialog.showMessageBox({
+                        title:"Alerta",
+                        message:"Esta por Limpiar la Papelera los datos se perderan",
+                        icon: 'warning',
+                        type:'warning',
+                        buttons: ['Cancelar','Aceptar'],
+                        defaultId: 0,
+                        cancelId: 1
+                    }).then(result => {
+                      
+                        console.log(result.response);
+                        if(result.response==1){
+  
+                            Login_password_master(mainWindow,data)
+
+                        }
+                         if(result.response==0){
+                          
+                        }
+
+                      
+
+
+                  }).catch(err => {
+                      
+                      console.log(err);
+                });
+
+})
+
+ipcMain.on("Clear-Trash-all-data-base",async(event,data)=>{
+
+    await ClearAllTrash().then(async(result)=>{
+
+     mainWindow.webContents.send("Reload-trash-interfaz")
+       Message(result)
+
+
+    }).catch((err)=>{
+
+
+    })
+
+})
+/***********************************************************/
+function Message(data){
+  if(data.success==true){
+
+        dialog.showMessageBox({
+                      title:"Notificación",
+                      message:data.message,
+                      icon: 'info',
+                       type:'info',
+                      buttons: ['Aceptar'],
+                      defaultId: 0,
+                      cancelId: 1
+          }).then(result => {
+                    
+                      console.log(result.response);
+
+                }).catch(err => {
+                    
+                    console.log(err);
+              });
+
+
+  }
+  if(data.success==false){
+
+        dialog.showMessageBox({
+                      title:"Alerta",
+                      message:data.message,
+                      icon: 'error',
+                       type:'error',
+                      buttons: ['Aceptar'],
+                      defaultId: 0,
+                      cancelId: 1
+          }).then(result => {
+                    
+                      console.log(result.response);
+
+                }).catch(err => {
+                    
+                    console.log(err);
+              });
+
+
+  }
+
+
+}
 
 /*********************************TRASH***************************************************/
 /***********************DASBOARD*********************************************/

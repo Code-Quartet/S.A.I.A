@@ -23,8 +23,8 @@ module.exports = function Register_instructor(parentWindow) {
         maxHeight:540,
         resizable:true,
         frame:false,
-        modal: true,
-        parent: parentWindow, // Si quieres que sea modal, necesita un padre
+       // modal: true,
+       // parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {

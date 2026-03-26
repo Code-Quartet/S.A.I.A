@@ -340,7 +340,16 @@ header h2 {
             validarFormulario();
         }
 
-        function Close() { window.close(); }
+        function Close() { 
+
+             api.send("Reload-dasboard-system-data-Employee")
+      setTimeout(function(){
+     window.close();
+    },1800)
+
+         
+
+             }
     </script>
 </body>
 </html>

@@ -19,10 +19,10 @@ module.exports = function Register_employee(parentWindow) {
   window_register_employee = new BrowserWindow({
         width:940,
         height:560,
-        modal: true,
+       // modal: true,
         resizable:false, 
         frame:false,
-        parent: parentWindow, // Si quieres que sea modal, necesita un padre
+       // parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {

@@ -151,45 +151,22 @@ passwordInputClick.addEventListener('keydown', function(event) {
 /*---------------------------------------------------------------*/
 api.receive("Data-user-employee",(event,data)=>{
 
- // console.log(data)
- /*
-  console.log(data.employee.image)*/
-/*--------------------------------------
-{
-    "user": {
-        "key": "bc3ce645-5490-4bf5-b8e8-6b135b43b297",
-        "username": "admin",
-        "permission": "Administrador"
-    },
-    "employee": {
-        "key": "76cbda11-241d-4fb8-9316-7d5639ba0f58",
-        "name": "Luis Edgardo Duno Castellano",
-        "age": "20",
-        "cod_id": "23860814",
-        "address": "Zulia Venexula",
-        "tlf": "041245789",
-        "email": "Duno@mail.com",
-        "image": "file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/business.png",
-        "id_user": "bc3ce645-5490-4bf5-b8e8-6b135b43b297"
-    }
-}
-/*---------------------------------------*/
- Data_user={
-  key:data.user.key,
-  user:data.user.username,
-  password:data.user.password,
-  permission:data.user.permission
-};
- Data_employee={
-    key:data.employee.key,
-     name:data.employee.name,
-     age:data.employee.age,
-     codId:data.employee.cod_id,
-     direccion:data.employee.address,
-     telefono:data.employee.tlf,
-     correo:data.employee.email,
-     image:data.employee.image,
- };
+     Data_user={
+      key:data.user.key,
+      user:data.user.username,
+      password:data.user.password,
+      permission:data.user.permission
+    };
+     Data_employee={
+        key:data.employee.key,
+         name:data.employee.name,
+         age:data.employee.age,
+         codId:data.employee.cod_id,
+         direccion:data.employee.address,
+         telefono:data.employee.tlf,
+         correo:data.employee.email,
+         image:data.employee.image,
+     };
 /*
 console.log(Data_user)
 console.log(Data_employee)

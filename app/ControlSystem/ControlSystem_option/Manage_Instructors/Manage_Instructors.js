@@ -195,14 +195,16 @@ api.receive("data-list-instructor",(event,info)=>{
     }
 
     if(info.pagination["isPaged"]==false){
+       
         document.getElementById("PaginationRender").style.display="none"
+    
     }
 
     if(info.pagination["isPaged"]==true){
 
         document.getElementById("PaginationRender").style.display="flex"
 
-      renderPagination(info.pagination)
+         renderPagination(info.pagination)
                 
      }
 })
@@ -314,7 +316,7 @@ let obj={
     permission:Data_user.permission,
     method:{
         action:"Deleted-instructor-register",
-        key:id
+        key:key
         
     }
 }

@@ -12,7 +12,7 @@ const ImageDefault = path.join(__dirname, "../assets/imagen/ImageLogin3.png");
 /**
  * Limpia las tablas principales respetando la integridad referencial.
  */
-async function LimpiarBaseDeDatos(DB) {
+async function LimpiarBaseDeDatos() {
     try {
         console.log("--- Limpiando base de datos ---");
         await DB.beginTransaction();
@@ -127,4 +127,4 @@ async function DataTrialSAIA() {
     }
 }
 
-module.exports = { DataTrialSAIA:DataTrialSAIA };
+module.exports = { DataTrialSAIA:DataTrialSAIA, LimpiarBaseDeDatos:LimpiarBaseDeDatos };

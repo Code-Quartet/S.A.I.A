@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal de Confirmación</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Mejor control de tamaños */
+        }
+
+        :root {
+            --text-color: #4a4a4a;
+            --subtext-color: #757575;
+            --border-color: #d1d1d1;
+            --danger-color: #d32f2f;
+            --primary-blue: #1a73e8;
+        }
+body {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+        /* Fondo de la modal */
+        .overlay-Deleted-Data {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        /* Clase para mostrar la modal */
+        .overlay-Deleted-Data.active-Deleted-Data {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Caja de la modal */
+.container-Deleted-Data {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    max-width: 500px;
+    width: 90%;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    margin-top: 30px;
+}
+
+        .active-Deleted-Data .container-Deleted-Data {
+            transform: translateY(0);
+        }
+
+        .title-Deleted-Data {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            font-family: sans-serif;
+        }
+
+        .body-Deleted-Data {
+            color: var(--subtext-color);
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-family: sans-serif;
+        }
+
+        .body-Deleted-Data span {
+            display: block;
+            margin-top: 8px;
+            font-weight: bold;
+            color: var(--danger-color);
+        }
+
+        /* Botones */
+.footer-Deleted-Data {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+        .btn-Deleted-Data {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        /* Corrección del selector :active */
+        .btn-Deleted-Data:active {
+            transform: scale(0.95);
+        }
+
+        .btn-cancel-Deleted-Data {
+            background: #f1f1f1;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-cancel-Deleted-Data:hover {
+            background: #e5e5e5;
+        }
+
+        .btn-delete-Deleted-Data {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-delete-Deleted-Data:hover {
+            background: #b71c1c;
+        }
+
+        /* Botón para probar la modal */
+        .btn-trigger-test {
+            margin: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+ <div class="container-Deleted-Data">
+            <h2 class="title-Deleted-Data">Confirmar Eliminación</h2>
+            
+            <p class="body-Deleted-Data">
+                ¿Estás seguro de que quieres eliminar este elemento?<br>
+                <span>⚠️ Esta acción no se puede deshacer</span>
+            </p>
+
+            <div class="footer-Deleted-Data">
+                <button class="btn-Deleted-Data btn-cancel-Deleted-Data" id="btnCancel-Deleted-Data" onclick="Close()">cerrar</button>
+                <button class="btn-Deleted-Data btn-delete-Deleted-Data" id="btnDelete-Deleted-Data" onclick="AceptarDeleted()">
+                    Eliminar permanentemente
+                </button>
+            </div>
+ </div>
+</body>
+<script type="text/javascript">
+    
+    function Close(){
+            window.close()
+    }
+    function AceptarDeleted(){
+
+            api.send("Open-password-master")
+
+
+    }
+    api.receive("Alert-Close-system",(eent,data)=>{
+
+                 window.close()
+
+    })
+</script>
+</html>
