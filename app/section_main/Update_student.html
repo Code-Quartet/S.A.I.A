@@ -191,6 +191,7 @@
     height: 100%;
     object-fit: cover;
     background: blue;
+     pointer-events: none;
 }
 
 .camera-button-register-studient {
@@ -286,7 +287,7 @@
             <h1 class="titleRegister" style="margin-left: 11px;">Actualizar Estudiante</h1>
         </div>
         
-        <div class="container-registration-form" id="registrationForm">
+        <form class="container-registration-form" id="registrationForm">
             <div class="columns column1">
                 <div class="form-group">
                     <div class="container-toogle-swicht">
@@ -312,7 +313,7 @@
                     </div>
                     <div class="form-group">
                         <label>Edad</label>
-                        <input type="number" id="edad" min="0" required>
+                        <input type="number" id="edad" min="0" placeholder="Ej: 20" required>
                     </div>
                     <div class="form-group">
                         <label>Nacimiento</label>
@@ -322,17 +323,17 @@
 
                 <div class="form-group">
                     <label>Dirección</label>
-                    <input type="text" id="direccion" required>
+                    <input type="text" id="direccion" placeholder="Dirección completa" required>
                 </div>
 
                 <div class="container-tlf-email">
                     <div class="form-group">
                         <label>Correo Electrónico</label>
-                        <input type="email" id="correo" required>
+                        <input type="email" id="correo" placeholder="nombre@correo.com" required>
                     </div>
                     <div class="form-group">
                         <label>Teléfono</label>
-                        <input type="tel" id="telefono" required>
+                        <input type="tel" id="telefono" placeholder="04163003485" required>
                     </div>
                 </div>
 
@@ -361,26 +362,26 @@
 
                 <div class="form-group">
                     <label>Nombre del Representante</label>
-                    <input type="text" id="nombre_representante" class="rep-field" disabled>
+                    <input type="text" id="nombre_representante" class="rep-field" placeholder="Nombre completo" disabled>
                 </div>
 
                 <div class="form-group">
                     <label>Cédula del Representante</label>
-                    <input type="text" id="cedula_representante" class="rep-field" disabled>
+                    <input type="text" id="cedula_representante" class="rep-field" placeholder="Cédula" disabled>
                 </div>
 
                 <div class="sub-container-representante-tlf-email">
                     <div class="form-group">
                         <label>Teléfono</label>
-                        <input type="tel" id="telefono_representante" class="rep-field" disabled>
+                        <input type="tel" id="telefono_representante" class="rep-field" placeholder="Teléfono" disabled>
                     </div>
                     <div class="form-group">
                         <label>Correo Electrónico</label>
-                        <input type="email" id="correo_representante" class="rep-field" disabled>
+                        <input type="email" id="correo_representante" class="rep-field" placeholder="correo@ejemplo.com" disabled>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         <div class="action-footer">
             <button type="button" class="btn-clear" id="btn-close">Cerrar</button>
@@ -443,6 +444,7 @@ let Key=null;
 
     api.receive('data-list-course-student-update', (event, data) => {
         const select = document.getElementById("tipoCurso");
+
         const currentVal = select.value;
         data.forEach((curso) => {
             if(curso.Key !== currentVal) {
@@ -518,10 +520,13 @@ btnConfirm.addEventListener('click', (e) => {
     })
 
     document.getElementById("btn-clear").addEventListener("click", () => {
-        registrationForm.reset();
+    registrationForm.reset();
         ageToggle.checked = false;
         textToggle.innerHTML = 'No';
         repFields.forEach(f => f.disabled = true);
+         document.getElementById("tipoCurso").innerHTML = `<option value="" disabled selected>Seleccione un Curso</option>`;
+         api.send("Get-data-list-course-student-update");
+
         validateForm();
     });
 

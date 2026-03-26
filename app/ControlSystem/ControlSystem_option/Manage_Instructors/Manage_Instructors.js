@@ -204,12 +204,13 @@ api.receive("data-list-instructor",(event,info)=>{
 
         document.getElementById("PaginationRender").style.display="flex"
 
-         renderPagination(info.pagination)
+         renderPaginationInstructor(info.pagination)
                 
      }
 })
 
-function renderPagination(data) {
+function renderPaginationInstructor(data) {
+    console.log("pagination-Instructor")
             
             const container = document.getElementById('PaginationRender');
             container.innerHTML = ''; // Limpiar antes de re-dibujar
@@ -280,6 +281,8 @@ api.receive("data-list-instructor-search",(event,info)=>{
 
 
 function SearchPaginationInstructor(index){
+
+   // console.log("SearchPaginationInstructor")
 
    api.send("search-pagination-Instructor",index)
 }

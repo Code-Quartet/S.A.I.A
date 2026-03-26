@@ -39,8 +39,7 @@ async function SearchInstructor(term) {
             SELECT Key, Name, Specialty, Tlf, Status
             FROM Instructor
             WHERE (Name LIKE ? OR Cod_id = ?) 
-            AND Time_Deleted IS NULL 
-            ORDER BY Name ASC`;
+            AND Time_Deleted IS NULL ORDER BY S.Date DESC, S.Time DESC`;
 
         // 3. Ejecutamos la búsqueda
         // Pasamos %term% para el LIKE y el término limpio para el =
@@ -101,8 +100,7 @@ async function GetInstructorsPaged(page = 1, limit = 10) {
             SELECT Key, Name, Specialty, Tlf, Status
             FROM Instructor 
             WHERE Time_Deleted IS NULL 
-            ORDER BY Name ASC 
-            LIMIT ? OFFSET ?`;
+            ORDER BY Date DESC, Time DESC LIMIT ? OFFSET ?`;
 
         const instructors = await db.buscarTodo(sqlData, [finalLimit, offset]);
 

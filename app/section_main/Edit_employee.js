@@ -39,7 +39,7 @@ module.exports = function Edit_employee(parentWindow,id) {
     window_edit_employee.loadFile('app/section_main/Edit_employee.html');
 
     // Herramientas de desarrollo
-    //window_edit_employee.webContents.openDevTools();
+    window_edit_employee.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_employee.webContents.setWindowOpenHandler(() => {

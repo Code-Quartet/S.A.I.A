@@ -14,9 +14,7 @@ async function GetListDataCourseStudent() {
         SELECT Key, Name 
         FROM Course 
         WHERE Status = 'Activo' 
-          AND Time_Deleted IS NULL 
-        ORDER BY Name ASC
-    `; 
+          AND Time_Deleted IS NULL`; 
     return await DB.buscarTodo(sql);
 }
 
@@ -54,10 +52,27 @@ async function GetStudentPaged(page = 1, limit = 10) {
                 C.Name as CourseName -- Ejemplo de cómo traer el nombre del curso
             FROM Student S
             LEFT JOIN Course C ON S.Id_curs = C.Key
-            WHERE S.Time_Deleted IS NULL 
-            ORDER BY S.Name ASC 
+            WHERE S.Time_Deleted IS NULL
+            ORDER BY S.Date DESC, S.Time DESC
             LIMIT ? OFFSET ?`;
 
+/*
+        const sqlData = `
+            SELECT 
+                S.Key, 
+                S.Name,
+                S.Cod_id,
+                S.Tlf,
+                S.E_mail,
+                S.Date, 
+                S.Time,
+                S.Id_curs,
+                C.Name as CourseName -- Ejemplo de cómo traer el nombre del curso
+            FROM Student S
+            LEFT JOIN Course C ON S.Id_curs = C.Key
+            WHERE S.Time_Deleted IS NULL 
+            ORDER BY S.Name ASC 
+            LIMIT ? OFFSET ?`;*/
         const students = await DB.buscarTodo(sqlData, [finalLimit, offset]);
 
         // 4. Calcular total de páginas
@@ -121,8 +136,7 @@ async function SearchStudentPagedName(searchTerm) {
             FROM Student S
             LEFT JOIN Course C ON S.Id_curs = C.Key
             WHERE S.Time_Deleted IS NULL 
-            AND (S.Name LIKE ? OR S.Cod_id LIKE ?)
-            ORDER BY S.Name ASC`;
+            AND (S.Name LIKE ? OR S.Cod_id LIKE ?)`;
 
         const search = `%${termClean}%`;
 
@@ -173,8 +187,7 @@ async function SearchStudentPagedData(searchTerm) {
             FROM Student S
             LEFT JOIN Course C ON S.Id_curs = C.Key
             WHERE S.Time_Deleted IS NULL 
-            AND (S.Date LIKE ? OR S.Cod_id LIKE ?)
-             ORDER BY S.Name ASC`;
+            AND (S.Date LIKE ? OR S.Cod_id LIKE ?)`;
 
         const search = `%${termClean}%`;
 

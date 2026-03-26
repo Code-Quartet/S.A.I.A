@@ -84,7 +84,7 @@ async function GetEmployeesPaged(page = 1, limit = 10) {
             SELECT Key, Name, E_mail, Tlf, Status
             FROM Employee 
             WHERE Time_Deleted IS NULL 
-            ORDER BY Name ASC 
+            ORDER BY Date DESC, Time DESC
             LIMIT ? OFFSET ?`;
 
         const employees = await DB.buscarTodo(sqlData, [finalLimit, offset]);

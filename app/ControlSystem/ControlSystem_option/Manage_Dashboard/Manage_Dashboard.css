@@ -29,8 +29,8 @@
     /* width: calc(100% - var(--dashboard-sidebar-width)); */
     padding: 16px;
     background: #efefef;
+    height: 94vh;
 }
-
 
 
         .dashboard-top-header {
@@ -50,9 +50,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 13px;
 }
-
         .dashboard-metric-card {
             background: var(--dashboard-white); padding: 20px; border-radius: 12px;
             border-bottom: 4px solid var(--dashboard-primary-blue);

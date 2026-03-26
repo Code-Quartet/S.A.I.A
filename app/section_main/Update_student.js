@@ -36,7 +36,7 @@ module.exports = function Update_studient(parentWindow,key){
     window_Update_studient.loadFile('app/section_main/Update_student.html');
 
     // Herramientas de desarrollo
-   //window_Update_studient.webContents.openDevTools();
+  //window_Update_studient.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Update_studient.webContents.setWindowOpenHandler(() => {
