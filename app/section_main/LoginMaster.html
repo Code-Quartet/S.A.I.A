@@ -48,8 +48,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    justify-content: space-between;
-    height: 119px;
+    justify-content: center;
 }
         /* Candado dibujado con CSS */
 
@@ -91,7 +90,7 @@ body {
 }
 
 .message{
-    font-size: 30px;
+    font-size: 45px;
     font-weight: bold;
     text-align: center;
 }
@@ -126,7 +125,7 @@ body {
                 <span class="icono icon-unlocked" id="icon-unlocked" style="display: none"></span>
             </div>      
             <div class="login-content">
-                <h1>Contraseña Maestra</h1>
+                <h1 id="titleLogin">Contraseña Maestra</h1>
                 <!---------------------->
             <div class="input-container-password" id="container-pass"  >
                   <input type="password" id="input-password" class="master-input" placeholder="Ingrese Contraseña">
@@ -134,7 +133,7 @@ body {
             </div>
             <label class="message"id="sms" style="display: none">Credenciales incorrectos.</label>
             <!---------------------->  
-            <div class="btn-group-master">
+            <div class="btn-group-master" id="containerBtn">
                 <button class="btn-m btn-close-m" id="cerrar">cerrar</button>
                 <button class="btn-m btn-enter-m" id="Ingresar">Ingresar</button>
             </div>
@@ -177,6 +176,8 @@ body {
 
                 document.getElementById("sms").style.display = 'block';
                 document.getElementById("container-pass").style.display = 'none';
+                document.getElementById("containerBtn").style.display = 'none';
+                document.getElementById("titleLogin").style.display = 'none';
 
                 SelectAction(data.action,data.key)
 
@@ -196,11 +197,15 @@ body {
     
                 document.getElementById("sms").style.display = 'block';
                 document.getElementById("container-pass").style.display = 'none';
+                document.getElementById("containerBtn").style.display = 'none';
+                document.getElementById("titleLogin").style.display = 'none';
 
                 setTimeout(()=>{
                     document.getElementById("lock-container").style.background = "#dadada";
                         document.getElementById("sms").style.display = 'none';
                         document.getElementById("container-pass").style.display = 'block';
+                        document.getElementById("containerBtn").style.display = 'flex';
+                        document.getElementById("titleLogin").style.display = 'block';
                         document.getElementById("icon-lock").style.display="block";
                         document.getElementById("icon-unlocked").style.display="none";
                         document.getElementById("icon-lock").style.color="black";

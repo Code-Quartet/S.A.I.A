@@ -39,7 +39,7 @@ module.exports = function Login_password_master(parentWindow,obj) {
     window_login_password_master.loadFile('app/section_main/LoginMaster.html');
 
     // Herramientas de desarrollo
- // window_login_password_master.webContents.openDevTools();
+    //window_login_password_master.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_login_password_master.webContents.setWindowOpenHandler(() => {
