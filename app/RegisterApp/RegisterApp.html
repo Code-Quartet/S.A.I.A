@@ -66,7 +66,7 @@
                 <div class="container-form-group">
                       <div class="sub-form-group">
                           <label>Cédula</label>
-                          <input type="text" id="ci" placeholder="Ej: 21783921">
+                          <input type="text" id="ci" placeholder="Ej: 21783921" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                       </div>
                        <div class="sub-form-group">
                               <label>Edad</label>
@@ -87,7 +87,7 @@
                 </div>
                   <div class="form-group">
                       <label>Teléfono</label>
-                      <input id="telefono" type="tel" placeholder="Ej: 04163003485" style="
+                      <input id="telefono" type="tel" placeholder="Ej: 04163003485" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="
     width: 90%;
 ">
                   </div>

@@ -82,6 +82,8 @@ header h2 {
             box-shadow: 0 0 0 3px rgba(43, 86, 197, 0.1);
         }
 
+        
+
         /* --- Password Field --- */
         .sub-container-password {
             display: flex;
@@ -241,11 +243,15 @@ header h2 {
                 <div class="container-form-group">
                     <div class="form-group" style="grid-column: span 1;">
                         <label>Teléfono</label>
-                        <input id="telefono" type="tel" placeholder="04120000000">
+                        <input id="telefono" type="tel" placeholder="04120000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                     <div class="form-group" style="grid-column: span 2;">
                         <label>Correo Electrónico</label>
-                        <input id="correo" type="email" placeholder="nombre@correo.com">
+                        <input id="correo" 
+                        type="email"
+                        autocomplete="email" 
+                        spellcheck="false" 
+                        placeholder="nombre@correo.com">
                     </div>
                 </div>
 

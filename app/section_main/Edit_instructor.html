@@ -75,8 +75,11 @@
             font-size: 14px;
         }
 
-        .field input:focus { border-color: #2d58d1; outline: none; }
-
+        .field input:focus {
+            border-color: #2d58d1;
+            box-shadow: 0 0 5px rgba(43, 86, 197, 0.2);
+            outline: none;
+        }
         /* Botones y Efecto Disable */
         .footer-buttons {
             display: flex;
@@ -159,7 +162,7 @@
 
         <div class="field field-grid4">
             <label>Cédula</label>
-            <input id="Codpersona" type="text" placeholder="Ej: 10.458.289" required>
+            <input id="Codpersona" type="text" placeholder="Ej: 10.458.289" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
         </div>
 
         <div class="field field-grid5">
@@ -169,12 +172,16 @@
 
         <div class="field field-grid6">
             <label>Correo Electrónico</label>
-            <input id="Email" type="email" placeholder="correo@ejemplo.com" required>
+            <input id="Email"
+            type="email" 
+            autocomplete="email" 
+            spellcheck="false"   
+            placeholder="correo@ejemplo.com" required>
         </div>
 
         <div class="field field-grid7">
             <label>Teléfono</label>
-            <input id="Phone" type="text" placeholder="Ej: 0412-000-0000" required>
+            <input id="Phone" type="text" placeholder="Ej: 0412-000-0000" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
         </div>
 
         <div class="field field-grid8">
