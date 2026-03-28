@@ -200,6 +200,7 @@ function renderPaginationEmployee(data) {
             // 1. Botón "Anterior"
             const prevBtn = document.createElement('button');
             prevBtn.className = 'page-btn';
+            
             prevBtn.innerText = '«';
             prevBtn.disabled = data.currentPage === 1;
             prevBtn.onclick = () => SearchPaginationEmployee(data.currentPage - 1);
