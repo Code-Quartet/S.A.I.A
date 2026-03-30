@@ -45,7 +45,7 @@ let templete_View_all_Registered_Users=`<main class="container-manage-table">
 
             </div>
         </nav>
-        <button class="btn-export" onclick="exportarAExcelStudent()">
+        <button class="btn-export" id="ExportStudnt" onclick="exportarAExcelStudent()">
             Exportar Listado 📄
         </button>
     </footer>
@@ -57,13 +57,18 @@ function View_all_Registered_Users(id){
     document.getElementById(id).innerHTML=templete_View_all_Registered_Users
 
    /*-------------------------------------------------*/
+        if(Data_user.permission=="Sub-Administrador"){
+
+                document.getElementById("ExportStudnt").style.display = 'none'
+        }
+   /*-------------------------------------------------*/
+   
     document.getElementById("SearchStudent").addEventListener("click",(e)=>{
 
         
         SearchDataStudent(document.getElementById("inputSearchStudent").value)
 
     })
-
 
     document.getElementById("inputSearchStudent").addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -81,7 +86,7 @@ function View_all_Registered_Users(id){
                 api.send("Get-data-Student-list")
 
           }
-        });
+    });
 /*------------------FILTER DATA-------------------------------*/
 const fechaInput = document.getElementById('fechaFilterData');
 
@@ -109,12 +114,23 @@ fechaInput.addEventListener('keydown', (event) => {
     api.send("Get-data-Student-list")
     /*--------------------------------*/
      
-
-
 }
 
 function exportarAExcelStudent() {
-    api.send('Exportar-excel-tabla-unica',"Student")
+
+
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"ExcelExportarUnicoStudent",
+                    key:Data_user.key
+                    
+                }
+            }
+            api.send("Login-user-master-permission",obj)
+
+   
 }
 
 
@@ -144,12 +160,23 @@ api.receive("Data-list-Student",(event,info)=>{
                                 <td>${student.Date}/${student.Time}</td>
                              <td class="td-action">
                                 <button class="btn-edit-data-table icon-info" onclick="InfoStudent('${student.Key}')"></button>
-                                <button class="btn-edit-data-table icon-pencil" onclick="UpdateStudent('${student.Key}')"></button>
-                                <button class="btn-delete-data-table icon-bin"  onclick="DeleteStudent('${student.Key}')"></button>
+                                <button class="btn-edit-data-table icon-pencil nosub" onclick="UpdateStudent('${student.Key}')"></button>
+                                <button class="btn-delete-data-table icon-bin nosub"  onclick="DeleteStudent('${student.Key}')"></button>
                             </td>
                             </tr>`;
 
         })
+
+
+        if(Data_user.permission=="Sub-Administrador"){
+
+                let item = document.querySelectorAll(".nosub")
+                    item.forEach((item,index)=>{
+
+                        item.style.display = 'none';
+                    })
+
+          }
     }
     if(info.success==false){
 
@@ -188,15 +215,26 @@ api.receive("Data-list-Student-serach",(event,info)=>{
                                 <td>${student.E_mail}</td>
                                 <td>${student.CourseName}</td>
                                 <td>${student.Date}/${student.Time}</td>
-                             <td class="td-action">
-                                <button class="btn-edit-data-table icon-info" onclick="InfoStudent('${student.Key}')"></button>
-                                <button class="btn-edit-data-table icon-pencil" onclick="UpdateStudent('${student.Key}')"></button>
-                                <button class="btn-delete-data-table icon-bin"  onclick="DeleteStudent('${student.Key}')"></button>
-                            </td>
+                                 <td class="td-action">
+                                    <button class="btn-edit-data-table icon-info" onclick="InfoStudent('${student.Key}')"></button>
+                                    <button class="btn-edit-data-table icon-pencil" onclick="UpdateStudent('${student.Key}')"></button>
+                                    <button class="btn-delete-data-table icon-bin"  onclick="DeleteStudent('${student.Key}')"></button>
+                                </td>
                             </tr>`;
 
         })
+
+        if(Data_user.permission=="Sub-Administrador"){
+
+                let item = document.querySelectorAll(".nosub")
+                    item.forEach((item,index)=>{
+
+                        item.style.display = 'none';
+                    })
+
+          }
     }
+
     if(info.success==false){
 
         document.getElementById("data-list-Student").innerHTML+=`<tr>

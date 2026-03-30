@@ -252,14 +252,10 @@
         validarFormulario(); // Deshabilita el botón tras limpiar
     }
 
-    function Close() {
+function Close() {
 
-   
-     api.send("Reload-dasboard-system-data-Instructor")
+   window.close();
 
-  setTimeout(function(){
-     window.close();
-    },1800)
  }
 
     function ValoresFormulario() {
@@ -278,6 +274,10 @@
 
         api.send('Save-data-new-instructor', valores);
         LimpiarFormulario();
+
+              api.send("Reload-dasboard-system-data-Instructor")
+
+           
     }
 
     api.receive("open-modal-register-instructor", (event, data) => {

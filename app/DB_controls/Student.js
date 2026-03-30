@@ -10,12 +10,40 @@ const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
 
 async function GetListDataCourseStudent() {
-    const sql = `
-        SELECT Key, Name 
-        FROM Course 
-        WHERE Status = 'Activo' 
-          AND Time_Deleted IS NULL`; 
-    return await DB.buscarTodo(sql);
+    try {
+        await DB.conectar();
+
+        const sql = `
+            SELECT 
+                c.Key, 
+                c.Name, 
+                c.Capacity,
+                COUNT(s.Key) as Total_Inscritos
+            FROM Course c
+            LEFT JOIN Student s ON c.Key = s.Id_curs AND s.Time_Deleted IS NULL
+            WHERE c.Status = 'Activo' 
+              AND c.Time_Deleted IS NULL
+            GROUP BY c.Key
+            HAVING Total_Inscritos < c.Capacity
+        `;
+
+        const results = await DB.buscarTodo(sql);
+
+        console.log(results)
+
+        return {
+            success: true,
+            data: results
+        };
+
+    } catch (error) {
+        console.error("Error al obtener cursos con cupo:", error);
+        return {
+            success: false,
+            message: "No se pudieron cargar los cursos disponibles.",
+            data: []
+        };
+    }
 }
 
 async function GetStudentPaged(page = 1, limit = 10) {
@@ -56,7 +84,7 @@ async function GetStudentPaged(page = 1, limit = 10) {
             ORDER BY S.Date DESC, S.Time DESC
             LIMIT ? OFFSET ?`;
 
-/*
+  /*
         const sqlData = `
             SELECT 
                 S.Key, 
@@ -203,7 +231,7 @@ async function SearchStudentPagedData(searchTerm) {
 
         return {
             success: true,
-            data:[students], // Retorna el array directo de resultados
+            data:students, // Retorna el array directo de resultados
         };
 
     } catch (error) {
@@ -215,26 +243,6 @@ async function SearchStudentPagedData(searchTerm) {
     }
 }
 
-            
-/*{
-    "estudiante": {
-        "esMenor": true,
-        "nombre": "Duno",
-        "cedula": "30",
-        "edad": "20",
-        "nacimiento": "0195-11-05",
-        "direccion": "xulia",
-        "curso": "C-6",
-        "correo": "Uno2mail.com",
-        "telefono": "0140050"
-    },
-    "representante": {
-        "nombre": "Edgardo",
-        "cedula": "124578956",
-        "telefono": "01024420",
-        "correo": "Edgardo@mial.com"
-    }
-}*/
 async function GetdataStudent(key){
    const sql = `
             SELECT 

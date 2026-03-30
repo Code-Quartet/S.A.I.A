@@ -125,37 +125,29 @@ async function GetEmployeesPaged(page = 1, limit = 10) {
     }
 }
 
-async function searchEmployee(filters = {}) {
+async function searchEmployee(searchTerm) {
     try {
         await DB.conectar();
 
-        // Extraemos los posibles filtros del objeto
-        const { term, cod_id } = filters;
-        
+        const termClean = searchTerm ? searchTerm.trim() : "";
+
+        if (!termClean) {
+            return { success: false, message: "Debe ingresar un nombre o código." };
+        }
+
+        // CORRECCIÓN: Quitamos el prefijo "S." o definimos "Employee S"
+        // También aseguramos que las columnas coincidan con tu esquema (Cod_id vs CodId)
         let sql = `
             SELECT Key, Name, E_mail, Tlf, Status, Cod_id
             FROM Employee 
-            WHERE Time_Deleted IS NULL`;
+            WHERE Time_Deleted IS NULL 
+            AND (Name LIKE ? OR Cod_id LIKE ?)`;
 
-        const params = [];
+        const search = `%${termClean}%`;
 
-        // 1. Filtro por Nombre (Búsqueda parcial)
-        if (term) {
-            sql += ` AND Name LIKE ?`;
-            params.push(`%${term}%`);
-        }
+        // Pasamos el parámetro para ambos "?"
+        const results = await DB.buscarTodo(sql, [search, search]);
 
-        // 2. Filtro por Cod_id (Búsqueda exacta)
-        if (cod_id) {
-            sql += ` AND Cod_id = ?`;
-            params.push(cod_id);
-        }
-
-        sql += ` ORDER BY Name ASC`;
-
-        const results = await DB.buscarTodo(sql, params);
-
-        // Validación de resultados
         if (!results || results.length === 0) {
             return {
                 success: false,
@@ -165,7 +157,7 @@ async function searchEmployee(filters = {}) {
 
         return {
             success: true,
-            data:results 
+            data: results 
         };
 
     } catch (error) {
@@ -176,7 +168,6 @@ async function searchEmployee(filters = {}) {
         };
     }
 }
-
 
 async function SearchFilterEmployee(status) {
     try {

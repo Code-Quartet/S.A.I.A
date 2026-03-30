@@ -48,7 +48,7 @@ let template_manage_employee=`
 
             </div>
         </nav>
-        <button class="btn-export" onclick="exexportarAExcelEmployee()">
+        <button class="btn-export" id="ExportEmployee" onclick="exexportarAExcelEmployee()">
             Exportar Listado 📄
         </button>
     </footer>
@@ -57,6 +57,16 @@ let template_manage_employee=`
 function Manage_Employee(id){
 
 	document.getElementById(id).innerHTML=template_manage_employee;
+
+
+   /*-------------------------------------------------*/
+        if(Data_user.permission=="Sub-Administrador"){
+
+                document.getElementById("ExportEmployee").style.display = 'none'
+        }
+   /*-------------------------------------------------*/
+
+
 
     api.send("Get-data-registre-employee")
 
@@ -258,7 +268,19 @@ function RegisterNewEmployee(){
 }
 
 function exexportarAExcelEmployee() {
-    api.send('Exportar-excel-tabla-unica',"Employee")
+            let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"ExcelExportarUnicoEmployee",
+                    key:Data_user.key
+                    
+                }
+            }
+
+       api.send("Login-user-master-permission",obj)
+
+   
 }
 
 

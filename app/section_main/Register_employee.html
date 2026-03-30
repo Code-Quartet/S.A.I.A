@@ -403,6 +403,9 @@ header h2 {
 
             console.log("Objeto enviado:", objData);
             if(window.api) api.send("save-data-registre-employee", objData);
+
+            api.send("Reload-dasboard-system-data-Employee")
+    
         }
 
         // --- Notificaciones ---
@@ -431,10 +434,10 @@ header h2 {
 
         function Close() {
             
-            api.send("Reload-dasboard-system-data-Employee")
-        setTimeout(function(){
+          
      window.close();
-    },1800)
+
+
         }
     </script>
 </body>

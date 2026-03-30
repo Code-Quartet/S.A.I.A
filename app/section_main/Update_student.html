@@ -442,11 +442,11 @@ let Key=null;
         api.send("Get-data-list-course-student-update");
     });
 
-    api.receive('data-list-course-student-update', (event, data) => {
+    api.receive('data-list-course-student-update', (event, info) => {
         const select = document.getElementById("tipoCurso");
 
         const currentVal = select.value;
-        data.forEach((curso) => {
+        info.data.forEach((curso) => {
             if(curso.Key !== currentVal) {
                 select.innerHTML += `<option value="${curso.Key}">${curso.Name}</option>`;
             }
@@ -510,6 +510,10 @@ btnConfirm.addEventListener('click', (e) => {
         };
         console.log("Register-update-data-student", formData);
         api.send("Register-update-data-student", formData);
+
+
+     api.send("Reload-dasboard-system-data-Student")
+
     });
 
     document.getElementById("info-course-student").addEventListener("click",(e) =>{
@@ -532,11 +536,9 @@ btnConfirm.addEventListener('click', (e) => {
 
     document.getElementById("btn-close").addEventListener("click", () => {
       
-        api.send("Reload-dasboard-system-data-Student")
-
-            setTimeout(function(){
+      
                  window.close();
-            },1800)
+        
     });
 
     document.getElementById("Btn_select_image_student").addEventListener("click", () => {

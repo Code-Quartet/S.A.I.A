@@ -50,7 +50,7 @@ let template_register_course =`
     <table>
         <thead>
             <tr>
-               <th>Curso</th><th>Cupo</th><th>Horario</th><th>Instructor</th><th>Inscritos</th><th>Estado</th><th>Acciones</th>
+               <th>Curso</th><th>Cupo</th><th>Horario</th><th>Instructor</th><th>Capacidad</th><th>Inscritos</th><th>Estado</th><th>Acciones</th>
             </tr>
         </thead>
         <tbody id="listaCursos">
@@ -63,7 +63,7 @@ let template_register_course =`
 
             </div>
         </nav>
-        <button class="btn-export" onclick="exportarAExcelCourse()">
+        <button class="btn-export" id="ExportCourse" onclick="exportarAExcelCourse()">
             Exportar Listado 📄
         </button>
     </footer>
@@ -71,6 +71,12 @@ let template_register_course =`
 function Manage_course(id){
 
     document.getElementById(id).innerHTML=template_register_course;
+   /*-------------------------------------------------*/
+        if(Data_user.permission=="Sub-Administrador"){
+
+                document.getElementById("ExportCourse").style.display = 'none'
+        }
+   /*-------------------------------------------------*/
 
 
 /*-------------------------------------------------------------------------------*/
@@ -175,7 +181,8 @@ api.receive("Data-list-course-search",(event,info)=>{
                     <td>${course.Capacity}</td>
                     <td>${course.Start_Time}/${course.End_Time}</td>
                     <td>${course.Instructor_Name}</td>
-                    <td>${course.Total_Students}/${course.Capacity}</td>
+                         <td>${course.Capacity}</td>
+                            <td>${course.Total_Students}</td>
                     <td><span class="${course.Status}">${course.Status}</span></td>
                     <td class="td-action">
                     <button class="btn-edit-data-table icon-info" onclick="InfoCourse('${course.Key}')"></button>
@@ -251,7 +258,8 @@ api.receive("Data-list-course",(event,info)=>{
                             <td>${course.Capacity}</td>
                             <td>${course.Start_Time}/${course.End_Time}</td>
                             <td>${course.Instructor_Name}</td>
-                            <td>${course.Total_Students}/${course.Capacity}</td>
+                            <td>${course.Capacity}</td>
+                            <td>${course.Total_Students}</td>
                             <td><span class="${course.Status}">${course.Status}</span></td>
                             <td class="td-action">
                                 <button class="btn-edit-data-table icon-info" onclick="InfoCourse('${course.Key}')"></button>
@@ -372,5 +380,18 @@ function Delete_course(id){
 }
 
 function exportarAExcelCourse() {
-    api.send('Exportar-excel-tabla-unica',"Course")
+
+                let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"ExcelExportarUnicoCourse",
+                    key:Data_user.key
+                    
+                }
+            }
+
+       api.send("Login-user-master-permission",obj)
+
+   
 }

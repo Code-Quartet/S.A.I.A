@@ -66,7 +66,7 @@ let TemplanteManageInstructor=`
 
             </div>
         </nav>
-        <button class="btn-export" onclick="exportarAExcelInstructor()">
+        <button class="btn-export" id="ExportInstructor" onclick="exportarAExcelInstructor()">
             Exportar Listado 📄
         </button>
     </footer>
@@ -78,7 +78,13 @@ function Manage_Instructor(id){
 
     api.send("Get-data-instrutor-list")
 
-    /*----------------------*/
+   /*-------------------------------------------------*/
+        if(Data_user.permission=="Sub-Administrador"){
+
+                document.getElementById("ExportInstructor").style.display = 'none'
+        }
+   /*-------------------------------------------------*/
+
     const dropdown = document.querySelector('.dropdown-table-manage');
     const btn = document.querySelector('.btn-dropdown-table-manage');
 
@@ -329,5 +335,17 @@ api.send("Login-user-master-permission",obj)
 }
 
 function exportarAExcelInstructor() {
-    api.send('Exportar-excel-tabla-unica',"Instructor")
+
+                   let obj={
+                key:Data_user.key,
+                permission:Data_user.permission,
+                method:{
+                    action:"ExcelExportarUnicoInstructor",
+                    key:Data_user.key
+                    
+                }
+            }
+
+       api.send("Login-user-master-permission",obj)
+
 }

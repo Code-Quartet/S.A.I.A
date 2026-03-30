@@ -36,7 +36,7 @@ module.exports = function Info_student(parentWindow,key) {
     window_Info_student.loadFile('app/section_main/Info_Student.html');
 
     // Herramientas de desarrollo
-  // window_Info_student.webContents.openDevTools();
+      window_Info_student.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Info_student.webContents.setWindowOpenHandler(() => {

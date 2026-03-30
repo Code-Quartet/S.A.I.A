@@ -6,7 +6,7 @@ let template_dasboard = `<div class="ControlSystem-container">
 	<aside class="ControlSystem-sidebar">
 		<section class="sub-fondo-sidebar">
 			<nav class="ControlSystem-menu">
-				<a class="menu-item ItemMenuActive"><span class="icon-user"></span>Panel Principal</a>
+				<a class="status menu-item ItemMenuActive"><span class="icon-user"></span>Panel Principal</a>
 				<a class="menu-item"><span class="icon-user"></span> Mi Perfil </a>
 				<a class="menu-item"><span class="icon-list"></span>Estudiantes Inscritos</a>
 				<a class="status menu-item"><span class="icon-book"></span> Gestionar Cursos</a>
@@ -38,6 +38,9 @@ let template_dasboard = `<div class="ControlSystem-container">
 
 						item.style.display = 'none';
 					})
+
+					document.getElementsByClassName("menu-item")[1].classList.add("ItemMenuActive")
+
 
 		}	
 

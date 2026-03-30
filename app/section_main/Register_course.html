@@ -330,6 +330,9 @@ api.receive("Data-list-intructor", (event, data) => {
              form.reset();
             checkFormValidity(); // Re-validar para desactivar el botón
             form.querySelector('input[name="nombre"]').focus();
+                 
+
+            api.send("Reload-dasboard-system-data-Course")
     
     });
 
@@ -343,11 +346,8 @@ api.receive("Data-list-intructor", (event, data) => {
 //cerrar
     document.getElementById('btnClose').addEventListener('click', () => {
        
-        api.send("Reload-dasboard-system-data-Course")
-        setTimeout(function(){
-     window.close();
-    },1800)
-
+     
+   window.close()
 
     });
 

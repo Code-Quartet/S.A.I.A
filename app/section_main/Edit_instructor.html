@@ -283,10 +283,9 @@ function LimpiarFormulario() {
 }
 
 function Close() { 
-    api.send("Reload-dasboard-system-data-Instructor")
-  setTimeout(function(){
+   
      window.close();
-    },1800)
+
 }
 
 function ValoresFormulario() {
@@ -308,10 +307,12 @@ function ValoresFormulario() {
     };
 
     api.send('Save-data-update-instructor', valores);
+   
+      api.send("Reload-dasboard-system-data-Instructor")
+
     
     // Opcional: No limpiar inmediatamente si es una "Actualización" 
-    // para que el usuario vea que terminó, o cerrar la ventana.
-    mostrarNotificacion();
+ 
 }
 
 // 6. Notificaciones

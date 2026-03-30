@@ -185,8 +185,8 @@ body {
                        window.close()
                 },5000)
 
-            }
-            if(data.sms.success==false){
+        }
+        if(data.sms.success==false){
                 console.log(sms.message)
                 document.getElementById("lock-container").style.background = 'red';
                 document.getElementById("icon-lock").style.display="block";
@@ -209,21 +209,10 @@ body {
                         document.getElementById("icon-lock").style.display="block";
                         document.getElementById("icon-unlocked").style.display="none";
                         document.getElementById("icon-lock").style.color="black";
+                        document.getElementById("input-password").focus();
                 },3000)
-            }
-       
-            console.log(data)
-
-            /*
-{
-    "action": "imageMyprofile",
-    "key": "eff6c89d-9c34-40c2-ac16-a7c11ab3bcdd",
-    "sms": {
-        "success": true,
-        "message": "Acceso concedido"
-    }
-}            */
-       
+        
+        }
 
         })
 /*-----------------------------------*/
@@ -268,7 +257,6 @@ function SelectAction(Action,key){
         if(Action=="EditPassMaster"){
 
             api.send("Editar-informacion-contrasena-maestra",key)
-
           
         }
 
@@ -299,7 +287,31 @@ function SelectAction(Action,key){
              api.send("Importar-SQLITE-DB")
           
         } 
-          /*--------------------------------------*/
+        /*--------------------------------------*/
+
+        if(Action=="ExcelExportarUnicoStudent"){
+           
+             api.send('Exportar-excel-tabla-unica',"Student")
+          
+        } 
+        if(Action=="ExcelExportarUnicoEmployee"){
+           
+            api.send('Exportar-excel-tabla-unica',"Employee")
+          
+        }
+        if(Action=="ExcelExportarUnicoInstructor"){
+           
+           
+   			 api.send('Exportar-excel-tabla-unica',"Instructor")
+          
+        }
+        if(Action=="ExcelExportarUnicoCourse"){
+           
+           api.send('Exportar-excel-tabla-unica',"Course")
+          
+        }
+
+        /*--------------------------------------------------------*/
 
         if(Action=="Deleted-student-register"){
 

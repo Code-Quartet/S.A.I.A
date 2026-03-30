@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil SAIA v2 - Dinámico</title>
+    <title>Perfil SAIA v2 - Optimizado</title>
     <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
     <style>
         :root {
@@ -17,22 +17,41 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f1f3f4;
-    /* display: flex; */
-    /* justify-content: center; */
-    /* padding: 40px 20px; */
+    background-color: #ffffff;
     margin: 0;
-}
-.card {
-    background: white;
-    /* border-radius: 12px; */
-    /* box-shadow: 0 4px 20px rgba(0,0,0,0.08); */
-    width: 100%;
-    max-width: 600px;
-    padding: 14px;
+    display: flex;
+    justify-content: center;
 }
 
-        /* Flexbox Header */
+/*
+.card {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    padding: 6px;
+    height: 100vh;
+    box-sizing: border-box;
+    display: none;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(3, 0.45fr) 54px;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}*/
+
+.card {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    padding: 12px;
+    height: 100vh;
+    box-sizing: border-box;
+    display: none;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: 153px 130px 125px 53px;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
         .profile-header {
             display: flex;
             gap: 25px;
@@ -49,7 +68,6 @@ body {
             border: 1px solid var(--border-color);
         }
 
-        /* Grid para datos */
         .section-container { margin-bottom: 25px; }
         
         .section-title {
@@ -75,7 +93,6 @@ body {
         .info-item { font-size: 0.9rem; color: var(--text-gray); }
         .info-item strong { color: var(--text-dark); }
 
-        /* Grid de Cursos */
         .courses-grid {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
@@ -113,110 +130,120 @@ body {
             font-weight: 600;
         }
 
-        .btn-edit { border: 1.5px solid var(--blue-main); color: var(--blue-main); background: white; }
         .btn-delete { border: 1.5px solid var(--red-main); color: var(--red-main); background: white; }
+        
+        /* Ocultar secciones dinámicamente */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="student-card-container">
+    <div class="card" id="main-card">
+        <header class="profile-header">
+            <img id="view-img" src="" alt="Perfil" class="profile-img">
+            <div class="info-group">
+                <h2 id="view-name" style="margin:0">---</h2>
+                <div class="info-item"><strong>ID:</strong> <span id="view-id"></span></div>
+                <div class="info-item"><strong>Edad:</strong> <span id="view-age"></span> años</div>
+                <div class="info-item"><strong>Ubicación:</strong> <span id="view-address"></span></div>
+            </div>
+        </header>
+
+        <div class="section-container"  >
+            <span class="section-title">Información del Representante</span>
+            <div class="data-grid" id="rep-section">
+                <div class="info-item"><strong>Nombre:</strong> <span id="rep-name"></span></div>
+                <div class="info-item"><strong>Cédula:</strong> <span id="rep-id"></span></div>
+                <div class="info-item"><strong>Teléfono:</strong> <span id="rep-tlf"></span></div>
+                <div class="info-item"><strong>Correo:</strong> <span id="rep-email"></span></div>
+            </div>
         </div>
 
+        <div class="section-container">
+            <span class="section-title">Cursos e Inscripción</span>
+            <div class="courses-grid">
+                <div class="grid-head">Curso</div>
+                <div class="grid-head">Fecha</div>
+                <div class="grid-head">Estado</div>
+
+                <div class="grid-cell" id="view-course">---</div>
+                <div class="grid-cell" id="view-date">---</div>
+                <div class="grid-cell"><span class="status-pill">Inscrito</span></div>
+            </div>
+        </div>
+
+        <footer class="actions">
+            <button class="btn btn-delete" id="btn-close">
+                <i class="icon-trash"></i>Cerrar
+            </button>
+        </footer>
+    </div>
+
     <script>
+        const btnClose = document.getElementById("btn-close");
+        const mainCard = document.getElementById("main-card");
 
-
-    window.onload=function(){
-        api.send("Get-data-student-info")
-    }
-        // El objeto que recibes del backend/base de datos
-        const studentData = {
-            Key: 'bff93532-52f2-4b4f-a702-4256a969e9f5',
-            Name: 'Carme',
-            Cod_id: '244545',
-            Address: 'Zulia',
-            Tlf: '45435464',
-            E_mail: 'Carme@mail.com',
-            Image: 'win.png', // Simplificado para el ejemplo
-            Age: '20',
-            Birthdate: '1985-04-12',
-            Name_Representative: null, // Cambia esto a un nombre para ver cómo aparece
-            Cod_id_Representative: null,
-            Tlf_Representative: null,
-            E_mail_Representative: null,
-            Date: '2026-03-19',
-            Time: '15:32:01',
-            Id_curs: 'a8ae429a-9d87-4bd0-aa56-5903998f3203',
-            CourseName: 'Manejo'
+        // Elementos del DOM para mapear datos
+        const fields = {
+            name: document.getElementById('view-name'),
+            id: document.getElementById('view-id'),
+            age: document.getElementById('view-age'),
+            address: document.getElementById('view-address'),
+            img: document.getElementById('view-img'),
+            course: document.getElementById('view-course'),
+            date: document.getElementById('view-date'),
+            // Representante
+            repSection: document.getElementById('rep-section'),
+            repName: document.getElementById('rep-name'),
+            repId: document.getElementById('rep-id'),
+            repTlf: document.getElementById('rep-tlf'),
+            repEmail: document.getElementById('rep-email')
         };
 
-        function renderStudentProfile(data) {
-            const container = document.getElementById('student-card-container');
+        function updateUI(data) {
+            // Datos básicos
+            fields.name.textContent = data.Name;
+            fields.id.textContent = data.Cod_id;
+            fields.age.textContent = data.Age;
+            fields.address.textContent = data.Address;
+            fields.course.textContent = data.CourseName ? data.CourseName.replace('┬║', '') : 'N/A';
+            fields.date.textContent = data.Date;
+            
+            // Imagen con fallback
+            fields.img.src = data.Image || 'default-avatar.png';
+            fields.img.onerror = () => { fields.img.src = 'default-avatar.png'; };
 
-            // Lógica para la sección del representante
-            let representativeHTML = '';
+            // Lógica del representante
             if (data.Name_Representative) {
-                representativeHTML = `
-                    <div class="section-container">
-                        <span class="section-title">Información del Representante</span>
-                        <div class="data-grid">
-                            <div class="info-item"><strong>Nombre:</strong> ${data.Name_Representative}</div>
-                            <div class="info-item"><strong>Cédula:</strong> ${data.Cod_id_Representative || 'N/A'}</div>
-                            <div class="info-item"><strong>Teléfono:</strong> ${data.Tlf_Representative || 'N/A'}</div>
-                            <div class="info-item"><strong>Correo:</strong> ${data.E_mail_Representative || 'N/A'}</div>
-                        </div>
-                    </div>`;
+                fields.repSection.classList.remove('hidden');
+                fields.repName.textContent = data.Name_Representative;
+                fields.repId.textContent = data.Cod_id_Representative || 'N/A';
+                fields.repTlf.textContent = data.Tlf_Representative || 'N/A';
+                fields.repEmail.textContent = data.E_mail_Representative || 'N/A';
+            } else {
+                fields.repSection.classList.add('hidden');
             }
 
-            // Inyección del HTML
-            container.innerHTML = `
-                <div class="card">
-                    <header class="profile-header">
-                        <img src="${data.Image}" alt="Perfil" class="profile-img" onerror="this.src='default-avatar.png'">
-                        <div class="info-group">
-                            <h2 style="margin:0">${data.Name}</h2>
-                            <div class="info-item"><strong>ID:</strong> ${data.Cod_id}</div>
-                            <div class="info-item"><strong>Edad:</strong> ${data.Age} años</div>
-                            <div class="info-item"><strong>Ubicación:</strong> ${data.Address}</div>
-                        </div>
-                    </header>
-
-                    ${representativeHTML}
-
-                    <div class="section-container">
-                        <span class="section-title">Cursos e Inscripción</span>
-                        <div class="courses-grid">
-                            <div class="grid-head">Curso</div>
-                            <div class="grid-head">Fecha</div>
-                            <div class="grid-head">Estado</div>
-
-                            <div class="grid-cell">${data.CourseName.replace('┬║', '')}</div>
-                            <div class="grid-cell">${data.Date}</div>
-                            <div class="grid-cell"><span class="status-pill">Inscrito</span></div>
-                        </div>
-                    </div>
-
-                    <footer class="actions">
-            
-                        <button class="btn btn-delete" id="btn-close"><i class="icon-trash"></i>Cerrar</button>
-                    </footer>
-                </div>
-            `;
-
-
-            document.getElementById("btn-close").addEventListener("click",(e)=>{
-                window.close();
-            })
+            // Mostrar la tarjeta una vez procesada
+            mainCard.style.display = 'grid';
         }
 
-        // Ejecutar la función al cargar
-     
-        api.receive("data-student-information",(event,data)=>{
+        // Eventos de Electron
+        window.onload = () => {
+            if (typeof api !== 'undefined') {
+                api.send("Get-data-student-info");
+            }
+        };
 
-                   renderStudentProfile(data);
+        if (typeof api !== 'undefined') {
+            api.receive("data-student-information", (event, data) => {
+                updateUI(data);
+            });
+        }
 
-        })
-
-
+        btnClose.addEventListener("click", () => {
+            window.close();
+        });
     </script>
 </body>
 </html>

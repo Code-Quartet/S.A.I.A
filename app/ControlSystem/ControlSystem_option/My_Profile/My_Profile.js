@@ -17,16 +17,16 @@ function My_Profile(id){
 					   	   <span class="icon-camera"></span> 
 					    </button>
 					  </div>
-<div class="profile-title">
-	<div style="display:flex;width: 67%;align-items: center;flex-direction: column;"> 
-		<h1 id="NameEmployee" style="font-size: 50px; ">Luis duno</h1> 
-		<p id="IDEmployee">23860851420</p>
-	</div>
-	<div style="display:flex;flex-direction:row;align-items: center;">
-		<h2 id="LabelPermission">Permiso:</h2>				            
-		<h3 id="Permission" style="padding: 2px;border-radius: 8px;margin-left: 3px;">Administrador</h3>				            
-	</div>
-</div>
+                    <div class="profile-title">
+                    	<div style="display:flex;width: 67%;align-items: center;flex-direction: column;"> 
+                    		<h1 id="NameEmployee" style="font-size: 50px; ">Luis duno</h1> 
+                    		<p id="IDEmployee">23860851420</p>
+                    	</div>
+                    	<div style="display:flex;flex-direction:row;align-items: center;">
+                    		<h2 id="LabelPermission">Permiso:</h2>				            
+                    		<h3 id="Permission" style="padding: 2px;border-radius: 8px;margin-left: 3px;">Administrador</h3>				            
+                    	</div>
+                    </div>
 					</div>
 					<div class="container-data-user">
 

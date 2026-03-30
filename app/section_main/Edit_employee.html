@@ -336,6 +336,10 @@ header h2 {
                 hora: fecha.toLocaleTimeString('it-IT')
             };
             api.send("save-data-update-employee", objData);
+                 
+                   api.send("Reload-dasboard-system-data-Employee")
+                   
+
         }
 
         api.receive("open-modal-update-employee", () => {
@@ -351,13 +355,8 @@ header h2 {
         }
 
         function Close() { 
-
-             api.send("Reload-dasboard-system-data-Employee")
-      setTimeout(function(){
-     window.close();
-    },1800)
-
-         
+  window.close();
+                  
 
              }
     </script>

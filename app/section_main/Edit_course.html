@@ -375,9 +375,9 @@ form.addEventListener('submit', (e) => {
     updatedData.dias = Array.from(form.querySelectorAll('input[name="dias"]:checked')).map(el => el.value).join(',');
     updatedData.evaluacion = form.evaluacion.checked ? 1 : 0;
     updatedData.certificado = form.certificado.checked ? 1 : 0;
+ api.send("save-update-data-course", updatedData);
 
-    console.log("Objeto listo para enviar a la DB:", updatedData);
-   api.send("save-update-data-course", updatedData);
+    api.send("Reload-dasboard-system-data-Course")
 
   // ClearForm()
     
@@ -412,13 +412,13 @@ function ClearForm(){
     checkFormValidity();
     form.querySelector('input[name="nombre"]').focus();
 }
+
+
 document.getElementById('btnClose').addEventListener('click', () => { 
     
 
-    api.send("Reload-dasboard-system-data-Course")
-     setTimeout(function(){
      window.close();
-    },1800)
+
 });
 
 

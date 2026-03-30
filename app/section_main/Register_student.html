@@ -348,14 +348,14 @@
 
             <div class="columns column2">
                 <div class="file-upload-container-new-registre">
-<div class="image-uploader-register-studient">
-    <div class="main-circle-register-studient">
-        <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="Avatar">
-    </div>
-    <button class="camera-button-register-studient" id="Btn_select_image_student">
-       <span class="icon-camera"></span>
-    </button> 
-</div>
+                    <div class="image-uploader-register-studient">
+                        <div class="main-circle-register-studient">
+                            <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="Avatar">
+                        </div>
+                        <button class="camera-button-register-studient" id="Btn_select_image_student">
+                           <span class="icon-camera"></span>
+                        </button> 
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -409,11 +409,13 @@ window.onload = function() {
 }
 
 /*--- CARGA DE CURSOS ---*/
-api.receive('data-list-course-student', async (event, data) => {
+api.receive('data-list-course-student', async (event, info) => {
+
+    
     const select = document.getElementById("tipoCurso");
     select.innerHTML = `<option value="" disabled selected>Seleccione un Curso</option>`;
 
-    data.forEach((curso) => {
+    info.data.forEach((curso) => {
         const option = document.createElement('option');
         option.value = curso.Key;
         option.textContent = curso.Name;
@@ -513,6 +515,12 @@ btnConfirm.addEventListener('click', (e) => {
     console.log("Enviando:", formData);
     api.send("Register-new-data-student", formData);
     LimpiarForm();
+     window.close();
+    
+
+     api.send("Reload-dasboard-system-data-Student")
+
+
 });
 
 /*--- EVENTOS DE ESCUCHA ---*/
@@ -537,10 +545,8 @@ btnClear.addEventListener('click', LimpiarForm);
 
 document.getElementById("btn-close").addEventListener("click", () => {
 
-    api.send("Reload-dasboard-system-data-Student")
-  setTimeout(function(){
-     window.close();
-    },1800)
+ window.close();
+    
 
 
 
