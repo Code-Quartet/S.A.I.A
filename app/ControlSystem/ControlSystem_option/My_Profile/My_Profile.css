@@ -59,6 +59,7 @@
   position: relative;
   width: 150px;
   height: 150px;
+  pointer-events: none;
  
 }
 
@@ -80,6 +81,7 @@
     display: block;
     background: blue;
     object-fit: revert;
+    pointer-events: none;
 }
 
 /* Botón de cámara superpuesto */
