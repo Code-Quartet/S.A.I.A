@@ -47,9 +47,9 @@
 .header-table {
     padding: 10px;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .title-table {
@@ -236,7 +236,8 @@
     color: white;
     padding: 5px;
     border-radius: 6px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
+    width: 100%;
 }
 /*------------------------------*/
 .container-table-manage {
