@@ -38,7 +38,7 @@ frame:false,
     window_edit_email.loadFile('app/section_main/Edit_email.html');
 
     // Herramientas de desarrollo
-  window_edit_email.webContents.openDevTools();
+ // window_edit_email.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_email.webContents.setWindowOpenHandler(() => {

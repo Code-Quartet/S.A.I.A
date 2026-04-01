@@ -41,7 +41,7 @@ console.log("Isuerpass",iduser)
     window_edit_password.loadFile('app/section_main/Edit_password.html');
 
     // Herramientas de desarrollo
-    window_edit_password.webContents.openDevTools();
+    //window_edit_password.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_password.webContents.setWindowOpenHandler(() => {

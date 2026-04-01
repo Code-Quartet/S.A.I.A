@@ -106,6 +106,7 @@ function Manage_course(id){
 
           }
     });
+/*------------------------------------------------------------------------*/
         const resultsPreview = document.getElementById('results-preview');
         let currentIndex = -1; // Rastrea la selección del teclado
         let ArraydataSearchInput = []; // Guarda los resultados actuales

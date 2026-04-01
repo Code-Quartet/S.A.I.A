@@ -181,7 +181,7 @@ searchInput.addEventListener('input', async (e) => {
 document.addEventListener('click', (e) => {
     if (e.target !== searchInput) resultsPreview.style.display = 'none';
 });
-        /*---------------------------------------*/
+/*---------------------------------------*/
 /*------------------FILTER DATA-------------------------------*/
 const fechaInput = document.getElementById('fechaFilterData');
 

@@ -6,6 +6,7 @@
     <title>Actualizar Empleado - SAIA v2</title>
     <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
     <style type="text/css">
+
         :root {
             --primary-blue: #2b56c5;
             --text-main: #374151;
@@ -18,12 +19,24 @@
             --success: #28a745;
         }
 
+         @font-face {
+    font-family: 'Inter';
+    src: url('../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+        body{
+            font-family: 'Inter';
+        }
+
         /*--------ESTRUCTURA-----------------*/
         .container-new-registre {
             display: grid;
             grid-template-columns: 1fr;
             grid-template-rows: 47px auto 61px;
             height: 92vh;
+
         }
 
         .container-title-register {
