@@ -8,6 +8,7 @@ let template_register_course =`
     <section class="toolbar-table-manage">
         <div class="search-box-table-manage">
           <input id="input-search-course" class="search-input-table-manage" type="search" placeholder="Buscar curso...">
+            <div id="results-preview" class="preview-list-search"></div>
             <button class="btn-search-tabla-manage" id="btnSearchCurso">
                 <i class="icon-search"></i>
             </button>
@@ -105,7 +106,102 @@ function Manage_course(id){
 
           }
     });
+        const resultsPreview = document.getElementById('results-preview');
+        let currentIndex = -1; // Rastrea la selección del teclado
+        let ArraydataSearchInput = []; // Guarda los resultados actuales
 
+// Función que se ejecuta al elegir un producto (Click o Enter)
+async function ejecutarBusquedaFinal(data) {
+
+    console.log(data)
+
+    const detalle = SearchCourse(data.Name);
+    
+    searchInput.value = data.Name;
+    resultsPreview.style.display = 'none';
+    currentIndex = -1;
+    
+}
+
+searchInput.addEventListener('keydown', (e) => {
+    const items = resultsPreview.querySelectorAll('.preview-item-search');
+    
+    if (items.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (currentIndex > -1) {
+            ejecutarBusquedaFinal(ArraydataSearchInput[currentIndex]);
+        }
+    } 
+    else if (e.key === 'Escape') {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+function actualizarSeleccion(items) {
+    items.forEach((item, index) => {
+        if (index === currentIndex) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' }); // Asegura que sea visible
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value;
+    currentIndex = -1; // Reiniciar índice al escribir
+
+    if (query.length < 2) {
+        resultsPreview.style.display = 'none';
+        return;
+    }
+
+    ArraydataSearchInput = await api.buscarSugerencias({table:"Course",terms:query});
+
+    if (ArraydataSearchInput.length > 0) {
+        resultsPreview.innerHTML = '';
+        ArraydataSearchInput.forEach((course, index) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item-search';
+            div.innerHTML = `
+                <div>Nombre:${course.Name}</div>
+                <div style="margin-left:35px">Descricción:${course.Description}</div>
+            `;
+            
+            div.onclick = () => ejecutarBusquedaFinal(course);
+            
+            // Mouse over opcional para sincronizar teclado con ratón
+            div.onmouseenter = () => {
+                currentIndex = index;
+                actualizarSeleccion(resultsPreview.querySelectorAll('.preview-item-search'));
+            };
+
+            resultsPreview.appendChild(div);
+        });
+        resultsPreview.style.display = 'block';
+    } else {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+// Cerrar si se hace clic fuera
+document.addEventListener('click', (e) => {
+    if (e.target !== searchInput) resultsPreview.style.display = 'none';
+});
+/*---------------------------------------*/
     /*-------------------------------------------------------------------------------*/
        /*----------------------*/
     const dropdown = document.querySelector('.dropdown-table-manage');
@@ -182,7 +278,7 @@ api.receive("Data-list-course-search",(event,info)=>{
                     <td>${course.Start_Time}/${course.End_Time}</td>
                     <td>${course.Instructor_Name}</td>
                          <td>${course.Capacity}</td>
-                            <td>${course.Total_Students}</td>
+                            <td>${course.Total_courses}</td>
                     <td><span class="${course.Status}">${course.Status}</span></td>
                     <td class="td-action">
                     <button class="btn-edit-data-table icon-info" onclick="InfoCourse('${course.Key}')"></button>
@@ -217,7 +313,7 @@ api.receive("Data-list-course-search",(event,info)=>{
             "Days": "Mar,Mie,Jue,Vie",
             "Instructor_ID": "4c361c18-e687-4caa-a91a-68fc740b39f5",
             "Instructor_Name": "Pool",
-            "Total_Students": 0
+            "Total_courses": 0
         },
         {
             "Key": "a8ae429a-9d87-4bd0-aa56-5903998f3203",
@@ -230,7 +326,7 @@ api.receive("Data-list-course-search",(event,info)=>{
             "Days": "Lun,Mar,Mie,Jue",
             "Instructor_ID": "d68a40bb-1761-42eb-84dc-9ea971fa2934",
             "Instructor_Name": "Caerlos",
-            "Total_Students": 4
+            "Total_courses": 4
         }
     ],
     "pagination": {
@@ -259,7 +355,7 @@ api.receive("Data-list-course",(event,info)=>{
                             <td>${course.Start_Time}/${course.End_Time}</td>
                             <td>${course.Instructor_Name}</td>
                             <td>${course.Capacity}</td>
-                            <td>${course.Total_Students}</td>
+                            <td>${course.Total_courses}</td>
                             <td><span class="${course.Status}">${course.Status}</span></td>
                             <td class="td-action">
                                 <button class="btn-edit-data-table icon-info" onclick="InfoCourse('${course.Key}')"></button>

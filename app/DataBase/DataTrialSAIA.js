@@ -59,12 +59,12 @@ async function DataTrialSAIA() {
             const eKey = `E-${i}`;
 
             await DB.crear(
-                `INSERT INTO User (Key, Username, Password, PasswordMaster, Permission, Date, Time) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
+                `INSERT INTO User (Key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
                 [uKey, `usuario${i}`, '123', 'admin123', 'Sub-Administrador', fecha, hora]
             );
 
             await DB.crear(
-                `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, E_mail, Id_user, Date, Time, Status, Age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, E_mail, Id_user, Date_Created, Time_Created, Status, Age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [eKey, `Empleado ${i}`, `CID-E${i}`, `Direccion ${i}`, `555-${i}`, `emp${i}@mail.com`, uKey, fecha, hora, 'Activo', 20 + (i % 30)]
             );
         }
@@ -73,7 +73,7 @@ async function DataTrialSAIA() {
         console.log("Insertando 20 Instructores...");
         for (let i = 1; i <= 20; i++) {
             await DB.crear(
-                `INSERT INTO Instructor (Key, Name, Cod_id, Address, Tlf, E_mail, Age, Status, Specialty, Date, Time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                `INSERT INTO Instructor (Key, Name, Cod_id, Address, Tlf, E_mail, Age, Status, Specialty, Date_Created, Time_Created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [`I-${i}`, `Instructor ${i}`, `CID-I${i}`, `Calle Ins ${i}`, `555-90${i}`, `ins${i}@mail.com`, 30 + i, 'Activo', 'Técnico', fecha, hora]
             );
         }
@@ -103,7 +103,7 @@ async function DataTrialSAIA() {
                 `INSERT INTO Student (
                     Key, Id_curs, Name, Cod_id, Age, Address, Tlf, E_mail, 
                     Image, Name_Representative, Cod_id_Representative, 
-                    Tlf_Representative, E_mail_Representative, Date, Time
+                    Tlf_Representative, E_mail_Representative, Date_Created, Time_Created
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
                 [
                     `S-${i}`, cursoAsignado, `Estudiante ${i}`, `CID-S${i}`, 

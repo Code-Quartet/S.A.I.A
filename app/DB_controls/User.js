@@ -213,7 +213,7 @@ async function RegisterSessionEvent(userKey, eventType) {
         const time = now.toTimeString().split(' ')[0]; // HH:MM:SS
 
         const sql = `
-            INSERT INTO User_Session (Session_ID, User_Key, Event_Type, Date, Time)
+            INSERT INTO User_Session (Session_ID, User_Key, Event_Type, Date_Created, Time_Created)
             VALUES (?, ?, ?, ?, ?)`;
 
         await DB.crear(sql, [uuidv4(),userKey, eventType, date, time]);
@@ -236,11 +236,11 @@ async function UserSessionHistory() {
                 u.Username, 
                 u.Permission,
                 s.Event_Type, 
-                s.Date, 
-                s.Time
+                s.Date_Created, 
+                s.Time_Created
             FROM User_Session s
             JOIN User u ON s.User_Key = u.Key
-            ORDER BY s.Date DESC, s.Time DESC 
+            ORDER BY s.Date_Created DESC, s.Time_Created DESC 
             LIMIT 50`;
             
         const history = await DB.buscarTodo(sql);
@@ -274,12 +274,12 @@ async function GetUserSessionHistory(userKey) {
                 u.Username, 
                 u.Permission,
                 s.Event_Type, 
-                s.Date, 
-                s.Time
+                s.Date_Created, 
+                s.Time_Created
             FROM User_Session s
             JOIN User u ON s.User_Key = u.Key
             WHERE s.User_Key = ? 
-            ORDER BY s.Date DESC, s.Time DESC 
+            ORDER BY s.Date_Created DESC, s.Time_Created DESC 
             LIMIT 50`;
             
         const history = await DB.buscarTodo(sql, [userKey]);
@@ -321,8 +321,8 @@ async function GetAllSessionHistory(filters = {}) {
                 u.Username, 
                 u.Permission,
                 s.Event_Type, 
-                s.Date, 
-                s.Time,
+                s.Date_Created, 
+                s.Time_Created,
                 s.Device_Info
             FROM User_Session s
             JOIN User u ON s.User_Key = u.Key
@@ -342,17 +342,17 @@ async function GetAllSessionHistory(filters = {}) {
 
         // 4. Filtro por Rango de Fechas (Muy útil para reportes)
         if (startDate) {
-            sql += ` AND s.Date >= ?`;
+            sql += ` AND s.Date_Created >= ?`;
             params.push(startDate);
         }
         if (endDate) {
-            sql += ` AND s.Date <= ?`;
+            sql += ` AND s.Date_Created <= ?`;
             params.push(endDate);
         }
 
         // 5. Orden y Límite
         // Usamos orden descendente para ver lo más reciente primero
-        sql += ` ORDER BY s.Date DESC, s.Time DESC LIMIT ?`;
+        sql += ` ORDER BY s.Date_Created DESC, s.Time_Created DESC LIMIT ?`;
         params.push(parseInt(limit));
 
         const results = await DB.buscarTodo(sql, params);

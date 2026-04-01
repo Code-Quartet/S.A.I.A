@@ -18,7 +18,7 @@ let templateTrash =`<main class="container-manage-table-trash">
         </div>
         
         <div class="tabs-filter-table-manage">
-            <button class="tab-btn active" id="Student">Inscritos</button>
+            <button class="tab-btn ActiveButtonTrash" id="Student">Inscritos</button>
             <button class="tab-btn" id="Course">Cursos</button>
             <button class="tab-btn" id="Instructor">Instructores</button>
             <button class="tab-btn" id="Employee">Empleados</button>
@@ -144,10 +144,10 @@ function EfectoColorMenuItemTrash(){
         
            ItmeMenu.forEach((item) => {
 
-                item.classList.remove("active");
+                item.classList.remove("ActiveButtonTrash");
 
             });
-            this.classList.add("active");
+            this.classList.add("ActiveButtonTrash");
         }
     });
 }
@@ -328,8 +328,8 @@ function RenderTableStudent(info) {
                                 <td>${student.Tlf}</td>
                                 <td>${student.E_mail}</td>
                                 <td>${student.CourseName}</td>
-                                <td>${student.Date}/${student.Time}</td>
-                             <td>${student.Date}</td>
+                                <td>${student.Date_Created}/${student.Time_Created}</td>
+                             <td>${student.Date_Created}</td>
                             <td>${student.Time_Deleted}</td>
                              <td class="td-action">
                                 <button class="btn-edit-data-table icon-undo2" onclick="RestoreData('${student.Key}','Student')"></button>
@@ -381,7 +381,7 @@ function RenderTableInstructor(info) {
                         <td>${Instructor.Specialty}</td>
                         <td>${Instructor.Tlf}</td>
                         <td ><span class="${Instructor.Status}">${Instructor.Status}</span></td>
-                        <td>${Instructor.Date}</td>
+                        <td>${Instructor.Date_Created}</td>
                         <td>${Instructor.Time_Deleted}</td>
                         <td class="td-action">
                             <button onclick="RestoreData('${Instructor.Key}','Instructor')" class="btn-edit-data-table icon-undo2"></button>

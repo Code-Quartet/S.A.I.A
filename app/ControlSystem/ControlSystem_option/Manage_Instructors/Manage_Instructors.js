@@ -9,13 +9,14 @@ let TemplanteManageInstructor=`
     <section class="toolbar-table-manage">
         <div class="search-box-table-manage">
             <input id="input-search-instructor" class="search-input-table-manage" type="search" placeholder="Buscar instructor...">
+             <div id="results-preview" class="preview-list-search"></div>
             <button class="btn-search-tabla-manage" id="SearchInstructor">
                 <i class="icon-search"></i>
             </button>
         </div>
             <div class="dropdown-table-manage" id="drop-curso">
                     <button class="btn-dropdown-table-manage">
-                             Curso ▾
+                             Estado ▾
                     </button>
                     <div class="dropdown-menu-table-manage" id="dropdownEstado">
                         <div class="filter-opt">
@@ -23,7 +24,7 @@ let TemplanteManageInstructor=`
                             Activo
                         </div>
                         <div class="filter-opt">
-                            <input type="checkbox" id="chk-inactivo" value="Pausa">
+                            <input type="checkbox" id="chk-inactivo" value="Inactivo">
                             Inactivo
                         </div>
                         <div class="filter-opt">
@@ -159,6 +160,102 @@ document.querySelector(".btn-reset").addEventListener("click",(e)=>{
 
           }
     });
+/*------------------------------------------------------------------------*/
+        const resultsPreview = document.getElementById('results-preview');
+        let currentIndex = -1; // Rastrea la selección del teclado
+        let ArraydataSearchInput = []; // Guarda los resultados actuales
+
+// Función que se ejecuta al elegir un producto (Click o Enter)
+async function ejecutarBusquedaFinal(data) {
+
+    console.log(data)
+
+    const detalle = SearchInstructor(data.Name);
+    
+    searchInput.value = data.Name;
+    resultsPreview.style.display = 'none';
+    currentIndex = -1;
+    
+}
+
+searchInput.addEventListener('keydown', (e) => {
+    const items = resultsPreview.querySelectorAll('.preview-item-search');
+    
+    if (items.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (currentIndex > -1) {
+            ejecutarBusquedaFinal(ArraydataSearchInput[currentIndex]);
+        }
+    } 
+    else if (e.key === 'Escape') {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+function actualizarSeleccion(items) {
+    items.forEach((item, index) => {
+        if (index === currentIndex) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' }); // Asegura que sea visible
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value;
+    currentIndex = -1; // Reiniciar índice al escribir
+
+    if (query.length < 2) {
+        resultsPreview.style.display = 'none';
+        return;
+    }
+
+    ArraydataSearchInput = await api.buscarSugerencias({table:"Instructor",terms:query});
+
+    if (ArraydataSearchInput.length > 0) {
+        resultsPreview.innerHTML = '';
+        ArraydataSearchInput.forEach((Instructor, index) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item-search';
+            div.innerHTML = `
+                <div>Nombre:${Instructor.Name}</div>
+                <div style="margin-left:35px">Descricción:${Instructor.Cod_id}</div>
+            `;
+            
+            div.onclick = () => ejecutarBusquedaFinal(Instructor);
+            
+            // Mouse over opcional para sincronizar teclado con ratón
+            div.onmouseenter = () => {
+                currentIndex = index;
+                actualizarSeleccion(resultsPreview.querySelectorAll('.preview-item-search'));
+            };
+
+            resultsPreview.appendChild(div);
+        });
+        resultsPreview.style.display = 'block';
+    } else {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+// Cerrar si se hace clic fuera
+document.addEventListener('click', (e) => {
+    if (e.target !== searchInput) resultsPreview.style.display = 'none';
+});
 
 /*-------------------------------------------------------------------------------*/
  

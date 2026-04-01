@@ -5,13 +5,14 @@ let templete_View_all_Registered_Users=`<main class="container-manage-table">
 
         <section class="toolbar-table-manage">
             <div class="search-box-table-manage">
-                <input type="search" class="search-input-table-manage" id="inputSearchStudent" placeholder="Buscar employee...">
+                <input type="search" class="search-input-table-manage" id="inputSearchStudent" placeholder="Buscar Estudiante...">
+                <div id="results-preview" class="preview-list-search"></div>
                 <button class="btn-search-tabla-manage" id="SearchStudent">
                 <span class="icon-search"></span>
                 </button>
             </div>
     
-    <input class="select-data-manage"type="date" id="fechaFilterData" name="date">
+    <input class="select-data-manage" type="date" id="fechaFilterData" name="date">
    
 
             <button class="btn-new-data" onclick="New_Registration()">
@@ -87,6 +88,100 @@ function View_all_Registered_Users(id){
 
           }
     });
+
+        const resultsPreview = document.getElementById('results-preview');
+        let currentIndex = -1; // Rastrea la selección del teclado
+        let productosLocal = []; // Guarda los resultados actuales
+
+// Función que se ejecuta al elegir un producto (Click o Enter)
+async function ejecutarBusquedaFinal(data) {
+    const detalle = SearchDataStudent(data.Cod_id);
+    
+    searchInput.value = data.Name;
+    resultsPreview.style.display = 'none';
+    currentIndex = -1;
+    
+}
+
+searchInput.addEventListener('keydown', (e) => {
+    const items = resultsPreview.querySelectorAll('.preview-item-search');
+    
+    if (items.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (currentIndex > -1) {
+            ejecutarBusquedaFinal(productosLocal[currentIndex]);
+        }
+    } 
+    else if (e.key === 'Escape') {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+function actualizarSeleccion(items) {
+    items.forEach((item, index) => {
+        if (index === currentIndex) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' }); // Asegura que sea visible
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value;
+    currentIndex = -1; // Reiniciar índice al escribir
+
+    if (query.length < 2) {
+        resultsPreview.style.display = 'none';
+        return;
+    }
+
+    productosLocal = await api.buscarSugerencias({table:"Student",terms:query});
+
+    if (productosLocal.length > 0) {
+        resultsPreview.innerHTML = '';
+        productosLocal.forEach((student, index) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item-search';
+            div.innerHTML = `
+                <div>Nombre:${student.Name}</div>
+                <div style="margin-left:35px">CI:${student.Cod_id}</div>
+            `;
+            
+            div.onclick = () => ejecutarBusquedaFinal(student);
+            
+            // Mouse over opcional para sincronizar teclado con ratón
+            div.onmouseenter = () => {
+                currentIndex = index;
+                actualizarSeleccion(resultsPreview.querySelectorAll('.preview-item-search'));
+            };
+
+            resultsPreview.appendChild(div);
+        });
+        resultsPreview.style.display = 'block';
+    } else {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+// Cerrar si se hace clic fuera
+document.addEventListener('click', (e) => {
+    if (e.target !== searchInput) resultsPreview.style.display = 'none';
+});
+        /*---------------------------------------*/
 /*------------------FILTER DATA-------------------------------*/
 const fechaInput = document.getElementById('fechaFilterData');
 
@@ -157,7 +252,7 @@ api.receive("Data-list-Student",(event,info)=>{
                                 <td>${student.Tlf}</td>
                                 <td>${student.E_mail}</td>
                                 <td>${student.CourseName}</td>
-                                <td>${student.Date}/${student.Time}</td>
+                                <td>${student.Date_Created}/${student.Time_Created}</td>
                              <td class="td-action">
                                 <button class="btn-edit-data-table icon-info" onclick="InfoStudent('${student.Key}')"></button>
                                 <button class="btn-edit-data-table icon-pencil nosub" onclick="UpdateStudent('${student.Key}')"></button>
@@ -214,7 +309,7 @@ api.receive("Data-list-Student-serach",(event,info)=>{
                                 <td>${student.Tlf}</td>
                                 <td>${student.E_mail}</td>
                                 <td>${student.CourseName}</td>
-                                <td>${student.Date}/${student.Time}</td>
+                                <td>${student.Date_Created}/${student.Time_Created}</td>
                                  <td class="td-action">
                                     <button class="btn-edit-data-table icon-info" onclick="InfoStudent('${student.Key}')"></button>
                                     <button class="btn-edit-data-table icon-pencil" onclick="UpdateStudent('${student.Key}')"></button>

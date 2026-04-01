@@ -27,14 +27,8 @@ contextBridge.exposeInMainWorld(
                 ipcRenderer.on(channel,data);
         },
         /*comumicacion entre ventanas */
-       
-        Info_Windows_Send:(channel,data) => {
-               ipcRenderer.send(channel,data); 
-        },
-        Info_Windows_Receive:(channel,data) => {
-               ipcRenderer.on(channel,data);
-        },
-         minimizeWindow: () => ipcRenderer.send('minimize-window'),
+             buscarSugerencias: (termino) => ipcRenderer.invoke('buscar-sugeridos', termino),
+        minimizeWindow: () => ipcRenderer.send('minimize-window'),
        maximizeWindow: () => ipcRenderer.send('maximize-window'),
        closeWindow: () => ipcRenderer.send('close-window')
         

@@ -60,7 +60,7 @@ async function UpdateCourse(key, formData) {
         Duration_Value = ?, 
         Duration_Unit = ?,
         Cost = ?,
-         Status = ?, 
+        Status = ?, 
         Capacity = ?,
         Has_Evaluation = ?,
         Has_Certificate = ?
@@ -339,47 +339,3 @@ module.exports={
     InformationCourseSelect:InformationCourseSelect,
     GetTopCourses:GetTopCourses
 }
-
-    /*
-,
-    Get_data_course_update:Get_data_course_update
-
-    {
-    "nombre": "Coducir",
-    "descripcion": "manejo",
-    "instructor": "617dda98-9b56-4003-94d2-20aa67d571c8",
-    "dias": [
-        "Lun",
-        "Jue",
-        "Vie"
-    ],
-    "hora_inicio": "00:00",
-    "hora_fin": "00:00",
-    "duracion_valor": "2",
-    "duracion_unidad": "Semanas",
-    "costo": "20",
-    "evaluacion": "on",
-    "certificado": "on"
-}*/
-/*
-  await DB.crearTabla(`CREATE TABLE Course (
-    Key TEXT PRIMARY KEY,                 -- UUID o Código único
-    Name TEXT NOT NULL UNIQUE,            -- Nombre del curso
-    Description TEXT,                     -- Descripción detallada
-    Instructor_ID TEXT NOT NULL,          -- Relación con tabla de instructores
-    Days TEXT NOT NULL,                   -- Días (Ej: "Lun,Mie,Vie")
-    Start_Time TIME NOT NULL,             -- Hora de inicio (Ej: "08:30")
-    End_Time TIME NOT NULL,               -- Hora de fin (Ej: "10:30")
-    Duration_Value INTEGER NOT NULL,      -- Cantidad (Ej: 2)
-    Duration_Unit TEXT NOT NULL,          -- Unidad (Ej: "Semanas")
-    Capacity INTEGER,                     -- Cupo máximo (Ej: 20)
-    Cost TEXT,                            -- Costo (Ej: "30$")
-    Has_Evaluation BOOLEAN DEFAULT 0,     -- 1 = Sí, 0 = No
-    Has_Certificate BOOLEAN DEFAULT 0,    -- 1 = Sí, 0 = No
-    Status TEXT DEFAULT 'Activo',         -- Activo, Inactivo, Completado, etc.
-    Date_Created DATE NOT NULL,           -- Fecha de creación
-    Time_Created TIME NOT NULL,           -- Hora de creación
-    Time_Deleted DATE                     -- Borrado lógico
-
-)`);
-*/

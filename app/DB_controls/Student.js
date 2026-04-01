@@ -23,7 +23,7 @@ async function GetListDataCourseStudent() {
             LEFT JOIN Student s ON c.Key = s.Id_curs AND s.Time_Deleted IS NULL
             WHERE c.Status = 'Activo' 
               AND c.Time_Deleted IS NULL
-            GROUP BY c.Key
+            GROUP BY c.Key, c.Name, c.Capacity
             HAVING Total_Inscritos < c.Capacity
         `;
 
@@ -64,43 +64,18 @@ async function GetStudentPaged(page = 1, limit = 10) {
             offset = 0;
         }
 
-        // 3. Consulta de datos
-        // Corrección: Se eliminó la coma extra después de S.Id_curs
-        // Corrección: Tabla 'Student' y 'Curso' (según tu definición de CREATE TABLE)
         const sqlData = `
             SELECT 
-                S.Key, 
-                S.Name,
-                S.Cod_id,
-                S.Tlf,
-                S.E_mail,
-                S.Date, 
-                S.Time,
-                S.Id_curs,
-                C.Name as CourseName -- Ejemplo de cómo traer el nombre del curso
-            FROM Student S
-            LEFT JOIN Course C ON S.Id_curs = C.Key
-            WHERE S.Time_Deleted IS NULL
-            ORDER BY S.Date DESC, S.Time DESC
-            LIMIT ? OFFSET ?`;
-
-  /*
-        const sqlData = `
-            SELECT 
-                S.Key, 
-                S.Name,
-                S.Cod_id,
-                S.Tlf,
-                S.E_mail,
-                S.Date, 
-                S.Time,
-                S.Id_curs,
-                C.Name as CourseName -- Ejemplo de cómo traer el nombre del curso
+                S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail,
+                S.Date_Created, S.Time_Created, S.Id_curs,
+                C.Name as CourseName
             FROM Student S
             LEFT JOIN Course C ON S.Id_curs = C.Key
             WHERE S.Time_Deleted IS NULL 
-            ORDER BY S.Name ASC 
-            LIMIT ? OFFSET ?`;*/
+            ORDER BY S.Date_Created DESC, S.Time_Created DESC
+            LIMIT ? OFFSET ?`;
+
+
         const students = await DB.buscarTodo(sqlData, [finalLimit, offset]);
 
         // 4. Calcular total de páginas
@@ -149,23 +124,17 @@ async function SearchStudentPagedName(searchTerm) {
             return { success: false, message: "Debe ingresar un nombre o código." };
         }
 
-        // 1. Consulta sin LIMIT ni OFFSET
+            // 1. Consulta sin LIMIT ni OFFSET
         const sqlData = `
             SELECT 
-                S.Key, 
-                S.Name,
-                S.Cod_id,
-                S.Tlf,
-                S.E_mail,
-                S.Date, 
-                S.Time,
-                S.Id_curs,
+                S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail, 
+                S.Date_Created, S.Time_Created, S.Id_curs, 
                 C.Name as CourseName
             FROM Student S
             LEFT JOIN Course C ON S.Id_curs = C.Key
             WHERE S.Time_Deleted IS NULL 
-            AND (S.Name LIKE ? OR S.Cod_id LIKE ?)`;
-
+              AND (S.Name LIKE ? OR S.Cod_id LIKE ?)
+            ORDER BY S.Date_Created DESC, S.Time_Created DESC`;
         const search = `%${termClean}%`;
 
         // 2. Pasamos solo los 2 parámetros de búsqueda
@@ -200,23 +169,16 @@ async function SearchStudentPagedData(searchTerm) {
             return { success: false, message: "Debe ingresar un nombre o código." };
         }
 
-        // 1. Consulta sin LIMIT ni OFFSET
         const sqlData = `
             SELECT 
-                S.Key, 
-                S.Name,
-                S.Cod_id,
-                S.Tlf,
-                S.E_mail,
-                S.Date, 
-                S.Time,
-                S.Id_curs,
+                S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail, 
+                S.Date_Created, S.Time_Created, S.Id_curs, 
                 C.Name as CourseName
             FROM Student S
             LEFT JOIN Course C ON S.Id_curs = C.Key
             WHERE S.Time_Deleted IS NULL 
-            AND (S.Date LIKE ? OR S.Cod_id LIKE ?)`;
-
+              AND (S.Date_Created LIKE ? OR S.Cod_id LIKE ?)
+            ORDER BY S.Date_Created DESC, S.Time_Created DESC`;
         const search = `%${termClean}%`;
 
         // 2. Pasamos solo los 2 parámetros de búsqueda
@@ -244,136 +206,73 @@ async function SearchStudentPagedData(searchTerm) {
 }
 
 async function GetdataStudent(key){
-   const sql = `
-            SELECT 
-                S.Key, 
-                S.Name, 
-                S.Cod_id, 
-                S.Address, 
-                S.Tlf, 
-                S.E_mail,
-                S.Image,
-                S.Age,
-                S.Birthdate,
-                S.Name_Representative, 
-                S.Cod_id_Representative,
-                S.Tlf_Representative, 
-                S.E_mail_Representative,
-                S.Date,
-                S.Time,
-                S.Id_curs,
-                C.Name as CourseName
+        const sql = `
+            SELECT S.*, C.Name as CourseName
             FROM Student S
             LEFT JOIN Course C ON S.Id_curs = C.Key
             WHERE S.Time_Deleted IS NULL 
-            AND S.Key= ?`;
-
-    //let sql = `SELECT * FROM Student WHERE Key=?`;
+              AND S.Key = ?`;
     let result = await DB.buscar(sql,[key])
     return result;
-   // console.log(result);
+
 }
 
 async function RegisterStudent(data) {
-    // Generamos la llave única
     const key = uuidv4();
-    
-    // 1. Definimos el SQL (Usando "Key" entre comillas por ser palabra reservada)
-    const sql = `
-        INSERT INTO Student (
-            Key, 
-            Id_curs, 
-            Name, 
-            Cod_id, 
-            Address, 
-            Tlf, 
-            E_mail,
-            Image,
-            Age,
-            Birthdate,
-            Name_Representative, 
-            Cod_id_Representative,
-            Tlf_Representative, 
-            E_mail_Representative,
-            Date,
-            Time
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`;
+ const sql = `
+    INSERT INTO Student (
+        Key, Id_curs, Name, Cod_id, Address, Tlf, E_mail, Image, Age, Birthdate,
+        Name_Representative, Cod_id_Representative, Tlf_Representative, E_mail_Representative,
+        Date_Created, Time_Created
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`;
 
-    // 2. Extraemos los datos con seguridad
-    // Usamos el operador ?. (optional chaining) para evitar errores si 'estudiante' no existe
+    
     const est = data.estudiante || {};
     const rep = data.representante || {}; 
 
-    // 3. Construimos los parámetros (exactamente 14 placeholders)
     const params = [
-        key,                         // "Key"
-        est.curso || null,           // Id_curs
-        est.nombre || null,          // Name
-        est.cedula || null,          // Cod_id
-        est.direccion || null,       // Address
-        est.telefono || null,        // Tlf
-        est.correo || null,          // E_mail
-        est.imagen || null,          // Image
-        est.edad || null,            // Age
-        est.nacimiento || null,      // Birthdate
-        rep.nombre || null,          // Name_Representative
-        rep.cedula || null,          // Cod_id_Representative
-        rep.telefono || null,        // Tlf_Representative
-        rep.correo || null           // E_mail_Representative
+        key, est.curso || null, est.nombre || null, est.cedula || null, est.direccion || null,
+        est.telefono || null, est.correo || null, est.imagen || null, est.edad || null,
+        est.nacimiento || null, rep.nombre || null, rep.cedula || null, rep.telefono || null, rep.correo || null
     ];
 
-    // 4. Ejecutamos la consulta
     try {
         return await DB.crear(sql, params);
     } catch (error) {
-        console.error("Error al registrar estudiante:", error);
+        console.error("Error al registrar:", error);
         throw error;
     }
 }
 
 async function UpdateStudent(key, data) {
+    const sql = `
+        UPDATE Student SET 
+            Id_curs = ?, 
+            Name = ?, 
+            Cod_id = ?, 
+            Address = ?, 
+            Tlf = ?, 
+            E_mail = ?,
+            Image = ?, 
+            Age = ?, 
+            Birthdate = ?, 
+            Name_Representative = ?, 
+            Cod_id_Representative = ?, 
+            Tlf_Representative = ?, 
+            E_mail_Representative = ?
+        WHERE Key = ?`;
 
-        /*----------------------------*/
-        const sql = `
-            UPDATE Student SET 
-                Id_curs = ?, 
-                Name = ?, 
-                Cod_id = ?, 
-                Address = ?, 
-                Tlf = ?, 
-                E_mail = ?,
-                Image = ?,
-                Age = ?,
-                Birthdate = ?,
-                Name_Representative = ?, 
-                Cod_id_Representative = ?,
-                Tlf_Representative = ?, 
-                E_mail_Representative = ?
-            WHERE Key = ?`;
-            const est = data.estudiante || {};
-            const rep = data.representante || {}; 
+    const est = data.estudiante || {};
+    const rep = data.representante || {}; 
 
-            // 3. Construimos los parámetros (exactamente 14 placeholders)
-            const params = [
+    const params = [
+        est.curso || null, est.nombre || null, est.cedula || null, est.direccion || null,
+        est.telefono || null, est.correo || null, est.imagen || null, est.edad || null,
+        est.nacimiento || null, rep.nombre || null, rep.cedula || null, rep.telefono || null,
+        rep.correo || null, key
+    ];
 
-                est.curso || null,           // Id_curs
-                est.nombre || null,          // Name
-                est.cedula || null,          // Cod_id
-                est.direccion || null,       // Address
-                est.telefono || null,        // Tlf
-                est.correo || null,          // E_mail
-                est.imagen || null,          // Image
-                est.edad || null,            // Age
-                est.nacimiento || null,      // Birthdate
-                rep.nombre || null,          // Name_Representative
-                rep.cedula || null,          // Cod_id_Representative
-                rep.telefono || null,        // Tlf_Representative
-                rep.correo || null,           // E_mail_Representative
-                key,                         // "Key"
-            ];
-
-
-            return await DB.actualizar(sql, params); 
+    return await DB.actualizar(sql, params); 
 }
 
 async function DeleteStudentLogical(key) {

@@ -8,6 +8,7 @@ let template_manage_employee=`
         <section class="toolbar-table-manage">
             <div class="search-box-table-manage">
                 <input type="search" class="search-input-table-manage" id="inputSearchEmployee" placeholder="Buscar employee...">
+                 <div id="results-preview" class="preview-list-search"></div>
                 <button class="btn-search-tabla-manage" id="Searchemployee">
                 <span class="icon-search"></span>
                 </button>
@@ -98,6 +99,106 @@ function Manage_Employee(id){
 
           }
         });
+
+    /*------------------------------------------------------------------------*/
+        const resultsPreview = document.getElementById('results-preview');
+        let currentIndex = -1; // Rastrea la selección del teclado
+        let ArraydataSearchInput = []; // Guarda los resultados actuales
+
+// Función que se ejecuta al elegir un producto (Click o Enter)
+async function ejecutarBusquedaFinal(data) {
+
+    console.log(data)
+
+    const detalle = SearchEmployee(data.Name);
+    
+    searchInput.value = data.Name;
+    resultsPreview.style.display = 'none';
+    currentIndex = -1;
+    
+}
+
+searchInput.addEventListener('keydown', (e) => {
+    const items = resultsPreview.querySelectorAll('.preview-item-search');
+    
+    if (items.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (currentIndex > -1) {
+            ejecutarBusquedaFinal(ArraydataSearchInput[currentIndex]);
+        }
+    } 
+    else if (e.key === 'Escape') {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+function actualizarSeleccion(items) {
+    items.forEach((item, index) => {
+        if (index === currentIndex) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' }); // Asegura que sea visible
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value;
+    currentIndex = -1; // Reiniciar índice al escribir
+
+    if (query.length < 2) {
+        resultsPreview.style.display = 'none';
+        return;
+    }
+
+    ArraydataSearchInput = await api.buscarSugerencias({table:"Employee",terms:query});
+
+    if (ArraydataSearchInput.length > 0) {
+        resultsPreview.innerHTML = '';
+        ArraydataSearchInput.forEach((Employee, index) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item-search';
+            div.innerHTML = `
+                <div>Nombre:${Employee.Name}</div>
+                <div style="margin-left:35px">Descricción:${Employee.Cod_id}</div>
+            `;
+            
+            div.onclick = () => ejecutarBusquedaFinal(Employee);
+            
+            // Mouse over opcional para sincronizar teclado con ratón
+            div.onmouseenter = () => {
+                currentIndex = index;
+                actualizarSeleccion(resultsPreview.querySelectorAll('.preview-item-search'));
+            };
+
+            resultsPreview.appendChild(div);
+        });
+        resultsPreview.style.display = 'block';
+    } else {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+// Cerrar si se hace clic fuera
+document.addEventListener('click', (e) => {
+    if (e.target !== searchInput) resultsPreview.style.display = 'none';
+});
+
+/*-------------------------------------------------------------------------------*/
+ 
 
 
 }

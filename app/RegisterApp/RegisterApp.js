@@ -55,7 +55,7 @@ module.exports = function Register_App(parentWindow) {
 /********************************************************************************************/
 function Reset_data(){
 
-                         setupLicense("2026-4-1")
+                         setupLicense("2026-4-5")
 
 
         console.log("reset")
@@ -124,8 +124,8 @@ async function Adding_table_db(){
     Password TEXT NOT NULL,                -- Contraseña
     PasswordMaster TEXT NOT NULL,                -- Contraseña
     Permission TEXT NOT NULL,              -- Permisos del usuario
-    Date DATE NOT NULL,                    -- Fecha de creación
-    Time TIME NOT NULL,                    -- Hora de creación
+    Date_Created DATE NOT NULL,
+    Time_Created TIME NOT NULL,
     Time_Deleted DATE                        -- Fecha de eliminación lógica
 )`);
 
@@ -133,8 +133,8 @@ async function Adding_table_db(){
     Session_ID TEXT PRIMARY KEY,
     User_Key TEXT NOT NULL,                -- Referencia a la Key de la tabla User
     Event_Type TEXT NOT NULL,              -- 'LOGIN' o 'LOGOUT'
-    Date DATE NOT NULL,                    -- Fecha del evento
-    Time TIME NOT NULL,                    -- Hora del evento
+    Date_Created DATE NOT NULL,
+    Time_Created TIME NOT NULL,
     FOREIGN KEY (User_Key) REFERENCES User(Key)
 )`);
 
@@ -151,8 +151,8 @@ async function Adding_table_db(){
     Status TEXT,
     Age TEXT UNICODE,
     Id_user TEXT UNIQUE,                       -- Relación con la tabla User
-    Date DATE NOT NULL,                    -- Fecha de creación
-    Time TIME NOT NULL,                    -- Hora de creación
+    Date_Created DATE NOT NULL,
+    Time_Created TIME NOT NULL,
     Time_Deleted DATE,                       -- Fecha de eliminación lógica
     FOREIGN KEY (Id_user) REFERENCES User(Key) -- Clave foránea
 )`);
@@ -171,8 +171,8 @@ await DB.crearTabla(`CREATE TABLE Instructor (
     Status TEXT,
     Specialty TEXT,
     Certifications TEXT,
-    Date DATE NOT NULL,             -- Fecha de creación
-    Time TIME NOT NULL,             -- Hora de creación
+    Date_Created DATE NOT NULL,
+    Time_Created TIME NOT NULL,
     Time_Deleted DATE                 -- Fecha de eliminación lógica
 )`);
 //Tabla Alumno
@@ -192,8 +192,8 @@ await DB.crearTabla(`CREATE TABLE Student (
     Cod_id_Representative TEXT,
     Tlf_Representative TEXT,
     E_mail_Representative TEXT,
-    Date DATE NOT NULL,
-    Time TIME NOT NULL,
+    Date_Created DATE NOT NULL,
+    Time_Created TIME NOT NULL,
     Time_Deleted DATE,
     FOREIGN KEY (Id_curs) REFERENCES Course(Key) 
 )`);
@@ -272,13 +272,13 @@ async function Adding_data_Admin_data(data){
     return Promise.all([
         // Inserción en tabla User
         DB.crear(
-            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date, Time) 
+            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
              VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, 'Administrador', data.fecha, data.hora]
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
-            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date, Time) 
+            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 ID_EMPLOYEE, 
@@ -422,13 +422,13 @@ async function Adding_data_Admin_trial(){
     return Promise.all([
         // Inserción en tabla User
         DB.crear(
-            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date, Time) 
+            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
              VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [ID_USER, "Admin", "123456789", "123456789", 'Administrador', "0/0/0000","00-00"]
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
-            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date, Time) 
+            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
              [  
              ID_EMPLOYEE, 
@@ -491,7 +491,7 @@ if(adminTrial==true  && DBTrial==true){
     dialog.showMessageBox({
           title: 'Notificación',
           type:'info',
-          message: "DATOS DE PRUEBA CARGADOS 'Usuario:Admin | Clave:123456789'",
+          message: "DATOS DE PRUEBA CARGADOS 'Usuario: Admin | Clave: 123456789'",
           icon: 'info',
           buttons: ['Aceptar'],
           defaultId: 0,

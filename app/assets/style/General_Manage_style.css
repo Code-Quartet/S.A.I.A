@@ -475,12 +475,54 @@ color:red;
 
 }
 
-/*
-.active{
+
+.ActiveButtonTrash{
     background: #2b56c5;
     color: white;
-}*/
+}
   
+/*----------------------------------------------------------------------*/
+
+.preview-list-search {
+    position: absolute;
+    top: 22%;
+    left: 18%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 9999;
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
+    width: 81%;
+}
+    .preview-item-search{
+               padding: 10px 15px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+
+    /* Clase crucial para el teclado */
+    .preview-item-search.selected {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .preview-item-search.code { font-size: 0.8em; color: #666; }
+    .preview-item-search.selected .code { color: #eee; }
+
+
+    .preview-item-search.price { font-size: 0.8em; color:green; font-size: 15px;}
+.preview-item-search.selected .price {
+    color: #fff700;
+    font-size: 20px;
+}
+/*--------------------------------------------*/
 
 
 

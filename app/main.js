@@ -22,7 +22,7 @@ const Login_password_master =  require(path.join(__dirname,'./section_main/Login
 /*------------Modulos externos----------------*/
 const Register_App = require(path.join(__dirname,'./RegisterApp/RegisterApp'));
 /*--------------------------------------------------------------------------------------*/
-const {GetDashboardStats}= require(path.join(__dirname,'./DB_controls/Dasboard'));
+const {GetDashboardStats,GlobalSearch}= require(path.join(__dirname,'./DB_controls/Dasboard'));
 /*--------------------------------------------------------------------------------------*/
 const Edit_password = require(path.join(__dirname,'./section_main/Edit_password'));
 const Edit_password_master = require(path.join(__dirname,'./section_main/Edit_password_master'));
@@ -218,18 +218,18 @@ ipcMain.on('message-campos-vacios-login', async (event,text) => {
 /**********************************LOGIN SYSTEM APP********************************/
 /***********************DASBOARD*********************************************/
 ipcMain.on("Get-data-stats-dasboard",async(event,data)=>{
-let result = await GetDashboardStats()
+  let result = await GetDashboardStats()
 
-console.log("StatsDasboard",result)
+  //console.log("StatsDasboard",result)
   mainWindow.webContents.send("Data-stats-dasboard",result);
 
   /*--------------------------------------*/
      let resultcourse = await GetTopCourses()
-     console.log("course",resultcourse) 
+    // console.log("course",resultcourse) 
      mainWindow.webContents.send("Data-list-course-dasboard",resultcourse);
      /*------------------------------------*/
      let resultHistory = await UserSessionHistory()
-     console.log("HistoryUser",resultHistory)
+     //console.log("HistoryUser",resultHistory)
      mainWindow.webContents.send("List-history-data-user",resultHistory);
 
 })
@@ -242,7 +242,6 @@ ipcMain.on("Reload-dasboard-system-data-MyProfile",(event,data)=>{
 })
 
 ipcMain.on("Reload-dasboard-system-data-Instructor",async(event,data)=>{
-
 
   let result = await GetInstructorsPaged()
   mainWindow.webContents.send("data-list-instructor",result);
@@ -332,7 +331,6 @@ ipcMain.on('Editar-informacion-usuario',(event,id) => {
 
 
   Edit_user(mainWindow,id)
-
 
 })
 
@@ -520,7 +518,25 @@ ipcMain.on('Exportar-SQLITE-DB', (event, id) => {
         });
 });
 /***********************MY-PROFILE******************************************/
-/***********************************************************************
+/**************************consulta previa *********************************************/
+ipcMain.handle('buscar-sugeridos', async (event, data) => {
+    try {
+        // Llamamos a la función de búsqueda
+        let result = await GlobalSearch(data.table,data.terms);
+
+        // Verificamos si la búsqueda fue exitosa y si hay datos
+        if (result.success && Array.isArray(result.data)) {
+            // Retornamos solo los primeros 8 resultados del array 'data'
+            return result.data.slice(0, 8);
+        }
+
+        return []; // Retornar vacío si no hubo éxito o no hay datos
+    } catch (error) {
+        console.error("Error en ipcMain buscar-sugeridos:", error);
+        return [];
+    }
+});
+/**************************consulta previa *********************************************/
 /*************************NEW INSCRIPTCION**********************************/
 
 ipcMain.on("Get-data-Student-list",async(event,data)=>{

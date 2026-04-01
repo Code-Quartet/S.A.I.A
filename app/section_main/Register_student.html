@@ -522,11 +522,9 @@ btnConfirm.addEventListener('click', (e) => {
     console.log("Enviando:", formData);
     api.send("Register-new-data-student", formData);
     LimpiarForm();
-     window.close();
-    
+
 
      api.send("Reload-dasboard-system-data-Student")
-
 
 });
 

@@ -7,45 +7,27 @@ const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
 const db = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
 
-/**
- * Busca instructores por Nombre, Cédula o Especialidad.
- * Utiliza búsqueda parcial (LIKE) y filtra los que no han sido eliminados.
- */
- /*
-async function SearchInstructor(query) {
-    const sql = `
-        SELECT * FROM Instructor 
-        WHERE (Name LIKE ? OR Cod_id LIKE ? OR Specialty LIKE ?) 
-        AND Time_Deleted IS NULL`;
-    const term = `%${query}%`;
-    return await db.leer(sql, [term, term, term]);
-}
-*/
 
 async function SearchInstructor(term) {
     try {
         await db.conectar();
-
-        // 1. Limpiamos el término de búsqueda para evitar espacios vacíos
         const searchTerm = term ? term.trim() : "";
 
         if (!searchTerm) {
             return { success: false, message: "Debe ingresar un nombre o código." };
         }
 
-        // 2. Usamos el operador OR para buscar en ambas columnas simultáneamente
-        // Usamos LIKE para el nombre (coincidencia parcial) y = para el Cod_id (coincidencia exacta)
+        // CORRECCIÓN: Se eliminaron los alias "S." que no existían en esta consulta.
+        // Se agregaron campos necesarios para el ordenamiento si se requieren.
         const sql = `
-            SELECT Key, Name, Specialty, Tlf, Status
+            SELECT Key, Name, Specialty, Tlf, Status, Date_Created, Time_Created
             FROM Instructor
             WHERE (Name LIKE ? OR Cod_id = ?) 
-            AND Time_Deleted IS NULL ORDER BY S.Date DESC, S.Time DESC`;
+            AND Time_Deleted IS NULL 
+            ORDER BY Date_Created DESC, Time_Created DESC`;
 
-        // 3. Ejecutamos la búsqueda
-        // Pasamos %term% para el LIKE y el término limpio para el =
         const results = await db.buscarTodo(sql, [`%${searchTerm}%`, searchTerm]);
 
-        // 4. Verificación de resultados
         if (!results || results.length === 0) {
             return {
                 success: false,
@@ -53,26 +35,25 @@ async function SearchInstructor(term) {
             };
         }
 
-        // 5. Retorno de la data (Sin envolver en [] adicionales para evitar errores de lectura)
-        return {
-            success: true,
-            data: results 
-        };
+        return { success: true, data: results };
 
     } catch (error) {
         console.error("Error en searchInstructor:", error);
-        return { 
-            success: false, 
-            message: "Error de conexión con la base de datos." 
-        };
+        return { success: false, message: "Error de conexión con la base de datos." };
     }
 }
 /**
  * Obtiene Name, Specialty, Tlf y Status de todos los instructores activos.
  */
 async function SelectInstructor(key) {
-    const sql = `SELECT * FROM Instructor WHERE key=? AND Time_Deleted IS NULL`;
-    return await db.buscar(sql,[key]);
+    try {
+        await db.conectar();
+        const sql = `SELECT * FROM Instructor WHERE Key = ? AND Time_Deleted IS NULL`;
+        return await db.buscar(sql, [key]);
+    } catch (error) {
+        console.error("Error en SelectInstructor:", error);
+        return null;
+    }
 }
 
 
@@ -96,12 +77,13 @@ async function GetInstructorsPaged(page = 1, limit = 10) {
         }
 
         // 3. Consulta de los campos específicos solicitados
+   
         const sqlData = `
-            SELECT Key, Name, Specialty, Tlf, Status
+            SELECT Key, Name, Specialty, Tlf, Status, Date_Created, Time_Created
             FROM Instructor 
             WHERE Time_Deleted IS NULL 
-            ORDER BY Date DESC, Time DESC LIMIT ? OFFSET ?`;
-
+            ORDER BY Date_Created DESC, Time_Created DESC 
+            LIMIT ? OFFSET ?`;
         const instructors = await db.buscarTodo(sqlData, [finalLimit, offset]);
 
         // 4. Calcular total de páginas
@@ -156,14 +138,14 @@ async function searchInstructorByStatus(statusArray) {
         }
 
         // Creamos los marcadores de posición (?, ?, ?) según la cantidad de estados
-        const placeholders = statusArray.map(() => "?").join(",");
-
+         const placeholders = statusArray.map(() => "?").join(",");
         const sql = `
             SELECT Key, Name, Cod_id, Tlf, Status, Specialty
             FROM Instructor 
             WHERE Status IN (${placeholders}) 
             AND Time_Deleted IS NULL 
             ORDER BY Name ASC`;
+
 
         // Pasamos el arreglo de estados directamente como parámetros
         const results = await db.buscarTodo(sql, statusArray);
@@ -180,68 +162,69 @@ async function searchInstructorByStatus(statusArray) {
     }
 }
 
-/**
- * Inserta un nuevo instructor mapeando el objeto recibido.
- * Genera automáticamente la fecha y hora de creación.
- */
 async function InsertInstructor(data) {
-
-    const key = uuidv4();
-    const sql = `
-        INSERT INTO Instructor (
-            Key, Name, Cod_id, Address, Tlf, E_mail, Image, 
-            Age, Status, Specialty, Certifications, Date, Time
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`;
-    
-    const params = [
-        key,                // UUID o ID único generado previamente
-        data.nombre,        // Name
-        data.cedula,        // Cod_id
-        data.direccion,     // Address
-        data.telefono,      // Tlf
-        data.correo,        // E_mail
-        data.imagen,        // Image
-        data.edad,          // Age
-        data.estado,        // Status
-        data.especialidad,  // Specialty
-        data.certificaciones// Certifications
-    ];
-    
-    return await db.crear(sql, params);
+    try {
+        await db.conectar();
+        const key = uuidv4();
+        // CORRECCIÓN: Faltaban 2 "?" en VALUES para completar los 13 campos definidos.
+        const sql = `
+            INSERT INTO Instructor (
+                Key, Name, Cod_id, Address, Tlf, E_mail, Image, 
+                Age, Status, Specialty, Certifications, Date_Created, Time_Created
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`;
+        
+        const params = [
+            key,
+            data.nombre || null,
+            data.cedula || null,
+            data.direccion || null,
+            data.telefono || null,
+            data.correo || null,
+            data.imagen || null,
+            data.edad || null,
+            data.estado || 'Activo',
+            data.especialidad || null,
+            data.certificaciones || null
+        ];
+        
+        return await db.crear(sql, params);
+    } catch (error) {
+        console.error("Error en InsertInstructor:", error);
+        throw error;
+    }
 }
 
-
 /**
- * Actualiza un instructor existente mediante su Key.
+ * Actualiza un instructor.
  */
 async function UpdateInstructor(key, data) {
-    const sql = `
-        UPDATE Instructor SET 
-            Name = ?, Cod_id = ?, Address = ?, Tlf = ?, 
-            E_mail = ?, Image = ?, Age = ?, Status = ?, 
-            Specialty = ?, Certifications = ?
-        WHERE Key = ?`;
-    
-    const params = [
-        data.nombre, data.cedula, data.direccion, data.telefono,
-        data.correo, data.imagen, data.edad, data.estado,
-        data.especialidad, data.certificaciones, key
-    ];
-    
-    return await db.actualizar(sql, params);
+    try {
+        await db.conectar();
+        const sql = `
+            UPDATE Instructor SET 
+                Name = ?, Cod_id = ?, Address = ?, Tlf = ?, 
+                E_mail = ?, Image = ?, Age = ?, Status = ?, 
+                Specialty = ?, Certifications = ?
+            WHERE Key = ?`;
+        
+        const params = [
+            data.nombre, data.cedula, data.direccion, data.telefono,
+            data.correo, data.imagen, data.edad, data.estado,
+            data.especialidad, data.certificaciones, key
+        ];
+        
+        return await db.actualizar(sql, params);
+    } catch (error) {
+        console.error("Error en UpdateInstructor:", error);
+        throw error;
+    }
 }
 
-/**
- * Borrado Inteligente (Lógico): Registra la fecha de eliminación.
- */
 async function DeleteInstructor(key) {
     const sql = `UPDATE Instructor SET Time_Deleted = date('now') WHERE Key = ?`;
     return await db.actualizar(sql, [key]);
 }
 
-/**
- * Borrado Permanente (Físico): Elimina el registro por completo.
- */
 async function PermanentErase(key) {
     const sql = `DELETE FROM Instructor WHERE Key = ?`;
     return await db.borrar(sql, [key]);

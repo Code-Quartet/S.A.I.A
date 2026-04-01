@@ -25,13 +25,13 @@ async function GetEmployeeWithUser(employeeKey) {
                 E.Age,
                 E.Status,
                 E.Birthdate,
-                E.Date AS EmployeeDate,
+                E.Date_Created AS EmployeeDate,
                 U.Key AS UserKey,
                 U.Username,
                 U.Password,
                 U.PasswordMaster,
                 U.Permission,
-                U.Date AS UserDate
+                U.Date_Created AS UserDate
             FROM Employee E
             INNER JOIN User U ON E.Id_user = U.Key
             WHERE E.Key = ? AND E.Time_Deleted IS NULL AND U.Time_Deleted IS NULL
@@ -84,7 +84,7 @@ async function GetEmployeesPaged(page = 1, limit = 10) {
             SELECT Key, Name, E_mail, Tlf, Status
             FROM Employee 
             WHERE Time_Deleted IS NULL 
-            ORDER BY Date DESC, Time DESC
+            ORDER BY Date_Created DESC, Time_Created DESC
             LIMIT ? OFFSET ?`;
 
         const employees = await DB.buscarTodo(sqlData, [finalLimit, offset]);
@@ -207,7 +207,6 @@ async function SearchFilterEmployee(status) {
     }
 }
 
-
 async function RegistreEmployee(data){
  
     const ID_USER = uuidv4();
@@ -220,13 +219,13 @@ async function RegistreEmployee(data){
     return Promise.all([
         // Inserción en tabla User
         DB.crear(
-            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date, Time) 
+            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
              VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, data.User.permission, data.fecha, data.hora]
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
       DB.crear(
-            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date, Time) 
+            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			[
                 ID_EMPLOYEE, 
@@ -262,7 +261,6 @@ async function RegistreEmployee(data){
 
 async function UpdateEmployee(employeeKey, updatedData) {
 
-    console.log(updatedData)
     try {
         // Usamos los métodos de la clase SAIADB que ya garantizan conexión
         await DB.beginTransaction();
