@@ -35,7 +35,7 @@ module.exports = function Register_course(parentWindow) {
     window_register_course.loadFile('app/section_main/Register_course.html');
 
     // Herramientas de desarrollo
-   // window_register_course.webContents.openDevTools();
+   //window_register_course.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_course.webContents.setWindowOpenHandler(() => {
