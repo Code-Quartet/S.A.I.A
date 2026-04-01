@@ -7,7 +7,10 @@ const os = require('os');
  * @param {string} expirationDate - Fecha en formato "YYYY-MM-DD"
  * @returns {boolean} - true si se creó con éxito, false si hubo un error.
  */
-module.exports = function setupLicense(expirationDate) {
+module.exports = function setupLicense() {
+
+    let expirationDate = "2026-4-5";
+
     try {
         // 1. Determinar la ruta de AppData (Windows/Mac/Linux)
         const appData = process.env.APPDATA || 

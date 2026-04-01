@@ -55,7 +55,7 @@ module.exports = function Register_App(parentWindow) {
 /********************************************************************************************/
 function Reset_data(){
 
- setupLicense("2026-4-5")
+ setupLicense()
 
 
         console.log("reset")
