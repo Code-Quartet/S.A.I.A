@@ -34,7 +34,7 @@ const Register_course = require(path.join(__dirname,'./section_main/Register_cou
 const Edit_course = require(path.join(__dirname,'./section_main/Edit_course'));
 const Info_course = require(path.join(__dirname,'./section_main/Info_course'));
 /*------------------------------------*/
-const {GetStudentPaged,SearchStudentPagedName,SearchStudentPagedData,DeleteStudentLogical} = require(path.join(__dirname,'./DB_controls/Student'));
+const {GetStudentPaged,SearchStudentPagedName,DeleteStudentLogical} = require(path.join(__dirname,'./DB_controls/Student'));
 const Register_student = require(path.join(__dirname,'./section_main/Register_student'));
 const Update_student = require(path.join(__dirname,'./section_main/Update_student'));
 const Info_student = require(path.join(__dirname,'./section_main/Info_student'));
@@ -187,9 +187,9 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
 ipcMain.on("Login-out-user-register",async(event,data) => {
 
-  console.log(User_sesion_login.user.key)
+    console.log(User_sesion_login.user.key)
 
- await RegisterSessionEvent(User_sesion_login.user.key, 'LOGOUT');
+    await RegisterSessionEvent(User_sesion_login.user.key, 'LOGOUT');
 
 })
 
@@ -257,8 +257,8 @@ ipcMain.on("Reload-dasboard-system-data-Course",async(event,data)=>{
 
 ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
 
-
     let result = await GetStudentPaged();
+   // console.log("Reload-dasboard-system-data-Student",result)
     mainWindow.webContents.send("Data-list-Student",result);
 
 })
@@ -266,6 +266,7 @@ ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
 ipcMain.on("Reload-dasboard-system-data-Employee",async(event,data)=>{
 
     let result = await GetEmployeesPaged()
+    //console.log("Reload-dasboard-system-data-Employee",result)
     mainWindow.webContents.send("Render-data-employee-list",result)
 
 })
@@ -555,7 +556,7 @@ ipcMain.on("Search-Student-data",async(event,data)=>{
 
 ipcMain.on("Search-Student-filter-data",async(event,data)=>{
 
-  let result = await SearchStudentPagedData(data);
+  let result = await SearchStudentPagedName(data);
   mainWindow.webContents.send("Data-list-Student-serach",result);
 
 })

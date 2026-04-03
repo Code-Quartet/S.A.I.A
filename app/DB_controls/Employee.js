@@ -61,16 +61,18 @@ async function GetEmployeeWithUser(employeeKey) {
 }
 
 async function GetEmployeesPaged(page = 1, limit = 10) {
-    try {
-        await DB.conectar();
-        
-        // 1. Obtener el total de elementos activos
+
+   try {
+       await DB.conectar();
+        // 1. Obtener el total de empleados activos (sin borrado lógico)
         const sqlCount = `SELECT COUNT(*) as total FROM Employee WHERE Time_Deleted IS NULL`;
         const resCount = await DB.buscar(sqlCount);
-        const totalElements = Array.isArray(resCount) ? resCount[0].total : resCount.total;
+        
+        // Manejo de respuesta según como retorne el objeto tu método .buscar()
+        const totalElements = resCount?.total ?? 0;
 
         // 2. Lógica adaptativa:
-        // Si hay 20 o menos, forzamos el límite al total y el offset a 0 (mostrar todo)
+        // Si hay 20 o menos, forzamos mostrar todo en una sola vista
         let finalLimit = limit;
         let offset = (page - 1) * limit;
 
@@ -79,49 +81,62 @@ async function GetEmployeesPaged(page = 1, limit = 10) {
             offset = 0;
         }
 
-        // 3. Consulta de datos con el límite ajustado
+        // 3. Consulta de los campos específicos solicitados
+   /*
         const sqlData = `
-            SELECT Key, Name, E_mail, Tlf, Status
-            FROM Employee 
+            SELECT Key, Name, E_mail, Tlf, Status, Date_Created, Time_Created
+            FROM Employee
             WHERE Time_Deleted IS NULL 
-            ORDER BY Date_Created DESC, Time_Created DESC
-            LIMIT ? OFFSET ?`;
+            ORDER BY Date_Created DESC, Time_Created DESC 
+            LIMIT ? OFFSET ?`;*/
 
-        const employees = await DB.buscarTodo(sqlData, [finalLimit, offset]);
+            const sqlData = `
+    SELECT Key, Name, E_mail, Tlf, Status, Date_Created, Time_Created
+    FROM Employee
+    WHERE Time_Deleted IS NULL 
+    ORDER BY Date_Created DESC, Time_Created DESC 
+    LIMIT ? OFFSET ?`;
 
-        // 4. Calcular total de páginas (si es <= 20, siempre será 1 página)
+        const Employees = await DB.buscarTodo(sqlData, [finalLimit, offset]);
+
+        // 4. Calcular total de páginas
         const totalPages = totalElements <= 20 ? 1 : Math.ceil(totalElements / limit);
 
-                // 4. Validación: Si no hay registros, retornar success false
-        if (!employees || employees.length === 0) {
-            return {
-                success: false,
-                message: `No se encontraron empleados`,
+        if(!Employees || Employees.length === 0) {
+                return {
+                    success: false,
+                    message: `No se encontraron empleados`,
                     pagination: {
-                        totalElements,
-                        totalPages,
-                        currentPage: totalElements <= 20 ? 1 : page,
-                        limit: finalLimit,
-                        isPaged: totalElements > 20 // Útil para ocultar/mostrar botones de paginación en el UI
-                    }
+                    totalElements,
+                    totalPages,
+                    currentPage: totalElements <= 20 ? 1 : page,
+                    limit: finalLimit,
+                    isPaged: totalElements > 20 // Flag para saber si mostrar controles de paginación en el frontend
+                }
             };
         }
 
-        // 5. Retorno exitoso con la data
+
         return {
             success: true,
-            data: employees,
+            data: Employees,
             pagination: {
                 totalElements,
                 totalPages,
                 currentPage: totalElements <= 20 ? 1 : page,
                 limit: finalLimit,
-                isPaged: totalElements > 20 // Útil para ocultar/mostrar botones de paginación en el UI
+                isPaged: totalElements > 20 // Flag para saber si mostrar controles de paginación en el frontend
             }
         };
+
+
+
     } catch (error) {
-        console.error("Error en getEmployeesPaged:", error);
-        return { success: false, message: "Error al obtener empleados." };
+        console.error("Error en GetEmployeesPaged:", error);
+        return { 
+            success: false, 
+            message: "Error al obtener la lista de empleados." 
+        };
     }
 }
 
@@ -220,13 +235,13 @@ async function RegistreEmployee(data){
         // Inserción en tabla User
         DB.crear(
             `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, data.User.permission, data.fecha, data.hora]
+             VALUES (?, ?, ?, ?, ?, date('now'), time('now'))`,
+            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, data.User.permission]
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
       DB.crear(
             `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`,
 			[
                 ID_EMPLOYEE, 
                 data.Employee.nombre, 
@@ -238,9 +253,7 @@ async function RegistreEmployee(data){
                 data.Employee.fechanacimiento, 
                 data.Employee.image,
                 data.Employee.status,
-                ID_USER, 
-                data.fecha, 
-                data.hora
+                ID_USER
                
             ]
         )

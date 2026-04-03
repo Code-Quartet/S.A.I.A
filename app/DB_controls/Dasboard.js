@@ -103,38 +103,49 @@ async function GlobalSearch(tableName, searchValue) {
     try {
         await DB.conectar();
 
-        // 1. Mapeo de columnas por tabla
+        // 1. Mapeo de columnas por tabla (Eliminamos Id_curs de Student)
         const tableColumns = {
             'Employee': ['Key', 'Name', 'E_mail', 'Tlf', 'Status', 'Cod_id'],
             'Instructor': ['Key', 'Name', 'Cod_id', 'Specialty', 'Tlf', 'Status'],
-            'Student': ['Key', 'Name', 'Cod_id', 'Tlf', 'E_mail', 'Date_Created', 'Time_Created', 'Id_curs'],
+            'Student': ['Key', 'Name', 'Cod_id', 'Tlf', 'E_mail', 'Date_Created', 'Time_Created'],
             'Course': ['Name', 'Description', 'Days', 'Status']
         };
 
         const columns = tableColumns[tableName];
         if (!columns) return { success: false, message: "Tabla no válida." };
 
-        // 2. Definir Alias y Base SQL
         let sql = "";
         let tableAlias = "";
         let orderBy = "";
+        let groupBy = ""; // Añadimos GroupBy para el manejo de relaciones N:N
 
-        // Ajustamos el SQL y el OrderBy según la tabla (usando nombres de columnas reales)
+        // 2. Definir Alias y Base SQL ajustada a la nueva estructura
         if (tableName === 'Student') {
             tableAlias = "S";
-            sql = `SELECT S.*, C.Name as CourseName FROM Student S LEFT JOIN Course C ON S.Id_curs = C.Key`;
+            // Usamos GROUP_CONCAT para traer los nombres de los cursos desde la tabla intermedia
+            sql = `
+                SELECT S.*, GROUP_CONCAT(C.Name, ', ') as CourseNames 
+                FROM Student S 
+                LEFT JOIN Student_Courses SC ON S.Key = SC.Id_student_key 
+                LEFT JOIN Course C ON SC.Id_curs = C.Key`;
+            groupBy = " GROUP BY S.Key";
             orderBy = ` ORDER BY S.Date_Created DESC, S.Time_Created DESC`;
         } else if (tableName === 'Course') {
             tableAlias = "C";
-            sql = `SELECT C.*, I.Name as InstructorName FROM Course C LEFT JOIN Instructor I ON C.Instructor_ID = I.Key`;
-            orderBy = ` ORDER BY C.Name ASC`; // Course usualmente no tiene Date_Created, o ajusta según tu DB
+            // Añadimos el conteo de estudiantes inscritos usando la tabla intermedia
+            sql = `
+                SELECT C.*, I.Name as InstructorName,
+                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
+                FROM Course C 
+                LEFT JOIN Instructor I ON C.Instructor_ID = I.Key`;
+            orderBy = ` ORDER BY C.Name ASC`;
         } else if (tableName === 'Employee') {
             tableAlias = "E";
             sql = `SELECT E.*, U.Username FROM Employee E LEFT JOIN User U ON E.Id_user = U.Key`;
             orderBy = ` ORDER BY E.Date_Created DESC, E.Time_Created DESC`;
         } else if (tableName === 'Instructor') {
             tableAlias = "I";
-            sql = `SELECT * FROM Instructor I`;
+            sql = `SELECT I.* FROM Instructor I`;
             orderBy = ` ORDER BY I.Name ASC`;
         } else {
             tableAlias = tableName;
@@ -156,8 +167,8 @@ async function GlobalSearch(tableName, searchValue) {
             whereClause += orConditions.join(" OR ") + ")";
         }
 
-        // 4. Ejecución
-        const finalSql = sql + whereClause + orderBy;
+        // 4. Ejecución (SQL + WHERE + GROUP BY + ORDER BY)
+        const finalSql = sql + whereClause + groupBy + orderBy;
         const results = await DB.buscarTodo(finalSql, params);
 
         return {
@@ -169,9 +180,8 @@ async function GlobalSearch(tableName, searchValue) {
         };
 
     } catch (error) {
-        console.error("Detalle del error SQL:", error.message);
+        console.error("Detalle del error SQL en GlobalSearch:", error.message);
         return { success: false, message: "Error en búsqueda global: " + error.message };
     }
 }
-
 module.exports={GetDashboardStats:GetDashboardStats,GlobalSearch:GlobalSearch}

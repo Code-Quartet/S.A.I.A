@@ -16,6 +16,7 @@
             --bg-light: #ffffff;
             --danger: #ef4444;
             --success: #28a745;
+            --bg-disabled: #f3f4f6;
         }
  @font-face {
     font-family: 'Inter';
@@ -94,6 +95,11 @@ input, select {
             border:2px solid rgba(43, 86, 197, 1);;
             box-shadow: 0 0 0 4px rgba(43, 86, 197, 0.2);
         }
+                input:disabled, select:disabled {
+            background-color: var(--bg-disabled);
+            cursor: not-allowed;
+            color: var(--text-muted);
+        }
 
         
 
@@ -122,7 +128,9 @@ input, select {
     border-color: var(--primary-blue);
     transition: all 0.3s ease;
 }
-        #toggleBtn {
+
+
+        #toggleBtn1 {
             background: none;
             border: none;
             padding: 0 15px;
@@ -130,6 +138,15 @@ input, select {
             font-size: 1.2rem;
             color: var(--text-muted);
         }
+       #toggleBtn2 {
+            background: none;
+            border: none;
+            padding: 0 15px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
 
         /* --- Image Uploader --- */
         .profile-container {
@@ -241,7 +258,7 @@ input, select {
                 <div class="container-form-group">
                     <div class="form-group">
                         <label>Cédula</label>
-                        <input type="text" id="ci" placeholder="21783921">
+                        <input type="text" id="ci" placeholder="21783921" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                     <div class="form-group">
                         <label>Edad</label>
@@ -300,14 +317,26 @@ input, select {
                     <input type="text" id="usuario" placeholder="Ej: subadmin_rosa">
                 </div>
 
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <div class="sub-container-password">
-                        <span class="icon-lock"></span>   
-                        <input type="password" id="password" placeholder="Ingrese clave">
-                        <button type="button" id="toggleBtn">
-                            <span id="eyeIcon" class="icon-eye"></span>
-                        </button>
+                <div class="form-group" style="display:flex; justify-content:space-between">
+                    <div id="ContainerPasword" style="width:100%">
+                        <label>Contraseña</label>
+                        <div class="sub-container-password">
+                            <span class="icon-lock"></span>   
+                            <input type="password" id="password" placeholder="Ingrese clave">
+                            <button type="button" id="toggleBtn1">
+                                <span id="eyeIcon1" class="icon-eye"></span>
+                            </button>
+                        </div>
+                     </div>
+                     <div id="ContainerPaswordMaster" style="width: 50% ; display: none;">
+                        <label>Contraseña Maestra</label>
+                        <div class="sub-container-password">
+                            <span class="icon-lock"></span>   
+                            <input type="password" id="password_Master" placeholder="Ingrese clave" disabled>
+                            <button type="button" id="toggleBtn2">
+                                <span id="eyeIcon2" class="icon-eye"></span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -341,8 +370,11 @@ input, select {
         // --- Referencias ---
         const btnRegistrar = document.getElementById('RegisterData');
         const passwordInput = document.getElementById('password');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const eyeIcon = document.getElementById('eyeIcon');
+        const password_MasterInput= document.getElementById('password_Master');
+        const toggleBtn1 = document.getElementById('toggleBtn1');
+        const toggleBtn2 = document.getElementById('toggleBtn2');
+        const eyeIcon1 = document.getElementById('eyeIcon1');
+        const eyeIcon2 = document.getElementById('eyeIcon2');
 
         // IDs de campos obligatorios para el bloqueo del botón
         const camposObligatorios = [
@@ -350,6 +382,21 @@ input, select {
             'telefono', 'correo', 'direccion', 
             'tipoPermiso', 'usuario', 'password', 'select-status-employee'
         ];
+
+
+        document.getElementById('tipoPermiso').addEventListener('change', function() {
+            // Si el valor es distinto de vacío, habilitamos el botón
+            if (this.value == "Administrador") {
+                document.getElementById("password_Master").disabled = false;
+                document.getElementById("ContainerPaswordMaster").style.display = 'block';
+                document.getElementById("ContainerPasword").style.width = '48%';
+            } else {
+                document.getElementById("password_Master").disabled = true;
+                document.getElementById("ContainerPaswordMaster").style.display = 'none';
+                document.getElementById("ContainerPasword").style.width = '100%';
+               
+            }
+        });
 
         // --- Validación en tiempo real ---
         function validarFormulario() {
@@ -368,11 +415,18 @@ input, select {
         });
 
         // --- Mostrar/Ocultar Password ---
-        toggleBtn.addEventListener('click', () => {
+        toggleBtn1.addEventListener('click', () => {
             const isPassword = passwordInput.type === 'password';
             passwordInput.type = isPassword ? 'text' : 'password';
-            eyeIcon.classList.toggle('icon-eye', !isPassword);
-            eyeIcon.classList.toggle('icon-eye-blocked', isPassword);
+            eyeIcon1.classList.toggle('icon-eye', !isPassword);
+            eyeIcon1.classList.toggle('icon-eye-blocked', isPassword);
+        });
+
+        toggleBtn2.addEventListener('click', () => {
+            const isPassword = password_MasterInput.type === 'password';
+            password_MasterInput.type = isPassword ? 'text' : 'password';
+            eyeIcon2.classList.toggle('icon-eye', !isPassword);
+            eyeIcon2.classList.toggle('icon-eye-blocked', isPassword);
         });
 
         // --- Manejo de Imágenes ---
@@ -389,7 +443,7 @@ input, select {
         // --- Registro de Datos ---
         function DatosRegistro() {
             const fecha = new Date();
-            const formatofecha = `${fecha.getDate()}/${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+            const formatofecha = `${fecha.getDate()}-${fecha.getMonth() + 1}-${fecha.getFullYear()}`;
             const horaActual = fecha.toLocaleTimeString('it-IT');
 
             const objData = {
@@ -405,20 +459,17 @@ input, select {
                     status: document.getElementById("select-status-employee").value
                 },
                 User: {
-                    usuario: document.getElementById("usuario").value,
-                    clave: document.getElementById("password").value,
-                    Mclave: "null",
+                    usuario:document.getElementById("usuario").value,
+                    clave:document.getElementById("password").value,
+                    Mclave:document.getElementById("password_Master").value || "",
                     permission: document.getElementById("tipoPermiso").value,
-                },
-                fecha: formatofecha,
-                hora: horaActual
+                }
             };
 
-            console.log("Objeto enviado:", objData);
+            //console.log("Objeto enviado:", objData);
             if(window.api) api.send("save-data-registre-employee", objData);
 
-            api.send("Reload-dasboard-system-data-Employee")
-    
+     
         }
 
         // --- Notificaciones ---
@@ -432,8 +483,11 @@ input, select {
             const notif = document.getElementById('topNotif');
             notif.classList.add('show');
             clearform();
+            api.send("Reload-dasboard-system-data-Employee")
             setTimeout(() => {
                 notif.classList.remove('show');
+                
+    
             }, 3000);
         }
 
@@ -447,10 +501,7 @@ input, select {
 
         function Close() {
             
-          
-     window.close();
-
-
+                window.close();
         }
     </script>
 </body>

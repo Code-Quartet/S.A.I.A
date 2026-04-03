@@ -251,7 +251,7 @@ api.receive("Data-list-Student",(event,info)=>{
                                 <td>${student.Cod_id}</td>
                                 <td>${student.Tlf}</td>
                                 <td>${student.E_mail}</td>
-                                <td>${student.CourseName}</td>
+                                <td>${student.CourseNames}</td>
                                 <td>${student.Date_Created}/${student.Time_Created}</td>
                              <td class="td-action">
                                 <button class="btn-edit-data-table icon-info" onclick="InfoStudent('${student.Key}')"></button>
@@ -308,7 +308,7 @@ api.receive("Data-list-Student-serach",(event,info)=>{
                                 <td>${student.Cod_id}</td>
                                 <td>${student.Tlf}</td>
                                 <td>${student.E_mail}</td>
-                                <td>${student.CourseName}</td>
+                                <td>${student.CourseNames}</td>
                                 <td>${student.Date_Created}/${student.Time_Created}</td>
                                  <td class="td-action">
                                     <button class="btn-edit-data-table icon-info" onclick="InfoStudent('${student.Key}')"></button>

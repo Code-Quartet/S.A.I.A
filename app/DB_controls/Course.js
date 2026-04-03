@@ -102,79 +102,42 @@ async function DeleteCourse(key) {
         return await DB.borrar(sql, [key]);
 }
 
-/*-----------------------------*/
-async function SelectUpdateCourseKey(key){
-
-    let sql = `
-            SELECT c.*, i.Name AS Nombre_Instructor 
-            FROM Course c
-            LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
-            WHERE c.Time_Deleted IS NULL AND c.Key LIKE ?
-        `;
-        const params = [key];
-
-        let result = await DB.buscar(sql, params);
-        //console.log(result)
-        return result
-}
-/******************************************************/
-
-
+/*--------------funciones de busqueda para el manage course---------------*/
 async function GetCoursePaged(page = 1, limit = 10) {
     try {
         await DB.conectar();
         
-        // 1. Get Total Count
         const sqlCount = `SELECT COUNT(*) as total FROM Course WHERE Time_Deleted IS NULL`;
         const resCount = await DB.buscar(sqlCount);
         const totalElements = resCount?.total ?? 0;
 
-        // 2. Adaptive Logic
         let finalLimit = limit;
         let finalOffset = (page - 1) * limit;
         let finalPage = page;
 
-        // If total is small, disable pagination by returning everything on page 1
         if (totalElements <= 20) {
             finalLimit = 20; 
             finalOffset = 0;
             finalPage = 1;
         }
 
-        // 3. Fetch Data
         const sqlData = `
             SELECT 
                 C.Key, C.Name, C.Capacity, C.Start_Time, C.End_Time, 
                 C.Status, C.Cost, C.Days, C.Instructor_ID,
                 I.Name as Instructor_Name,
-                (SELECT COUNT(*) FROM Student S WHERE S.Id_curs = C.Key AND S.Time_Deleted IS NULL) AS Total_Students
+                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
             FROM Course C
             LEFT JOIN Instructor I ON C.Instructor_ID = I.Key
             WHERE C.Time_Deleted IS NULL 
-            ORDER BY C.Date_Created DESC, C.Name ASC 
+            ORDER BY C.Date_Created DESC, C.Time_Created ASC 
             LIMIT ? OFFSET ?`;
 
         const courses = await DB.buscarTodo(sqlData, [finalLimit, finalOffset]);
         const totalPages = Math.ceil(totalElements / finalLimit);
 
-        // 4. Unified Response
-        if (!courses || courses.length === 0) {
-            return {
-                success: false,
-                message: "No se encontraron cursos",
-                data: [],
-                pagination: {
-                    totalElements,
-                    totalPages: 0,
-                    currentPage: finalPage,
-                    limit: finalLimit,
-                    isPaged: totalElements > 20
-                }
-            };
-        }
-
         return {
-            success: true,
+            success: courses.length > 0,
             data: courses,
             pagination: {
                 totalElements,
@@ -186,57 +149,14 @@ async function GetCoursePaged(page = 1, limit = 10) {
                 isPaged: totalElements > 20
             }
         };
-
     } catch (error) {
         console.error("Error en GetCoursePaged:", error);
-        return { 
-            success: false, 
-            data: [], 
-            message: "Error interno al obtener cursos." 
-        };
-    }
-}
-
-
-
-async function GetAllKeyNameInnstructor(){
-    const sql = `SELECT Key, Name FROM Instructor ORDER BY Name ASC`;
-    return await DB.buscarTodo(sql);
-}
-
-async function SearchCourse(searchTerm){
-    try {
-        await DB.conectar(); 
-        const termClean = searchTerm ? searchTerm.trim() : "";
-        if (!termClean) return { success: false, message: "Debe ingresar un nombre o código." };
-
-        let sql = `
-            SELECT 
-                c.*, 
-                i.Name AS Instructor_Name,
-                (SELECT COUNT(*) FROM Student s WHERE s.Id_curs = c.Key AND s.Time_Deleted IS NULL) AS Total_Students
-            FROM Course c
-            LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
-            WHERE c.Time_Deleted IS NULL 
-            AND (c.Name LIKE ? OR c.Status LIKE ?)
-            ORDER BY c.Name ASC`;
-        
-        const wildCardTerm = `%${termClean}%`;
-        const results = await DB.buscarTodo(sql, [wildCardTerm, wildCardTerm]);
-
-        if (!results || results.length === 0) {
-            return { success: false, message: "No se encontraron resultados.", data: [] };
-        }
-
-        return { success: true, data: results, count: results.length };
-    } catch (error) {
-        return { success: false, message: "Error en la búsqueda.", data: [] };
+        return { success: false, data: [], message: "Error interno al obtener cursos." };
     }
 }
 
 async function SearchCourseByStatus(statusArray) {
     try {
-        await DB.conectar();
         if (!statusArray || !Array.isArray(statusArray) || statusArray.length === 0) {
             return { success: false, message: "No se seleccionaron estados." };
         }
@@ -244,14 +164,14 @@ async function SearchCourseByStatus(statusArray) {
         const placeholders = statusArray.map(() => "?").join(",");
         const sql = `
             SELECT 
-                c.Key, c.Name, c.Capacity, c.Status, c.Cost, c.Instructor_ID,
-                i.Name AS Nombre_Instructor,
-                (SELECT COUNT(*) FROM Student s WHERE s.Id_curs = c.Key AND s.Time_Deleted IS NULL) AS Total_Students
-            FROM Course c
-            LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
-            WHERE c.Status IN (${placeholders}) 
-            AND c.Time_Deleted IS NULL 
-            ORDER BY c.Name ASC`;
+                C.*,
+                I.Name as Instructor_Name,
+                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
+            FROM Course C
+            LEFT JOIN Instructor I ON C.Instructor_ID = I.Key
+            WHERE C.Status IN (${placeholders}) 
+              AND C.Time_Deleted IS NULL 
+            ORDER BY C.Name ASC`;
 
         const results = await DB.buscarTodo(sql, statusArray);
 
@@ -265,22 +185,71 @@ async function SearchCourseByStatus(statusArray) {
     }
 }
 
+async function SearchCourse(searchTerm) {
+    try {
+        const termClean = searchTerm ? searchTerm.trim() : "";
+        if (!termClean) return { success: false, message: "Debe ingresar un nombre o código." };
 
-async function InformationCourseSelect(key){
+        const sql = `
+            SELECT 
+                c.*, 
+                i.Name AS Instructor_Name,
+                (SELECT COUNT(*) FROM Student_Courses sc WHERE sc.Id_curs = c.Key) AS Total_Students
+            FROM Course c
+            LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
+            WHERE c.Time_Deleted IS NULL 
+              AND (c.Name LIKE ? OR c.Status LIKE ?)
+            ORDER BY c.Name ASC`;
+        
+        const wildCardTerm = `%${termClean}%`;
+        const results = await DB.buscarTodo(sql, [wildCardTerm, wildCardTerm]);
 
-   let sql = `
+        return { 
+            success: results.length > 0, 
+            data: results, 
+            count: results.length,
+            message: results.length > 0 ? "" : "No se encontraron resultados."
+        };
+    } catch (error) {
+        return { success: false, message: "Error en la búsqueda.", data: [] };
+    }
+}
+
+
+async function InformationCourseSelect(key) {
+    try {
+        const sql = `
             SELECT 
                 c.*, 
                 i.Name AS Nombre_Instructor,
-                (SELECT COUNT(*) FROM Student s WHERE s.Id_curs = c.Key AND s.Time_Deleted IS NULL) AS Total_Students
+                (SELECT COUNT(*) FROM Student_Courses sc WHERE sc.Id_curs = c.Key) AS Total_Students
             FROM Course c
             LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
             WHERE c.Time_Deleted IS NULL AND c.Key = ?
         `;
-    return await DB.buscar(sql, [key]);
+        return await DB.buscar(sql, [key]);
+    } catch (error) {
+        console.error("Error al obtener información del curso:", error);
+        return null;
+    }
 }
 
 
+async function GetAllKeyNameInnstructor() {
+    return await DB.buscarTodo(`SELECT Key, Name FROM Instructor ORDER BY Name ASC`);
+}
+
+async function SelectUpdateCourseKey(key) {
+    const sql = `
+        SELECT c.*, i.Name AS Nombre_Instructor 
+        FROM Course c
+        LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
+        WHERE c.Time_Deleted IS NULL AND c.Key = ?`;
+    return await DB.buscar(sql, [key]);
+}
+/*--------------funciones de busqueda para el manage course----------------*/
+
+/*funcion para el uso del Dasboard*/
 async function GetTopCourses() {
     try {
         await DB.conectar();

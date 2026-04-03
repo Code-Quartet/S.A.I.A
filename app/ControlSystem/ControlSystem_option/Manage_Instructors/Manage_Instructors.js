@@ -233,7 +233,7 @@ searchInput.addEventListener('input', async (e) => {
             div.className = 'preview-item-search';
             div.innerHTML = `
                 <div>Nombre:${Instructor.Name}</div>
-                <div style="margin-left:35px">Descricción:${Instructor.Cod_id}</div>
+                <div style="margin-left:35px">CI:${Instructor.Cod_id}</div>
             `;
             
             div.onclick = () => ejecutarBusquedaFinal(Instructor);

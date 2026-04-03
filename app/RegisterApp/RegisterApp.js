@@ -179,7 +179,6 @@ await DB.crearTabla(`CREATE TABLE Instructor (
 
 await DB.crearTabla(`CREATE TABLE Student (
     Key TEXT PRIMARY KEY,
-    Id_curs TEXT NOT NULL,
     Name TEXT NOT NULL,
     Cod_id TEXT NOT NULL UNIQUE,
     Age TEXT,
@@ -194,8 +193,7 @@ await DB.crearTabla(`CREATE TABLE Student (
     E_mail_Representative TEXT,
     Date_Created DATE NOT NULL,
     Time_Created TIME NOT NULL,
-    Time_Deleted DATE,
-    FOREIGN KEY (Id_curs) REFERENCES Course(Key) 
+    Time_Deleted DATE
 )`);
 
 //Tabla Curso
@@ -217,6 +215,26 @@ await DB.crearTabla(`CREATE TABLE Student (
     Date_Created DATE NOT NULL,
     Time_Created TIME NOT NULL,
     Time_Deleted DATE                     -- Para borrado lógico
+)`);
+
+//Tabla Student_Courses
+  await DB.crearTabla(`CREATE TABLE IF NOT EXISTS Student_Courses (
+    Id_student_key TEXT NOT NULL,
+    Id_curs TEXT NOT NULL,
+    Date_Enrolled DATE DEFAULT (date('now')),
+    
+    -- Definimos la clave primaria compuesta para evitar duplicados
+    -- (Un estudiante no puede estar inscrito dos veces en el mismo curso)
+    PRIMARY KEY (Id_student_key, Id_curs),
+    
+    -- Relaciones con borrado en cascada
+    FOREIGN KEY (Id_student_key) 
+        REFERENCES Student (Key) 
+        ON DELETE CASCADE,
+    
+    FOREIGN KEY (Id_curs) 
+        REFERENCES Course (Id_curs) 
+        ON DELETE CASCADE
 )`);
 
 
@@ -273,13 +291,13 @@ async function Adding_data_Admin_data(data){
         // Inserción en tabla User
         DB.crear(
             `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, 'Administrador', data.fecha, data.hora]
+             VALUES (?, ?, ?, ?, ?, date('now'), time('now'))`,
+            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, 'Administrador']
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
             `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`,
             [
                 ID_EMPLOYEE, 
                 data.Employee.nombre, 
@@ -290,10 +308,7 @@ async function Adding_data_Admin_data(data){
                 data.Employee.correo, 
                 data.Employee.fechanacimiento, 
                 data.Employee.image,
-                "Activo",
-                ID_USER, 
-                data.fecha, 
-                data.hora
+                "Activo"
                
             ]
         )
@@ -423,13 +438,13 @@ async function Adding_data_Admin_trial(){
         // Inserción en tabla User
         DB.crear(
             `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [ID_USER, "Admin", "123456789", "123456789", 'Administrador', "0/0/0000","00-00"]
+             VALUES (?, ?, ?, ?, ?, date('now'), time('now'))`,
+            [ID_USER, "Admin", "123456789", "123456789", 'Administrador']
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
             `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`,
              [  
              ID_EMPLOYEE, 
                "TrialNombreAdmin", 
@@ -441,9 +456,7 @@ async function Adding_data_Admin_trial(){
                 "00/00/0000", 
                 ImageDefault,
                 "Activo",
-                ID_USER, 
-                "00/0/0000", 
-                "00-00"
+                ID_USER
                 ]
 
         )

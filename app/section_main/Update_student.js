@@ -11,7 +11,9 @@ const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*---------------------------------------------------------------*/
 const {GetListDataCourseStudent,GetdataStudent,UpdateStudent} = require(path.join(__dirname,'../DB_controls/Student'));
 /*---------------------------------------------------------------*/
-
+const ImageDefault = path.join(__dirname,"../assets/imagen/ImageLogin3.png")
+/*---------------------------------------------------------------*/
+/*-------------------------------------*/
 let window_Update_studient;
 let key_student=""
 module.exports = function Update_studient(parentWindow,key){
@@ -20,7 +22,7 @@ module.exports = function Update_studient(parentWindow,key){
         width:990,
         height:530,
       // modal: true,
-        resizable:false, 
+       resizable:false, 
         frame:false,
       //  parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
@@ -33,7 +35,7 @@ module.exports = function Update_studient(parentWindow,key){
         }
     });
 
-    window_Update_studient.loadFile('app/section_main/Update_student.html');
+    window_Update_studient.loadFile('app/section_main/Update_studentV3.html');
 
     // Herramientas de desarrollo
   //window_Update_studient.webContents.openDevTools();
@@ -90,7 +92,7 @@ ipcMain.on("select-Image-new-student-update",(even,data)=>{
       
       if(result.canceled==true){
 
-          window_Update_studient.webContents.send('Image-select-new-student-update',ImageDefault);
+          //window_Update_studient.webContents.send('Image-select-new-student-update',ImageDefault);
       }
 
       }).catch(err => {
@@ -100,20 +102,25 @@ ipcMain.on("select-Image-new-student-update",(even,data)=>{
       });
 })
 
+ipcMain.on("Register-update-data-student", (event, data) => {
+    console.log("Recibiendo datos para actualizar:", data);
 
-ipcMain.on("Register-update-data-student",(even,data)=>{
-   
-    console.log("Register-update-data-student",data)
+    // Es buena práctica verificar si la ventana aún existe
+    if (!window_Update_studient || window_Update_studient.isDestroyed()) {
+        console.error("La ventana de actualización no existe o fue cerrada.");
+        return;
+    }
 
-    UpdateStudent(data.Key,data).then((result)=>{
-                  
-       window_Update_studient.webContents.send("Open-modal-message-student-update")
-          
-          //console.log("Open-modal-message-student-update",result)
-    }).catch((error)=>{
+    UpdateStudent(data.key,data)
+        .then((result) => {
+            console.log("Estudiante actualizado con éxito:", result);
             
-        console.log("ERROR DATA SAVE REGISTRO",error)
-
-    })
-
-})
+            // Enviamos la señal a la ventana
+            window_Update_studient.webContents.send("Open-modal-message-student-update");
+        })
+        .catch((error) => {
+            console.error("ERROR AL GUARDAR REGISTRO:", error);
+            // Opcional: Notificar al frontend que hubo un error
+            // window_Update_studient.webContents.send("error-en-actualizacion", error.message);
+        });
+});

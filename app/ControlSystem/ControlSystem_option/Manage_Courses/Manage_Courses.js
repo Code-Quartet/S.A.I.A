@@ -51,7 +51,7 @@ let template_register_course =`
     <table>
         <thead>
             <tr>
-               <th>Curso</th><th>Cupo</th><th>Horario</th><th>Instructor</th><th>Capacidad</th><th>Inscritos</th><th>Estado</th><th>Acciones</th>
+               <th>Curso</th><th>Horario</th><th>Instructor</th><th>Capacidad</th><th>Inscritos</th><th>Estado</th><th>Acciones</th>
             </tr>
         </thead>
         <tbody id="listaCursos">
@@ -179,7 +179,7 @@ searchInput.addEventListener('input', async (e) => {
             div.className = 'preview-item-search';
             div.innerHTML = `
                 <div>Nombre:${course.Name}</div>
-                <div style="margin-left:35px">Descricción:${course.Description}</div>
+                <div style="margin-left:35px">Descripción:${course.Description}</div>
             `;
             
             div.onclick = () => ejecutarBusquedaFinal(course);
@@ -270,24 +270,23 @@ api.receive("Data-list-course-search",(event,info)=>{
     const table = document.getElementById('listaCursos');
     table.innerHTML="";
     if(info.success==true){
-    info.data.forEach((course,index)=>{
+        info.data.forEach((course,index)=>{
 
-             table.innerHTML += `
-                <tr>
-                    <td>${course.Name}</td>
-                    <td>${course.Capacity}</td>
-                    <td>${course.Start_Time}/${course.End_Time}</td>
-                    <td>${course.Instructor_Name}</td>
-                         <td>${course.Capacity}</td>
-                            <td>${course.Total_courses}</td>
-                    <td><span class="${course.Status}">${course.Status}</span></td>
-                    <td class="td-action">
-                    <button class="btn-edit-data-table icon-info" onclick="InfoCourse('${course.Key}')"></button>
-                        <button class="btn-edit-data-table icon-pencil" onclick="EditCourse('${course.Key}')"></button>
-                        <button class="btn-delete-data-table icon-bin"  onclick="Delete_course('${course.Key}')"></button>
-                    </td>
-                </tr>
-            `;
+                 table.innerHTML += `
+                    <tr>
+                        <td>${course.Name}</td>
+                        <td>${course.Start_Time}/${course.End_Time}</td>
+                        <td>${course.Instructor_Name}</td>
+                             <td>${course.Capacity}</td>
+                                <td>${course.Total_Students}</td>
+                        <td><span class="${course.Status}">${course.Status}</span></td>
+                        <td class="td-action">
+                        <button class="btn-edit-data-table icon-info" onclick="InfoCourse('${course.Key}')"></button>
+                            <button class="btn-edit-data-table icon-pencil" onclick="EditCourse('${course.Key}')"></button>
+                            <button class="btn-delete-data-table icon-bin"  onclick="Delete_course('${course.Key}')"></button>
+                        </td>
+                    </tr>
+                `;
 
     })
     }
@@ -300,49 +299,24 @@ api.receive("Data-list-course-search",(event,info)=>{
 
 
 })
-/*{
-    "success": true,
-    "data": [
-        {
-            "Key": "f4e241ea-cba2-415f-864b-0a20a6a6e5fc",
-            "Name": "Computacion",
-            "Capacity": 4,
-            "Start_Time": "19:00",
-            "End_Time": "22:00",
-            "Status": "Activo",
-            "Cost": "1212",
-            "Days": "Mar,Mie,Jue,Vie",
-            "Instructor_ID": "4c361c18-e687-4caa-a91a-68fc740b39f5",
-            "Instructor_Name": "Pool",
-            "Total_courses": 0
-        },
-        {
-            "Key": "a8ae429a-9d87-4bd0-aa56-5903998f3203",
-            "Name": "Manejo Zero",
-            "Capacity": 54,
-            "Start_Time": "07:00",
-            "End_Time": "15:00",
-            "Status": "Activo",
-            "Cost": "465",
-            "Days": "Lun,Mar,Mie,Jue",
-            "Instructor_ID": "d68a40bb-1761-42eb-84dc-9ea971fa2934",
-            "Instructor_Name": "Caerlos",
-            "Total_courses": 4
-        }
-    ],
-    "pagination": {
-        "totalElements": 0,
-        "totalPages": 0,
-        "currentPage": 1,
-        "limit": 10,
-        "hasNext": false,
-        "hasPrev": false
-    }
-}*/
+
 api.receive("Data-list-course",(event,info)=>{
 
     console.log(info)
-
+    /*
+   {
+     Key: 'C-5',
+     Name: 'Soldadura',
+     Capacity: 20,
+     Start_Time: '08:00',
+     End_Time: '10:00',
+     Status: 'Activo',
+     Cost: '50',
+     Days: 'Lun,Mar',
+     Instructor_ID: 'I-6',
+     Instructor_Name: 'Instructor 6',
+     Total_Students: 15
+   }*/
     const table = document.getElementById('listaCursos');
     table.innerHTML="";
 
@@ -352,11 +326,10 @@ api.receive("Data-list-course",(event,info)=>{
                      table.innerHTML += `
                         <tr>
                             <td>${course.Name}</td>
-                            <td>${course.Capacity}</td>
                             <td>${course.Start_Time}/${course.End_Time}</td>
                             <td>${course.Instructor_Name}</td>
                             <td>${course.Capacity}</td>
-                            <td>${course.Total_courses}</td>
+                            <td>${course.Total_Students}</td>
                             <td><span class="${course.Status}">${course.Status}</span></td>
                             <td class="td-action">
                                 <button class="btn-edit-data-table icon-info" onclick="InfoCourse('${course.Key}')"></button>
@@ -437,8 +410,6 @@ function SearchPaginationCourse(index){
 
 
 }
-
-
 
 function OpenNewCourse(){
 

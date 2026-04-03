@@ -17,8 +17,8 @@ let window_Info_student;
 let Key_Student=null;
 module.exports = function Info_student(parentWindow,key) {
   window_Info_student = new BrowserWindow({
-        width:630,
-        height:490,
+        width:600,
+        height:500,
        modal: true,
        resizable:false, 
       frame:false,
@@ -36,7 +36,7 @@ module.exports = function Info_student(parentWindow,key) {
     window_Info_student.loadFile('app/section_main/Info_Student.html');
 
     // Herramientas de desarrollo
-      //window_Info_student.webContents.openDevTools();
+   // window_Info_student.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Info_student.webContents.setWindowOpenHandler(() => {

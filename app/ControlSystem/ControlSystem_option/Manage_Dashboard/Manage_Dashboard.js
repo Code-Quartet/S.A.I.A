@@ -134,7 +134,7 @@ api.receive("List-history-data-user", (event, historyList) => {
                     <div class="dashboard-event-dot ${dotClass}"></div>
                     <div class="dashboard-session-info">
                         <strong>Usuario: ${history.Username}</strong>
-                        <span>${history.Date} | ${history.Time} (${history.Event_Type})</span>
+                        <span>${history.Date_Created} | ${history.Time_Created} (${history.Event_Type})</span>
                     </div>
                 </div>`;
         });

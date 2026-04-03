@@ -12,7 +12,9 @@ const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*---------------------------------------------------------------*/
 const {GetListDataCourseStudent,RegisterStudent,GetdataStudent} = require(path.join(__dirname,'../DB_controls/Student'));
 /*---------------------------------------------------------------*/
-
+/*--------------LINK BASE DE DATOS ------------------------*/
+const ImageDefault = path.join(__dirname,"../assets/imagen/ImageLogin3.png")
+/*---------------------------------------------------------------*/
 let window_Register_student;
 
 module.exports = function Register_student(parentWindow) {
@@ -33,7 +35,7 @@ module.exports = function Register_student(parentWindow) {
         }
     });
 
-    window_Register_student.loadFile('app/section_main/Register_Student.html');
+    window_Register_student.loadFile('app/section_main/Register_StudentV3.html');
 
     //Herramientas de desarrollo
     //window_Register_student.webContents.openDevTools();
@@ -86,7 +88,7 @@ ipcMain.on("select-Image-new-student",(even,data)=>{
       
       if(result.canceled==true){
 
-          window_Register_student.webContents.send("Image-select-new-student",ImageDefault);
+         // window_Register_student.webContents.send("Image-select-new-student",ImageDefault);
       }
 
       }).catch(err => {
