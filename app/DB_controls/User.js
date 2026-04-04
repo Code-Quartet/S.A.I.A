@@ -10,6 +10,7 @@ const DB = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
 
 async function login_system(data) {
+
     try {
         await DB.conectar();
 
@@ -21,10 +22,7 @@ async function login_system(data) {
                 E.Tlf, E.E_mail, E.Image, E.Id_user
             FROM User U
             INNER JOIN Employee E ON U.Key = E.Id_user
-            WHERE U.Username = ? 
-              AND U.Password = ? 
-              
-        `;
+            WHERE U.Username = ? AND U.Password = ?`;
 
         const params = [data.username, data.password];
         const result = await DB.buscar(sql, params);

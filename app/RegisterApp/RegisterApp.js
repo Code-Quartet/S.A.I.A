@@ -11,7 +11,7 @@ const { DataTrialSAIA} = require(path.join(__dirname,'../DataBase/DataTrialSAIA'
 const setupLicense = require(path.join(__dirname,'../DataBase/.data.js'))
 /*--------------LINK BASE DE DATOS ------------------------*/
 /*--------------LINK BASE DE DATOS ------------------------*/
-const ImageDefault = path.join(__dirname,"../assets/imagen/business.png")
+const ImageDefault = path.join(__dirname,"../assets/imagen/ImageLogin3.png")
 /*-----------------------------------*/
 
 let window_register_app;
@@ -263,7 +263,7 @@ ipcMain.on("select-image-user",(event, arg) => {
       
       if(result.canceled==true){
 
-                window_register_app.webContents.send("Imagen-user-select",ImageDefault);
+               //window_register_app.webContents.send("Imagen-user-select",ImageDefault);
 
       }
 
@@ -291,14 +291,14 @@ async function Adding_data_Admin_data(data){
         // Inserción en tabla User
         DB.crear(
             `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, date('now'), time('now'))`,
+             VALUES (?, ?, ?, ?, ?, Date('now'), Time('now'))`,
             [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, 'Administrador']
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
             `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`,
-            [
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, Date('now'), Time('now'))`,
+           [
                 ID_EMPLOYEE, 
                 data.Employee.nombre, 
                 data.Employee.ci, 
@@ -308,7 +308,8 @@ async function Adding_data_Admin_data(data){
                 data.Employee.correo, 
                 data.Employee.fechanacimiento, 
                 data.Employee.image,
-                "Activo"
+                 "Activo",
+                    ID_USER
                
             ]
         )
@@ -438,13 +439,13 @@ async function Adding_data_Admin_trial(){
         // Inserción en tabla User
         DB.crear(
             `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, date('now'), time('now'))`,
+             VALUES (?, ?, ?, ?, ?, Date('now'), Time('now'))`,
             [ID_USER, "Admin", "123456789", "123456789", 'Administrador']
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
             `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`,
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, Date('now'), Time('now'))`,
              [  
              ID_EMPLOYEE, 
                "TrialNombreAdmin", 

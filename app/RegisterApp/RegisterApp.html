@@ -102,7 +102,7 @@
             </div>
 
             <div class="column2">
-                <div class="form-group ContainerUploadImagen" >
+                <div class="form-group ContainerUploadImagen" id="ContainerUploadImagen" >
                     <div class="file-upload-container-new-registre" style="border-style: none;">
                        <label class="image-uploader" for="fileInputregister">
                         <div class="main-circle">
@@ -118,7 +118,7 @@
                 </div>         
               <div class="form-group">
                     <label>Nombre de Usuario</label>
-                   <input type="text" id="usuario" value="Admin" placeholder="Rosa María Pérez Gonzales" style="
+                   <input type="text" id="usuario" value="Admin" placeholder="Admin" style="
     width: 90%;
 ">
               </div>
@@ -237,7 +237,7 @@ function Modal_register_data_admin(){
 }
 
 /*FUNCION DE APERTURA DEL MODAL*/
-document.getElementById("Btn_select_image_user").addEventListener("click",(event)=>{
+document.getElementById("ContainerUploadImagen").addEventListener("click",(event)=>{
 
   api.send("select-image-user")
 

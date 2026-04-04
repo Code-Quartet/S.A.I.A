@@ -130,14 +130,15 @@ ipcMain.on('Login-user-master-permission',async(event,data) => {
 
 ipcMain.on('Login-user-app',async(event,data) => {
 
-     await login_system(data).then(async (result)=>{
+console.log("login",data)
+     await login_system(data).then(async(result)=>{
 
         if(result!=null){
 
           User_sesion_login=result;
 
           mainWindow.send("Data-user-employee",result)
-         // console.log("result",result.user.key)
+         console.log("result",result.user.key)
           await RegisterSessionEvent(result.user.key, 'LOGIN');
 
         }else{
