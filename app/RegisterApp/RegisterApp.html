@@ -204,9 +204,9 @@ document.getElementById("btn-trial-system").addEventListener("click",()=>{
 	
 	api.send("Activate-system-trial")
 
-
 })
 */
+
 document.getElementById("btn-install-system").addEventListener("click",()=>{
   
   Modal_register_data_admin()
@@ -220,15 +220,16 @@ function Modal_register_data_admin(){
 	const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");
 	modalRegisterInstallApp.style.display = "flex";
 
-	    const closeBtnRegisterInstallApp = document.getElementById("CloseModal");
+	    
         const confirmBtnRegisterInstallApp = document.getElementById("RegisterData");
-
         // Función para abrir el modalRegisterApp
-        confirmBtnRegisterInstallApp.addEventListener("click", () => {
+        confirmBtnRegisterInstallApp.addEventListener("click",() => {
 
            obtenerYValidarDatosRegistro()
+
         });
 
+        const closeBtnRegisterInstallApp = document.getElementById("CloseModal");
         // Función para cerrar el modalRegisterApp (X)
         closeBtnRegisterInstallApp.addEventListener("click", () => {
             modalRegisterInstallApp.style.display = "none";
@@ -282,12 +283,11 @@ function obtenerYValidarDatosRegistro(){
                }
             }
 
-if(document.getElementById("usuario").value=="admin" && document.getElementById("password").value=="123456789"){
+if(document.getElementById("usuario").value=="Admin" && document.getElementById("password").value=="123456789"){
 
               api.send('open-message-system-user-pass-default',"Mantiene los datos usuario / contraseñas por defecto")
 
             }
-    		
     }
     else{
     	api.send("message-campos-vacios","complete todo los campos")
@@ -343,7 +343,7 @@ api.receive("Completed-Saving-data",(event,data)=>{
 
 /*---------------funcion button eyes---------------------------*/
 
-  const passwordInput1 = document.getElementById('password1');
+  const passwordInput1 = document.getElementById('password');
   const toggleBtn1 = document.getElementById('toggleBtn1');
   const eyeIcon1 = document.getElementById('eyeIcon1');
 
@@ -362,7 +362,7 @@ api.receive("Completed-Saving-data",(event,data)=>{
     }
   }); 
 
-const passwordInput2 = document.getElementById('Mpassword2');
+const passwordInput2 = document.getElementById('Mpassword');
   const toggleBtn2 = document.getElementById('toggleBtn2');
   const eyeIcon2 = document.getElementById('eyeIcon2');
 
