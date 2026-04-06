@@ -59,7 +59,6 @@
   position: relative;
   width: 150px;
   height: 150px;
-  pointer-events: none;
   cursor: pointer;
  
 }

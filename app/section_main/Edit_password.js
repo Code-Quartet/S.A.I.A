@@ -20,7 +20,7 @@ let ID_user="";
 module.exports = function Edit_password(parentWindow,iduser) {
   window_edit_password = new BrowserWindow({
         width:470,
-        height:430,
+        height:400,
         modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo

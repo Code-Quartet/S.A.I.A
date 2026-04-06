@@ -189,8 +189,6 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
 ipcMain.on("Login-out-user-register",async(event,data) => {
 
-    console.log(User_sesion_login.user.key)
-
     await RegisterSessionEvent(User_sesion_login.user.key, 'LOGOUT');
 
 })
@@ -287,28 +285,25 @@ ipcMain.on('Image-select-my-profile',(event,id) => {
 
       if(result.canceled==false){
 
-          mainWindow.webContents.send("Imagen-user-select-my-profile",result.filePaths[0]);
+      mainWindow.webContents.send("Imagen-user-select-my-profile",result.filePaths[0]);
+      mainWindow.webContents.send("notification-my-profile");
+      setTimeout(function(){
+
+              mainWindow.webContents.send("reload-user-data-modif");
+
+        
+      },1500)
+
+        UpdateImagenAvatar(id,result.filePaths[0])
+
       }
       
       if(result.canceled==true){
 
-          mainWindow.webContents.send("Imagen-user-select-my-profile",ImageDefault);
+         // mainWindow.webContents.send("Imagen-user-select-my-profile",ImageDefault);
       }
 
-      
-        /*--------------------*/
-        UpdateImagenAvatar(id,result.filePaths[0]).then((result)=>{
 
-                 mainWindow.webContents.send("notification-my-profile")
-
-                  mainWindow.webContents.send("reload-user-data-modif")
-
-
-        }).catch((err)=>{
-
-
-        })
-        /*-----*/
       }).catch((err) => {
         
          console.log(err)

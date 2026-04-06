@@ -7,13 +7,13 @@ function My_Profile(id){
 
 	document.getElementById(id).innerHTML=`<div class="container-user-info">
             <div class="container-form">
-	            <div class="form-my-profile" id="btnCamaraMyProfile">
+	            <div class="form-my-profile" >
 					<div class="profile-container">
 					  <div class="image-uploader" for="fileInput" >
 					    <div class="main-circle">
 					      <img id="avatarPreviewMyprofile" class="avatar-main" src="file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/business.png" alt="imagen-dasboard">
 					    </div>
-					    <button class="camera-button" >
+					    <button class="camera-button" id="btnCamaraMyProfile">
 					   	   <span class="icon-camera"></span> 
 					    </button>
 					  </div>
@@ -157,6 +157,7 @@ function My_Profile(id){
 
     /********** SISTEMAA DE BOTON DE CAMARA*******************************/
     document.getElementById("btnCamaraMyProfile").addEventListener("click",(event)=>{
+        console.log("nksn")
 
             let obj={
                 key:Data_user.key,

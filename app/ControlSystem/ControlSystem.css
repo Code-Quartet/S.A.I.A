@@ -42,6 +42,8 @@
     display: flex;
     align-items: center;
     transition: background 0.3s;
+    font-weight: bold;
+    font-size: 14px;
 }
 
 .menu-item span {
@@ -100,7 +102,8 @@
 
 .ItemMenuActive {
     border-bottom: 0.5px solid white;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     border-left: 6px solid #f3f3f3;
+    color: white;
 }
