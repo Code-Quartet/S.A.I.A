@@ -355,6 +355,7 @@ justify-content: space-between;
     border-style: none;
     font-size: 13px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .btn-export {
@@ -365,6 +366,7 @@ justify-content: space-between;
     border-style: none;
     font-size: 13px;
     font-weight: bold;
+    cursor: pointer;
 }
 .btn-apply {
     background: #2b56c5;
@@ -374,6 +376,7 @@ justify-content: space-between;
     border-style: none;
     font-size: 13px;
     font-weight: bold;
+    cursor: pointer;
 }
 .btn-reset{
 background:white;
@@ -383,6 +386,7 @@ background:white;
     border-style: none;
     font-size: 13px;
     font-weight: bold;
+    cursor: pointer;
 
 }
 .btn-trash {
@@ -393,22 +397,26 @@ background:white;
     border-style: none;
     font-size: 13px;
     font-weight: bold;
+    cursor: pointer;
 }
 .btn-edit-data-table{
 	background:white;
 	color:  blue;
 	 border-style: none;
+     cursor: pointer;
 }
 
 .btn-undo-table{
 	background:white;
 	color:  blue;
 	 border-style: none;
+     cursor: pointer;
 }
 .btn-delete-data-table{
 	background:white;
 color:red;
  border-style: none;
+ cursor: pointer;
 }
 
 

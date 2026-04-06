@@ -62,6 +62,7 @@ body {
     height: 100%; 
     object-fit: cover;
      pointer-events: none; 
+     cursor: pointer;
 }
 
 .camera-button {
@@ -155,12 +156,12 @@ body {
     </div>
 
     <form id="instructorForm" class="form-container">
-        <div class="field-grid1">
+        <div class="field-grid1" onclick="SelectImagenInstructor()">
             <div class="main-circle">
                 <img id="imagen" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="avatar">
            
             </div>
-                 <button type="button" class="camera-button" onclick="SelectImagenInstructor()">
+                 <button type="button" class="camera-button" >
                     <span class="icon-camera"></span>
                 </button>
         </div>

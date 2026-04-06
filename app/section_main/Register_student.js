@@ -35,7 +35,7 @@ module.exports = function Register_student(parentWindow) {
         }
     });
 
-    window_Register_student.loadFile('app/section_main/Register_StudentV3.html');
+    window_Register_student.loadFile('app/section_main/Register_StudentV4.html');
 
     //Herramientas de desarrollo
     //window_Register_student.webContents.openDevTools();

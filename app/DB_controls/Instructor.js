@@ -3,8 +3,8 @@ const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
 /*-------------------------------------*/
-const SAIADB = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
-const db = new SAIADB(path.join(__dirname,'../DataBase/SAIA.db'));
+const SAIAdb = require(path.join(__dirname,'../DataBase/SAIA_manager.js'))
+const db = new SAIAdb(path.join(__dirname,'../DataBase/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
 
 
@@ -220,9 +220,67 @@ async function UpdateInstructor(key, data) {
     }
 }
 
-async function DeleteInstructor(key) {
-    const sql = `UPDATE Instructor SET Time_Deleted = date('now') WHERE Key = ?`;
-    return await db.actualizar(sql, [key]);
+async function DeleteInstructor(instructorKey){
+
+     console.log("DeleteInstructor",instructorKey)
+
+    const STATUS_REQUIRED = "Despedido";
+    try {
+        await db.beginTransaction();
+
+        // 1. Obtener Status para validar condiciones
+        const sqlFind = `SELECT Status FROM Instructor WHERE Key = ? AND Time_Deleted IS NULL`;
+        const instructor = await db.buscar(sqlFind, [instructorKey]);
+
+        //console.log("instructor",instructor)
+        
+        // Validar existencia
+        if (!instructor) {
+            await db.rollback();
+            return {
+                success: false,
+                title:"warning",
+                type:"warning",
+                message: "El instructor no existe o ya fue desactivado." };
+        }
+
+        // 2. Validar que el Status sea el correcto para proceder
+        if (instructor.Status !== STATUS_REQUIRED) {
+            await db.rollback();
+            return { 
+                success: false,
+                title:"Error",
+                type:"error",
+                message: `No se puede eliminar: El estado actual es '${instructor.Status}', pero debe ser '${STATUS_REQUIRED}'.` 
+            };
+        }
+
+        const userKey = instructor.Id_user;
+
+        // 3. Marcar borrado lógico en instructor
+        const sqlDelinstructor = `UPDATE Instructor SET Time_Deleted = date('now') WHERE Key = ?`;
+        await db.actualizar(sqlDelinstructor, [instructorKey]);
+
+        // 4. Marcar borrado lógico en User si existe relación
+        if (userKey) {
+            const sqlDelUser = `UPDATE User SET Time_Deleted = date('now') WHERE Key = ?`;
+            await db.actualizar(sqlDelUser, [userKey]);
+        }
+
+        await db.commit();
+        return { success: true,
+         title:"info", 
+         type:"info",
+         message: "Registro desactivado con éxito." };
+
+    } catch (error) {
+        // Aseguramos el rollback en caso de cualquier error de db
+        if (db.inTransaction) await db.rollback();
+        console.error("Error en el borrado lógico:", error);
+        return { success: false, message: "Error interno en el servidor." };
+    }
+
+       
 }
 
 async function PermanentErase(key) {

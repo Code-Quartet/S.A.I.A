@@ -60,6 +60,7 @@
   width: 150px;
   height: 150px;
   pointer-events: none;
+  cursor: pointer;
  
 }
 
@@ -72,6 +73,8 @@
     overflow: hidden;
     /* background: red; */
     border: 8px solid #e4e4e4;
+    cursor: pointer;
+ 
 }
 
 /* Estilo de tu imagen específica */
@@ -82,6 +85,8 @@
     background: blue;
     object-fit: revert;
     pointer-events: none;
+     cursor: pointer;
+ 
 }
 
 /* Botón de cámara superpuesto */

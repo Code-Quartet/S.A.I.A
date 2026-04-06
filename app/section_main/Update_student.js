@@ -35,7 +35,7 @@ module.exports = function Update_studient(parentWindow,key){
         }
     });
 
-    window_Update_studient.loadFile('app/section_main/Update_studentV3.html');
+    window_Update_studient.loadFile('app/section_main/Update_studentV4.html');
 
     // Herramientas de desarrollo
   //window_Update_studient.webContents.openDevTools();

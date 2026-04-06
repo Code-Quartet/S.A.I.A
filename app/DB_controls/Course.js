@@ -107,20 +107,24 @@ async function GetCoursePaged(page = 1, limit = 10) {
     try {
         await DB.conectar();
         
+        // 1. Obtener el total de elementos activos
         const sqlCount = `SELECT COUNT(*) as total FROM Course WHERE Time_Deleted IS NULL`;
         const resCount = await DB.buscar(sqlCount);
         const totalElements = resCount?.total ?? 0;
 
+        // 2. Lógica adaptativa de paginación
         let finalLimit = limit;
         let finalOffset = (page - 1) * limit;
         let finalPage = page;
 
+        // Si hay pocos elementos, forzamos vista única (desactivamos paginación)
         if (totalElements <= 20) {
             finalLimit = 20; 
             finalOffset = 0;
             finalPage = 1;
         }
 
+        // 3. Consultar datos con la subconsulta corregida para la tabla intermedia
         const sqlData = `
             SELECT 
                 C.Key, C.Name, C.Capacity, C.Start_Time, C.End_Time, 
@@ -134,10 +138,29 @@ async function GetCoursePaged(page = 1, limit = 10) {
             LIMIT ? OFFSET ?`;
 
         const courses = await DB.buscarTodo(sqlData, [finalLimit, finalOffset]);
+        
+        // 4. Calcular total de páginas basándonos en el límite final
         const totalPages = Math.ceil(totalElements / finalLimit);
 
+        // Caso: No hay registros o la página solicitada está fuera de rango
+        if (!courses || courses.length === 0) {
+            return {
+                success: false,
+                message: "No se encontraron cursos en esta sección.",
+                data: [],
+                pagination: {
+                    totalElements,
+                    totalPages,
+                    currentPage: finalPage,
+                    limit: finalLimit,
+                    isPaged: totalElements > 20
+                }
+            };
+        }
+
+        // Caso: Éxito con datos
         return {
-            success: courses.length > 0,
+            success: true,
             data: courses,
             pagination: {
                 totalElements,
@@ -149,12 +172,16 @@ async function GetCoursePaged(page = 1, limit = 10) {
                 isPaged: totalElements > 20
             }
         };
+
     } catch (error) {
         console.error("Error en GetCoursePaged:", error);
-        return { success: false, data: [], message: "Error interno al obtener cursos." };
+        return { 
+            success: false, 
+            data: [], 
+            message: "Error interno al obtener la lista de cursos." 
+        };
     }
 }
-
 async function SearchCourseByStatus(statusArray) {
     try {
         if (!statusArray || !Array.isArray(statusArray) || statusArray.length === 0) {

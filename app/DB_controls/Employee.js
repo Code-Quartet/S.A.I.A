@@ -341,41 +341,65 @@ async function UpdateEmployee(employeeKey, updatedData) {
     }
 }
 
+
 async function DeleteEmployeeLogical(employeeKey) {
+    const STATUS_REQUIRED = "Despedido";
+
     try {
         await DB.beginTransaction();
 
-        // 1. Obtener el Id_user (Garantizamos que el empleado existe)
-        const sqlFindUser = `SELECT Id_user FROM Employee WHERE Key = ? AND Time_Deleted IS NULL`;
-        const employee = await DB.buscar(sqlFindUser, [employeeKey]);
+        // 1. Obtener Id_user y Status para validar condiciones
+        const sqlFind = `SELECT Id_user, Status FROM Employee WHERE Key = ? AND Time_Deleted IS NULL`;
+        const employee = await DB.buscar(sqlFind, [employeeKey]);
         
+        // Validar existencia
         if (!employee) {
             await DB.rollback();
-            return { success: false, message: "El empleado no existe o ya fue desactivado." };
+            return {
+                success: false,
+                title:"warning",
+                type:"warning",
+                message: "El empleado no existe o ya fue desactivado." };
+        }
+
+        // 2. Validar que el Status sea el correcto para proceder
+        if (employee.Status !== STATUS_REQUIRED) {
+            await DB.rollback();
+            return { 
+                success: false,
+                title:"Error",
+                type:"error",
+                message: `No se puede eliminar: El estado actual es '${employee.Status}', pero debe ser '${STATUS_REQUIRED}'.` 
+            };
         }
 
         const userKey = employee.Id_user;
-        const fechaActual = new Date().toISOString().split('T')[0];
 
-        // 2. Marcar borrado lógico en Employee
-        const sqlDelEmployee = `UPDATE Employee SET Time_Deleted = ? WHERE Key = ?`;
-        await DB.actualizar(sqlDelEmployee, [fechaActual, employeeKey]);
+        // 3. Marcar borrado lógico en Employee
+        const sqlDelEmployee = `UPDATE Employee SET Time_Deleted = date('now') WHERE Key = ?`;
+        await DB.actualizar(sqlDelEmployee, [employeeKey]);
 
-        // 3. Marcar borrado lógico en User si existe
+        // 4. Marcar borrado lógico en User si existe relación
         if (userKey) {
-            const sqlDelUser = `UPDATE User SET Time_Deleted = ? WHERE Key = ?`;
-            await DB.actualizar(sqlDelUser, [fechaActual, userKey]);
+            const sqlDelUser = `UPDATE User SET Time_Deleted = date('now') WHERE Key = ?`;
+            await DB.actualizar(sqlDelUser, [userKey]);
         }
 
         await DB.commit();
-        return { success: true, message: "Registro desactivado con éxito." };
+        return { success: true,
+         title:"info", 
+         type:"info",
+         message: "Registro desactivado con éxito." };
 
     } catch (error) {
-        await DB.rollback();
+        // Aseguramos el rollback en caso de cualquier error de DB
+        if (DB.inTransaction) await DB.rollback();
         console.error("Error en el borrado lógico:", error);
-        return { success: false, message: "Error interno: " + error.message };
+        return { success: false, message: "Error interno en el servidor." };
     }
 }
+
+
 
 async function DeleteEmployeePermanent(employeeKey) {
     try {

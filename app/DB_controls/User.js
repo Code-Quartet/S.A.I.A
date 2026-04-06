@@ -15,14 +15,13 @@ async function login_system(data) {
         await DB.conectar();
 
         // Agregamos alias (U_ y E_) para evitar colisiones de nombres como 'Key'
-        const sql = `
-            SELECT
+        const sql = `SELECT
                 U.Key AS U_Key, U.Username, U.Permission, U.Password,
                 E.Key AS E_Key, E.Name, E.Age, E.Cod_id, E.Address, 
                 E.Tlf, E.E_mail, E.Image, E.Id_user
             FROM User U
             INNER JOIN Employee E ON U.Key = E.Id_user
-            WHERE U.Username = ? AND U.Password = ?`;
+            WHERE U.Username = ? AND U.Password = ? AND U.Time_Deleted IS NULL`;
 
         const params = [data.username, data.password];
         const result = await DB.buscar(sql, params);

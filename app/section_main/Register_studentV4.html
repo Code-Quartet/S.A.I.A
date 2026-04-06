@@ -27,12 +27,12 @@
         }
 
         /*--------ESTRUCTURA-----------------*/
-.container-new-registre {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 43px auto 36px;
-    height: 77vh;
-}
+        .container-new-registre {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 43px auto 36px;
+            height: 77vh;
+        }
         .container-title-register { display: flex; align-items: center; justify-content: center; }
 
         .container-registration-form {
@@ -230,31 +230,6 @@
         </div>
     </div>
 
-    <div id="modalEditor">
-        <div class="editor-content">
-            <div class="editor-sidebar">
-                <h3 style="margin: 0 0 20px 0; font-size: 14px; color: #333;">RECUADRE DE FOTO</h3>
-                <button type="button" id="btnResetEditor" style="padding: 8px; background: #fff; color: var(--danger-red); border: 1px solid var(--danger-red); border-radius: 6px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 11px;">RESTAURAR</button>
-                <div class="editor-label">Posición X <span id="vPosX">0</span></div>
-                <input type="range" id="posX" class="editor-range" min="-250" max="250" value="0">
-                <div class="editor-label">Posición Y <span id="vPosY">0</span></div>
-                <input type="range" id="posY" class="editor-range" min="-250" max="250" value="0">
-                <div class="editor-label">Zoom <span id="vScale">1.0</span></div>
-                <input type="range" id="scale" class="editor-range" min="0.1" max="3.0" step="0.1" value="1.0">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                    <button type="button" id="btnCancelEditor" style="padding: 12px; background: #9ca3af; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px;">CANCELAR</button>
-                    <button type="button" id="btnApplyEditor" style="padding: 12px; background: var(--primary-blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px;">APLICAR</button>
-                </div>
-            </div>
-            <div class="editor-view">
-                <div class="editor-circle-frame">
-                    <img id="editorPreviewImg" src="">
-                </div>
-                <canvas id="exportCanvas" style="display:none;"></canvas>
-            </div>
-        </div>
-    </div>
-
     <div class="top-notification" id="topNotif">
         <span class="icon-checkmark icono-message"></span>
         <h3>¡Inscripción guardada!</h3>
@@ -294,13 +269,10 @@
     const selectCurso = document.getElementById("tipoCurso");
 
     /*--- LÓGICA DE MULTI-CURSOS Y BOTÓN INFO ---*/
-    
-    // Habilitar/Deshabilitar botón de info al cambiar selección
     selectCurso.addEventListener('change', function() {
         btnInfo.disabled = (this.value === "");
     });
 
-    // Abrir información del curso seleccionado actualmente en el select
     btnInfo.addEventListener("click", (e) => {
         let courseSelect = selectCurso.value;
         if(courseSelect) {
@@ -308,7 +280,6 @@
         }
     });
 
-    // Añadir curso a la lista de etiquetas
     document.getElementById("btnAddCourse").addEventListener("click", () => {
         const val = selectCurso.value;
         const text = selectCurso.options[selectCurso.selectedIndex].text;
@@ -317,7 +288,6 @@
             seleccionCursos.push({ id: val, nombre: text });
             renderCourses();
             validateForm();
-            // Resetear el select y el botón de info tras añadir
             selectCurso.value = "";
             btnInfo.disabled = true;
         }
@@ -346,50 +316,16 @@
         validateForm();
     }
 
-    /*--- EDITOR DE IMAGEN (Lógica idéntica) ---*/
-    const modalEditor = document.getElementById('modalEditor');
-    const editorPreviewImg = document.getElementById('editorPreviewImg');
-    const canvas = document.getElementById('exportCanvas');
-    const ctx = canvas.getContext('2d');
-    const controlIds = ['posX', 'posY', 'scale'];
-    const defaults = { posX: 0, posY: 0, scale: 1.0 };
-
-
-    document.getElementById("uploadTrigger").addEventListener("click", (e) => { e.preventDefault(); api.send("select-Image-new-student"); });
-
-    api.receive('Image-select-new-student', async (event, imagen) => {
-        editorPreviewImg.src = imagen;
-        modalEditor.style.display = 'flex';
-        resetEditorFields();
-        updateEditorUI();
+    /*--- SELECCIÓN DE IMAGEN (Sin editor) ---*/
+    document.getElementById("uploadTrigger").addEventListener("click", (e) => { 
+        e.preventDefault(); 
+        api.send("select-Image-new-student"); 
     });
 
-    function updateEditorUI() {
-        const v = { x: document.getElementById('posX').value, y: document.getElementById('posY').value, s: document.getElementById('scale').value };
-        document.getElementById('vPosX').innerText = v.x;
-        document.getElementById('vPosY').innerText = v.y;
-        document.getElementById('vScale').innerText = v.s;
-        editorPreviewImg.style.left = `${v.x}px`;
-        editorPreviewImg.style.top = `${v.y}px`;
-        editorPreviewImg.style.transform = `scale(${v.s})`;
-    }
-
-    function resetEditorFields() { controlIds.forEach(id => document.getElementById(id).value = defaults[id]); }
-    controlIds.forEach(id => document.getElementById(id).oninput = updateEditorUI);
-    document.getElementById('btnResetEditor').onclick = () => { resetEditorFields(); updateEditorUI(); };
-    document.getElementById('btnCancelEditor').onclick = () => { modalEditor.style.display = 'none'; };
-
-    document.getElementById('btnApplyEditor').onclick = () => {
-        canvas.width = 300; canvas.height = 300;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const x = parseFloat(document.getElementById('posX').value);
-        const y = parseFloat(document.getElementById('posY').value);
-        const s = parseFloat(document.getElementById('scale').value);
-        ctx.drawImage(editorPreviewImg, x, y, editorPreviewImg.clientWidth * s, editorPreviewImg.clientHeight * s);
-        mainAvatar.src = canvas.toDataURL('image/png');
-        modalEditor.style.display = 'none';
+    api.receive('Image-select-new-student', async (event, imagen) => {
+        mainAvatar.src = imagen;
         validateForm();
-    };
+    });
 
     /*--- VALIDACIÓN DINÁMICA ---*/
     function validateForm() {
@@ -446,12 +382,9 @@
             } : null
         };
 
-        console.log("Nuevo Course Datas",formData)
-
         api.send("Register-new-data-student", formData);
         LimpiarForm();
         api.send("Reload-dasboard-system-data-Student");
-        
     });
 
     /*--- EVENTOS GENERALES ---*/

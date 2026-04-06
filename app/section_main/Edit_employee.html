@@ -144,6 +144,8 @@ input, select {
             height: 100%; 
             object-fit: cover; 
              pointer-events: none;
+             cursor: pointer;
+
         }
         .camera-button {
             position: absolute; bottom: 5px; right: 5px;
@@ -232,11 +234,11 @@ input, select {
             </div>
 
             <div class="column2">
-                <div class="image-uploader">
+                <div class="image-uploader" onclick="SelectImage()">
                     <div class="main-circle">
                         <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png">
                     </div>
-                    <button class="camera-button" onclick="SelectImage()">
+                    <button class="camera-button" >
                         <span class="icon-camera"></span>
                     </button> 
                 </div>

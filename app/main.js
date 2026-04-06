@@ -130,7 +130,8 @@ ipcMain.on('Login-user-master-permission',async(event,data) => {
 
 ipcMain.on('Login-user-app',async(event,data) => {
 
-console.log("login",data)
+  //console.log("login",data)
+
      await login_system(data).then(async(result)=>{
 
         if(result!=null){
@@ -138,7 +139,7 @@ console.log("login",data)
           User_sesion_login=result;
 
           mainWindow.send("Data-user-employee",result)
-         console.log("result",result.user.key)
+         //console.log("result",result.user.key)
           await RegisterSessionEvent(result.user.key, 'LOGIN');
 
         }else{
@@ -758,32 +759,48 @@ ipcMain.on("Open-system-info-instructor-register",(event,id)=>{
 
 })
 
-ipcMain.on("Deleted-instructor-register",(event,id)=>{
- 
-   DeleteInstructor(id).then((result)=>{
+ipcMain.on("Deleted-instructor-register",async(event,id)=>{
 
-    console.log(result)
+ await DeleteInstructor(id).then((result)=>{
 
-          dialog.showMessageBox({
-                      title:"Notificación",
-                      message:"Instructor Eliminado",
-                      icon: 'error',
-                       type:'error',
-                      buttons: ['Aceptar'],
-                      defaultId: 0,
-                      cancelId: 1
-                }).then(async result => {
-                    
-                      //console.log(result.response);
-                        let resultgetInstructor = await GetInstructorsPaged()
- 
-                  mainWindow.webContents.send("data-list-instructor",resultgetInstructor);
+       if(result.success==true){
+
+                    dialog.showMessageBox({
+                            title:result.title,
+                            message:result.message,
+                            icon:result.type,
+                            type:result.type,
+                            buttons: ['Aceptar'],
+                            defaultId: 0,
+                            cancelId: 1
+                        }).then(async result => {
+
+                            let resultgetInstructor = await GetInstructorsPaged()
+                            mainWindow.webContents.send("data-list-instructor",resultgetInstructor);
 
 
-                }).catch(err => {
-                    
-                    console.log(err);
-              });
+                        }).catch(err => {
+                            
+                            console.log(err);
+                    });
+          }
+          if(result.success==false){
+
+                    dialog.showMessageBox({
+                            title:result.title,
+                            message:result.message,
+                            icon:result.type,
+                            type:result.type,
+                            buttons: ['Aceptar'],
+                            defaultId: 0,
+                            cancelId: 1
+                        }).then(async result => {
+
+                        }).catch(err => {
+                            
+                            console.log(err);
+                    });
+          }
 
    }).catch((err)=>{
 
@@ -854,38 +871,53 @@ ipcMain.on("Open-system-info-employee-register",(event,id)=>{
 
 ipcMain.on("Deleted-employee-register",(event,id)=>{
 
-
   console.log("Deleted-employee-register",id)
  
   DeleteEmployeeLogical(id).then((result)=>{
-    //DeleteEmployeePermanent(id).then((result)=>{
 
-    console.log(result)
+      //console.log("Deleted-employee-register",result)
 
-    dialog.showMessageBox({
-                title:"Notificación",
-                message:"Empleado Eliminado",
-                icon: 'error',
-                 type:'error',
-                buttons: ['Aceptar'],
-                defaultId: 0,
-                cancelId: 1
-          }).then(async result => {
-              
-                //console.log(result.response);
-                    let resultgetEmployee = await GetEmployeesPaged()
-                 mainWindow.webContents.send("Render-data-employee-list",resultgetEmployee)
+      if(result.success==true){
 
+                dialog.showMessageBox({
+                        title:result.title,
+                        message:result.message,
+                        icon:result.type,
+                        type:result.type,
+                        buttons: ['Aceptar'],
+                        defaultId: 0,
+                        cancelId: 1
+                    }).then(async result => {
 
-          }).catch(err => {
-              
-              console.log(err);
-        });
+                          let resultgetEmployee = await GetEmployeesPaged()
+                          mainWindow.webContents.send("Render-data-employee-list",resultgetEmployee)
 
+                    }).catch(err => {
+                        
+                        console.log(err);
+                });
+      }
+      if(result.success==false){
 
-   }).catch((err)=>{
+                dialog.showMessageBox({
+                        title:result.title,
+                        message:result.message,
+                        icon:result.type,
+                        type:result.type,
+                        buttons: ['Aceptar'],
+                        defaultId: 0,
+                        cancelId: 1
+                    }).then(async result => {
 
-   })
+                    }).catch(err => {
+                        
+                        console.log(err);
+                });
+      }
+
+  }).catch((err)=>{
+
+  })
 
 })
 
@@ -1108,11 +1140,57 @@ ipcMain.on("Permanently-Delete-Course-system",(event,key)=>{
 })
 
 /*-------------------------------------------------------------------------*/
+ipcMain.handle('buscar-sugeridos-trash', async (event, data) => {
+
+  console.log("buscar-sugeridos-trash",data)
+    try {
+        // Llamamos a la función de búsqueda
+        let result = await GlobalSearchTrash(data.tabla,data.terms);
+
+        // Verificamos si la búsqueda fue exitosa y si hay datos
+        if (result.success && Array.isArray(result.data)) {
+            // Retornamos solo los primeros 8 resultados del array 'data'
+            return result.data.slice(0, 8);
+        }
+
+        return []; // Retornar vacío si no hubo éxito o no hay datos
+    } catch (error) {
+        console.error("Error en ipcMain buscar-sugeridos:", error);
+        return [];
+    }
+});
 ipcMain.on("Search-data-trash",async(event,data)=>{
 
       let result = await GlobalSearchTrash(data.tabla,data.terms).then((result)=>{
+
         console.log("Search-data-trash",result)
-        mainWindow.webContents.send("Search-data-trash-send",result)
+
+        if(result.success==true){
+            
+            mainWindow.webContents.send("Search-data-trash-send",result)
+        }
+        if(result.success==false){
+/*
+             dialog.showMessageBox({
+                      title:"Notificación",
+                      message:data.message,
+                      icon: 'info',
+                       type:'info',
+                      buttons: ['Aceptar'],
+                      defaultId: 0,
+                      cancelId: 1
+          }).then(result => {
+                    
+                      console.log(result.response);
+
+                }).catch(err => {
+                    
+                    console.log(err);
+              });
+         */   
+            
+        }
+      
 
       }).catch((err)=>{
 
@@ -1120,6 +1198,8 @@ ipcMain.on("Search-data-trash",async(event,data)=>{
       })
 
 })
+
+//mainWindow.webContents.send("Search-data-trash-send",result)
 /*-------------------------------------------------------------------------*/
 
 ipcMain.on("Open-message-alert-clear-trash",async(event,data)=>{

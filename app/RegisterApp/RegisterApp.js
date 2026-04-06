@@ -454,7 +454,7 @@ async function Adding_data_Admin_trial(){
                 "01014577854", 
                 "200",
                 "Trial@mail.com", 
-                "00/00/0000", 
+                "00-00-0000", 
                 ImageDefault,
                 "Activo",
                 ID_USER

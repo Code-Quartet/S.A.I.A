@@ -1,59 +1,55 @@
-let template_manage_employee=`
-<main class="container-manage-table">
-        <header class="header-table">
-      
-            <h1 class="title-table">Gestionar Empleados</h1>
-        </header>
+let template_manage_employee=`<main class="container-manage-table">
+                                    <header class="header-table">  
+                                        <h1 class="title-table">Gestionar Empleados</h1>
+                                    </header>
 
-        <section class="toolbar-table-manage">
-            <div class="search-box-table-manage">
-                <input type="search" class="search-input-table-manage" id="inputSearchEmployee" placeholder="Buscar employee...">
-                 <div id="results-preview" class="preview-list-search"></div>
-                <button class="btn-search-tabla-manage" id="Searchemployee">
-                <span class="icon-search"></span>
-                </button>
-            </div>
-            <div class="select-filter-box">
-                    <select class="select-dropdown-filter" id="select-dropdown-filter">
-                        <option value="" disabled selected>Estado</option>
-                        <option value="Activo">Activo</option>
-                        <option value="Inactivo">Inactivo</option>
-                        <option value="Despedido">Despedido</option>
-                    </select>
-            </div>
-        <button class="btn-new-data" onclick="RegisterNewEmployee()">
-            Nuevo Empleado <span class="icon-user-plus"></span>
-        </button>
-        </section>
+                                    <section class="toolbar-table-manage">
+                                        <div class="search-box-table-manage">
+                                            <input type="search" class="search-input-table-manage" id="inputSearchEmployee" placeholder="Buscar employee...">
+                                             <div id="results-preview" class="preview-list-search"></div>
+                                            <button class="btn-search-tabla-manage" id="Searchemployee">
+                                            <span class="icon-search"></span>
+                                            </button>
+                                        </div>
+                                        <div class="select-filter-box">
+                                                <select class="select-dropdown-filter" id="select-dropdown-filter">
+                                                    <option value="" disabled selected>Estado</option>
+                                                    <option value="Activo">Activo</option>
+                                                    <option value="Inactivo">Inactivo</option>
+                                                    <option value="Despedido">Despedido</option>
+                                                </select>
+                                        </div>
+                                    <button class="btn-new-data" onclick="RegisterNewEmployee()">
+                                        Nuevo Empleado <span class="icon-user-plus"></span>
+                                    </button>
+                                    </section>
 
-        <section class="container-table-manage">
-         <table>
-                <thead>
-                    <tr>
-                        <th>Nombre Completo</th>
-                        <th>Correo Electrónico</th>
-                        <th>Teléfono</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="employee-body">
-  
-                </tbod>
-        </table>
-        </section>
+                                    <section class="container-table-manage">
+                                        <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre Completo</th>
+                                                        <th>Correo Electrónico</th>
+                                                        <th>Teléfono</th>
+                                                        <th>Estado</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="employee-body">
+                                  
+                                                </tbod>
+                                        </table>
+                                    </section>
 
-    <footer class="footer-table-manage">
-          <nav class=sub-container-pagination-table-manage>
-            <div class="pagination-table-manage" id="PaginationRender">
-
-            </div>
-        </nav>
-        <button class="btn-export" id="ExportEmployee" onclick="exexportarAExcelEmployee()">
-            Exportar Listado 📄
-        </button>
-    </footer>
-</main>`;
+                                    <footer class="footer-table-manage">
+                                        <nav class=sub-container-pagination-table-manage>
+                                           <div class="pagination-table-manage" id="PaginationRender"> </div>
+                                        </nav>
+                                        <button class="btn-export" id="ExportEmployee" onclick="exexportarAExcelEmployee()">
+                                            Exportar Listado 📄
+                                        </button>
+                                    </footer>
+                            </main>`;
 
 function Manage_Employee(id){
 

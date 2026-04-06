@@ -27,12 +27,12 @@
         }
 
         /*--------ESTRUCTURA-----------------*/
-.container-new-registre {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 36px auto 53px;
-    height: 64vh;
-}
+        .container-new-registre {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 36px auto 53px;
+            height: 64vh;
+        }
 
         .container-title-register { display: flex; align-items: center; justify-content: center; }
 
@@ -231,30 +231,7 @@
         </div>
     </div>
 
-    <div id="modalEditor">
-        <div class="editor-content">
-            <div class="editor-sidebar">
-                <h3 style="margin: 0 0 20px 0; font-size: 14px; color: #333;">RECUADRE DE FOTO</h3>
-                <button type="button" id="btnResetEditor" style="padding: 8px; background: #fff; color: var(--danger-red); border: 1px solid var(--danger-red); border-radius: 6px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 11px;">RESTAURAR</button>
-                <div class="editor-label">Posición X <span id="vPosX">0</span></div>
-                <input type="range" id="posX" class="editor-range" min="-250" max="250" value="0">
-                <div class="editor-label">Posición Y <span id="vPosY">0</span></div>
-                <input type="range" id="posY" class="editor-range" min="-250" max="250" value="0">
-                <div class="editor-label">Zoom <span id="vScale">1.0</span></div>
-                <input type="range" id="scale" class="editor-range" min="0.1" max="3.0" step="0.1" value="1.0">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                    <button type="button" id="btnCancelEditor" style="padding: 12px; background: #9ca3af; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px;">CANCELAR</button>
-                    <button type="button" id="btnApplyEditor" style="padding: 12px; background: var(--primary-blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px;">APLICAR</button>
-                </div>
-            </div>
-            <div class="editor-view">
-                <div class="editor-circle-frame">
-                    <img id="editorPreviewImg" src="">
-                </div>
-                <canvas id="exportCanvas" style="display:none;"></canvas>
-            </div>
-        </div>
-    </div>
+    <div id="modalEditor"></div>
 
     <div class="top-notification" id="topNotif">
         <span class="icon-checkmark icono-message"></span>
@@ -265,7 +242,7 @@
     
 /*--- VARIABLES GLOBALES Y DE CONTROL ---*/
 let seleccionCursos = [];
-let Key = null; // Variable para almacenar el ID del registro a actualizar
+let Key = null; 
 
 const ageToggle = document.getElementById('ageToggle');
 const btnConfirm = document.getElementById('btn-confirm');
@@ -278,54 +255,31 @@ const coursesContainer = document.getElementById('selected-courses-container');
 const btnInfo = document.getElementById("info-course-student");
 const selectCurso = document.getElementById("tipoCurso");
 
-// Elementos del Modal Editor
-const modalEditor = document.getElementById('modalEditor');
-const editorPreviewImg = document.getElementById('editorPreviewImg');
-const canvas = document.getElementById('exportCanvas');
-const ctx = canvas.getContext('2d');
-const controlIds = ['posX', 'posY', 'scale'];
-const defaults = { posX: 0, posY: 0, scale: 1.0 };
-
 /*--- INICIALIZACIÓN ---*/
 window.onload = function() {
     api.send("Get-data-student-update");
     validateForm();
-    // Inicializar eventos de los inputs del rango del editor
-    controlIds.forEach(id => {
-        document.getElementById(id).addEventListener('input', updateEditorUI);
-    });
 }
 
 /*--- RECEPCIÓN DE DATOS DEL ESTUDIANTE ---*/
-/*--- RECEPCIÓN DE DATOS DEL ESTUDIANTE ---*/
 api.receive('data-student-information', (event, data) => {
-
-    console.log("Datos recibidos:", data);
-    
     Key = data.Key;
     document.getElementById('nombre').value = data.Name || "";
     document.getElementById('cedula').value = data.Cod_id || "";
     document.getElementById('edad').value = data.Age || "";
-    
-    // Manejo de imagen base64 (asegurando el prefijo si es necesario)
-    if (data.Image && !data.Image.startsWith('data:image')) {
-        mainAvatar.src = `data:image/png;base64,${data.Image}`;
-    } else {
+   
         mainAvatar.src = data.Image || "../assets/imagen/ImageLogin3.png";
-    }
-
+ 
     document.getElementById('fechanacimiento').value = data.Birthdate || "";
     document.getElementById('direccion').value = data.Address || "";
     document.getElementById('correo').value = data.E_mail || "";
     document.getElementById('telefono').value = data.Tlf || "";
 
-    // Datos del Representante
     document.getElementById('nombre_representante').value = data.Name_Representative || "";
     document.getElementById('cedula_representante').value = data.Cod_id_Representative || "";
     document.getElementById('telefono_representante').value = data.Tlf_Representative || "";
     document.getElementById('correo_representante').value = data.E_mail_Representative || "";
 
-    // Lógica de Menor de Edad
     if (data.Name_Representative && data.Name_Representative.trim() !== "") {
         ageToggle.checked = true;
         textToggle.innerHTML = "Sí";
@@ -336,16 +290,13 @@ api.receive('data-student-information', (event, data) => {
         repFields.forEach(f => f.disabled = true);
     }
 
-    /*--- NUEVA LÓGICA PARA RENDERIZAR BADGES DESDE EL OBJETO ---*/
     if (data.cursos && Array.isArray(data.cursos)) {
-        // Mapeamos el objeto recibido al formato que usa tu script {id, nombre}
         seleccionCursos = data.cursos.map(c => ({
             id: c.id,
-            nombre: c.name // Mapeamos 'name' del JSON a 'nombre' del estado local
+            nombre: c.name
         }));
         renderCourses();
     } else if (data.Id_curs) { 
-        // Fallback por si llega el formato anterior de un solo curso
         seleccionCursos = [{ id: data.Id_curs, nombre: data.CourseName }];
         renderCourses();
     }
@@ -353,11 +304,11 @@ api.receive('data-student-information', (event, data) => {
     validateForm();
     api.send("Get-data-list-course-student-update");
 });
+
 /*--- CARGA DE LISTA DE CURSOS DISPONIBLES ---*/
 api.receive('data-list-course-student-update', (event, info) => {
     selectCurso.innerHTML = '<option value="" disabled selected>Seleccione un curso...</option>';
     info.data.forEach((curso) => {
-        // Evitar duplicar el curso que ya está en los badges
         if(!seleccionCursos.find(c => c.id == curso.Key)) {
             selectCurso.innerHTML += `<option value="${curso.Key}">${curso.Name}</option>`;
         }
@@ -411,58 +362,17 @@ window.removeCourse = function(id) {
     validateForm();
 }
 
-/*--- EDITOR DE IMAGEN (CORREGIDO) ---*/
+/*--- SELECCIÓN DE IMAGEN (SIN EDITOR) ---*/
 document.getElementById("uploadTrigger").addEventListener("click", (e) => { 
     e.preventDefault(); 
     api.send("select-Image-new-student-update"); 
 });
 
 api.receive('Image-select-new-student-update', (event, imagen) => {
-    editorPreviewImg.src = imagen;
-    modalEditor.style.display = 'flex';
-    resetEditorFields();
-    updateEditorUI();
-});
-
-function updateEditorUI() {
-    const v = { 
-        x: document.getElementById('posX').value, 
-        y: document.getElementById('posY').value, 
-        s: document.getElementById('scale').value 
-    };
-    document.getElementById('vPosX').innerText = v.x;
-    document.getElementById('vPosY').innerText = v.y;
-    document.getElementById('vScale').innerText = v.s;
-    
-    editorPreviewImg.style.left = `${v.x}px`;
-    editorPreviewImg.style.top = `${v.y}px`;
-    editorPreviewImg.style.transform = `scale(${v.s})`;
-}
-
-function resetEditorFields() { 
-    controlIds.forEach(id => {
-        document.getElementById(id).value = defaults[id];
-    });
-}
-
-document.getElementById('btnResetEditor').onclick = () => { resetEditorFields(); updateEditorUI(); };
-document.getElementById('btnCancelEditor').onclick = () => { modalEditor.style.display = 'none'; };
-
-document.getElementById('btnApplyEditor').onclick = () => {
-    canvas.width = 300; 
-    canvas.height = 300;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    const x = parseFloat(document.getElementById('posX').value);
-    const y = parseFloat(document.getElementById('posY').value);
-    const s = parseFloat(document.getElementById('scale').value);
-    
-    // Dibujar imagen con las transformaciones aplicadas
-    ctx.drawImage(editorPreviewImg, x, y, editorPreviewImg.clientWidth * s, editorPreviewImg.clientHeight * s);
-    mainAvatar.src = canvas.toDataURL('image/png');
-    modalEditor.style.display = 'none';
+    // Al eliminar el editor, la imagen seleccionada se asigna directamente
+    mainAvatar.src = imagen;
     validateForm();
-};
+});
 
 /*--- VALIDACIÓN DINÁMICA ---*/
 function validateForm() {
@@ -486,7 +396,6 @@ function validateForm() {
 
 /*--- LIMPIAR FORMULARIO ---*/
 function LimpiarForm() {
-
     registrationForm.reset();
     ageToggle.checked = false;
     textToggle.innerHTML = 'No';
@@ -523,12 +432,9 @@ btnConfirm.addEventListener('click', (e) => {
             correo: document.getElementById('correo_representante').value
         } : null
     };
-    console.log("Update data",formData)
     
-    /*------------------------------------------*/
     api.send("Register-update-data-student",formData);
     api.send("Reload-dasboard-system-data-Student");
-    // Opcional: LimpiarForm(); si quieres cerrar tras guardar
 });
 
 /*--- EVENTOS GENERALES ---*/
@@ -542,9 +448,7 @@ ageToggle.addEventListener('change', function() {
     validateForm();
 });
 
-// Escuchar cambios en todos los inputs para validar en tiempo real
 registrationForm.addEventListener('input', validateForm);
-
 btnClear.addEventListener('click', LimpiarForm);
 document.getElementById("btn-close").addEventListener("click", () => { window.close(); });
 

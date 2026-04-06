@@ -12,6 +12,8 @@ let templateTrash =`<main class="container-manage-table-trash">
 
         <div class="search-box-table-manage">
             <input type="search" class="search-input-table-manage" id="inputSearchTrash" placeholder="Buscar Papelera...">
+            <div id="results-preview" class="preview-list-search"></div> 
+
             <button class="btn-search-tabla-manage"id="searchTrashData">
                     <span class="icon-search"></span>
             </button>
@@ -99,7 +101,104 @@ function Trash(id){
             SearchData(document.getElementById("inputSearchTrash").value,TypeTableSelect);  
         }
     })
-        /*----------------------------------------------------------*/
+    /*----------------------------------------------------------*/
+
+    let searchInput = document.getElementById("inputSearchTrash")
+            const resultsPreview = document.getElementById('results-preview');
+        let currentIndex = -1; // Rastrea la selección del teclado
+        let ArraydataSearchInput = []; // Guarda los resultados actuales
+
+// Función que se ejecuta al elegir un producto (Click o Enter)
+async function ejecutarBusquedaFinal(data) {
+
+    console.log(data)
+
+    const detalle = SearchData(data.Name,TypeTableSelect);
+    
+    searchInput.value = data.Name;
+    resultsPreview.style.display = 'none';
+    currentIndex = -1;
+    
+}
+
+searchInput.addEventListener('keydown', (e) => {
+    const items = resultsPreview.querySelectorAll('.preview-item-search');
+    
+    if (items.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        actualizarSeleccion(items);
+    } 
+    else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (currentIndex > -1) {
+            ejecutarBusquedaFinal(ArraydataSearchInput[currentIndex]);
+        }
+    } 
+    else if (e.key === 'Escape') {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+function actualizarSeleccion(items) {
+    items.forEach((item, index) => {
+        if (index === currentIndex) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' }); // Asegura que sea visible
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value;
+    currentIndex = -1; // Reiniciar índice al escribir
+
+    if (query.length < 2) {
+        resultsPreview.style.display = 'none';
+        return;
+    }
+
+    ArraydataSearchInput = await api.buscarSugerenciasTrash({tabla:TypeTableSelect,terms:query});
+
+    if (ArraydataSearchInput.length > 0) {
+        resultsPreview.innerHTML = '';
+        ArraydataSearchInput.forEach((DataTrashSugerida, index) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item-search';
+            div.innerHTML = `
+                <div>Nombre:${DataTrashSugerida.Name}</div`;
+            
+            div.onclick = () => ejecutarBusquedaFinal(DataTrashSugerida);
+            
+            // Mouse over opcional para sincronizar teclado con ratón
+            div.onmouseenter = () => {
+                currentIndex = index;
+                actualizarSeleccion(resultsPreview.querySelectorAll('.preview-item-search'));
+            };
+
+            resultsPreview.appendChild(div);
+        });
+        resultsPreview.style.display = 'block';
+    } else {
+        resultsPreview.style.display = 'none';
+    }
+});
+
+// Cerrar si se hace clic fuera
+document.addEventListener('click', (e) => {
+    if (e.target !== searchInput) resultsPreview.style.display = 'none';
+});
+
+/*-------------------------------------------------------------------------------*/
 
 
 }
@@ -250,9 +349,8 @@ function RenderTableEmployee(info) {
                         <tr>
                             <th>Nombre Completo</th>
                             <th>Correo Electrónico</th>
-                            <th>Teléfono</th>
                             <th>Estado</th>
-                                                                           <th>F. registro</th>
+                             <th>F. registro</th>
                    <th>F. borrado</th>
                             <th>Acciones</th>
 
@@ -269,9 +367,8 @@ function RenderTableEmployee(info) {
                 document.getElementById("employee-body").innerHTML+=`<tr>
                                     <td>${employee.Name}</td>
                                     <td>${employee.E_mail}</td>
-                                    <td>${employee.Tlf}</td>
                                     <td ><span class="${employee.Status}">${employee.Status}</span></td>
-                                                              <td>${employee.Date}</td>
+                                                              <td>${employee.Date_Created}</td>
                             <td>${employee.Time_Deleted}</td>
                                 <td class="td-action">
                                     <button class="btn-edit-data-table icon-undo2
@@ -303,8 +400,6 @@ function RenderTableStudent(info) {
                         <tr>
                             <th>Nombre Completo</th>
                             <th>Cédula</th>
-                            <th>Teléfono</th>
-                            <th>Correo Electrónico</th>
                             <th>Curso</th>
                             <th>Fecha de Inscripción</th>
                                                <th>F. registro</th>
@@ -325,9 +420,7 @@ function RenderTableStudent(info) {
             document.getElementById("data-list-Student").innerHTML+=`<tr>
                                 <td>${student.Name}</td>
                                 <td>${student.Cod_id}</td>
-                                <td>${student.Tlf}</td>
-                                <td>${student.E_mail}</td>
-                                <td>${student.CourseName}</td>
+                                <td>${student.CourseNames}</td>
                                 <td>${student.Date_Created}/${student.Time_Created}</td>
                              <td>${student.Date_Created}</td>
                             <td>${student.Time_Deleted}</td>
@@ -360,7 +453,6 @@ function RenderTableInstructor(info) {
                     <tr>
                         <th>Nombre</th>
                         <th>Especialidad</th>
-                        <th>Teléfono</th>
                         <th>Estado</th>
                         <th>F. registro</th>
                    <th>F. borrado</th>
@@ -379,7 +471,6 @@ function RenderTableInstructor(info) {
             document.getElementById("listInstructor").innerHTML+=`<tr>
                         <td>${Instructor.Name}</td>
                         <td>${Instructor.Specialty}</td>
-                        <td>${Instructor.Tlf}</td>
                         <td ><span class="${Instructor.Status}">${Instructor.Status}</span></td>
                         <td>${Instructor.Date_Created}</td>
                         <td>${Instructor.Time_Deleted}</td>

@@ -35,14 +35,25 @@ async function GetListDataCourseStudent() {
 
 async function GetStudentPaged(page = 1, limit = 10) {
     try {
+        await DB.conectar();
+
+        // 1. Obtener el total de estudiantes activos
         const sqlCount = `SELECT COUNT(*) as total FROM Student WHERE Time_Deleted IS NULL`;
         const resCount = await DB.buscar(sqlCount);
         const totalElements = resCount?.total ?? 0;
 
+        // 2. Lógica adaptativa de paginación
         let finalLimit = limit;
-        let offset = (page - 1) * limit;
-        if (totalElements <= 20) { finalLimit = 20; offset = 0; }
+        let finalOffset = (page - 1) * limit;
+        let finalPage = page;
 
+        if (totalElements <= 20) {
+            finalLimit = 20; 
+            finalOffset = 0;
+            finalPage = 1;
+        }
+
+        // 3. Consultar datos con relación N:N y agrupamiento de nombres de cursos
         const sqlData = `
             SELECT 
                 S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail,
@@ -56,26 +67,50 @@ async function GetStudentPaged(page = 1, limit = 10) {
             ORDER BY S.Date_Created DESC, S.Time_Created DESC
             LIMIT ? OFFSET ?`;
 
-        const students = await DB.buscarTodo(sqlData, [finalLimit, offset]);
-        const totalPages = totalElements <= 20 ? 1 : Math.ceil(totalElements / limit);
+        const students = await DB.buscarTodo(sqlData, [finalLimit, finalOffset]);
+        
+        // 4. Cálculo de páginas totales
+        const totalPages = Math.ceil(totalElements / finalLimit);
 
+        // Caso: Sin registros
+        if (!students || students.length === 0) {
+            return {
+                success: false,
+                message: "No hay estudiantes registrados o activos.",
+                data: [],
+                pagination: {
+                    totalElements,
+                    totalPages: 0,
+                    currentPage: finalPage,
+                    limit: finalLimit,
+                    isPaged: totalElements > 20
+                }
+            };
+        }
+
+        // Caso: Éxito con datos
         return {
-            success: !!students.length,
+            success: true,
             data: students,
             pagination: {
                 totalElements,
                 totalPages,
-                currentPage: totalElements <= 20 ? 1 : page,
+                currentPage: finalPage,
                 limit: finalLimit,
+                hasNext: finalPage < totalPages,
+                hasPrev: finalPage > 1,
                 isPaged: totalElements > 20
             }
         };
+
     } catch (error) {
         console.error("Error en GetStudentPaged:", error);
-        return { success: false, message: "Error al obtener la lista de estudiantes." };
+        return { 
+            success: false, 
+            message: "Error técnico al obtener la lista de estudiantes." 
+        };
     }
 }
-
 
 async function SearchStudentPagedName(searchTerm) {
     try {

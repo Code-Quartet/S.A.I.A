@@ -38,7 +38,7 @@ async function GetCoursePagedTrash(page = 1, limit = 10) {
                 C.Key, C.Name, C.Capacity, C.Start_Time, C.End_Time, 
                 C.Status, C.Cost, C.Days, C.Time_Deleted, C.Date_Created, C.Instructor_ID,
                 I.Name as Instructor_Name,
-                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
+                (SELECT COUNT(*) FROM Student S WHERE S.Id_curs = C.Key AND S.Time_Deleted IS NULL) AS Total_Students
             FROM Course C
             LEFT JOIN Instructor I ON C.Instructor_ID = I.Key
             WHERE C.Time_Deleted IS NOT NULL 
@@ -66,12 +66,9 @@ async function GetStudentPagedTrash(page = 1, limit = 10) {
 
         const sqlData = `
             SELECT S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail, S.Date_Created, 
-                   S.Time_Created, S.Time_Deleted,
-                   (SELECT GROUP_CONCAT(C.Name, ', ') 
-                    FROM Student_Courses SC 
-                    JOIN Course C ON SC.Id_curs = C.Key 
-                    WHERE SC.Id_student_key = S.Key) as CourseNames
+                   S.Time_Created, S.Id_curs, S.Time_Deleted, C.Name as CourseName
             FROM Student S
+            LEFT JOIN Course C ON S.Id_curs = C.Key
             WHERE S.Time_Deleted IS NOT NULL 
             ORDER BY S.Time_Deleted DESC 
             LIMIT ? OFFSET ?`;
@@ -95,7 +92,7 @@ async function GetEmployeesPagedTrash(page = 1, limit = 10) {
         let offset = totalElements <= 20 ? 0 : (page - 1) * limit;
 
         const sqlData = `
-            SELECT Key, Name, Cod_id, E_mail, Tlf, Status, Date_Created, Time_Deleted
+            SELECT Key, Name, E_mail, Tlf, Status, Date_Created, Time_Deleted
             FROM Employee 
             WHERE Time_Deleted IS NOT NULL 
             ORDER BY Time_Deleted DESC 
@@ -120,7 +117,7 @@ async function GetInstructorsPagedTrash(page = 1, limit = 10) {
         let offset = totalElements <= 20 ? 0 : (page - 1) * limit;
 
         const sqlData = `
-            SELECT Key, Name, Cod_id, Specialty, Tlf, Status, Date_Created, Time_Deleted
+            SELECT Key, Name, Specialty, Tlf, Status, Date_Created, Time_Deleted
             FROM Instructor 
             WHERE Time_Deleted IS NOT NULL 
             ORDER BY Time_Deleted DESC 
@@ -141,7 +138,7 @@ async function GetTrashItemByKey(tableName, key) {
             'User': `SELECT * FROM User WHERE Key = ? AND Time_Deleted IS NOT NULL`,
             'Employee': `SELECT E.*, U.Username FROM Employee E LEFT JOIN User U ON E.Id_user = U.Key WHERE E.Key = ? AND E.Time_Deleted IS NOT NULL`,
             'Instructor': `SELECT * FROM Instructor WHERE Key = ? AND Time_Deleted IS NOT NULL`,
-            'Student': `SELECT S.* FROM Student S WHERE S.Key = ? AND S.Time_Deleted IS NOT NULL`,
+            'Student': `SELECT S.*, C.Name as CourseName FROM Student S LEFT JOIN Course C ON S.Id_curs = C.Key WHERE S.Key = ? AND S.Time_Deleted IS NOT NULL`,
             'Course': `SELECT C.*, I.Name as InstructorName FROM Course C LEFT JOIN Instructor I ON C.Instructor_ID = I.Key WHERE C.Key = ? AND C.Time_Deleted IS NOT NULL`
         };
 
@@ -150,12 +147,6 @@ async function GetTrashItemByKey(tableName, key) {
 
         const result = await DB.buscar(sql, [key]);
         if (!result) return { success: false, message: `No se encontró el registro en ${tableName}.` };
-
-        // Caso especial para estudiantes: obtener sus cursos actuales si existen
-        if (tableName === 'Student') {
-            const courses = await DB.buscarTodo(`SELECT C.Name FROM Student_Courses SC JOIN Course C ON SC.Id_curs = C.Key WHERE SC.Id_student_key = ?`, [key]);
-            result.Courses = courses.map(c => c.Name).join(", ");
-        }
 
         return { success: true, data: result };
     } catch (error) {
@@ -169,13 +160,12 @@ async function GlobalSearchTrash(tableName, searchValue) {
     try {
         await DB.conectar();
 
-        // 1. Mapeo de columnas para búsqueda (Consistente con GlobalSearch)
         const tableColumns = {
-            'Employee': ['Key', 'Name', 'E_mail', 'Tlf', 'Status', 'Cod_id'],
-            'Instructor': ['Key', 'Name', 'Cod_id', 'Specialty', 'Tlf', 'Status'],
-            'Student': ['Key', 'Name', 'Cod_id', 'Tlf', 'E_mail', 'Date_Created', 'Time_Created'],
-            'Course': ['Name', 'Description', 'Days', 'Status'],
-            'User': ['Username', 'Permission']
+            'User': ['Username', 'Permission'],
+            'Employee': ['Name', 'Cod_id', 'E_mail', 'Tlf'],
+            'Instructor': ['Name', 'Cod_id', 'Specialty'],
+            'Student': ['Name', 'Cod_id', 'E_mail', 'Tlf'],
+            'Course': ['Name', 'Description', 'Days']
         };
 
         const columns = tableColumns[tableName];
@@ -183,65 +173,43 @@ async function GlobalSearchTrash(tableName, searchValue) {
 
         let sql = "";
         let tableAlias = "";
-        let groupBy = "";
-        let orderBy = "";
 
-        // 2. Definición de Base SQL (Misma estructura de datos que GlobalSearch)
+        // CORRECCIÓN: Definimos alias para todos los casos, incluido el else
         if (tableName === 'Student') {
             tableAlias = "S";
-            // Extrae nombres de cursos desde la tabla intermedia Student_Courses
-            sql = `
-                SELECT S.*, GROUP_CONCAT(C.Name, ', ') as CourseNames 
-                FROM Student S 
-                LEFT JOIN Student_Courses SC ON S.Key = SC.Id_student_key 
-                LEFT JOIN Course C ON SC.Id_curs = C.Key`;
-            groupBy = " GROUP BY S.Key";
-            orderBy = " ORDER BY S.Time_Deleted DESC"; 
+            sql = `SELECT S.*, C.Name as CourseName FROM Student S LEFT JOIN Course C ON S.Id_curs = C.Key`;
         } else if (tableName === 'Course') {
             tableAlias = "C";
-            // Extrae nombre de instructor y cuenta estudiantes inscritos
-            sql = `
-                SELECT C.*, I.Name as Instructor_Name,
-                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
-                FROM Course C 
-                LEFT JOIN Instructor I ON C.Instructor_ID = I.Key`;
-            orderBy = " ORDER BY C.Time_Deleted DESC";
+            sql = `SELECT C.*, I.Name as InstructorName FROM Course C LEFT JOIN Instructor I ON C.Instructor_ID = I.Key`;
         } else if (tableName === 'Employee') {
             tableAlias = "E";
             sql = `SELECT E.*, U.Username FROM Employee E LEFT JOIN User U ON E.Id_user = U.Key`;
-            orderBy = " ORDER BY E.Time_Deleted DESC";
-        } else if (tableName === 'Instructor') {
-            tableAlias = "I";
-            sql = `SELECT I.* FROM Instructor I`;
-            orderBy = " ORDER BY I.Time_Deleted DESC";
         } else if (tableName === 'User') {
             tableAlias = "U";
-            sql = `SELECT U.* FROM User U`;
-            orderBy = " ORDER BY U.Time_Deleted DESC";
+            sql = `SELECT * FROM User U`;
+        } else if (tableName === 'Instructor') {
+            tableAlias = "I";
+            sql = `SELECT * FROM Instructor I`;
         } else {
-            tableAlias = "T";
-            sql = `SELECT T.* FROM ${tableName} T`;
-            orderBy = " ORDER BY T.Time_Deleted DESC";
+            tableAlias = "T"; // Alias genérico
+            sql = `SELECT * FROM ${tableName} T`;
         }
 
-        // 3. Construir WHERE para la PAPELERA (Time_Deleted IS NOT NULL)
         let whereClause = ` WHERE ${tableAlias}.Time_Deleted IS NOT NULL`;
         let params = [];
 
         if (searchValue) {
-            const term = `%${searchValue}%`;
             whereClause += " AND (";
             const orConditions = columns.map(col => {
-                params.push(term);
+                params.push(`%${searchValue}%`);
                 return `${tableAlias}.${col} LIKE ?`;
             });
             whereClause += orConditions.join(" OR ") + ")";
         }
 
-        // 4. Ejecución final
-        const finalSql = sql + whereClause + groupBy + orderBy;
-        const results = await DB.buscarTodo(finalSql, params);
+        sql += whereClause + ` ORDER BY ${tableAlias}.Time_Deleted DESC`;
 
+        const results = await DB.buscarTodo(sql, params);
         return {
             table: tableName,
             success: true,
@@ -249,12 +217,12 @@ async function GlobalSearchTrash(tableName, searchValue) {
             data: results,
             pagination: { isPaged: false }
         };
-
     } catch (error) {
-        console.error("Detalle del error SQL en GlobalSearchTrash:", error.message);
-        return { success: false, message: "Error en búsqueda de papelera: " + error.message };
+        console.error("Detalle del error SQL:", error.message);
+        return { success: false, message: "Error: " + error.message };
     }
 }
+
 module.exports = {
     GetCoursePagedTrash,
     GetStudentPagedTrash,
