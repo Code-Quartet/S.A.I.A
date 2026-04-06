@@ -19,8 +19,11 @@ let window_Register_student;
 
 module.exports = function Register_student(parentWindow) {
   window_Register_student = new BrowserWindow({
-        width:990,
+        width:600,
         height:530,
+
+        /*        width:990,
+        height:530,*/
       // modal: true,
         resizable:false, 
         frame:false,
@@ -38,7 +41,7 @@ module.exports = function Register_student(parentWindow) {
     window_Register_student.loadFile('app/section_main/Register_StudentV5.html');
 
     //Herramientas de desarrollo
-    window_Register_student.webContents.openDevTools();
+    //window_Register_student.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Register_student.webContents.setWindowOpenHandler(() => {
@@ -62,12 +65,6 @@ ipcMain.on("Get-data-list-course-student",async(event,data)=>{
 })
 
 
-ipcMain.on("get-info-course-student",async(event,data)=>{
-
-
-
-
-})
 
 
 ipcMain.on("select-Image-new-student",(even,data)=>{

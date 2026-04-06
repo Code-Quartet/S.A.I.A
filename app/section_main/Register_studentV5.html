@@ -3,415 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actualizar Empleado - SAIA v2</title>
+    <title>SAIA v2 - Registro Premium</title>
     <link rel="stylesheet" type="text/css" href="../assets/iconos/icomoon/style.css">
-    <style type="text/css">
-        @font-face {
-            font-family: 'Inter';
-            src: url('../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        body { font-family: 'Inter'; margin: 0; background-color: #fff; }
-
+    <style>
         :root {
-            --primary-blue: #2b56c5;
-            --text-main: #374151;
-            --text-muted: #9ca3af;
-            --border-color: #d1d5db;
-            --bg-light: #ffffff;
-            --bg-disabled: #f3f4f6;
-            --danger-red: #ef4444;
-            --success: #28a745;
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --success: #10b981;
+            --bg-window: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+            --radius-md: 12px;
         }
 
-        /*--------ESTRUCTURA-----------------*/
-        .container-new-registre {
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: 43px auto 36px;
-            height: 77vh;
-        }
-        .container-title-register { display: flex; align-items: center; justify-content: center; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-window); margin: 0; overflow: hidden; height: 450px; width: 600px; color: var(--text-main); }
 
-        .container-registration-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            padding: 0px;
-            margin-left: 20px;
+        /* PRELOADER GLOBAL */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--white); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
         }
-
-        .action-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-right: 13px;
-            padding: 10px;
+        .loader-spin {
+            width: 30px; height: 30px; border: 3px solid var(--border);
+            border-top: 3px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        /*--------------------STYLE TOGGLE SWITCH---------------*/
-        .container-toogle-swicht { display: flex; flex-direction: row; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .label-title { font-weight: bold; color: #333; }
-        .toggle-switch { position: relative; display: inline-block; width: 70px; height: 30px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #d8d8d8; transition: .4s; border-radius: 34px; }
-        .knob { position: absolute; height: 22px; width: 22px; left: 4px; top: 4px; background-color: white; transition: .4s; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: bold; color: #333; }
-        input:checked + .slider { background-color: #60b8ff; }
-        input:checked + .slider .knob { transform: translateX(40px); }
-
-        /*----------------INPUT STYLE-------------------------*/
-        .form-group { margin-bottom: 6px; }
-        .form-group > label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }
-        .form-group > input, .select-input-new-registre { width: 80%; padding: 10px; border: 1.5px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; outline: none; transition: all 0.2s; }
-        .form-group > input:focus { border-color: var(--primary-blue); box-shadow: 0 0 5px rgba(43, 86, 197, 0.2); }
-        input:disabled, select:disabled { background-color: var(--bg-disabled); cursor: not-allowed; color: var(--text-muted); }
-
-        .sub-group-data-personal, .container-tlf-email, .sub-container-representante-tlf-email { display: flex; gap: 10px; align-items: center; width: 85%; }
-        .sub-group-data-personal > div, .container-tlf-email > div, .sub-container-representante-tlf-email > div { flex: 1; }
-
-        .btn-info-course { width: 30px; height: 30px; color: blue; border: none; background: transparent; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
-        .btn-info-course:disabled { cursor: not-allowed; opacity: 0.6; color: #dcdcdc; }
-
-        /*--- MULTISELECT CURSOS ---*/
-        .course-badge-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; min-height: 35px; width: 90%; }
-        .course-badge { background-color: var(--primary-blue); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; display: flex; align-items: center; gap: 6px; animation: fadeIn 0.3s ease; }
-        .course-badge .remove-course { cursor: pointer; font-weight: bold; font-size: 1rem; }
-        .course-badge .remove-course:hover { color: var(--danger-red); }
+        /* PRELOADER EN TODOS LOS INPUTS */
+        .input-group { position: relative; display: flex; align-items: center; width: 100%; }
+        .input-group i:not(.field-loader) { position: absolute; left: 10px; color: var(--text-muted); font-size: 14px; z-index: 2; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+        .field-loader {
+            position: absolute; right: 10px; width: 14px; height: 14px;
+            border: 2px solid var(--border); border-top: 2px solid var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite;
+            display: none; z-index: 2;
+        }
+        
+        /* Estado de carga para cualquier input-group */
+        .loading .field-loader { display: block; }
+        .loading input, .loading select { background: #f1f5f9; pointer-events: none; padding-right: 30px; }
 
-        /*-----------------IMAGE UPLOAD------------------------------*/
-        .file-upload-container-new-registre { display: flex; justify-content: center; margin-bottom: 20px; }
-        .image-uploader-register-studient { position: relative; width: 171px; height: 169px; cursor: pointer; background: #d8d8d8; border-radius: 97px; padding: 7px; display: flex; align-items: center; }
-        .main-circle-register-studient { width: 100%; height: 100%; border-radius: 50%; background-color: #e5e7eb; overflow: hidden; border: 2px solid var(--border-color); }
-        .avatar-main-register { width: 100%; height: 100%; object-fit: cover; pointer-events: none;  background: blue;}
-        .camera-button-register-studient { position: absolute; bottom: 4px; right: 12px; width: 35px; height: 35px; background-color: #d7d7d7; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; border: 2px solid white; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /*-----------------BUTTONS--------------------*/
-        .btn-confirm { background-color: var(--primary-blue); color: white; border: none; padding: 12px 40px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
-        .btn-confirm:disabled { background-color: var(--text-muted); cursor: not-allowed; opacity: 0.7; }
-        .btn-clear { background-color: transparent; color: var(--text-main); border: 1.5px solid var(--border-color); padding: 12px 25px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s; margin-right: 10px; }
-        .btn-clear:hover { background-color: #fceaea; border-color: var(--danger-red); color: var(--danger-red); }
+.app-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+}
+        header { padding: 10px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 13px; margin: 0; font-weight: 800; color: var(--primary); text-transform: uppercase; }
 
-        .top-notification { position: fixed; top: 20px; right: -400px; background: white; padding: 4px 15px; border-radius: 10px; border-left: 5px solid var(--success); box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.5s; display: flex; align-items: center; gap: 15px; z-index: 9999; }
-        .top-notification.show { right: 20px; }
-        .icono-message { color: var(--success); font-size: 1.5rem; }
+        .main-content { flex: 1; overflow-y: auto; padding: 15px 20px; }
 
-        /*----------------- MODAL EDITOR --------------------*/
-        #modalEditor { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; }
-        .editor-content { background: white; width: 750px; height: 420px; display: flex; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-        .editor-sidebar { width: 260px; padding: 25px; border-right: 1px solid #eee; display: flex; flex-direction: column; justify-content: center; }
-        .editor-view { flex-grow: 1; background: #f9fafb; display: flex; align-items: center; justify-content: center; }
-        .editor-circle-frame { width: 280px; height: 280px; background: white; border: 2px solid var(--primary-blue); position: relative; overflow: hidden; border-radius: 50%; }
-        #editorPreviewImg { position: absolute; top: 0; left: 0; transform-origin: top left; }
-        .editor-label { display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 5px; }
-        .editor-label span { color: var(--primary-blue); }
-        .editor-range { width: 100%; margin-bottom: 15px; accent-color: var(--primary-blue); cursor: pointer; }
+        /* MEJORA ÁREA DE IMAGEN */
+        .hero-section { display: flex; gap: 20px; margin-bottom: 20px; align-items: center; }
+
+.avatar-container {
+    position: relative;
+    width: 85px;
+    height: 85px;
+    cursor: pointer;
+    padding: 4px;
+    background: linear-gradient(135deg, #9e9e9e, var(--white));
+    border-radius: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+        .avatar-container:hover { transform: scale(1.05); box-shadow: 0 8px 15px rgba(79, 70, 229, 0.15); }
+        
+.avatar-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+    background: #2196f3;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+        .avatar-overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.2);
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 0.3s; color: white; font-size: 20px;
+        }
+        .avatar-container:hover .avatar-overlay { opacity: 1; }
+
+ .toggle-card {
+    flex: 1;
+    background: #f1f5f9;
+    padding: 23px 12px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid transparent;
+}
+        /* FORM */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .span-2 { grid-column: span 2; }
+        .field label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input, select { 
+            width: 100%; padding: 9px 10px 9px 32px; border: 1.5px solid var(--border);
+            border-radius: var(--radius-md); font-size: 13px; outline: none; transition: 0.2s;
+            color: var(--text-main);
+        }
+        input:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08); }
+
+        /* CURSOS AREA */
+        .course-flex { display: flex; gap: 8px; }
+        .btn-sq { width: 38px; height: 38px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-info { background: white; border: 1.5px solid var(--border); color: var(--primary); }
+        .btn-add { background: var(--primary); color: white; }
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tag {
+    background: var(--primary);
+    color: white;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+        /* REP SECTION */
+        #rep-section { grid-column: span 2; background: #f8fafc; border-radius: 16px; max-height: 0; overflow: hidden; opacity: 0; transition: 0.4s ease; border: 1px solid transparent; }
+        #rep-section.active { max-height: 300px; opacity: 1; padding: 15px; border-color: var(--border); margin-top: 5px; }
+
+        footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .btn { padding: 10px 18px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; }
+        .btn-ghost {
+    background: #b7b7b72b;
+    color: var(--text-muted);
+}
+        .btn-primary { background: var(--primary); color: white; display: flex; align-items: center; gap: 8px; }
+        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+        /* SWITCH */
+        .switch { position: relative; width: 36px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background: #cbd5e1; border-radius: 20px; transition: .3s; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .3s; }
+        input:checked + .slider { background: var(--success); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        .toast { position: fixed; top: 20px; right: -400px; background: white; padding: 12px 20px; border-radius: 12px; border-left: 4px solid var(--success); box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: 0.5s; z-index: 10001; display: flex; align-items: center; gap: 12px; }
+        .toast.show { right: 20px; }
+
+        /*-------------------------------*/
+        /* --- ESTILOS MEJORADOS PARA BOTONES DE FOOTER --- */
+
+.btn { 
+    padding: 10px 18px; 
+    border-radius: 10px; 
+    font-size: 12px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    border: none; 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transición suave */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Botón Cancelar (Cerrar) */
+.btn-ghost[onclick*="window.close"] {
+    background: #cc9a9a29;
+    color: var(--text-muted);
+}
+
+.btn-ghost[onclick*="window.close"]:hover {
+    background: #fef2f2; /* Rojo muy pálido */
+    color: #ef4444;    /* Rojo vibrante */
+    transform: translateY(-1px);
+}
+
+/* Botón Limpiar (Reset) */
+
+#btnReset.btn-ghost:hover {
+    background: #f1f5f9; /* Gris azulado claro */
+    color: var(--primary); /* Color principal */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+/* Efecto Active (cuando se hace clic) */
+.btn:active {
+    transform: translateY(0);
+    filter: brightness(0.9);
+}
+
+/* Botón Guardar (Principal) - Refuerzo de hover */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-dark);
+    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.35);
+    transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    background: #cbd5e1;
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
+}
     </style>
 </head>
 <body>
 
-    <div class="container-new-registre">
-        <div class="container-title-register">
-            <h1 class="titleRegister">Nueva Estudiante</h1>
-        </div>
+    <div id="preloader">
+        <div class="loader-spin"></div>
+        <p style="font-size: 10px; margin-top: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 1px;">SAIA ECOSYSTEM</p>
+    </div>
 
-        <form class="container-registration-form" id="registrationForm">
-            <div class="columns column1">
-                <div class="form-group">
-                    <div class="container-toogle-swicht">
-                        <label class="label-title">¿Es menor de edad?</label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="ageToggle">
-                            <div class="slider">
-                                <div class="knob" id="text-toggle">No</div>
-                            </div>
-                        </label>
+    <div class="app-container">
+        <header>
+            <h1><i class="icon-user-plus"></i> Inscripción Estudiantil</h1>
+            <div id="status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1;"></div>
+        </header>
+
+        <div class="main-content">
+            <form id="mainForm">
+                <div class="hero-section">
+                    <div class="avatar-container" id="btnImg" title="Cambiar fotografía">
+                        <img id="preview" src="../assets/imagen/ImageLogin3.png">
+                        <div class="avatar-overlay"><i class="icon-camera"></i></div>
+                    </div>
+
+<div class="toggle-card">
+                        <div>
+                            <b style="font-size: 17px;display: block;color: var(--primary);">Estudiante Menor</b>
+                            <span style="font-size: 12px;color: var(--text-muted);">Habilitar Representante Legal</span>
+                        </div>
+                        <label class="switch"><input type="checkbox" id="isMinor"><span class="slider"></span></label>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Nombre Completo</label>
-                    <input type="text" id="nombre" placeholder="Ej: Rosa María Pérez Gonzales" required>
-                </div>
+                <div class="form-grid">
+                    <div class="field span-2">
+                        <label>Nombre Completo</label>
+                        <div class="input-group" id="load-nombre">
+                            <i class="icon-user"></i>
+                            <input type="text" id="nombre" placeholder="Nombres y Apellidos">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
 
-                <div class="sub-group-data-personal">
-                    <div class="form-group">
+                    <div class="field">
                         <label>Cédula</label>
-                        <input type="text" id="cedula" placeholder="Ej: 21783921" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <div class="input-group" id="load-cedula">
+                            <i class="icon-address-card"></i>
+                            <input type="text" id="cedula" maxlength="10" placeholder="0000000000">
+                            <div class="field-loader"></div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Edad</label>
-                        <input type="number" id="edad" min="1" placeholder="Ej: 20" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Nacimiento</label>
-                        <input type="date" id="fechanacimiento" required>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label>Dirección</label>
-                    <input type="text" id="direccion" placeholder="Dirección completa" required>
-                </div>
+                    <div class="field">
+                        <label>F. Nacimiento</label>
+                        <div class="input-group" id="load-fechaNac">
+                            <i class="icon-calendar"></i>
+                            <input type="date" id="fechaNac">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
 
-                <div class="container-tlf-email">
-                    <div class="form-group">
+                    <div class="field">
                         <label>Correo Electrónico</label>
-                        <input type="email" id="correo" placeholder="nombre@correo.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Teléfono</label>
-                        <input type="tel" id="telefono" placeholder="04163003485" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
-                    </div>
-                </div>
-
-                <div class="sub-group-data-course">
-                    <div class="form-group" style="width: 95%;">
-                        <label>Cursos a inscribir</label>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <select class="select-input-new-registre" id="tipoCurso" style="width: 70%;"></select>
-                            <button type="button" class="btn-info-course icon-info" id="info-course-student" disabled title="Ver info del curso seleccionado"></button>
-                            <button type="button" class="btn-confirm" id="btnAddCourse" style="padding: 0 15px; height: 40px; font-size: 1.2rem;">+</button>
-                        </div>
-                        <div id="selected-courses-container" class="course-badge-container">
-                            <span style="color: var(--text-muted); font-size: 0.8rem;">Ningún curso seleccionado</span>
+                        <div class="input-group" id="load-correo">
+                            <i class="icon-envelop"></i>
+                            <input type="email" id="correo" placeholder="ejemplo@correo.com">
+                            <div class="field-loader"></div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="columns column2">
-                <div class="file-upload-container-new-registre">
-                    <div class="image-uploader-register-studient" id="uploadTrigger">
-                        <div class="main-circle-register-studient">
-                            <img id="imagen-avatar" class="avatar-main-register" src="../assets/imagen/ImageLogin3.png" alt="Avatar">
+                    <div class="field">
+                        <label>Teléfono Contacto</label>
+                        <div class="input-group" id="load-telefono">
+                            <i class="icon-phone"></i>
+                            <input type="tel" id="telefono" placeholder="0900000000" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <div class="field-loader"></div>
                         </div>
-                        <button type="button" class="camera-button-register-studient" id="Btn_select_image_student">
-                            <span class="icon-camera"></span>
-                        </button>
+                    </div>
+
+                    <div class="field span-2">
+                        <label>Cursos e Inscripción</label>
+                        <div class="course-flex">
+                            <div class="input-group" id="load-selCurso" style="flex: 1;">
+                                <i class="icon-books"></i>
+                                <select id="selCurso"></select>
+                                <div class="field-loader"></div>
+                            </div>
+                            <button type="button" class="btn-sq btn-info" id="btnInfo" disabled><i class="icon-info"></i></button>
+                            <button type="button" class="btn-sq btn-add" id="btnAdd"><i class="icon-plus"></i></button>
+                        </div>
+                        <div class="tags" id="tagCloud"></div>
+                    </div>
+
+                    <div id="rep-section">
+                        <p style="font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px;">REPRESENTANTE LEGAL</p>
+                        <div class="form-grid">
+                            <div class="field span-2">
+                                <label>Nombre del Representante</label>
+                                <div class="input-group" id="load-rep_nombre">
+                                    <i class="icon-users"></i>
+                                    <input type="text" id="rep_nombre" class="req-rep" placeholder="Nombres y Apellidos">
+                                    <div class="field-loader"></div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Cédula Rep.</label>
+                                <div class="input-group" id="load-rep_cedula">
+                                    <i class="icon-credit-card"></i>
+                                    <input type="text" id="rep_cedula" class="req-rep" required placeholder="0000000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <div class="field-loader"></div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Teléfono Rep.</label>
+                                <div class="input-group" id="load-rep_tel">
+                                    <i class="icon-mobile"></i>
+                                    <input type="tel" id="rep_tel" class="req-rep" placeholder="0900000000" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <div class="field-loader"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Nombre del Representante</label>
-                    <input type="text" id="nombre_representante" class="rep-field" placeholder="Nombre completo" disabled>
-                </div>
-
-                <div class="form-group">
-                    <label>Cédula del Representante</label>
-                    <input type="text" id="cedula_representante" class="rep-field" placeholder="Cédula" oninput="this.value = this.value.replace(/[^0-9]/g, '')" disabled>
-                </div>
-
-                <div class="sub-container-representante-tlf-email">
-                    <div class="form-group">
-                        <label>Teléfono</label>
-                        <input type="tel" id="telefono_representante" class="rep-field" placeholder="Teléfono" oninput="this.value = this.value.replace(/[^0-9]/g, '')" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Correo Electrónico</label>
-                        <input type="email" id="correo_representante" class="rep-field" placeholder="correo@ejemplo.com" disabled>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <div class="action-footer">
-            <div>
-                <button type="button" class="btn-clear" id="btn-close">Cerrar</button>
-            </div>
-            <div style="display: flex">
-                <button type="button" class="btn-clear" id="btn-clear">Limpiar</button>
-                <button type="submit" class="btn-confirm" id="btn-confirm" disabled>
-                    Confirmar <span class="icon-checkmark"></span>
-                </button>
-            </div>
+            </form>
         </div>
+
+        <footer>
+            <button class="btn btn-ghost" onclick="window.close()">Cancelar</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-ghost" id="btnReset"><i class="icon-undo2"></i> Limpiar</button>
+                <button class="btn btn-primary" id="btnSave" disabled>Finalizar Registro <i class="icon-floppy-disk"></i></button>
+            </div>
+        </footer>
     </div>
 
-    <div class="top-notification" id="topNotif">
-        <span class="icon-checkmark icono-message"></span>
-        <h3>¡Inscripción guardada!</h3>
+    <div class="toast" id="toast">
+        <i class="icon-checkmark" style="color: var(--success); font-size: 20px;"></i>
+        <div><b style="font-size: 12px; display: block;">¡Registro Exitoso!</b><span style="font-size: 10px; color: var(--text-muted);">Estudiante sincronizado con la base de datos.</span></div>
     </div>
 
-<script type="text/javascript">
-    
-    let seleccionCursos = [];
+    <script>
+        let selectCursos = [];
+        const isMinor = document.getElementById('isMinor');
+        const repSection = document.getElementById('rep-section');
+        const btnSave = document.getElementById('btnSave');
+        const selCurso = document.getElementById('selCurso');
 
-    window.onload = function() {
-        api.send("Get-data-list-course-student");
-        validateForm();
-    }
-
-    /*--- CARGA DE CURSOS ---*/
-    api.receive('data-list-course-student', async (event, info) => {  
-        const select = document.getElementById("tipoCurso");
-        select.innerHTML = `<option value="" disabled selected>Seleccione un Curso</option>`;
-        info.data.forEach((curso) => {
-            const option = document.createElement('option');
-            option.value = curso.Key;
-            option.textContent = curso.Name;
-            select.appendChild(option);
-        });
-    });
-
-    /*--- VARIABLES DE CONTROL ---*/
-    const ageToggle = document.getElementById('ageToggle');
-    const btnConfirm = document.getElementById('btn-confirm');
-    const btnClear = document.getElementById('btn-clear');
-    const textToggle = document.getElementById('text-toggle');
-    const repFields = document.querySelectorAll('.rep-field');
-    const registrationForm = document.getElementById('registrationForm');
-    const mainAvatar = document.getElementById('imagen-avatar');
-    const coursesContainer = document.getElementById('selected-courses-container');
-    const btnInfo = document.getElementById("info-course-student");
-    const selectCurso = document.getElementById("tipoCurso");
-
-    /*--- LÓGICA DE MULTI-CURSOS Y BOTÓN INFO ---*/
-    selectCurso.addEventListener('change', function() {
-        btnInfo.disabled = (this.value === "");
-    });
-
-    btnInfo.addEventListener("click", (e) => {
-        let courseSelect = selectCurso.value;
-        if(courseSelect) {
-            api.send("Open-system-info-course-register", courseSelect);
+        // Función universal para activar/desactivar preloaders en inputs
+        function setLoading(fieldId, state) {
+            const el = document.getElementById(`load-${fieldId}`);
+            if (el) state ? el.classList.add('loading') : el.classList.remove('loading');
         }
-    });
 
-    document.getElementById("btnAddCourse").addEventListener("click", () => {
-        const val = selectCurso.value;
-        const text = selectCurso.options[selectCurso.selectedIndex].text;
-
-        if (val && !seleccionCursos.find(c => c.id === val)) {
-            seleccionCursos.push({ id: val, nombre: text });
-            renderCourses();
-            validateForm();
-            selectCurso.value = "";
-            btnInfo.disabled = true;
-        }
-    });
-
-    function renderCourses() {
-        if (seleccionCursos.length === 0) {
-            coursesContainer.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">Ningún curso seleccionado</span>`;
-        } else {
-            coursesContainer.innerHTML = "";
-            seleccionCursos.forEach(curso => {
-                const badge = document.createElement("div");
-                badge.className = "course-badge";
-                badge.innerHTML = `
-                    ${curso.nombre}
-                    <span class="remove-course" onclick="removeCourse('${curso.id}')">&times;</span>
-                `;
-                coursesContainer.appendChild(badge);
-            });
-        }
-    }
-
-    window.removeCourse = function(id) {
-        seleccionCursos = seleccionCursos.filter(c => c.id !== id);
-        renderCourses();
-        validateForm();
-    }
-
-    /*--- SELECCIÓN DE IMAGEN (Sin editor) ---*/
-    document.getElementById("uploadTrigger").addEventListener("click", (e) => { 
-        e.preventDefault(); 
-        api.send("select-Image-new-student"); 
-    });
-
-    api.receive('Image-select-new-student', async (event, imagen) => {
-        mainAvatar.src = imagen;
-        validateForm();
-    });
-
-    /*--- VALIDACIÓN DINÁMICA ---*/
-    function validateForm() {
-        let isFormValid = true;
-        const studentRequiredIds = ['nombre', 'cedula', 'edad', 'fechanacimiento', 'direccion', 'correo', 'telefono'];
-        
-        studentRequiredIds.forEach(id => {
-            const input = document.getElementById(id);
-            if (!input || !input.value.trim()) isFormValid = false;
-        });
-
-        if (seleccionCursos.length === 0) isFormValid = false;
-
-        if (ageToggle.checked) {
-            repFields.forEach(field => { if (!field.value.trim()) isFormValid = false; });
-        }
-        btnConfirm.disabled = !isFormValid;
-    }
-
-    /*--- LIMPIAR FORMULARIO ---*/
-    function LimpiarForm() {
-        registrationForm.reset();
-        ageToggle.checked = false;
-        textToggle.innerHTML = 'No';
-        seleccionCursos = [];
-        renderCourses();
-        repFields.forEach(field => { field.disabled = true; field.value = ""; });
-        mainAvatar.src = "../assets/imagen/ImageLogin3.png";
-        btnInfo.disabled = true;
-        validateForm();
-    }
-
-    /*--- ENVIAR DATOS ---*/
-    btnConfirm.addEventListener('click', (e) => {
-        e.preventDefault();
-        const formData = {
-            estudiante: {
-                esMenor: ageToggle.checked,
-                nombre: document.getElementById('nombre').value,
-                cedula: document.getElementById('cedula').value,
-                edad: document.getElementById('edad').value,
-                imagen: mainAvatar.src,
-                nacimiento: document.getElementById('fechanacimiento').value,
-                direccion: document.getElementById('direccion').value,
-                cursos: seleccionCursos.map(c => c.id),
-                correo: document.getElementById('correo').value,
-                telefono: document.getElementById('telefono').value
-            },
-            representante: ageToggle.checked ? {
-                nombre: document.getElementById('nombre_representante').value,
-                cedula: document.getElementById('cedula_representante').value,
-                telefono: document.getElementById('telefono_representante').value,
-                correo: document.getElementById('correo_representante').value
-            } : null
+        window.onload = () => {
+            api.send("Get-data-list-course-student");
+            validate();
         };
 
-        api.send("Register-new-data-student", formData);
-        LimpiarForm();
-        api.send("Reload-dasboard-system-data-Student");
-    });
-
-    /*--- EVENTOS GENERALES ---*/
-    ageToggle.addEventListener('change', function() {
-        const isMinor = this.checked;
-        textToggle.innerHTML = isMinor ? 'Sí' : 'No';
-        repFields.forEach(field => {
-            field.disabled = !isMinor;
-            if (!isMinor) field.value = "";
+        api.receive('data-list-course-student', (e, info) => {
+            selCurso.innerHTML = '<option value="" disabled selected>Seleccione un curso...</option>';
+            info.data.forEach(c => {
+                let opt = document.createElement('option');
+                opt.value = c.Key; opt.textContent = c.Name;
+                selCurso.appendChild(opt);
+            });
+            document.getElementById('preloader').style.opacity = '0';
+            setTimeout(() => document.getElementById('preloader').style.display = 'none', 500);
         });
-        validateForm();
-    });
 
-    const allInputs = document.querySelectorAll('#registrationForm input');
-    allInputs.forEach(input => {
-        input.addEventListener('input', validateForm);
-    });
+        isMinor.addEventListener('change', function() {
+            repSection.classList.toggle('active', this.checked);
+            validate();
+        });
 
-    btnClear.addEventListener('click', LimpiarForm);
-    document.getElementById("btn-close").addEventListener("click", () => { window.close(); });
-    api.receive("Open-modal-message-student", (event, datas) => { mostrarNotificacion(); });
+        selCurso.addEventListener('change', () => document.getElementById('btnInfo').disabled = !selCurso.value);
 
-    function mostrarNotificacion() {
-        const notif = document.getElementById('topNotif');
-        notif.classList.add('show');
-        setTimeout(() => notif.classList.remove('show'), 4000);
-    }
-</script>
+        document.getElementById('btnInfo').addEventListener('click', () => {
+            if(selCurso.value) api.send("Open-system-info-course-register", selCurso.value);
+        });
+
+        document.getElementById('btnAdd').addEventListener('click', () => {
+            const val = selCurso.value;
+            const txt = selCurso.options[selCurso.selectedIndex].text;
+            if(val && !selectCursos.find(c => c.id === val)) {
+                selectCursos.push({id: val, nombre: txt});
+                renderTags(); validate();
+            }
+        });
+
+        function renderTags() {
+            const cloud = document.getElementById('tagCloud');
+            cloud.innerHTML = '';
+            selectCursos.forEach(c => {
+                const tag = document.createElement('div');
+                tag.className = 'tag';
+                tag.innerHTML = `${c.nombre} <i class="icon-cross" style="cursor:pointer" onclick="removeTag('${c.id}')"></i>`;
+                cloud.appendChild(tag);
+            });
+        }
+
+        window.removeTag = (id) => {
+            selectCursos = selectCursos.filter(c => c.id !== id);
+            renderTags(); validate();
+        };
+
+        function validate() {
+            const fields = ['nombre', 'cedula', 'fechaNac', 'correo', 'telefono'];
+            let valid = fields.every(id => document.getElementById(id).value.trim() !== "");
+            if (selectCursos.length === 0) valid = false;
+            if (isMinor.checked) {
+                const repValid = ['rep_nombre', 'rep_cedula', 'rep_tel'].every(id => document.getElementById(id).value.trim() !== "");
+                if(!repValid) valid = false;
+            }
+            btnSave.disabled = !valid;
+            document.getElementById('status-dot').style.background = valid ? 'var(--success)' : '#f59e0b';
+        }
+
+        document.querySelectorAll('input').forEach(i => i.addEventListener('input', validate));
+
+        btnSave.addEventListener('click', () => {
+            // Ejemplo: Activar preloader en el nombre mientras se envía
+            setLoading('nombre', true);
+            
+            const data = {
+                estudiante: {
+                    esMenor: isMinor.checked,
+                    nombre: document.getElementById('nombre').value,
+                    cedula: document.getElementById('cedula').value,
+                    nacimiento: document.getElementById('fechaNac').value,
+                    correo: document.getElementById('correo').value,
+                    telefono: document.getElementById('telefono').value,
+                    cursos: selectCursos.map(c => c.id),
+                    imagen: document.getElementById('preview').src,
+                    direccion: "N/A"
+                },
+                representante: isMinor.checked ? {
+                    nombre: document.getElementById('rep_nombre').value,
+                    cedula: document.getElementById('rep_cedula').value,
+                    telefono: document.getElementById('rep_tel').value,
+                    correo: "N/A"
+                } : null
+            };
+            api.send("Register-new-data-student", data);
+            api.send("Reload-dasboard-system-data-Student");
+        });
+
+        api.receive("Open-modal-message-student", () => {
+            setLoading('nombre', false);
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); location.reload(); }, 2500);
+        });
+
+        document.getElementById('btnImg').addEventListener('click', () => api.send("select-Image-new-student"));
+        api.receive('Image-select-new-student', (e, img) => { document.getElementById('preview').src = img; validate(); });
+        document.getElementById('btnReset').addEventListener('click', () => location.reload());
+    </script>
 </body>
 </html>

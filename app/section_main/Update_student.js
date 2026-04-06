@@ -19,7 +19,7 @@ let key_student=""
 module.exports = function Update_studient(parentWindow,key){
 
   window_Update_studient = new BrowserWindow({
-        width:990,
+           width:600,
         height:530,
       // modal: true,
        resizable:false, 
@@ -35,7 +35,7 @@ module.exports = function Update_studient(parentWindow,key){
         }
     });
 
-    window_Update_studient.loadFile('app/section_main/Update_studentV4.html');
+    window_Update_studient.loadFile('app/section_main/Update_studentV5.html');
 
     // Herramientas de desarrollo
   //window_Update_studient.webContents.openDevTools();
