@@ -218,7 +218,7 @@
                         <label>Cédula</label>
                         <div class="input-group" id="load-cedula">
                             <i class="icon-address-card"></i>
-                            <input type="text" id="cedula" maxlength="10" placeholder="0000000000">
+                            <input type="text" id="cedula" maxlength="10" placeholder="0000000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             <div class="field-loader"></div>
                         </div>
                     </div>

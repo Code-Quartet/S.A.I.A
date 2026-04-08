@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "fast-csv": "^5.0.5",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "^5.0.3",
     "uuid": "^9.0.1",
     "xlsx": "^0.18.5"
   }

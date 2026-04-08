@@ -194,7 +194,7 @@ body {
                         <label>Cédula</label>
                         <div class="input-group" id="load-cedula">
                             <i class="icon-address-card"></i>
-                            <input type="text" id="cedula" maxlength="10">
+                            <input type="text" id="cedula" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             <div class="field-loader"></div>
                         </div>
                     </div>
@@ -221,7 +221,7 @@ body {
                         <label>Teléfono</label>
                         <div class="input-group" id="load-telefono">
                             <i class="icon-phone"></i>
-                            <input type="tel" id="telefono">
+                            <input type="tel" id="telefono" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             <div class="field-loader"></div>
                         </div>
                     </div>
