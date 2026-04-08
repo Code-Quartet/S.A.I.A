@@ -160,65 +160,18 @@
         /*-------------------------------*/
         /* --- ESTILOS MEJORADOS PARA BOTONES DE FOOTER --- */
 
-.btn { 
-    padding: 10px 18px; 
-    border-radius: 10px; 
-    font-size: 12px; 
-    font-weight: 700; 
-    cursor: pointer; 
-    border: none; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transición suave */
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+.btn { padding: 10px 20px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        
+        .btn-close { background: #cc9a9a29; color: #ef4444; }
+        .btn-close:hover { background: #fef2f2; transform: translateY(-1px); }
+        
+        .btn-clear { background: #b7b7b72b; color: var(--text-muted); }
+        .btn-clear:hover { background: #f1f5f9; color: var(--primary); transform: translateY(-1px); }
 
-/* Botón Cancelar (Cerrar) */
-.btn-ghost[onclick*="window.close"] {
-    background: #cc9a9a29;
-    color: var(--text-muted);
-}
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3); }
+        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
 
-.btn-ghost[onclick*="window.close"]:hover {
-    background: #fef2f2; /* Rojo muy pálido */
-    color: #ef4444;    /* Rojo vibrante */
-    transform: translateY(-1px);
-}
-
-/* Botón Limpiar (Reset) */
-
-#btnReset.btn-ghost:hover {
-    background: #f1f5f9; /* Gris azulado claro */
-    color: var(--primary); /* Color principal */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    transform: translateY(-1px);
-}
-
-/* Efecto Active (cuando se hace clic) */
-.btn:active {
-    transform: translateY(0);
-    filter: brightness(0.9);
-}
-
-/* Botón Guardar (Principal) - Refuerzo de hover */
-.btn-primary {
-    background: var(--primary);
-    color: white;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-}
-
-.btn-primary:hover:not(:disabled) {
-    background: var(--primary-dark);
-    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.35);
-    transform: translateY(-2px);
-}
-
-.btn-primary:disabled {
-    background: #cbd5e1;
-    box-shadow: none;
-    transform: none;
-    cursor: not-allowed;
-}
     </style>
 </head>
 <body>
@@ -345,9 +298,9 @@
         </div>
 
         <footer>
-            <button class="btn btn-ghost" onclick="window.close()">Cancelar</button>
+            <button class="btn btn-close" onclick="window.close()"><i class="icon-cross"></i> Cerrar</button>
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-ghost" id="btnReset"><i class="icon-undo2"></i> Limpiar</button>
+                <button class="btn btn-clear" id="btnReset"><i class="icon-undo2"></i> Limpiar</button>
                 <button class="btn btn-primary" id="btnSave" disabled>Finalizar Registro <i class="icon-floppy-disk"></i></button>
             </div>
         </footer>

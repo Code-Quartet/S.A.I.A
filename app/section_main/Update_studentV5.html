@@ -273,7 +273,7 @@ body {
                                 <label>Cédula Rep.</label>
                                 <div class="input-group" id="load-cedula_representante">
                                     <i class="icon-credit-card"></i>
-                                    <input type="text" id="cedula_representante" class="rep-field">
+                                    <input type="text" id="cedula_representante" class="rep-field" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="0900000000" >
                                     <div class="field-loader"></div>
                                 </div>
                             </div>
@@ -281,7 +281,7 @@ body {
                                 <label>Teléfono Rep.</label>
                                 <div class="input-group" id="load-telefono_representante">
                                     <i class="icon-mobile"></i>
-                                    <input type="tel" id="telefono_representante" class="rep-field">
+                                    <input type="tel" id="telefono_representante" class="rep-field"required oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="0900000000" >
                                     <div class="field-loader"></div>
                                 </div>
                             </div>

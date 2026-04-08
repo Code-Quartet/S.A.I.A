@@ -289,8 +289,25 @@ ipcMain.on('Image-select-my-profile',(event,id) => {
       mainWindow.webContents.send("notification-my-profile");
       setTimeout(function(){
 
-              mainWindow.webContents.send("reload-user-data-modif");
+    dialog.showMessageBox({
+          title: 'Notificación',
+          type:'none',
+          message: 'Imagen de Usuario Actualizado',
+          detail: 'Retorno al Login para establecer información',
+          icon: 'info',
+          buttons: ['Aceptar'],
+          defaultId: 0,
+          cancelId: 1,
+          noLink: true
+    }).then(result => {
+   
+            mainWindow.webContents.send("reload-user-data-modif");
 
+    }).catch(err => {
+    console.log(err);
+    });
+
+        
         
       },1500)
 

@@ -1,5 +1,5 @@
 {
-  "name": "S.A.I.A",
+  "name": "SAIA",
   "version": "1.0.0",
   "description": "",
   "main": "app/main.js",
@@ -12,14 +12,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "Privada",
   "build": {
-    "appId": "com.AdVizualyze.app",
-    "productName": "AdVizualyze",
+    "appId": "com.SAIA.app",
+    "productName": "SAIA",
     "asar": true,
-    "extraResources": [
-      "data_app/**"
-    ],
     "win": {
       "icon": "build/icon.ico",
       "target": [
