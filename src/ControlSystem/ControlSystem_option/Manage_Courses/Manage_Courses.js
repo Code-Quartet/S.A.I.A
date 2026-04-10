@@ -42,7 +42,7 @@ let template_register_course =`
                     </div>
             </div>
 
-        <button class="btn-new-data btn-pri" onclick="OpenNewCourse()">
+        <button class="btn-new-data btn-pri" id="NewRegisterCourse">
             Nuevo Curso <i class="icon-plus"></i>
         </button>
     </section>
@@ -78,7 +78,18 @@ function Manage_course(id){
                 document.getElementById("ExportCourse").style.display = 'none'
         }
    /*-------------------------------------------------*/
+const btnNewRegisterCourse = document.getElementById("NewRegisterCourse");
 
+btnNewRegisterCourse.addEventListener('click', () => {
+    
+    btnNewRegisterCourse.disabled = true;
+
+    api.send("Open-system-new-course-register")
+    
+    setTimeout(() => {
+        btnNewRegisterCourse.disabled = false;
+    }, 1000); 
+});
 
 /*-------------------------------------------------------------------------------*/
     document.getElementById("btnSearchCurso").addEventListener("click",(e)=>{
@@ -113,8 +124,6 @@ function Manage_course(id){
 
 // Función que se ejecuta al elegir un producto (Click o Enter)
 async function ejecutarBusquedaFinal(data) {
-
-    console.log(data)
 
     const detalle = SearchCourse(data.Name);
     
@@ -248,10 +257,10 @@ document.addEventListener('click', (e) => {
 
     document.querySelector(".btn-reset").addEventListener("click",(e)=>{
         const contenedor = document.getElementById('drop-curso');
-const checkboxes = contenedor.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = contenedor.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(chk => {
-            chk.checked = false; // Esto quita la marca de "check"
-        });
+        chk.checked = false; // Esto quita la marca de "check"
+    });
 
          api.send("Select-course-list")
 
@@ -416,11 +425,6 @@ function SearchPaginationCourse(index){
 
 }
 
-function OpenNewCourse(){
-
-    api.send("Open-system-new-course-register")
-    
-}
 
 function EditCourse(id){
 

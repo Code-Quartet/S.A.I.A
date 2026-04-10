@@ -32,7 +32,33 @@
 <script type="text/javascript" src="src/ControlSystem/ControlSystem_option/Manage_Instructors/Manage_Instructors.js"></script>
 <script type="text/javascript" src="src/ControlSystem/ControlSystem_option/Manage_Employee/Manage_Employees.js"></script>
 <script type="text/javascript" src="src/ControlSystem/ControlSystem_option/Trash/Trash.js"></script>
-
-
 <script type="text/javascript" src="assets/javascript/RenderSelect.js"></script>
+<script type="text/javascript">
+  function saludarSegunHora() {
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    let mensaje = "";
+
+    // Determinamos el saludo según el rango horario
+    if (hora >= 6 && hora < 12) {
+        mensaje = "¡Buenos días! Espero que tengas un excelente inicio de jornada.";
+    } else if (hora >= 12 && hora < 20) {
+        mensaje = "¡Buenas tardes! Espero que tengas una gran tarde";
+    } else {
+        mensaje = "¡Buenas noches! Es hora de descansar o terminar lo pendiente.";
+    }
+
+    // Configuración de la API de Síntesis de Voz
+    const saludoAudio = new SpeechSynthesisUtterance(mensaje);
+    saludoAudio.lang = 'es-ES'; // Configura el idioma a español
+    saludoAudio.rate = 1;       // Velocidad normal
+
+    // Ejecutar el saludo
+    window.speechSynthesis.speak(saludoAudio);
+}
+// 1. Cargar datos al iniciar
+window.addEventListener('DOMContentLoaded', () => {
+    saludarSegunHora()
+});
+</script>
 </html>

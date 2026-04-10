@@ -12,7 +12,7 @@ class SAIADB {
 
         // --- CONFIGURACIÓN DE PROTECCIÓN AVANZADA ---
         // Localizamos la carpeta de datos de aplicación (AppData en Windows)
-        const appData = process.env.APPDATA || 
+        const appData = process.env.APPDATA ||
             (process.platform === 'darwin' ? 
             path.join(os.homedir(), 'Library', 'Application Support') : 
             path.join(os.homedir(), '.local', 'share'));
@@ -51,9 +51,16 @@ class SAIADB {
                 return { valid: false, error: "Error de integridad: Datos de sistema corruptos (0x102)." };
             }
 
-            if (today > expirationDate) {
-                return { valid: false, error: "La licencia de uso ha expirado. Contacte al administrador." };
-            }
+          if (today > expirationDate) {
+            const red = "\x1b[31m";
+            const reset = "\x1b[0m";
+            const bold = "\x1b[1m";
+
+            return { 
+                valid: false, 
+                error: `${red}${bold}× ERROR:${reset} ${red}La licencia de uso ha expirado. Contacte al administrador.${reset}` 
+            };
+        }
 
             return { valid: true };
         } catch (e) {

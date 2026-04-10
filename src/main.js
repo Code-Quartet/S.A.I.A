@@ -4,7 +4,6 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
-console.log(path.join(__dirname,"../database/.config.json"))
 const config = require(path.join(__dirname,"../database/.config.json"));
 /*---------------------------------------------------------*/
 /*--------------LINK BASE DE DATOS (Ajustado a carpeta raíz /database) ------------------------*/
@@ -109,7 +108,7 @@ function createWindow() {
     // Como main.js está en /src, subimos un nivel
     mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
     
     // Bloqueo de nuevas ventanas
     mainWindow.webContents.setWindowOpenHandler(() => {

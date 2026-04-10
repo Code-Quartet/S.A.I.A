@@ -9,8 +9,7 @@ const os = require('os');
  */
 module.exports = function setupLicense() {
 
-    let expirationDate = "2026-4-15";
-
+    let expirationDate = "2026-4-16";
     try {
         // 1. Determinar la ruta de AppData (Windows/Mac/Linux)
         const appData = process.env.APPDATA || 

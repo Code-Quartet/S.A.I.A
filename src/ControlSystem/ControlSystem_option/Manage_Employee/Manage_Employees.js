@@ -36,7 +36,7 @@ let template_manage_employee=`<main class="container-manage-table">
                     </div>
             </div>
                                         </div>
-                                    <button class="btn-new-data" onclick="RegisterNewEmployee()">
+                                    <button class="btn-new-data" id="NewRegisterEmployee">
                                         Nuevo Empleado <span class="icon-user-plus"></span>
                                     </button>
                                     </section>
@@ -70,21 +70,35 @@ let template_manage_employee=`<main class="container-manage-table">
 
 function Manage_Employee(id){
 
-	document.getElementById(id).innerHTML=template_manage_employee;
+    document.getElementById(id).innerHTML=template_manage_employee;
 
 
-   /*-------------------------------------------------*/
-        if(Data_user.permission=="Sub-Administrador"){
+    /*-------------------------------------------------*/
+    if(Data_user.permission=="Sub-Administrador"){
 
-                document.getElementById("ExportEmployee").style.display = 'none'
-        }
-   /*-------------------------------------------------*/
+        document.getElementById("ExportEmployee").style.display = 'none'
+    }
+    /*-------------------------------------------------*/
 
+    const btnNewRegisterEmployee = document.getElementById("NewRegisterEmployee");
+
+    btnNewRegisterEmployee.addEventListener('click', () => {
+        
+        btnNewRegisterEmployee.disabled = true;
+
+           api.send("Open-system-new-employee-register")
+        
+        setTimeout(() => {
+            btnNewRegisterEmployee.disabled = false;
+        }, 1000); 
+    });
+
+/*-------------------------------------------------------------------------------*/
 
 
     api.send("Get-data-registre-employee")
 
-    document.getElementById("Searchemployee").addEventListener("click",(e)=>{
+        document.getElementById("Searchemployee").addEventListener("click",(e)=>{
 
         SearchEmployee(document.getElementById("inputSearchEmployee").value)
 
@@ -135,14 +149,12 @@ document.querySelector('.btn-apply').addEventListener('click', async () => {
 
 document.querySelector(".btn-reset").addEventListener("click",(e)=>{
 
-            const contenedor = document.getElementById('drop-curso');
-const checkboxes = contenedor.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(chk => {
-            chk.checked = false; // Esto quita la marca de "check"
-        });
-
-
-  api.send("Get-data-registre-employee")
+    const contenedor = document.getElementById('drop-curso');
+    const checkboxes = contenedor.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(chk => {
+    chk.checked = false; // Esto quita la marca de "check"
+    });
+    api.send("Get-data-registre-employee")
 
 })
 
@@ -431,9 +443,7 @@ function DeleteEmployee(id){
             api.send("Login-user-master-permission",obj)
 }
 
-function RegisterNewEmployee(){
-    api.send("Open-system-new-employee-register")
-}
+
 
 function exexportarAExcelEmployee() {
             let obj={

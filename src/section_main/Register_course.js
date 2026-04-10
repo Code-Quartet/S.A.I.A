@@ -20,8 +20,9 @@ module.exports = function Register_course(parentWindow) {
   window_register_course = new BrowserWindow({
         width:540,
         height:580,
-       resizable:false, 
+        resizable:false, 
         frame:false,
+        //movable: true,
         //modal: true,
        // parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo

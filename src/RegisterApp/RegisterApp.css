@@ -26,13 +26,11 @@ body{
 }
 /*------------------------------*/
 
-
-
-.container-body-registre-app{
-    background-image:url('../../assets/imagen/fondo.jpg');
+.container-body-registre-app {
+    background-image: url('../../assets/imagen/fondo.jpg');
     background-position: center;
-    background-size: cover;
-    background-repeat:no-repeat;
+    background-size: inherit;
+    background-repeat: no-repeat;
     height: 100vh;
 }
 
@@ -59,11 +57,13 @@ body{
     width: 100%;
     height: 100vh;
 }
-	.show-detail{
-		background:#2196f391;
-		width: 100%;
-		height: 100vh;
-	}
+
+
+.show-detail {
+    /* background: #2196f391; */
+    width: 100%;
+    height: 100vh;
+}
 
 
 .title-system-install {
@@ -135,6 +135,7 @@ body{
     position: relative;
     overflow: hidden;
     border-radius: 10px;
+    border: 0.22px solid #637298;
     width: 69%;
 }
 /* Ocultar imágenes por defecto */

@@ -38,7 +38,7 @@ let TemplanteManageInstructor=`
             </div>
         </div>
 
-        <button class="btn-new-data" onclick="OpenRegisterInstructor()">
+        <button class="btn-new-data" id="NewRegisterInstructor">
             <span class="icon-user-plus"></span> Nuevo Instructor
         </button>
 
@@ -84,6 +84,21 @@ function Manage_Instructor(id){
                 document.getElementById("ExportInstructor").style.display = 'none'
         }
    /*-------------------------------------------------*/
+      /*-------------------------------------------------*/
+const btnNewRegisterInstructor = document.getElementById("NewRegisterInstructor");
+
+btnNewRegisterInstructor.addEventListener('click', () => {
+    
+    btnNewRegisterInstructor.disabled = true;
+
+         api.send("Open-system-new-instructor-register")
+    
+    setTimeout(() => {
+        btnNewRegisterInstructor.disabled = false;
+    }, 1000); 
+});
+
+/*-------------------------------------------------------------------------------*/
 
     const dropdown = document.querySelector('.dropdown-table-manage');
     const btn = document.querySelector('.btn-dropdown-table-manage');
@@ -128,11 +143,11 @@ document.querySelector('.btn-apply').addEventListener('click', async () => {
 
 document.querySelector(".btn-reset").addEventListener("click",(e)=>{
 
-            const contenedor = document.getElementById('drop-curso');
-const checkboxes = contenedor.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(chk => {
-            chk.checked = false; // Esto quita la marca de "check"
-        });
+    const contenedor = document.getElementById('drop-curso');
+    const checkboxes = contenedor.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(chk => {
+        chk.checked = false; // Esto quita la marca de "check"
+    });
 
 
     api.send("Get-data-instrutor-list")
@@ -391,11 +406,9 @@ api.receive("data-list-instructor-search",(event,info)=>{
 
 function SearchPaginationInstructor(index){
 
-   // console.log("SearchPaginationInstructor")
-
    api.send("search-pagination-Instructor",index)
-}
 
+}
 
 function OpenInfoInstructor(key){
 
@@ -408,11 +421,6 @@ function restablecerFiltros(){
     
     menu.querySelectorAll('input').forEach(i => i.checked = false);
 
-}
-
-function OpenRegisterInstructor(){
-    
-    api.send("Open-system-new-instructor-register")
 }
 
 function OpenEditInstructor(key){
