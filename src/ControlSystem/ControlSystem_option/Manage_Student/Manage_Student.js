@@ -74,7 +74,7 @@ btnNewRegisterStudent.addEventListener('click', () => {
     // Lo rehabilitamos después de un pequeño delay 
     // para evitar ráfagas de clics accidentales
     setTimeout(() => {
-        btnNewRegisterStudent.disabled = false;
+      //  btnNewRegisterStudent.disabled = false;
     }, 1000); 
 });
    /*-------------------------------------------------*/
@@ -225,6 +225,12 @@ fechaInput.addEventListener('keydown', (event) => {
     /*--------------------------------*/
      
 }
+
+
+api.receive("Activate-button-register-student",(event,data)=>{
+    const btnNewRegisterStudent = document.getElementById("NewRegisterStudent");
+    btnNewRegisterStudent.disabled = false;
+})
 
 function exportarAExcelStudent() {
 

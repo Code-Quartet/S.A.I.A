@@ -84,7 +84,6 @@ function Manage_Instructor(id){
                 document.getElementById("ExportInstructor").style.display = 'none'
         }
    /*-------------------------------------------------*/
-      /*-------------------------------------------------*/
 const btnNewRegisterInstructor = document.getElementById("NewRegisterInstructor");
 
 btnNewRegisterInstructor.addEventListener('click', () => {
@@ -92,10 +91,7 @@ btnNewRegisterInstructor.addEventListener('click', () => {
     btnNewRegisterInstructor.disabled = true;
 
          api.send("Open-system-new-instructor-register")
-    
-    setTimeout(() => {
-        btnNewRegisterInstructor.disabled = false;
-    }, 1000); 
+
 });
 
 /*-------------------------------------------------------------------------------*/
@@ -281,7 +277,12 @@ document.addEventListener('click', (e) => {
 /*-------------------------------------------------------------------------------*/
  
 }
+api.receive("Activate-button-register-instructor",(event,data)=>{
 
+    const btnNewRegisterInstructor = document.getElementById("NewRegisterInstructor");
+    btnNewRegisterInstructor.disabled = false
+
+})
 function SearchInstructor(data){
 
         api.send("search-data-registre-instructor",data)

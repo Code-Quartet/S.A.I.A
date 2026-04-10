@@ -360,6 +360,17 @@ justify-content: space-between;
     cursor: pointer;
 }
 
+.btn-new-data:disabled{
+    background:grey;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 11px;
+    border-style: none;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .btn-export {
     background: #2b56c5;
     color: white;

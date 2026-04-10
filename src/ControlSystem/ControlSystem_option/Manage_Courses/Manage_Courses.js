@@ -85,10 +85,7 @@ btnNewRegisterCourse.addEventListener('click', () => {
     btnNewRegisterCourse.disabled = true;
 
     api.send("Open-system-new-course-register")
-    
-    setTimeout(() => {
-        btnNewRegisterCourse.disabled = false;
-    }, 1000); 
+
 });
 
 /*-------------------------------------------------------------------------------*/
@@ -212,8 +209,6 @@ document.addEventListener('click', (e) => {
     if (e.target !== searchInput) resultsPreview.style.display = 'none';
 });
 /*---------------------------------------*/
-    /*-------------------------------------------------------------------------------*/
-       /*----------------------*/
     const dropdown = document.querySelector('.dropdown-table-manage');
     const btn = document.querySelector('.btn-dropdown-table-manage');
 
@@ -272,6 +267,13 @@ document.addEventListener('click', (e) => {
 
 }
 
+api.receive("Activate-button-register-course",(event,data)=>{
+
+    const btnNewRegisterCourse = document.getElementById("NewRegisterCourse");
+
+    btnNewRegisterCourse.disabled = false
+
+})
 
 function SearchCourse(data){
 

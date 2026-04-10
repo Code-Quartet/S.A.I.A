@@ -88,9 +88,6 @@ function Manage_Employee(id){
 
            api.send("Open-system-new-employee-register")
         
-        setTimeout(() => {
-            btnNewRegisterEmployee.disabled = false;
-        }, 1000); 
     });
 
 /*-------------------------------------------------------------------------------*/
@@ -280,7 +277,12 @@ document.addEventListener('click', (e) => {
 
 
 }
+api.receive("Activate-button-register-employee",(event,data)=>{
+    
+    const btnNewRegisterEmployee = document.getElementById("NewRegisterEmployee");
+    btnNewRegisterEmployee.disabled = false;
 
+})
 
 api.receive("Render-data-employee-list",(event,info)=>{
 

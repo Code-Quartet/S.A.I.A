@@ -360,10 +360,10 @@ api.receive("Data-list-intructor", (event, data) => {
     });
 //cerrar
     document.getElementById('btnClose').addEventListener('click', () => {
-       
-     
-   window.close()
-
+           
+      
+       api.send("button-register-course-activate")
+ window.close()
     });
 
     // Ejecutar validación inicial al cargar la página

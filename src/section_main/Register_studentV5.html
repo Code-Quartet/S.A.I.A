@@ -359,7 +359,7 @@ input, select {
         </div>
 
         <footer>
-            <button class="btn btn-close" onclick="window.close()"><i class="icon-cross"></i> Cerrar</button>
+            <button class="btn btn-close" id="btnclose"><i class="icon-cross"></i> Cerrar</button>
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-clear" id="btnReset"><i class="icon-undo2"></i> Limpiar</button>
                 <button class="btn btn-primary" id="btnSave" disabled>Finalizar Registro <i class="icon-floppy-disk"></i></button>
@@ -491,6 +491,12 @@ input, select {
         document.getElementById('btnImg').addEventListener('click', () => api.send("select-Image-new-student"));
         api.receive('Image-select-new-student', (e, img) => { document.getElementById('preview').src = img; validate(); });
         document.getElementById('btnReset').addEventListener('click', () => location.reload());
+
+        document.getElementById("btnclose").addEventListener("click",(event)=>{
+                    
+                            api.send("button-register-student-activate")
+                                    window.close()
+        })
     </script>
 </body>
 </html>

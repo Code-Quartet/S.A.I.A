@@ -589,6 +589,14 @@ ipcMain.on("search-data-pagination-student",async(even,pos)=>{
     mainWindow.webContents.send("Data-list-Student",result)
 })
 
+ipcMain.on("button-register-student-activate",(event,data)=>{
+
+mainWindow.webContents.send("Activate-button-register-student")
+
+})
+
+
+
 ipcMain.on("Open-registre-new-Student",(event,data)=>{
 
     Register_student()
@@ -670,6 +678,14 @@ ipcMain.on("search-paginationCourse",async(event,data)=>{
 
      let result = await GetCoursePaged(data) 
      mainWindow.webContents.send("Data-list-course-search",result);
+
+})
+
+ipcMain.on("button-register-course-activate",(event,data)=>{
+
+
+mainWindow.webContents.send("Activate-button-register-course")
+
 
 })
 
@@ -756,6 +772,13 @@ ipcMain.on("search-data-registre-instructor",async(event,data)=>{
 
    let result = await SearchInstructor(data)
    mainWindow.webContents.send("data-list-instructor-search",result);
+
+
+})
+
+ipcMain.on("button-register-instructor-activate",(event,data)=>{
+
+mainWindow.webContents.send("Activate-button-register-instructor")
 
 
 })
@@ -869,7 +892,12 @@ ipcMain.on("search-pagination-employee",async(even,pos)=>{
 
 })
 
+ipcMain.on("button-register-employee-activate",(event,data)=>{
 
+mainWindow.webContents.send("Activate-button-register-employee")
+
+
+})
 ipcMain.on("Open-system-new-employee-register",(event,data)=>{
  
   Register_employee(mainWindow)
