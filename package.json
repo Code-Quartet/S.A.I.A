@@ -2,7 +2,7 @@
   "name": "SAIA",
   "version": "1.0.0",
   "description": "",
-  "main": "app/main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
@@ -12,18 +12,34 @@
   },
   "keywords": [],
   "author": "",
-  "license": "Privada",
-  "build": {
-    "appId": "com.SAIA.app",
-    "productName": "SAIA",
-    "asar": true,
-    "win": {
-      "icon": "build/icon.ico",
-      "target": [
-        "NSIS"
-      ]
-    }
+ "license": "Proprietary",
+"build": {
+  "appId": "com.SAIA.saiav1",
+    "productName": "S.A.I.A v1",
+    "asar": false,
+    "extraResources": [
+      "database/**"
+    ],
+    "directories": {
+      "output": "dist-installer",
+      "buildResources": "build"
+    },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64", "ia32"]
+      }
+    ],
+    "icon": "build/favicon.ico"
   },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "runAfterFinish": true
+  }
+},
   "devDependencies": {
     "electron": "^13.6.9",
     "electron-builder": "^24.4.0"

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    <link rel="stylesheet" type="text/css" href="RegisterApp.css">
+<body class="container-body-registre-app">
+	<section id="window-logo-install-app" class="container-show-logo logo-install-app">
+		
+		<h1 style="color:white; font-size: 250px">S.A.I.A</h1>
+
+	</section>
+	<section id="window-detail-install-app" class="show-detail container-hide">
+		<h1 class="title-system-install">Sistema de Instalación</h1>
+		<section class="container-slide">
+			<div class="slideshow-container">
+
+				<div class="container-bot">
+				    <span class="dot"></span> 
+				    <span class="dot"></span> 
+				    <span class="dot"></span> 
+				</div>
+
+				 <div class="mySlides fade">
+				    <img src="../../assets/imagen/image1.jpg" class="imagen-slide">
+				    <!--<div class="text">Explora la Naturaleza</div>-->
+				 </div>
+
+				<div class="mySlides fade">
+					    <img src="../../assets/imagen/image2.jpg" class="imagen-slide">
+					    <!--<div class="text">Diseño Minimalista</div>-->
+				</div>
+
+				 <div class="mySlides fade">
+				    <img src="../../assets/imagen/image3.jpg" class="imagen-slide">
+				    <!--<div class="text">Aventura Urbana</div>-->
+				</div>	
+
+			</div>
+		</section>
+		<section class="container-info-btn">
+			<!----->
+			<button class="btn-trial" id="btn-trial-system">Activar modo Prueba</button>
+      <button class="btn-pulse" id="btn-install-system">Agregar información</button>
+		</section>
+	</section>
+<!--
+      <label class="info-install-app">Usuario y contaseña por defecto Admin/123456789</label>-->
+	<!-----------MODAL SYSTEM---------------->
+
+    <div id="modalRegisterAppOverlay" class="modalRegisterApp-overlay-RegisterApp">
+  <div class="modalRegisterApp-content-RegisterApp">
+			<div class="div1">
+				<h1 style="text-align: center;">Registre Informacion del Aministrador</h1>
+			</div>
+	    <div class="registration-form">
+        <div class="grid-container-new-registre">
+            <div class="column1">
+                                <div class="form-group">
+                    <label>Nombre Completo</label>
+                  <input type="text" id="nombre" placeholder="Ej: Rosa María Pérez Gonzales" style="
+                    width: 90%;
+                ">
+                </div>
+
+                <div class="container-form-group">
+                      <div class="sub-form-group">
+                          <label>Cédula</label>
+                          <input type="text" id="ci" placeholder="Ej: 21783921" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                      </div>
+                       <div class="sub-form-group">
+                              <label>Edad</label>
+                              <input type="text" id="edad" placeholder="Ej:20">
+                      </div>
+                      <div class="sub-form-group">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" id="fechanacimiento">
+                    </div>
+                </div>
+
+          
+                <div class="form-group">
+                    <label>Dirección</label>
+                   <input id="direccion" type="text" placeholder="Ej: Calle 24 entre Av. Miranda y Av. Libertador" style="
+    width: 90%;
+">
+                </div>
+                  <div class="form-group">
+                      <label>Teléfono</label>
+                      <input id="telefono" type="tel" placeholder="Ej: 04163003485" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="
+    width: 90%;
+">
+                  </div>
+
+                  <div class="form-group">
+                      <label>Correo Electrónico</label>
+                      <input id="correo" type="email" placeholder="Ej: nombre@correo.com" style="
+    width: 90%;
+">
+                  </div>
+              
+            </div>
+
+            <div class="column2">
+                <div class="form-group ContainerUploadImagen" id="ContainerUploadImagen" >
+                    <div class="file-upload-container-new-registre" style="border-style: none;">
+                       <label class="image-uploader" for="fileInputregister">
+                        <div class="main-circle">
+                          <img id="imagen-avatar" class="avatar-main-register" src="../../assets/imagen/ImageLogin3.png" alt="imagen-dasboard">
+                        </div>
+                        
+                           <button class="camera-button" id="Btn_select_image_user">
+                            <span class="icon-camera"></span>
+                           </button> 
+                       
+                      </label>
+                    </div>
+                </div>         
+              <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                   <input type="text" id="usuario" value="Admin" placeholder="Admin" style="
+    width: 90%;
+">
+              </div>
+              <div class="form-group">
+                    <label>Contraseña</label>
+                    <div class="sub-container-password">
+                        <span  class="icon-lock"></span>   
+                        <input  type="password" id="password" placeholder="Ingrese su Contraseña" value="123456789">
+                        <button type="button" id="toggleBtn1">
+                          <span id="eyeIcon1" class="icon-eye"></span>
+                        </button>
+                    </div>
+              </div>
+              <div class="form-group">
+                    <label>Contraseña Maestra</label>
+                    <div class="sub-container-password">
+                        <span  class="icon-lock"></span>   
+                        <input  type="password" id="Mpassword" placeholder="Ingrese su Contraseña" value="123456789">
+                        <button type="button" id="toggleBtn2">
+                          <span id="eyeIcon2" class="icon-eye"></span>
+                        </button>
+                    </div>
+              </div>            
+            </div>
+        </div>
+    </div>
+			<div class="div3"> 
+          <button class="btn-modal Close" id="CloseModal">Cerrar</button>
+          <button class="btn-modal Register" id="RegisterData">Registrar</button>
+			</div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript">
+/**-------------------------FUNCION PARA EL CAMBIO DE VISTSA-----------------------------*/
+
+setTimeout(()=>{
+
+	document.getElementById("window-logo-install-app").classList.replace("container-show-logo","container-hide")
+
+	document.getElementById("window-detail-install-app").classList.replace("container-hide","container-show-detail")
+
+},5000)
+
+
+/*----------------------CONTROL DEL SLIDECHOW------------------------------------*/
+let slideIndex = 0;
+showSlides();
+
+function showSlides() {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  
+  // Ocultar todas las imágenes
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  
+  slideIndex++;
+  
+  // Reiniciar el índice si llega al final
+  if (slideIndex > slides.length) {slideIndex = 1}    
+  
+  // Quitar la clase "active" de todos los puntos
+
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  
+  // Mostrar la imagen actual y activar el punto correspondiente
+  slides[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " active";
+  
+  // Ejecutar la función cada 3000ms (3 segundos)
+     setTimeout(showSlides, 3000); 
+
+}
+
+/**/
+document.getElementById("btn-trial-system").addEventListener("click",()=>{
+	
+	api.send("Activate-system-trial")
+
+})
+
+
+document.getElementById("btn-install-system").addEventListener("click",()=>{
+  
+  Modal_register_data_admin()
+
+
+})
+
+
+function Modal_register_data_admin(){
+
+	const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");
+	modalRegisterInstallApp.style.display = "flex";
+
+	    
+        const confirmBtnRegisterInstallApp = document.getElementById("RegisterData");
+        // Función para abrir el modalRegisterApp
+        confirmBtnRegisterInstallApp.addEventListener("click",() => {
+
+           obtenerYValidarDatosRegistro()
+
+        });
+
+        const closeBtnRegisterInstallApp = document.getElementById("CloseModal");
+        // Función para cerrar el modalRegisterApp (X)
+        closeBtnRegisterInstallApp.addEventListener("click", () => {
+            modalRegisterInstallApp.style.display = "none";
+        });
+}
+
+/*FUNCION DE APERTURA DEL MODAL*/
+document.getElementById("ContainerUploadImagen").addEventListener("click",(event)=>{
+
+  api.send("select-image-user")
+
+})
+
+api.receive("Imagen-user-select",(event,image)=>{
+
+  document.getElementById("imagen-avatar").src=image
+
+})
+
+function obtenerYValidarDatosRegistro(){
+
+  let fecha = new Date();
+  let formatofecha = fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear();
+  /*--------------------------*/
+  const ahora = new Date();
+  const horaActual = ahora.getHours().toString().padStart(2, '0') + ':' +
+                     ahora.getMinutes().toString().padStart(2, '0') + ':' +
+                     ahora.getSeconds().toString().padStart(2, '0');
+
+	if(document.getElementById("nombre").value!="" && document.getElementById("ci").value!="" && document.getElementById("edad").value!="" && document.getElementById("fechanacimiento").value!="" && document.getElementById("usuario").value!="" && document.getElementById("password").value && document.getElementById("correo").value && document.getElementById("telefono").value && document.getElementById("direccion").value){
+
+        if(document.getElementById("usuario").value!=="admin" && document.getElementById("password").value!=="123456789"){
+
+                let objData={
+                        Employee:{nombre:document.getElementById("nombre").value,
+                          ci:document.getElementById("ci").value,
+                          edad:document.getElementById("edad").value,
+                          fechanacimiento:document.getElementById("fechanacimiento").value,
+                          correo:document.getElementById("correo").value,
+                          tlf:document.getElementById("telefono").value,
+                          direccion:document.getElementById("direccion").value,
+                          image:document.getElementById("imagen-avatar").src
+                        },
+                        User:{
+                          usuario:document.getElementById("usuario").value,
+                          clave:document.getElementById("password").value,
+                           Mclave:document.getElementById("Mpassword").value
+                        },
+                        fecha:formatofecha,
+                        hora:horaActual
+               }
+            }
+
+if(document.getElementById("usuario").value=="Admin" && document.getElementById("password").value=="123456789"){
+
+              api.send('open-message-system-user-pass-default',"Mantiene los datos usuario / contraseñas por defecto")
+
+            }
+    }
+    else{
+    	api.send("message-campos-vacios","complete todo los campos")
+    }
+
+}
+
+
+api.receive("Saving-data-default-user",(event,data)=>{
+
+ let fecha = new Date();
+ let formatofecha = fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear();
+  /*--------------------------*/
+  const ahora = new Date();
+  const horaActual = ahora.getHours().toString().padStart(2, '0') + ':' +
+                     ahora.getMinutes().toString().padStart(2, '0') + ':' +
+                     ahora.getSeconds().toString().padStart(2, '0');
+  
+            let objData={
+                Employee:{
+                    nombre:document.getElementById("nombre").value,
+                    ci:document.getElementById("ci").value,
+                    edad:document.getElementById("edad").value,
+                    fechanacimiento:document.getElementById("fechanacimiento").value,
+                    correo:document.getElementById("correo").value,
+                    tlf:document.getElementById("telefono").value,
+                    direccion:document.getElementById("direccion").value,
+                    image:document.getElementById("imagen-avatar").src
+                },
+                User:{
+                    usuario:document.getElementById("usuario").value,
+                    clave:document.getElementById("password").value,
+                    Mclave:document.getElementById("Mpassword").value
+                },
+                fecha:formatofecha,
+                hora:horaActual
+            }
+
+            api.send("Instalar-app",objData)
+})
+
+
+
+
+/*-----------------------------------------------------------------------*/
+
+api.receive("Completed-Saving-data",(event,data)=>{
+ 
+  const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");
+  modalRegisterInstallApp.style.display = "none";
+
+})
+
+/*---------------funcion button eyes---------------------------*/
+
+  const passwordInput1 = document.getElementById('password');
+  const toggleBtn1 = document.getElementById('toggleBtn1');
+  const eyeIcon1 = document.getElementById('eyeIcon1');
+
+  toggleBtn1.addEventListener('click', () => {
+    // 1. Cambiamos el tipo de input
+    const isPassword = passwordInput1.type === 'password';
+    passwordInput1.type = isPassword ? 'text' : 'password';
+
+    // 2. Intercambiamos las clases de Icomoon
+    if (isPassword) {
+      eyeIcon1.classList.remove('icon-eye');
+      eyeIcon1.classList.add('icon-eye-blocked');
+    } else {
+      eyeIcon1.classList.remove('icon-eye-blocked');
+      eyeIcon1.classList.add('icon-eye');
+    }
+  }); 
+
+const passwordInput2 = document.getElementById('Mpassword');
+  const toggleBtn2 = document.getElementById('toggleBtn2');
+  const eyeIcon2 = document.getElementById('eyeIcon2');
+
+   toggleBtn2.addEventListener('click', () => {
+    // 1. Cambiamos el tipo de input
+    const isPassword = passwordInput2.type === 'password';
+    passwordInput2.type = isPassword ? 'text' : 'password';
+
+    // 2. Intercambiamos las clases de Icomoon
+    if (isPassword) {
+      eyeIcon2.classList.remove('icon-eye');
+      eyeIcon2.classList.add('icon-eye-blocked');
+    } else {
+      eyeIcon2.classList.remove('icon-eye-blocked');
+      eyeIcon2.classList.add('icon-eye');
+    }
+  });
+
+  /*---------------funcion button eyes---------------------------*/
+
+</script>
+</html>

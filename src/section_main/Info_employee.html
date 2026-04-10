@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Empleado</title>
+        <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    
+    <style>
+        :root {
+            --primary-blue: #3f51b5;
+            --danger-red: #d32f2f;
+            --bg-gray: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #666;
+            --status-bg: #e8eaf6;
+        }
+ @font-face {
+    font-family: 'Inter';
+    src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+   
+    font-family: 'Inter';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+        .card {
+            background: white;
+            width: 450px;
+            padding: 2px;
+        }
+
+        /* Cabecera con Flexbox */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        .header-info h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--text-dark);
+        }
+
+        .header-info p {
+            margin: 5px 0;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .status-badge {
+            background-color: var(--status-bg);
+            color: var(--primary-blue);
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 20px 0;
+        }
+
+        /* Sección de Datos con CSS Grid */
+        .personal-data h3 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px 15px;
+            font-size: 0.95rem;
+        }
+
+        .label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .value {
+            color: var(--text-dark);
+        }
+
+        /* Botones con Flexbox */
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-edit {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+            background: white;
+        }
+
+        .btn-edit:hover { background: #f0f2ff; }
+
+        .btn-delete {
+            border-color: var(--danger-red);
+            color: var(--danger-red);
+            background: white;
+        }
+
+        .btn-delete:hover { background: #fff5f5; }
+
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="header">
+        <img id="emp-image" src="" alt="Foto" class="profile-img">
+        <div class="header-info">
+            <h2 id="emp-name">Cargando...</h2>
+            <p>Permiso: <span id="emp-permission">N/A</span></p>
+            <div>Estado: <span id="emp-status" class="status-badge">...</span></div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="personal-data">
+        <h3>Datos Personales</h3>
+        <div class="data-grid">
+            <span class="label">Teléfono:</span>
+            <span class="value" id="emp-tlf"></span>
+
+            <span class="label">Edad:</span>
+            <span class="value" id="emp-age"></span>
+
+            <span class="label">Cédula:</span>
+            <span class="value" id="emp-id"></span>
+
+            <span class="label">Correo Electrónico:</span>
+            <span class="value" id="emp-email"></span>
+
+            <span class="label">Dirección:</span>
+            <span class="value" id="emp-address"></span>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-delete" onclick="Close()">
+            Cerrar <i class="fas icon-exit"></i>
+        </button>
+    </div>
+</div>
+
+</body>
+
+<script>
+
+	   // --- Inicialización ---
+window.onload = () => api.send("get-data-employee-info");
+
+        api.receive("data-employee-info", (event, response) => {
+        	 loadEmployeeData(response.data);
+
+        });
+    // El objeto de datos proporcionado
+    /*
+    const response = {
+        "success": true,
+        "data": {
+            "EmployeeKey": "80316d07-b2f2-489c-b80a-25feaee7c9be",
+            "Name": "Seven",
+            "Cod_id": "3154450",
+            "Address": "Zulia Venezuela",
+            "Tlf": "210545454",
+            "E_mail": "Seven@mail.com",
+            "Image": "https://via.placeholder.com/100", 
+            "Age": "50",
+            "Status": "Activo",
+            "Birthdate": "1995-10-05",
+            "EmployeeDate": "12/3/2026",
+            "Permission": "Sub-Administrador"
+        }
+    };*/
+
+    // Función para inyectar los datos
+    function loadEmployeeData(employee) {
+        document.getElementById('emp-name').textContent = employee.Name;
+        document.getElementById('emp-permission').textContent = employee.Permission;
+        document.getElementById('emp-status').textContent = employee.Status;
+        document.getElementById('emp-tlf').textContent = employee.Tlf;
+        document.getElementById('emp-age').textContent = employee.Age;
+        document.getElementById('emp-id').textContent = employee.Cod_id;
+        document.getElementById('emp-email').textContent = employee.E_mail;
+        document.getElementById('emp-address').textContent = employee.Address;
+        
+        // Imagen: Si la ruta local falla, usa un placeholder
+        const imgElement = document.getElementById('emp-image');
+        imgElement.src = employee.Image;
+        imgElement.onerror = () => { imgElement.src = "https://ui-avatars.com/api/?name=" + employee.Name; };
+    }
+
+
+
+function Close(){
+	window.close()
+}
+</script>
+
+
+</html>

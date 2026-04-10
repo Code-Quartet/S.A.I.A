@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAIA v2 - Registro Premium</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    <style>
+
+        @font-face {
+    font-family: 'Inter';
+    src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --success: #10b981;
+            --bg-window: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+            --radius-md: 12px;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-window); margin: 0; overflow: hidden; height: 450px; width: 600px; color: var(--text-main); }
+
+        /* PRELOADER GLOBAL */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--white); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-spin {
+            width: 30px; height: 30px; border: 3px solid var(--border);
+            border-top: 3px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* PRELOADER EN TODOS LOS INPUTS */
+        .input-group { position: relative; display: flex; align-items: center; width: 100%; }
+        .input-group i:not(.field-loader) { position: absolute; left: 10px; color: var(--text-muted); font-size: 14px; z-index: 2; }
+        
+        .field-loader {
+            position: absolute; right: 10px; width: 14px; height: 14px;
+            border: 2px solid var(--border); border-top: 2px solid var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite;
+            display: none; z-index: 2;
+        }
+        
+        /* Estado de carga para cualquier input-group */
+        .loading .field-loader { display: block; }
+        .loading input, .loading select { background: #f1f5f9; pointer-events: none; padding-right: 30px; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.app-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+}
+        header { padding: 10px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 13px; margin: 0; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+
+        .main-content { flex: 1; overflow-y: auto; padding: 15px 20px; }
+
+        /* MEJORA ÁREA DE IMAGEN */
+        .hero-section { display: flex; gap: 20px; margin-bottom: 20px; align-items: center; }
+
+.avatar-container {
+    position: relative;
+    width: 85px;
+    height: 85px;
+    cursor: pointer;
+    padding: 4px;
+    background: linear-gradient(135deg, #9e9e9e, var(--white));
+    border-radius: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+        .avatar-container:hover { transform: scale(1.05); box-shadow: 0 8px 15px rgba(79, 70, 229, 0.15); }
+        
+.avatar-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+    background: #2196f3;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+        .avatar-overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.2);
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 0.3s; color: white; font-size: 20px;
+        }
+        .avatar-container:hover .avatar-overlay { opacity: 1; }
+
+ .toggle-card {
+    flex: 1;
+    background: #f1f5f9;
+    padding: 23px 12px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid transparent;
+}
+        /* FORM */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .span-2 { grid-column: span 2; }
+        .field label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+input, select {
+    width: 100%;
+    padding: 9px 10px 9px 32px;
+    border: 1.5px solid #5fa4ff;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    outline: none;
+    transition: 0.2s;
+    color: var(--text-main);
+}
+        input:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08); }
+
+        /* CURSOS AREA */
+        .course-flex { display: flex; gap: 8px; }
+        .btn-sq { width: 38px; height: 38px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-info { background: white; border: 1.5px solid var(--border); color: var(--primary); }
+        .btn-add { background: var(--primary); color: white; }
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tag {
+    background: var(--primary);
+    color: white;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+        /* REP SECTION */
+        #rep-section { grid-column: span 2; background: #f8fafc; border-radius: 16px; max-height: 0; overflow: hidden; opacity: 0; transition: 0.4s ease; border: 1px solid transparent; }
+#rep-section.active {
+    max-height: 328px;
+    opacity: 1;
+    padding: 15px;
+    border-color: var(--border);
+    margin-top: 5px;
+}
+        footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .btn { padding: 10px 18px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; }
+        .btn-ghost {
+    background: #b7b7b72b;
+    color: var(--text-muted);
+}
+        .btn-primary { background: var(--primary); color: white; display: flex; align-items: center; gap: 8px; }
+        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+        /* SWITCH */
+        .switch { position: relative; width: 36px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background: #cbd5e1; border-radius: 20px; transition: .3s; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .3s; }
+        input:checked + .slider { background: var(--success); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        .toast { position: fixed; top: 20px; right: -400px; background: white; padding: 12px 20px; border-radius: 12px; border-left: 4px solid var(--success); box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: 0.5s; z-index: 10001; display: flex; align-items: center; gap: 12px; }
+        .toast.show { right: 20px; }
+
+        /*-------------------------------*/
+        /* --- ESTILOS MEJORADOS PARA BOTONES DE FOOTER --- */
+
+.btn { padding: 10px 20px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        
+        .btn-close { background: #cc9a9a29; color: #ef4444; }
+        .btn-close:hover { background: #fef2f2; transform: translateY(-1px); }
+        
+        .btn-clear { background: #b7b7b72b; color: var(--text-muted); }
+        .btn-clear:hover { background: #f1f5f9; color: var(--primary); transform: translateY(-1px); }
+
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3); }
+        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-spin"></div>
+        <p style="font-size: 10px; margin-top: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 1px;">SAIA ECOSYSTEM</p>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <h1><i class="icon-user-plus"></i> Inscripción Estudiantil</h1>
+            <div id="status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1;"></div>
+        </header>
+
+        <div class="main-content">
+            <form id="mainForm">
+                <div class="hero-section">
+                    <div class="avatar-container" id="btnImg" title="Cambiar fotografía">
+                        <img id="preview" src="../../assets/imagen/ImageLogin3.png">
+                        <div class="avatar-overlay"><i class="icon-camera"></i></div>
+                    </div>
+
+                <div class="toggle-card">
+                        <div>
+                            <b style="font-size: 17px;display: block;color: var(--primary);">Estudiante Menor</b>
+                            <span style="font-size: 12px;color: var(--text-muted);">Habilitar Representante Legal</span>
+                        </div>
+                        <label class="switch"><input type="checkbox" id="isMinor"><span class="slider"></span></label>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field ">
+                        <label>Nombre Completo</label>
+                        <div class="input-group" id="load-nombre">
+                            <i class="icon-user"></i>
+                            <input type="text" id="nombre" placeholder="Nombres y Apellidos">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Edad</label>
+                        <div class="input-group" id="load-edad">
+                            <i class="icon-star-full"></i>
+                            <input type="text" id="edad" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="Ej: 20">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Cédula</label>
+                        <div class="input-group" id="load-cedula">
+                            <i class="icon-credit-card"></i>
+                            <input type="text" id="cedula" maxlength="10" placeholder="0000000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>F. Nacimiento</label>
+                        <div class="input-group" id="load-fechaNac">
+                            <i class="icon-calendar"></i>
+                            <input type="date" id="fechaNac">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Correo Electrónico</label>
+                        <div class="input-group" id="load-correo">
+                            <i class="icon-envelop"></i>
+                            <input type="email" id="correo" placeholder="ejemplo@correo.com">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Teléfono Contacto</label>
+                        <div class="input-group" id="load-telefono">
+                            <i class="icon-phone"></i>
+                            <input type="tel" id="telefono" placeholder="Ej: 0412-000-0000" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+
+                    <div class="field span-2">
+                        <label>Dirección</label>
+                        <div class="input-group" id="load-direccion">
+                            <i class="icon-location"></i>
+                            <input type="text" id="direccion" placeholder="Dirección completa">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="field span-2">
+                        <label>Cursos e Inscripción</label>
+                        <div class="course-flex">
+                            <div class="input-group" id="load-selCurso" style="flex: 1;">
+                                <i class="icon-books"></i>
+                                <select id="selCurso"></select>
+                                <div class="field-loader"></div>
+                            </div>
+                            <button type="button" class="btn-sq btn-info" id="btnInfo" disabled><i class="icon-info"></i></button>
+                            <button type="button" class="btn-sq btn-add" id="btnAdd"><i class="icon-plus"></i></button>
+                        </div>
+                        <div class="tags" id="tagCloud"></div>
+                    </div>
+
+                    <div id="rep-section">
+                        <p style="font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px;">REPRESENTANTE LEGAL</p>
+                        <div class="form-grid">
+                            <div class="field">
+                                <label>Nombre del Representante</label>
+                                <div class="input-group" id="load-rep_nombre">
+                                    <i class="icon-users"></i>
+                                    <input type="text" id="rep_nombre" class="req-rep" placeholder="Nombres y Apellidos">
+                                    <div class="field-loader"></div>
+                                </div>
+                            </div>
+                        <div class="field">
+                        <label>Edad Rep.</label>
+                        <div class="input-group" id="load-edad">
+                            <i class="icon-star-full"></i>
+                            <input type="text" id="rep_edad" placeholder="Ej: 20" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+                            <div class="field">
+                                <label>Cédula Rep.</label>
+                                <div class="input-group" id="load-rep_cedula">
+                                    <i class="icon-credit-card"></i>
+                                    <input type="text" id="rep_cedula" class="req-rep" required placeholder="0000000000" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <div class="field-loader"></div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Teléfono Rep.</label>
+                                <div class="input-group" id="load-rep_tel">
+                                    <i class="icon-mobile"></i>
+                                    <input type="tel" id="rep_tel" class="req-rep" placeholder="Ej: 0412-000-0000" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11">
+                                    <div class="field-loader"></div>
+                                </div>
+                            </div>
+
+                            <div class="field span-2">
+                                <label>Correo Representante</label>
+                                <div class="input-group" id="load-correo_representante">
+                                    <i class="icon-envelop"></i>
+                                    <input type="email" id="rep_correo" class="rep-field" placeholder="correo@ejemplo.com" >
+                                    <div class="field-loader"></div>
+                                </div>
+                            </div>
+                <div class="field span-2">
+                        <label>Dirección Representante</label>
+                        <div class="input-group" id="load-direccion">
+                            <i class="icon-location"></i>
+                            <input type="text" id="rep_direccion" placeholder="Dirección completa">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <footer>
+            <button class="btn btn-close" onclick="window.close()"><i class="icon-cross"></i> Cerrar</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-clear" id="btnReset"><i class="icon-undo2"></i> Limpiar</button>
+                <button class="btn btn-primary" id="btnSave" disabled>Finalizar Registro <i class="icon-floppy-disk"></i></button>
+            </div>
+        </footer>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="icon-checkmark" style="color: var(--success); font-size: 20px;"></i>
+        <div><b style="font-size: 12px; display: block;">¡Registro Exitoso!</b><span style="font-size: 10px; color: var(--text-muted);">Estudiante sincronizado con la base de datos.</span></div>
+    </div>
+
+    <script>
+        let selectCursos = [];
+        const isMinor = document.getElementById('isMinor');
+        const repSection = document.getElementById('rep-section');
+        const btnSave = document.getElementById('btnSave');
+        const selCurso = document.getElementById('selCurso');
+
+        // Función universal para activar/desactivar preloaders en inputs
+        function setLoading(fieldId, state) {
+            const el = document.getElementById(`load-${fieldId}`);
+            if (el) state ? el.classList.add('loading') : el.classList.remove('loading');
+        }
+
+        window.onload = () => {
+            api.send("Get-data-list-course-student");
+            validate();
+        };
+
+        api.receive('data-list-course-student', (e, info) => {
+            selCurso.innerHTML = '<option value="" disabled selected>Seleccione un curso...</option>';
+            info.data.forEach(c => {
+                let opt = document.createElement('option');
+                opt.value = c.Key; opt.textContent = c.Name;
+                selCurso.appendChild(opt);
+            });
+            document.getElementById('preloader').style.opacity = '0';
+            setTimeout(() => document.getElementById('preloader').style.display = 'none', 500);
+        });
+
+        isMinor.addEventListener('change', function() {
+            repSection.classList.toggle('active', this.checked);
+            validate();
+        });
+
+        selCurso.addEventListener('change', () => document.getElementById('btnInfo').disabled = !selCurso.value);
+
+        document.getElementById('btnInfo').addEventListener('click', () => {
+            if(selCurso.value) api.send("Open-system-info-course-register", selCurso.value);
+        });
+
+        document.getElementById('btnAdd').addEventListener('click', () => {
+            const val = selCurso.value;
+            const txt = selCurso.options[selCurso.selectedIndex].text;
+            if(val && !selectCursos.find(c => c.id === val)) {
+                selectCursos.push({id: val, nombre: txt});
+                renderTags(); validate();
+            }
+        });
+
+        function renderTags() {
+            const cloud = document.getElementById('tagCloud');
+            cloud.innerHTML = '';
+            selectCursos.forEach(c => {
+                const tag = document.createElement('div');
+                tag.className = 'tag';
+                tag.innerHTML = `${c.nombre} <i class="icon-cross" style="cursor:pointer" onclick="removeTag('${c.id}')"></i>`;
+                cloud.appendChild(tag);
+            });
+        }
+
+        window.removeTag = (id) => {
+            selectCursos = selectCursos.filter(c => c.id !== id);
+            renderTags(); validate();
+        };
+
+        function validate() {
+            const fields = ['nombre', 'cedula', 'fechaNac', 'correo', 'telefono'];
+            let valid = fields.every(id => document.getElementById(id).value.trim() !== "");
+            if (selectCursos.length === 0) valid = false;
+            if (isMinor.checked) {
+                const repValid = ['rep_nombre', 'rep_edad', 'rep_cedula', 'rep_tel','rep_edad','rep_correo','rep_direccion'].every(id => document.getElementById(id).value.trim() !== "");
+                if(!repValid) valid = false;
+            }
+            btnSave.disabled = !valid;
+            document.getElementById('status-dot').style.background = valid ? 'var(--success)' : '#f59e0b';
+        }
+
+        document.querySelectorAll('input').forEach(i => i.addEventListener('input', validate));
+
+        btnSave.addEventListener('click', () => {
+            // Ejemplo: Activar preloader en el nombre mientras se envía
+            setLoading('nombre', true);
+            
+            const data = {
+                estudiante: {
+                    esMenor: isMinor.checked,
+                    nombre: document.getElementById('nombre').value,
+                    cedula: document.getElementById('cedula').value,
+                    edad: document.getElementById('edad').value,
+                    nacimiento: document.getElementById('fechaNac').value,
+                    correo: document.getElementById('correo').value,
+                    telefono: document.getElementById('telefono').value,
+                    cursos: selectCursos.map(c => c.id),
+                    imagen: document.getElementById('preview').src,
+                    direccion: document.getElementById('direccion').value,
+                },
+                representante: isMinor.checked ? {
+                    nombre: document.getElementById('rep_nombre').value,
+                    cedula: document.getElementById('rep_cedula').value,
+                    edad: document.getElementById('rep_edad').value,
+                    telefono: document.getElementById('rep_tel').value,
+                    correo:document.getElementById('rep_correo').value,
+                    direccion:document.getElementById('rep_direccion').value,
+                } : null
+            };
+            api.send("Register-new-data-student", data);
+            api.send("Reload-dasboard-system-data-Student");
+        });
+
+        api.receive("Open-modal-message-student", () => {
+            setLoading('nombre', false);
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); location.reload(); }, 2500);
+        });
+
+        document.getElementById('btnImg').addEventListener('click', () => api.send("select-Image-new-student"));
+        api.receive('Image-select-new-student', (e, img) => { document.getElementById('preview').src = img; validate(); });
+        document.getElementById('btnReset').addEventListener('click', () => location.reload());
+    </script>
+</body>
+</html>
