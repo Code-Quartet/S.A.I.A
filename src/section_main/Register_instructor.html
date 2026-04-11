@@ -25,12 +25,14 @@ body {
     max-width: 800px;
     margin: auto;
 }
-        .modal-header h2 { text-align: center; margin-bottom: 20px; color: #333; }
+        .modal-header{ -webkit-app-region: no-drag;}
+        .modal-header h2 { -webkit-app-region: drag;text-align: center; margin-bottom: 20px; color: #333; }
 
 .form-container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 3px;
+    -webkit-app-region: no-drag;
 }
 
         /* Áreas del Grid mejoradas para legibilidad */

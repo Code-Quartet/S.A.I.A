@@ -66,10 +66,14 @@ body {
 
         .app-container { width: 100%; height: 100%; display: flex; flex-direction: column; background: var(--white); }
 
-        header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 14px; margin: 0; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; 
+              -webkit-app-region: drag;
+        }
+        header h1 { font-size: 14px; margin: 0; font-weight: 800; color: var(--primary); text-transform: uppercase;
 
-        .main-content { flex: 1; overflow-y: auto; padding: 15px 20px; }
+         }
+
+        .main-content {   -webkit-app-region: no-drag; flex: 1; overflow-y: auto; padding: 15px 20px; }
 
         /* ÁREA DE IMAGEN Y TOGGLE */
         .hero-section { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; }
@@ -139,7 +143,7 @@ input, select {
         #rep-section.active { max-height: 500px; opacity: 1; padding: 15px; border: 1px solid var(--border); margin-top: 10px; }
 
         /* FOOTER Y BOTONES */
-        footer { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        footer {   -webkit-app-region: no-drag; padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .btn { padding: 10px 20px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
         
         .btn-close { background: #cc9a9a29; color: #ef4444; }

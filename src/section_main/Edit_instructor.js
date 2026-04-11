@@ -23,10 +23,10 @@ module.exports = function Edit_instructor(parentWindow,key) {
         height:540,
         maxWidth:480,    
         maxHeight:540,
-        resizable:true,
+        resizable:false,
         frame:false,
-      //  modal: true,
-       // parent: parentWindow, // Si quieres que sea modal, necesita un padre
+      modal: true,
+       parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../../build/favicon.ico'),
         webPreferences: {

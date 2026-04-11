@@ -22,10 +22,10 @@ module.exports = function Edit_employee(parentWindow,id) {
   window_edit_employee = new BrowserWindow({
       width:940,
         height:540,
-       // modal: true,
+       modal: true,
         resizable:false, 
         frame:false,
-       //parent: parentWindow, // Si quieres que sea modal, necesita un padre
+       parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../../build/favicon.ico'),
         webPreferences: {

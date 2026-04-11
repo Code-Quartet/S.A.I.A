@@ -38,11 +38,14 @@ body {
     align-items: center;
     min-height: 100vh;
     /* padding: 20px; */
+
+    
 }
         .card {
             background: var(--white);
             width: 100%;
             max-width: 550px;
+           
 
         }
 
@@ -50,8 +53,11 @@ h2 {
     text-align: center;
     color: var(--text-main);
     font-size: 1.9rem;
+    -webkit-app-region: drag;
+    cursor:move;
 }
 .course-form {
+     -webkit-app-region: no-drag;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     /* grid-template-rows: 1fr; */

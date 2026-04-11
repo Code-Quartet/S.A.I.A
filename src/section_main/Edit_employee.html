@@ -49,8 +49,11 @@ header h2 {
     padding-bottom: 3px;
     text-align: center;
     font-size: 32px;
+      -webkit-app-region: drag;
+    cursor:move;
 }
 .grid-container-new-registre {
+    -webkit-app-region: no-drag;
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     gap: 30px;
@@ -161,6 +164,7 @@ input, select {
     display: flex;
     justify-content: space-between;
     border-top: 1px solid #eee;
+     -webkit-app-region: no-drag;
 }
         .btn-modal { padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; }
         .Register { background: var(--primary-blue); color: white; }

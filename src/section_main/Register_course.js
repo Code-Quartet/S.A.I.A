@@ -22,9 +22,9 @@ module.exports = function Register_course(parentWindow) {
         height:580,
         resizable:false, 
         frame:false,
-        //movable: true,
-        //modal: true,
-       // parent: parentWindow, // Si quieres que sea modal, necesita un padre
+        movable: true,
+        modal: true,
+        parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../../build/favicon.ico'),
         webPreferences: {
@@ -48,6 +48,8 @@ module.exports = function Register_course(parentWindow) {
     window_register_course.once('ready-to-show', () => {
         window_register_course.show();
     });
+
+     window_register_course.setAutoHideMenuBar(true);
 
 }
 

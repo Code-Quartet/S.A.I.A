@@ -20,13 +20,11 @@ module.exports = function Register_instructor(parentWindow) {
   window_register_instructor = new BrowserWindow({
         width:480,
         height:540,
-        maxWidth:480,    
-        maxHeight:540,
-        resizable:true,
+        resizable:false,
         frame:false,
-       // modal: true,
-       // parent: parentWindow, // Si quieres que sea modal, necesita un padre
-        show: false, // Mejor oculto hasta que esté listo
+        movable: true,
+        modal: true,
+        parent: parentWindow, // Si quieres que sea modal, necesita un padre
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {
             nodeIntegration: false,

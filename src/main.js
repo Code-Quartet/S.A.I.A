@@ -599,7 +599,7 @@ mainWindow.webContents.send("Activate-button-register-student")
 
 ipcMain.on("Open-registre-new-Student",(event,data)=>{
 
-    Register_student()
+    Register_student(mainWindow)
 
 })
 

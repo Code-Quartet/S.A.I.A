@@ -23,13 +23,11 @@ module.exports = function Register_student(parentWindow) {
   window_Register_student = new BrowserWindow({
        width:600,
         height:530,
-
-       /* width:990,
-        height:530,*/
-      // modal: true,
-        resizable:false, 
+        resizable:false,
         frame:false,
-        //parent: parentWindow, // Si quieres que sea modal, necesita un padre
+        movable: true,
+        modal: true,
+        parent: parentWindow,
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../../build/favicon.ico'),
         webPreferences: {
@@ -43,7 +41,7 @@ module.exports = function Register_student(parentWindow) {
     window_Register_student.loadFile('src/section_main/Register_StudentV5.html');
 
     //Herramientas de desarrollo
-    //window_Register_student.webContents.openDevTools();
+   // window_Register_student.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Register_student.webContents.setWindowOpenHandler(() => {

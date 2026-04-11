@@ -66,10 +66,11 @@
     flex-direction: column;
     background: var(--white);
 }
-        header { padding: 10px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        header { -webkit-app-region: drag;
+            padding: 10px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         header h1 { font-size: 13px; margin: 0; font-weight: 800; color: var(--primary); text-transform: uppercase; }
 
-        .main-content { flex: 1; overflow-y: auto; padding: 15px 20px; }
+        .main-content {  -webkit-app-region: no-drag; flex: 1; overflow-y: auto; padding: 15px 20px; }
 
         /* MEJORA ÁREA DE IMAGEN */
         .hero-section { display: flex; gap: 20px; margin-bottom: 20px; align-items: center; }
@@ -155,7 +156,7 @@ input, select {
     border-color: var(--border);
     margin-top: 5px;
 }
-        footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        footer {   -webkit-app-region: no-drag; padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .btn { padding: 10px 18px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; }
         .btn-ghost {
     background: #b7b7b72b;

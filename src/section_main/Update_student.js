@@ -23,10 +23,11 @@ module.exports = function Update_studient(parentWindow,key){
   window_Update_studient = new BrowserWindow({
            width:600,
         height:530,
-      // modal: true,
-       resizable:false, 
+        resizable:false,
         frame:false,
-      //  parent: parentWindow, // Si quieres que sea modal, necesita un padre
+        movable: true,
+        modal: true,
+        parent:parentWindow,
         show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../../build/favicon.ico'),
         webPreferences: {

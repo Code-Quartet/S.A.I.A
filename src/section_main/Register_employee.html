@@ -54,10 +54,12 @@ header h2 {
     padding-bottom: 3px;
     text-align: center;
     font-size: 32px;
+      -webkit-app-region: drag;
 }
 
         /* --- Grid Layout --- */
 .grid-container-new-registre {
+     -webkit-app-region: no-drag;
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     gap: 30px;
@@ -200,6 +202,7 @@ input, select {
 
         /* --- Buttons --- */
 .footer-register-employee {
+     -webkit-app-region: no-drag;
     display: flex;
     justify-content: space-between;
 }
