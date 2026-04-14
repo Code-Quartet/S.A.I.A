@@ -22,12 +22,13 @@ let objAction=null;
 module.exports = function Login_password_master(parentWindow,obj) {
   window_login_password_master = new BrowserWindow({
         width: 560,
-        height: 180,
+        height:480,
+        //height: 180,
         //resizable: false,
         frame: false,
         transparent: true,
         modal:true,  
-        //parent: parentWindow,
+        parent: parentWindow,
         icon: path.join(__dirname, '../../build/favicon.ico'),
         webPreferences: {
             nodeIntegration: false,
@@ -40,7 +41,7 @@ module.exports = function Login_password_master(parentWindow,obj) {
     window_login_password_master.loadFile('src/section_main/LoginMaster.html');
 
     // Herramientas de desarrollo
-    //window_login_password_master.webContents.openDevTools();
+    window_login_password_master.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_login_password_master.webContents.setWindowOpenHandler(() => {

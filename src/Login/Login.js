@@ -6,17 +6,17 @@ function Login(app){
 	        	<img src="assets/imagen/ImageLogin3.png" alt="Imagen login" class="imagen-login" id="ImagenLogin">
 		       <div class="form-login-system">
 		           <label class="container-input username">
-		                <span class="label-login">Coreo Electronico</span>
+		                <span class="label-login">Usuario</span>
 		                <div class="sub-container-login">
 		                 <span class="icon-user"></span>   
-		               <input type="text" name="usename" class="username" placeholder="Ingrese su correo electronico" id="username-input" require>
+		               <input type="text" name="usename" class="username" placeholder="Ingrese su Usuario" id="username-input" require>
 		               </div>
 		           </label>
 		            <label class="container-input password">
 		                <span class="label-login">Contraseña</span>
 		                    <div class="sub-container-login">
 		                        <span  class="icon-lock"></span>   
-		                        <input type="password" name="password"  class="password-input" id="password" placeholder="Ingrese su contraseña" require>
+		                        <input type="password" name="password"  class="password-input" id="password" placeholder="Ingrese su Contraseña" require>
 		                        <button type="button" id="toggleBtn">
 		                             <span id="eyeIcon" class="icon-eye"></span>
 		                        </button>
@@ -167,19 +167,16 @@ api.receive("Data-user-employee",(event,data)=>{
          correo:data.employee.email,
          image:data.employee.image,
      };
-/*
-console.log(Data_user)
-console.log(Data_employee)
-*/
-document.getElementById("ImagenLogin").src=data.employee.image
-document.getElementById('username-input').value="";
-document.getElementById('password').value="";
 
-setTimeout(()=>{
+    document.getElementById("ImagenLogin").src=data.employee.image
+    document.getElementById('username-input').value="";
+    document.getElementById('password').value="";
 
-  abrirModal_barraCarga()
+    setTimeout(()=>{
 
-},2000)
+      abrirModal_barraCarga()
+
+    },2000)
 
 
 })

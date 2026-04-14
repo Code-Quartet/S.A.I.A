@@ -38,8 +38,7 @@
 }
 
 .imagen-login {
-    /* background: #264eca; */
-    background-image: url('../../assets/imagen/studio.jpg');
+    background: #014b9c;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -64,7 +63,7 @@
 .container-input {
     padding: 2px;
     font-size: 19px;
-    /* font-weight: bold; */
+    font-weight: bold;
     margin-top: 10px;
 }
     .label-login{}

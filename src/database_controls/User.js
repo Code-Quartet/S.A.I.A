@@ -59,6 +59,58 @@ async function login_system(data) {
     }
 }
 
+/*---------------------------------------------*/
+async function Get_data_user_key(key) {
+
+    try {
+        await DB.conectar();
+
+        const sql = `SELECT
+                U.Key AS U_Key, U.Username, U.Permission, U.Password,
+                E.Key AS E_Key, E.Name, E.Age, E.Cod_id, E.Address, 
+                E.Tlf, E.E_mail, E.Image, E.Id_user
+            FROM User U
+            INNER JOIN Employee E ON U.Key = E.Id_user
+            WHERE U.Key=? AND U.Time_Deleted IS NULL`;
+
+        const params = [key];
+        const result = await DB.buscar(sql, params);
+
+        // Si result es un array, tomamos el primer elemento [0]
+        // Si tu DB.buscar ya devuelve un solo objeto, puedes usar 'row' directamente
+        const row = Array.isArray(result) ? result[0] : result;
+
+        if (row) {
+            // Estructuramos el objeto de retorno
+            return {
+                user: {
+                    key: row.U_Key,
+                    username: row.Username,
+                    permission: row.Permission,
+                    // Evitamos devolver la password por seguridad si no es necesaria
+                },
+                employee: {
+                    key: row.E_Key,
+                    name: row.Name,
+                    age: row.Age,
+                    cod_id: row.Cod_id,
+                    address: row.Address,
+                    tlf: row.Tlf,
+                    email: row.E_mail,
+                    image: row.Image,
+                    id_user: row.Id_user
+                }
+            };
+        } else {
+            return null; // Es más estándar retornar null o un objeto de error que un string "Error"
+        }
+
+    } catch (error) {
+        console.error("Error crítico en login_system:", error);
+        throw error;
+    }
+}
+/*---------------------------------------------*/
 async function loginMaster(key, masterInput, permissionInput) {
     try {
         // 1. Buscamos al usuario por su Key
@@ -223,8 +275,6 @@ async function RegisterSessionEvent(userKey, eventType) {
 async function UserSessionHistory() {
     try {
         await DB.conectar();
-
-        // Se agregó SELECT al inicio y se eliminó la coma después de s.Time o s.Device_Info
         const sql = `
             SELECT 
                 s.Session_ID, 
@@ -374,7 +424,9 @@ async function GetAllSessionHistory(filters = {}) {
             message: "Error interno al consultar el historial de sesiones."
         };
     }
-}/*como usar*/
+}
+
+/*como usar*/
 /*const logs = await GetAllSessionHistory({
     username: 'admin',
     eventType: 'LOGIN',
@@ -394,7 +446,8 @@ module.exports={
         GetUserSessionHistory:GetUserSessionHistory,
         UserSessionHistory:UserSessionHistory,
         RegisterSessionEvent:RegisterSessionEvent,
-        GetAllSessionHistory:GetAllSessionHistory
+        GetAllSessionHistory:GetAllSessionHistory,
+        Get_data_user_key:Get_data_user_key
 }
 
 /*

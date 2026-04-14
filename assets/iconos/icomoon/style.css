@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?iddkl8');
-  src:  url('fonts/icomoon.eot?iddkl8#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?iddkl8') format('truetype'),
-    url('fonts/icomoon.woff?iddkl8') format('woff'),
-    url('fonts/icomoon.svg?iddkl8#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?6myfw3');
+  src:  url('fonts/icomoon.eot?6myfw3#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?6myfw3') format('truetype'),
+    url('fonts/icomoon.woff?6myfw3') format('woff'),
+    url('fonts/icomoon.svg?6myfw3#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-icoDasboard:before {
+  content: "\eaf1";
+}
 .icon-home:before {
   content: "\e900";
 }
@@ -1497,4 +1500,28 @@
 }
 .icon-IcoMoon:before {
   content: "\eaea";
+}
+.icon-advertencia:before {
+  content: "\eaeb";
+}
+.icon-balanza:before {
+  content: "\eaec";
+}
+.icon-dashboard:before {
+  content: "\eaed";
+}
+.icon-delete:before {
+  content: "\eaee";
+}
+.icon-down-arrow:before {
+  content: "\eaef";
+}
+.icon-edit:before {
+  content: "\eaf2";
+}
+.icon-go-back-arrow:before {
+  content: "\eaf3";
+}
+.icon-lista:before {
+  content: "\eaf0";
 }

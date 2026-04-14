@@ -83,7 +83,7 @@ ipcMain.on("update-password-user",(event,data)=>{
 
             //console.log(result)
             if(result.success==true){
-
+/*
                 dialog.showMessageBox({
                       title: 'Notificación',
                       type:'info',
@@ -95,12 +95,13 @@ ipcMain.on("update-password-user",(event,data)=>{
                       cancelId: 1,
                       noLink: true
                     }).then(result => {
-                      //console.log(result.response);
+                      console.log(result.response);
+                      */
                       window_edit_password.send("sms-operation-pass-ok")
-
+/*
                     }).catch(err => {
                       console.log(err);
-                    });
+                    });*/
 
             }
             if(result.success==false){

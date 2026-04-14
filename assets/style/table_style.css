@@ -58,5 +58,8 @@ td {
     color: #374151;
     border-bottom: 1px solid var(--border-color);
     text-align: center;
-}
 
+    white-space: nowrap;    /* Evita que el texto salte de línea */
+  overflow: hidden;       /* Esconde lo que sobra */
+  text-overflow: ellipsis; /* Agrega los "..." */
+}

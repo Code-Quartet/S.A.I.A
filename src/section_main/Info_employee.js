@@ -40,7 +40,7 @@ module.exports = function Info_employee(parentWindow,id) {
     window_info_employee.loadFile('src/section_main/Info_employee.html');
 
     // Herramientas de desarrollo
-    window_info_employee.webContents.openDevTools();
+   // window_info_employee.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_info_employee.webContents.setWindowOpenHandler(() => {

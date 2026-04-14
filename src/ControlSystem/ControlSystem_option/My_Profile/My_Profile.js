@@ -38,19 +38,19 @@ function My_Profile(id){
 									<label class="info-label">Usuario</label>
 									<div class="info-value" id="txt-user">Yris</div>
 								</div>
-								<button class="btn-edit icon-pencil" id="EditarUsuario">Editar</button>
+								<button class="btn-edit" id="EditarUsuario">Editar<i class="icon-pencil"></i></button>
 							</div>
 							<div class="info-row">
 								<div>
 									<label class="info-label">Correo Electrónico</label>
 									<div class="info-value" id="txt-correo">yrisadmin@correo.com</div>
 								</div>
-								<button class="btn-edit icon-pencil" id="EditarCorreo">Editar</button>
+								<button class="btn-edit" id="EditarCorreo">Editar <i class="icon-pencil"></i></button>
 							</div>
 							<div class="footer-info-row">
 
 								<button class="btn-main-action" id="openModalBtn">
-							            <span class="icon-cog"></span> Configuración Avanzada
+							             Configuración Avanzada<span class="icon-cog"></span>
 							        </button>
 							</div> 
 					</div>
@@ -66,7 +66,7 @@ function My_Profile(id){
 
             <div class="advanced-grid">
                 <div class="advanced-card" id="EditarContraseñaMaestra">
-                    <div class="card-icon" style="background: var(--brand-blue);"><span class="icon-key"></span></div>
+                    <div class="card-icon" style="background: var(--brand-blue);"><span class="icon-key2"></span></div>
                     <div class="card-info">
                         <h4>Clave Maestra</h4>
                         <p>Cambiar acceso de nivel 2.</p>
@@ -149,6 +149,11 @@ function My_Profile(id){
     if(Data_user.permission=="Sub-Administrador"){
     	document.getElementById("Permission").style.color = 'white'
     	document.getElementById("Permission").style.background = 'green'
+
+        document.getElementById("openModalBtn").style.display = 'none';
+        document.getElementById("EditarUsuario").style.display = 'none';
+        document.getElementById("EditarCorreo").style.display = 'none';
+        document.getElementById("btnCamaraMyProfile").style.display = 'none';
     }
 
     //document.getElementById("pass-usuario").value = Data_user.password

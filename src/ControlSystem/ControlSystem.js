@@ -6,7 +6,7 @@ let template_dasboard = `<div class="ControlSystem-container">
 	<aside class="ControlSystem-sidebar">
 		<section class="sub-fondo-sidebar">
 			<nav class="ControlSystem-menu">
-				<a class="status menu-item ItemMenuActive"><span class="icon-user"></span>Panel Principal</a>
+				<a class="status menu-item ItemMenuActive"><span class="icon-icoDasboard"></span>Panel Principal</a>
 				<a class="menu-item"><span class="icon-user"></span> Mi Perfil </a>
 				<a class="menu-item"><span class="icon-list"></span>Estudiantes Inscritos</a>
 				<a class="status menu-item"><span class="icon-book"></span> Gestionar Cursos</a>
@@ -29,9 +29,13 @@ let template_dasboard = `<div class="ControlSystem-container">
 		EfectoColorMenuItem()
 		if(Data_user.permission=="Administrador"){
 
+				Select_menu(0,"container-admin-info")
+
 
 		}
 		if(Data_user.permission=="Sub-Administrador"){
+
+				Select_menu(1,"container-admin-info")
 
 				let item = document.querySelectorAll(".status")
 					item.forEach((item,index)=>{
@@ -44,7 +48,7 @@ let template_dasboard = `<div class="ControlSystem-container">
 
 		}	
 
-		Select_menu(0,"container-admin-info")
+	
 }
 
 function EfectoColorMenuItem(){
@@ -94,7 +98,7 @@ function Select_menu(index,container){
 				Trash(container)
 			break;	
 			case 7:
-				StatusRender("login")
+				
 				api.send("Login-out-user-register")
 			break;	
 			default:
@@ -103,16 +107,36 @@ function Select_menu(index,container){
 		}
 }
 
-
+api.receive("Login-out-app",(event,data)=>{
+StatusRender("login")
+})
 api.receive("Reload-trash-interfaz",(event,data)=>{
 
-	Select_menu(5,"container-admin-info")
+	Select_menu(0,"container-admin-info")
 
 })
 
 api.receive("reload-user-data-modif",(evebt,data)=>{
 
-	StatusRender("login")
+	//StatusRender("login")
+	Data_user={
+      key:data.user.key,
+      user:data.user.username,
+      password:data.user.password,
+      permission:data.user.permission
+    };
+     Data_employee={
+        key:data.employee.key,
+         name:data.employee.name,
+         age:data.employee.age,
+         codId:data.employee.cod_id,
+         direccion:data.employee.address,
+         telefono:data.employee.tlf,
+         correo:data.employee.email,
+         image:data.employee.image,
+     };
+	Select_menu(1,"container-admin-info")
+
 
 
 })

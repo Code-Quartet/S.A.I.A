@@ -18,7 +18,7 @@ let window_edit_course;
 let Key_course="";
 module.exports = function Edit_course(parentWindow,key) {
   window_edit_course = new BrowserWindow({
-        width:540,
+        width:560,
         height:580,
        resizable:false, 
         frame:false,
@@ -39,7 +39,7 @@ module.exports = function Edit_course(parentWindow,key) {
     window_edit_course.loadFile('src/section_main/Edit_course.html');
 
     // Herramientas de desarrollo
-    //window_edit_course.webContents.openDevTools();
+   // window_edit_course.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_course.webContents.setWindowOpenHandler(() => {
@@ -94,9 +94,27 @@ ipcMain.on("save-update-data-course",async(event,data)=>{
 
     console.log("save-update-data-course",data)
     await UpdateCourse(data.Key,data).then((resutl)=>{
+  if(resutl.success==false){
 
-      window_edit_course.webContents.send("open-modal-register-course")
+    dialog.showMessageBox({
+        title: 'Alerta',
+        type:'warning',
+        message:resutl.message,
+        icon: 'warning',
+        buttons: ['Aceptar'],
+        defaultId: 0,
+        cancelId: 1,
+        noLink: true
+      }).then(resutl => {
+        
 
+      }).catch(err => {
+        console.log(err);
+      });
+
+        }else{
+              window_edit_course.webContents.send("open-modal-register-course")
+        }
     })
     .catch((err)=>{
 

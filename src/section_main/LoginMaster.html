@@ -3,241 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
     <style>
-  
         @font-face {
-    font-family: 'Inter';
-    src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
 
         :root {
             --primary-blue: #3b82f6;
             --dark-blue: #2563eb;
-            --danger-red: #c53030;
-            --bg-gray: #f3f4f6;
-            --text-main: #1e293b;
-            --text-label: #4a5568;
-            --border-color: #e2e8f0;
-            --input-bg: #f8fafc;
+            --danger-red: #ef4444;
+            --success-green: #10b981;
+            --bg-gray: #f9fafb;
+            --text-main: #1f2937;
+            --border-radius: 20px; /* Bordes redondeados uniformes */
         }
 
-        * { padding: 0px; margin: 0px;}
+        * { padding: 0; margin: 0; box-sizing: border-box; }
 
 body {
-   font-family: 'Inter';
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+    /* background-color: #e5e7eb; */
     height: 100vh;
-    justify-content: center;
-}
-
-        /* --- 2. DISEÑO: CONTRASEÑA MAESTRA --- */
-.master-login {
-    max-width: 540px;
-    background: white;
-    padding: 4px;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    border-radius: 60px 7px 7px 60px;
-    border: 0.2px solid #c5c5c5;
-}
-.login-content {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
     justify-content: center;
 }
-        /* Candado dibujado con CSS */
 
- .lock-container{
-    background: #dadada;
-    padding: 20px;
-    border-radius: 100px;
-}
-.icono {
-    text-align: center;
-    font-size: 80px;
-    margin-left: 29px;
-}
-  .login-content {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
+        /* --- CONTENEDOR PRINCIPAL REFORMADO --- */
+        .master-login {
+            max-width: 500px;
+            width: 95%;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden; /* Para que la barra de carga no sobresalga */
+        }
+
+        /* BARRA DE CARGA (PROGRESO) */
+        .loading-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #eee;
+            display: none;
+        }
+        .loading-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .lock-container {
+            background: #f3f4f6;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            transition: all 0.4s ease;
+        }
+
+ .icono {
+    font-size: 50px;
+    color: var(--text-main);
+    margin-left: 18px;
 }
 
-.login-content h1 {
-    font-size: 2rem;
-    color: #374151;
-    text-align: center;
-}
+        .login-content {
+            width: 100%;
+            text-align: center;
+        }
 
-.input-container-password{
-   border: 0.5px solid #b9defb;
-    border-radius: 8px;
-}
+        h1 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
 
-.master-input {
-    padding: 10px;
+        .input-container-password {
+            position: relative;
+            margin-bottom: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            transition: border-color 0.3s;
+            display: flex;
+            align-items: center;
+            padding: 5px 15px;
+        }
 
-    font-size: 17px;
-    outline: none;
-    width: 86%;
-    border-style: none;
-}
+        .input-container-password:focus-within {
+            border-color: var(--primary-blue);
+        }
 
-.message{
-    font-size: 45px;
-    font-weight: bold;
-    text-align: center;
-}
+        .master-input {
+            flex: 1;
+            padding: 12px 5px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
 
-.btn-group-master {
-    display: flex;
-    justify-content: space-between;
-}
+        .toggle-password {
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 20px;
+        }
 
-.btn-m {
-    /* flex: 1; */
-    border-radius: 40px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-    text-align: center;
-    width: 40%;
-    padding: 4px 19px;
-    font-size: 20px;
-}
+        .message {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            min-height: 24px;
+        }
+
+        .btn-group-master {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .btn-m {
+            flex: 1;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            padding: 14px;
+            font-size: 16px;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .btn-m:active { transform: scale(0.98); }
         .btn-close-m { background-color: var(--danger-red); }
         .btn-enter-m { background-color: var(--primary-blue); }
+
+        /* Estados de animación */
+        .success-bg { background-color: var(--success-green) !important; color: white !important; }
+        .error-bg { background-color: var(--danger-red) !important; color: white !important; }
 
     </style>
 </head>
 <body>
 
     <div class="modal-card master-login">
-            <div class="lock-container" id="lock-container">
-                <span class="icono icon-lock" id="icon-lock"></span>
-                <span class="icono icon-unlocked" id="icon-unlocked" style="display: none"></span>
-            </div>      
-            <div class="login-content">
-                <h1 id="titleLogin">Contraseña Maestra</h1>
-                <!---------------------->
-            <div class="input-container-password" id="container-pass"  >
-                  <input type="password" id="input-password" class="master-input" placeholder="Ingrese Contraseña">
+        <div class="loading-bar-container" id="loading-bar-container">
+            <div class="loading-bar-fill" id="loading-bar-fill"></div>
+        </div>
+
+        <div class="lock-container" id="lock-container">
+            <span class="icono icon-lock" id="icon-lock"></span>
+            <span class="icono icon-unlocked" id="icon-unlocked" style="display: none"></span>
+        </div>      
+
+        <div class="login-content">
+            <h1 id="titleLogin">Contraseña Maestra</h1>
+            
+            <div class="input-container-password" id="container-pass">
+                <input type="password" id="input-password" class="master-input" placeholder="Ingrese Contraseña Maestra">
                 <span class="icon-eye toggle-password" onclick="toggleVisibility('input-password', this)"></span>
             </div>
-            <label class="message"id="sms" style="display: none">Credenciales incorrectos.</label>
-            <!---------------------->  
+
+            <p class="message" id="sms" style="display: none"></p>
+
             <div class="btn-group-master" id="containerBtn">
-                <button class="btn-m btn-close-m" id="cerrar">cerrar</button>
+                <button class="btn-m btn-close-m" id="cerrar">Cerrar</button>
                 <button class="btn-m btn-enter-m" id="Ingresar">Ingresar</button>
             </div>
         </div>
     </div>
 
     <script>
-        window.onload=function(){
-            document.getElementById("input-password").focus();
+        // Función para la barra de carga
+function startLoadingBar(duration, color) {
+    return new Promise((resolve) => {
+        const barContainer = document.getElementById("loading-bar-container");
+        const barFill = document.getElementById("loading-bar-fill");
+        
+        barContainer.style.display = "block";
+        barFill.style.backgroundColor = color;
+        barFill.style.width = "0%";
+        
+        let start = null;
+
+        function step(timestamp) {
+            if (!start) start = timestamp;
+            const progress = timestamp - start;
+            const percentage = Math.min((progress / duration) * 100, 100);
+            
+            barFill.style.width = percentage + "%";
+
+            if (progress < duration) {
+                window.requestAnimationFrame(step);
+            } else {
+                // AQUÍ TERMINA: Ejecutamos el resolve
+                resolve();
+            }
         }
-        document.getElementById("Ingresar").addEventListener("click",(event)=>{
+        window.requestAnimationFrame(step);
+    });
+}
+        window.onload = () => document.getElementById("input-password").focus();
 
-                api.send("verify_master_password",document.getElementById("input-password").value)
+        document.getElementById("Ingresar").addEventListener("click", () => {
+            api.send("verify_master_password", document.getElementById("input-password").value);
+        });
 
-        })
+        document.getElementById("cerrar").addEventListener("click", () => window.close());
 
-        document.getElementById("cerrar").addEventListener("click",(event)=>{
-            
-                window.close()
-            
-        })
-        document.getElementById("input-password").focus();
         document.getElementById("input-password").addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
-                  api.send("verify_master_password",document.getElementById("input-password").value)
-
+                api.send("verify_master_password", document.getElementById("input-password").value);
             }
         });
-        api.receive("message-password-master",(event,data)=>{
+
+/*------------------------------------------*/
+api.receive("message-password-master", (event, data) => {
 
 
-       if(data.sms.success==true){
-                console.log(sms.message)
-                document.getElementById("lock-container").style.background = 'blue';
-                document.getElementById("icon-lock").style.display="none";
-                document.getElementById("icon-unlocked").style.color="white";
-                document.getElementById("icon-unlocked").style.display="block";
-                document.getElementById("sms").innerHTML = data.sms.message;
-                document.getElementById("sms").style.color="blue";
+          const lockCont = document.getElementById("lock-container");
+            const iconL = document.getElementById("icon-lock");
+            const iconU = document.getElementById("icon-unlocked");
+            const sms = document.getElementById("sms");
+            const title = document.getElementById("titleLogin");
+            const passCont = document.getElementById("container-pass");
+            const btnCont = document.getElementById("containerBtn");
 
-                document.getElementById("sms").style.display = 'block';
-                document.getElementById("container-pass").style.display = 'none';
-                document.getElementById("containerBtn").style.display = 'none';
-                document.getElementById("titleLogin").style.display = 'none';
+    if (data.sms.success) {
+        // 1. Preparamos la interfaz de éxito
+        lockCont.classList.add("success-bg");
+        iconL.style.display = "none";
 
-                SelectAction(data.action,data.key)
-
-                setTimeout(()=>{
-                       window.close()
-                },5000)
-
-        }
-        if(data.sms.success==false){
-                console.log(sms.message)
-                document.getElementById("lock-container").style.background = 'red';
-                document.getElementById("icon-lock").style.display="block";
-                document.getElementById("icon-unlocked").style.display="none";
-                document.getElementById("icon-lock").style.color="white";
-                document.getElementById("sms").innerHTML = data.sms.message;
-                document.getElementById("sms").style.color="red";
-    
-                document.getElementById("sms").style.display = 'block';
-                document.getElementById("container-pass").style.display = 'none';
-                document.getElementById("containerBtn").style.display = 'none';
-                document.getElementById("titleLogin").style.display = 'none';
-
-                setTimeout(()=>{
-                    document.getElementById("lock-container").style.background = "#dadada";
-                        document.getElementById("sms").style.display = 'none';
-                        document.getElementById("container-pass").style.display = 'block';
-                        document.getElementById("containerBtn").style.display = 'flex';
-                        document.getElementById("titleLogin").style.display = 'block';
-                        document.getElementById("icon-lock").style.display="block";
-                        document.getElementById("icon-unlocked").style.display="none";
-                        document.getElementById("icon-lock").style.color="black";
-                        document.getElementById("input-password").focus();
-                },3000)
+        iconU.style.display = "block";
+        iconU.style.color="white";
+        sms.innerHTML = data.sms.message;
+        sms.style.display = 'block';
         
+        // Ocultamos el resto
+        passCont.style.display = 'none';
+        btnCont.style.display = 'none';
+        title.style.display = 'none';
+
+        // 2. Iniciamos la barra y esperamos a que termine
+        startLoadingBar(2500, "var(--success-green)").then(() => {
+            // Este código se ejecuta SOLO cuando la barra llega al 100%
+            SelectAction(data.action, data.key);
+            
+            // Cerramos después de un breve respiro para que el usuario vea el cambio
+            setTimeout(() => window.close(), 500); 
+        });
+
+    } else {
+         // ERROR
+                lockCont.classList.add("error-bg");
+                iconL.style.color = "white";
+                
+                sms.innerHTML = data.sms.message;
+                sms.style.color = "var(--danger-red)";
+                sms.style.display = 'block';
+                
+                passCont.style.display = 'none';
+                btnCont.style.display = 'none';
+                title.style.display = 'none';
+
+                startLoadingBar(3000, "var(--danger-red)");
+
+                setTimeout(() => {
+                    lockCont.classList.remove("error-bg");
+                    lockCont.style.background = "#f3f4f6";
+                    iconL.style.color = "var(--text-main)";
+                    sms.style.display = 'none';
+                    passCont.style.display = 'flex';
+                    btnCont.style.display = 'flex';
+                    title.style.display = 'block';
+                    document.getElementById("loading-bar-container").style.display = "none";
+                    document.getElementById("input-password").value = "";
+                    document.getElementById("input-password").focus();
+                }, 3000);
+            }
+});
+/*------------------------------------------*/
+
+
+        function toggleVisibility(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                iconElement.classList.replace('icon-eye', 'icon-eye-blocked');
+            } else {
+                input.type = "password";
+                iconElement.classList.replace('icon-eye-blocked', 'icon-eye');
+            }
         }
 
-        })
-/*-----------------------------------*/
-function toggleVisibility(inputId, iconElement) {
-    const input = document.getElementById(inputId);
-    
-    if (input.type === "password") {
-        // Cambiar a texto para mostrar
-        input.type = "text";
-        // Cambiamos el icono a "ojo tachado" (ajusta la clase según tu pack de Icomoon)
-        iconElement.classList.remove('icon-eye');
-        iconElement.classList.add('icon-eye-blocked'); 
-    } else {
-        // Volver a password para ocultar
-        input.type = "password";
-        // Volver al icono original
-        iconElement.classList.remove('icon-eye-blocked');
-        iconElement.classList.add('icon-eye');
-    }
-}
-/*-----------------------------------------*/
-function SelectAction(Action,key){
+        // ... (Mantén tu función SelectAction igual)
+
+        function SelectAction(Action,key){
 
         if(Action=="imageMyprofile"){
 
@@ -305,7 +380,7 @@ function SelectAction(Action,key){
         if(Action=="ExcelExportarUnicoInstructor"){
            
            
-   			 api.send('Exportar-excel-tabla-unica',"Instructor")
+             api.send('Exportar-excel-tabla-unica',"Instructor")
           
         }
         if(Action=="ExcelExportarUnicoCourse"){
@@ -389,7 +464,6 @@ function CloseAlertWindow(){
     api.send("Close-alert-system")
 }
 
-
-</script>
+    </script>
 </body>
 </html>

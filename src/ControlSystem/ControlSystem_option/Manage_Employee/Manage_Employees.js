@@ -5,7 +5,7 @@ let template_manage_employee=`<main class="container-manage-table">
 
                                     <section class="toolbar-table-manage">
                                         <div class="search-box-table-manage">
-                                            <input type="search" class="search-input-table-manage" id="inputSearchEmployee" placeholder="Buscar employee...">
+                                            <input type="search" class="search-input-table-manage" id="inputSearchEmployee" placeholder="Buscar empleado...">
                                              <div id="results-preview" class="preview-list-search"></div>
                                             <button class="btn-search-tabla-manage" id="Searchemployee">
                                             <span class="icon-search"></span>

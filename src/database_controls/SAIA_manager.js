@@ -5,14 +5,14 @@ const os = require('os');
 const XLSX = require('xlsx');
 
 class SAIADB {
-    constructor(dbPath = '../SAIA.db') {
+    constructor(dbPath) {
         this.dbPath = dbPath;
         this.db = null;
         this.inTransaction = false;
 
         // --- CONFIGURACIÓN DE PROTECCIÓN AVANZADA ---
         // Localizamos la carpeta de datos de aplicación (AppData en Windows)
-        const appData = process.env.APPDATA ||
+        const appData = process.env.APPDATA || 
             (process.platform === 'darwin' ? 
             path.join(os.homedir(), 'Library', 'Application Support') : 
             path.join(os.homedir(), '.local', 'share'));
@@ -51,16 +51,9 @@ class SAIADB {
                 return { valid: false, error: "Error de integridad: Datos de sistema corruptos (0x102)." };
             }
 
-          if (today > expirationDate) {
-            const red = "\x1b[31m";
-            const reset = "\x1b[0m";
-            const bold = "\x1b[1m";
-
-            return { 
-                valid: false, 
-                error: `${red}${bold}× ERROR:${reset} ${red}La licencia de uso ha expirado. Contacte al administrador.${reset}` 
-            };
-        }
+            if (today > expirationDate) {
+                return { valid: false, error: "La licencia de uso ha expirado. Contacte al administrador." };
+            }
 
             return { valid: true };
         } catch (e) {
@@ -249,17 +242,7 @@ class SAIADB {
         return { success: true, path: destPath };
     }
 
-    async exportarTablaAExcel(tabla, destPath) {
-        const rows = await this._allQuery(`SELECT * FROM ${tabla}`);
-        if (rows.length === 0) throw new Error(`La tabla ${tabla} está vacía o no existe.`);
 
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(rows);
-        XLSX.utils.book_append_sheet(wb, ws, tabla);
-
-        XLSX.writeFile(wb, destPath);
-        return { success: true, path: destPath };
-    }
 
     async importarTodoDesdeExcel(filePath) {
         if (!fs.existsSync(filePath)) throw new Error("Archivo no encontrado.");

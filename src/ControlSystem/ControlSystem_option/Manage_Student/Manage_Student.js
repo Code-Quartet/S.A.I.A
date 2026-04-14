@@ -3,7 +3,7 @@ let templete_View_all_Registered_Users=`<main class="container-manage-table">
             <h1 class="title-table">Todos los Inscritos</h1>
         </header>
 
-        <section class="toolbar-table-manage">
+        <section class="toolbar-table-manage" id="toolbar_table_manage">
             <div class="search-box-table-manage">
                 <input type="search" class="search-input-table-manage" id="inputSearchStudent" placeholder="Buscar Estudiante...">
                 <div id="results-preview" class="preview-list-search"></div>
@@ -61,6 +61,10 @@ function View_all_Registered_Users(id){
         if(Data_user.permission=="Sub-Administrador"){
 
                 document.getElementById("ExportStudnt").style.display = 'none'
+
+                     document.getElementById("NewRegisterStudent").style.display = 'none'
+     document.getElementById("toolbar_table_manage").style.justifyContent = 'space-around'
+
         }
    /*-------------------------------------------------*/
    const btnNewRegisterStudent = document.getElementById("NewRegisterStudent");
@@ -71,11 +75,7 @@ btnNewRegisterStudent.addEventListener('click', () => {
 
     // Enviamos la señal
      api.send("Open-registre-new-Student")
-    // Lo rehabilitamos después de un pequeño delay 
-    // para evitar ráfagas de clics accidentales
-    setTimeout(() => {
-      //  btnNewRegisterStudent.disabled = false;
-    }, 1000); 
+
 });
    /*-------------------------------------------------*/
    
@@ -341,6 +341,8 @@ api.receive("Data-list-Student-serach",(event,info)=>{
                     })
 
           }
+
+
     }
 
     if(info.success==false){

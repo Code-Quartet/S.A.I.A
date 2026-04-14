@@ -18,7 +18,7 @@ let window_register_course;
 
 module.exports = function Register_course(parentWindow) {
   window_register_course = new BrowserWindow({
-        width:540,
+        width:560,
         height:580,
         resizable:false, 
         frame:false,
@@ -85,8 +85,28 @@ ipcMain.on("save-new-data-course",async(event,data)=>{
 
     await InsertCourse(data).then((resutl)=>{
 
-      window_register_course.webContents.send("open-modal-register-course")
+        if(resutl.success==false){
 
+    dialog.showMessageBox({
+        title: 'Alerta',
+        type:'warning',
+        message:resutl.message,
+        icon: 'warning',
+        buttons: ['Aceptar'],
+        defaultId: 0,
+        cancelId: 1,
+        noLink: true
+      }).then(resutl => {
+        
+
+      }).catch(err => {
+        console.log(err);
+      });
+
+        }else{
+
+      window_register_course.webContents.send("open-modal-register-course")
+}
 })
 .catch((err)=>{
 

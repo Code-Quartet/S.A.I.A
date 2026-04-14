@@ -80,15 +80,6 @@ async function GetEmployeesPaged(page = 1, limit = 10) {
             offset = 0;
         }
 
-        // 3. Consulta de los campos específicos solicitados
-   /*
-        const sqlData = `
-            SELECT Key, Name, E_mail, Tlf, Status, Date_Created, Time_Created
-            FROM Employee
-            WHERE Time_Deleted IS NULL 
-            ORDER BY Date_Created DESC, Time_Created DESC 
-            LIMIT ? OFFSET ?`;*/
-
             const sqlData = `
     SELECT Key, Name, E_mail, Tlf, Status, Date_Created, Time_Created
     FROM Employee

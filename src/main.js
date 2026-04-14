@@ -9,6 +9,7 @@ const config = require(path.join(__dirname,"../database/.config.json"));
 /*--------------LINK BASE DE DATOS (Ajustado a carpeta raíz /database) ------------------------*/
 // Subimos un nivel (../) para salir de src y entrar a database
 const SAIADB = require(path.join(__dirname, './database_controls/SAIA_manager.js'));
+const {exportarTablaAExcel,respaldarArchivoDB, importarArchivoDB, exportarJSON, importarJSON, exportarTodoAExcel, importarTodoDesdeExcel } = require(path.join(__dirname, './database_controls/dataExchange.js')); 
 const { LimpiarBaseDeDatos } = require(path.join(__dirname, './database_controls/DataTrialSAIA'));
 const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
 /*--------------RECURSOS ESTÁTICOS ------------------------*/
@@ -19,7 +20,7 @@ const Register_App = require(path.join(__dirname, './RegisterApp/RegisterApp'));
 
 /*-----------------------------------*/
 const { InfoMessage, ErrorMessage } = require(path.join(__dirname, './section_main/Message_system'));
-const { UserSessionHistory, login_system, RegisterSessionEvent, UpdateImagenAvatar, GetAllSessionHistory } = require(path.join(__dirname, './database_controls/User'));
+const { UserSessionHistory, login_system, Get_data_user_key,RegisterSessionEvent, UpdateImagenAvatar, GetAllSessionHistory } = require(path.join(__dirname, './database_controls/User'));
 const Login_password_master = require(path.join(__dirname, './section_main/LoginMaster'));
 
 /*------------MÓDULOS EXTERNOS Y DASHBOARD ----------------*/
@@ -70,7 +71,7 @@ const AlertDeletedPermanet = require(path.join(__dirname, './section_main/AlertD
 /*-------- VENTANA PRINCIPAL ------------*/
 
 /*----Variable del systema ---*/
-let User_sesion_login = null;
+let User_sesion_login_id = "";
 /*----Variable del systema ---*/
 function Select_system_type(){
 
@@ -108,7 +109,7 @@ function createWindow() {
     // Como main.js está en /src, subimos un nivel
     mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
     
     // Bloqueo de nuevas ventanas
     mainWindow.webContents.setWindowOpenHandler(() => {
@@ -118,9 +119,46 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+
+mainWindow.on('close', (event) => {
+
+    if (!app.quitting) { 
+      event.preventDefault(); // Detiene el cierre
+
+      // Muestra un diálogo de confirmación
+     const choice = dialog.showMessageBoxSync(mainWindow, {
+        type: 'question',
+        buttons: ['Sí', 'No'],      
+        title: 'Confirmación',
+        message: '¿Estás seguro de que quieres salir?',
+      });
+
+      if (choice === 0) {
+
+        console.log("cerrando app",User_sesion_login_id)
+        // Cierra la ventana ahora que está confirmado
+        if(User_sesion_login_id==""){
+            mainWindow.destroy();
+
+
+        }
+        else{
+            dialog.showMessageBox({
+                  title: 'Alerta',
+                  type:'warning',
+                  message: 'Debe cerrar sesión primero',
+                  icon: 'warning',
+                  buttons: ['Aceptar'],
+                  noLink: true
+                })
+
+        }
+        
+      }
+    }
+  });
+
 }
-
-
 /****************************LOGIN SYSTEM APP******************************************************/
 
 /*LOGIM SYSTEM APP*/
@@ -143,11 +181,13 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
         if(result!=null){
 
-          User_sesion_login=result;
+          User_sesion_login_id=result;
+
 
           mainWindow.send("Data-user-employee",result)
-         //console.log("result",result.user.key)
-          await RegisterSessionEvent(result.user.key, 'LOGIN');
+
+           console.log( 'LOGOIN',User_sesion_login_id.user.key)
+          await RegisterSessionEvent(User_sesion_login_id.user.key, 'LOGIN');
 
         }else{
 
@@ -194,9 +234,40 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
 })
 
-ipcMain.on("Login-out-user-register",async(event,data) => {
+ipcMain.on("Login-out-user-register",(event,data) => {
 
-    await RegisterSessionEvent(User_sesion_login.user.key, 'LOGOUT');
+    dialog.showMessageBox({
+      title: 'Notificación',
+      type:'question',
+      message:"Esta seguro de cerrar sesión",
+      icon: 'info',
+      buttons: ['Cancelar','Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    }).then(async result => {
+      console.log(result.response);
+     
+        if(result.response==1){
+
+        console.log( 'LOGOUT',User_sesion_login_id.user.key)
+
+        await RegisterSessionEvent(User_sesion_login_id.user.key, 'LOGOUT');
+        mainWindow.webContents.send("Login-out-app")
+
+        User_sesion_login_id=""
+
+
+        }
+        if(result.response==0){
+
+        }
+
+
+    }).catch(err => {
+      console.log(err);
+    });
+
 
 })
 
@@ -230,8 +301,7 @@ ipcMain.on("Get-data-stats-dasboard",async(event,data)=>{
   //console.log("StatsDasboard",result)
   mainWindow.webContents.send("Data-stats-dasboard",result);
 
-  /*--------------------------------------*/
-     let resultcourse = await GetTopCourses()
+   let resultcourse = await GetTopCourses()
     // console.log("course",resultcourse) 
      mainWindow.webContents.send("Data-list-course-dasboard",resultcourse);
      /*------------------------------------*/
@@ -242,9 +312,17 @@ ipcMain.on("Get-data-stats-dasboard",async(event,data)=>{
 })
 /***********************DASBOARD*********************************************/
 /********************************System Reload Dasboard***********************************************/
-ipcMain.on("Reload-dasboard-system-data-MyProfile",(event,data)=>{
+ipcMain.on("Reload-dasboard-system-data-MyProfile",async(event,data)=>{
 
-  mainWindow.webContents.send("reload-user-data-modif",User_sesion_login);
+ await mainWindow.webContents.send("notification-my-profile");
+
+setTimeout(async()=>{
+let dataUSer = await Get_data_user_key(User_sesion_login_id.user.key)
+  mainWindow.webContents.send("reload-user-data-modif",dataUSer);
+
+
+
+},4000)
 
 })
 
@@ -265,7 +343,6 @@ ipcMain.on("Reload-dasboard-system-data-Course",async(event,data)=>{
 ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
 
     let result = await GetStudentPaged();
-  // await console.log("Reload-dasboard-system-data-Student",result)
     await mainWindow.webContents.send("Data-list-Student",result);
 
 })
@@ -273,12 +350,14 @@ ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
 ipcMain.on("Reload-dasboard-system-data-Employee",async(event,data)=>{
 
     let result = await GetEmployeesPaged()
-    //console.log("Reload-dasboard-system-data-Employee",result)
     mainWindow.webContents.send("Render-data-employee-list",result)
 
 })
 /********************************System Reload Dasboard***********************************************/
 /***********************MY-PROFILE******************************************/
+
+
+
 ipcMain.on('Image-select-my-profile',(event,id) => {
 
       dialog.showOpenDialog(mainWindow,{
@@ -288,36 +367,15 @@ ipcMain.on('Image-select-my-profile',(event,id) => {
           { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
         ],
         properties: ['openFile']
-      }).then((result) => {
+      }).then(async (result) => {
 
       if(result.canceled==false){
 
       mainWindow.webContents.send("Imagen-user-select-my-profile",result.filePaths[0]);
       mainWindow.webContents.send("notification-my-profile");
-      setTimeout(function(){
 
-    dialog.showMessageBox({
-          title: 'Notificación',
-          type:'none',
-          message: 'Imagen de Usuario Actualizado',
-          detail: 'Retorno al Login para establecer información',
-          icon: 'info',
-          buttons: ['Aceptar'],
-          defaultId: 0,
-          cancelId: 1,
-          noLink: true
-    }).then(result => {
-   
-            mainWindow.webContents.send("reload-user-data-modif");
-
-    }).catch(err => {
-    console.log(err);
-    });
-
-        
-        
-      },1500)
-
+          let DataUserKey = await Get_data_user_key(User_sesion_login_id.user.key)
+            mainWindow.webContents.send("reload-user-data-modif",DataUserKey);        
         UpdateImagenAvatar(id,result.filePaths[0])
 
       }
@@ -367,7 +425,7 @@ ipcMain.on('Editar-informacion-correo',(event,id) => {
 
 ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
 
-  console.log('Iniciando Excel-Exportar');
+ // console.log('Iniciando Excel-Exportar',tabla);
 
     // Generamos fecha y hora para el nombre por defecto
     const ahora = new Date();
@@ -377,7 +435,7 @@ ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
     const options = {
         title: 'Exportar a Excel',
         buttonLabel: 'Exportar',
-        defaultPath: `Reporte_General_${fecha}_${hora}.xlsx`, // Nombre sugerido
+        defaultPath: `Reporte_General_${tabla}_${fecha}_${hora}.xlsx`, // Nombre sugerido
         filters: [
             { name: 'Excel Workbook', extensions: ['xlsx'] }
         ]
@@ -391,7 +449,8 @@ ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
                 console.log("Exportando Excel en:", result.filePath);
                 
                 // Llamamos a tu función de base de datos pasando la ruta elegida
-                DB.exportarTablaAExcel(tabla,result.filePath);
+                //console.log(tabla,result.filePath)
+                exportarTablaAExcel(tabla,result.filePath);
             }
         })
         .catch(err => {
@@ -404,7 +463,7 @@ ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
 /*-------------------------------------------------*/
 
 ipcMain.on('Excel-Exportar', (event, id) => {
-    console.log('Iniciando Excel-Exportar');
+   // console.log('Iniciando Excel-Exportar');
 
     // Generamos fecha y hora para el nombre por defecto
     const ahora = new Date();
@@ -428,7 +487,7 @@ ipcMain.on('Excel-Exportar', (event, id) => {
                 console.log("Exportando Excel en:", result.filePath);
                 
                 // Llamamos a tu función de base de datos pasando la ruta elegida
-                DB.exportarTodoAExcel(result.filePath);
+                exportarTodoAExcel(result.filePath);
             }
         })
         .catch(err => {
@@ -437,7 +496,7 @@ ipcMain.on('Excel-Exportar', (event, id) => {
 });
 
 ipcMain.on('Excel-Importar', (event, id) => {
-    console.log('Iniciando Excel-Importar');
+   /// console.log('Iniciando Excel-Importar');
 
     const options = {
         title: 'Seleccionar archivo de Excel',
@@ -463,7 +522,7 @@ ipcMain.on('Excel-Importar', (event, id) => {
             console.log("Archivo seleccionado para importar:", rutaSeleccionada);
             
             // Llamamos a tu función de base de datos
-            DB.importarTodoDesdeExcel(rutaSeleccionada);
+            importarTodoDesdeExcel(rutaSeleccionada);
 
         })
         .catch(err => {
@@ -473,7 +532,7 @@ ipcMain.on('Excel-Importar', (event, id) => {
 
 /*-*/
 ipcMain.on('Importar-SQLITE-DB', (event, id) => {
-    console.log('Iniciando Importar-SQLITE-DB');
+    //console.log('Iniciando Importar-SQLITE-DB');
 
     const options = {
         title: 'Seleccionar Base de Datos para Importar',
@@ -497,7 +556,7 @@ ipcMain.on('Importar-SQLITE-DB', (event, id) => {
             console.log("Ruta cargada:", address);
 
             // Ejecutar la lógica de importación
-            DB.importarArchivoDB(address);
+            importarArchivoDB(address);
             
         })
         .catch(err => {
@@ -532,7 +591,7 @@ ipcMain.on('Exportar-SQLITE-DB', (event, id) => {
         .then(result => {
             if (!result.canceled && result.filePath) {
                 console.log("Ruta seleccionada:", result.filePath);
-                DB.respaldarArchivoDB(result.filePath);
+               respaldarArchivoDB(result.filePath);
             }
         })
         .catch(err => {
@@ -564,7 +623,6 @@ ipcMain.handle('buscar-sugeridos', async (event, data) => {
 ipcMain.on("Get-data-Student-list",async(event,data)=>{
 
     let result = await GetStudentPaged();
-    console.log(result)
     mainWindow.webContents.send("Data-list-Student",result);
 
 })
@@ -617,7 +675,7 @@ ipcMain.on("Open-system-info-student-register",(event,id)=>{
 
 ipcMain.on("Deleted-student-register",(event,id)=>{
 
-  console.log("Deleted-employee-register",id)
+  //console.log("Deleted-employee-register",id)
  
   DeleteStudentLogical(id).then((result)=>{
      console.log(result)
@@ -625,8 +683,8 @@ ipcMain.on("Deleted-student-register",(event,id)=>{
     dialog.showMessageBox({
                 title:"Notificación",
                 message:"Estudiante Eliminado",
-                icon: 'error',
-                 type:'error',
+                icon: 'info',
+                 type:'info',
                 buttons: ['Aceptar'],
                 defaultId: 0,
                 cancelId: 1
@@ -715,8 +773,8 @@ ipcMain.on("Delete-course-register",(event,id)=>{
           dialog.showMessageBox({
                       title:"Notificación",
                       message:"Curso Eliminado",
-                      icon: 'error',
-                       type:'error',
+                      icon: 'info',
+                       type:'info',
                       buttons: ['Aceptar'],
                       defaultId: 0,
                       cancelId: 1

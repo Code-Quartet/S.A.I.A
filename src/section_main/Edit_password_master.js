@@ -87,7 +87,7 @@ ipcMain.on("update-password-user-master",(event,data)=>{
 
             //console.log(result)
             if(result.success==true){
-
+/*
                 dialog.showMessageBox({
                       title: 'Notificación',
                       type:'info',
@@ -98,14 +98,14 @@ ipcMain.on("update-password-user-master",(event,data)=>{
                       defaultId: 0,
                       cancelId: 1,
                       noLink: true
-                    }).then(result => {
+                    }).then(result => {*/
                       //console.log(result.response);
                       window_Edit_password_master.send("sms-operation-pass-ok-master")
-
+/*
                     }).catch(err => {
                       console.log(err);
                     });
-
+*/
             }
             if(result.success==false){
                 ErrorMessage("Error",result.message)

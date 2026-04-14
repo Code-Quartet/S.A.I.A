@@ -9,58 +9,37 @@ const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
 
 
 async function InsertCourse(formData) {
-    // 1. Validar si el nombre ya existe usando el método buscar de tu clase SAIADB
-    const sqlCheck = `SELECT Name FROM Course WHERE Name = ? LIMIT 1`;
-    
+    const sql = `INSERT INTO Course (
+        Key, Name, Description, Instructor_ID, Days, 
+        Start_Time, End_Time, Duration_Value, Duration_Unit, Status, 
+        Cost, Capacity, Has_Evaluation, Has_Certificate,
+        Date_Created, Time_Created, Status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DATE('now'), TIME('now'), 'Activo')`;
+
+    const key = uuidv4();
+
+    const params = [
+        key,
+        formData.nombre,
+        formData.descripcion,
+        formData.instructor,
+        Array.isArray(formData.dias) ? formData.dias.join(',') : '', 
+        formData.hora_inicio,
+        formData.hora_fin,
+        parseInt(formData.duracion_valor) || 0,
+        formData.duracion_unidad,
+        formData.estado,
+        formData.costo || "0",
+        formData.cupo || "0",
+        formData.evaluacion === 'on' ? 1 : 0, // Conversión de "on" a booleano
+        formData.certificado === 'on' ? 1 : 0  // Conversión de "on" a booleano
+    ];
+
     try {
-        const existing = await DB.buscar(sqlCheck, [formData.nombre]);
-
-        if (existing) {
-            return { 
-                success: false, 
-                message: `El curso "${formData.nombre}" ya está registrado.` 
-            };
-        }
-
-        // 2. SQL corregido (se eliminó el duplicado de Status)
-        const sql = `INSERT INTO Course (
-            Key, Name, Description, Instructor_ID, Days, 
-            Start_Time, End_Time, Duration_Value, Duration_Unit,
-            Cost, Capacity, Has_Evaluation, Has_Certificate,
-            Status, Date_Created, Time_Created
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Activo', DATE('now'), TIME('now'))`;
-
-        const key = uuidv4();
-
-        const params = [
-            key,
-            formData.nombre,
-            formData.descripcion,
-            formData.instructor,
-            Array.isArray(formData.dias) ? formData.dias.join(',') : (formData.dias || ''), 
-            formData.hora_inicio,
-            formData.hora_fin,
-            parseInt(formData.duracion_valor) || 0,
-            formData.duracion_unidad,
-            formData.costo || "0",
-            parseInt(formData.cupo) || 0,
-            formData.evaluacion === 'on' ? 1 : 0,
-            formData.certificado === 'on' ? 1 : 0
-        ];
-
-        // 3. Ejecutar inserción usando el método crear (que llama a _runQuery)
-        await DB.crear(sql, params);
-        
-        return { 
-            success: true, 
-            message: "Curso guardado correctamente.",
-            key: key 
-        };
-
+        return await DB.crear(sql, params);
     } catch (err) {
         console.error("Error al insertar curso:", err);
-        // Retornamos el error de licencia o de base de datos de forma controlada
-        return { success: false, message: err.message || "Error al procesar la solicitud" };
+        throw err;
     }
 }
     /**
@@ -68,67 +47,49 @@ async function InsertCourse(formData) {
      */
 
 async function UpdateCourse(key, formData) {
-    // 1. Verificar duplicado excluyendo el registro actual (Key != ?)
-    const sqlCheck = `SELECT Name FROM Course WHERE Name = ? AND Key != ? LIMIT 1`;
-    
+    // 1. Definimos el SQL
+    const sql = `UPDATE Course SET 
+        Name = ?, 
+        Description = ?, 
+        Instructor_ID = ?, 
+        Days = ?, 
+        Start_Time = ?, 
+        End_Time = ?, 
+        Duration_Value = ?, 
+        Duration_Unit = ?,
+        Cost = ?,
+        Status = ?, 
+        Capacity = ?,
+        Has_Evaluation = ?,
+        Has_Certificate = ?
+        WHERE Key = ?`;
+
+    // 2. Preparamos los parámetros asegurando que cada "?" tenga su valor
+    const params = [
+        formData.nombre,
+        formData.descripcion,
+        formData.instructor,
+        // Si el frontend envía un array, lo unimos; si ya es string, lo dejamos; si no existe, vacío.
+        Array.isArray(formData.dias) ? formData.dias.join(',') : (formData.dias || ''),
+        formData.hora_inicio,
+        formData.hora_fin,
+        parseInt(formData.duracion_valor) || 0,
+        formData.duracion_unidad,
+        formData.costo,
+               formData.estado,
+        parseInt(formData.cupo) || 0, // <--- ERROR CORREGIDO: Faltaba este valor en params
+        // Lógica para capturar booleanos de checkboxes:
+        (formData.evaluacion === 'on' || formData.evaluacion === 1 || formData.evaluacion === true) ? 1 : 0,
+        (formData.certificado === 'on' || formData.certificado === 1 || formData.certificado === true) ? 1 : 0,
+        key // El WHERE Key = ?
+    ];
+
     try {
-        const existing = await DB.buscar(sqlCheck, [formData.nombre, key]);
-
-        if (existing) {
-            return { 
-                success: false, 
-                message: `No se puede actualizar: el nombre "${formData.nombre}" ya lo usa otro curso.` 
-            };
-        }
-
-        // 2. Definir SQL de actualización
-        const sql = `UPDATE Course SET 
-            Name = ?, 
-            Description = ?, 
-            Instructor_ID = ?, 
-            Days = ?, 
-            Start_Time = ?, 
-            End_Time = ?, 
-            Duration_Value = ?, 
-            Duration_Unit = ?,
-            Cost = ?,
-            Status = ?, 
-            Capacity = ?,
-            Has_Evaluation = ?,
-            Has_Certificate = ?
-            WHERE Key = ?`;
-
-        const params = [
-            formData.nombre,
-            formData.descripcion,
-            formData.instructor,
-            Array.isArray(formData.dias) ? formData.dias.join(',') : (formData.dias || ''),
-            formData.hora_inicio,
-            formData.hora_fin,
-            parseInt(formData.duracion_valor) || 0,
-            formData.duracion_unidad,
-            formData.costo || "0",
-            formData.estado || 'Activo',
-            parseInt(formData.cupo) || 0,
-            (formData.evaluacion === 'on' || formData.evaluacion === 1 || formData.evaluacion === true) ? 1 : 0,
-            (formData.certificado === 'on' || formData.certificado === 1 || formData.certificado === true) ? 1 : 0,
-            key
-        ];
-
-        // 3. Ejecutar actualización
-        await DB.actualizar(sql, params);
-        
-        return { 
-            success: true, 
-            message: "Curso actualizado exitosamente." 
-        };
-
+        await DB.conectar();
+        return await DB.actualizar(sql, params);
     } catch (error) {
         console.error("Error al actualizar curso:", error);
-        return { 
-            success: false, 
-            message: error.message || "Error interno al actualizar." 
-        };
+        throw error;
     }
 }
     /**

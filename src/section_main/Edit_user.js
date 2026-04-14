@@ -57,12 +57,10 @@ module.exports = function Edit_user(parentWindow,dataID) {
 
 ipcMain.on("Campo-usuario-vacio-btn",async(event,text)=>{
 
-  console.log("Campo-usuario-vacio-btn",text)
-
     dialog.showMessageBox({
         title: 'Notificación',
         type:'none',
-        message: 'Porfavor Complete los Campos'+text,
+        message: 'Porfavor Complete los Campos',
         icon: 'info',
         buttons: ['Aceptar'],
         defaultId: 0,
@@ -84,7 +82,7 @@ ipcMain.on("Campo-usuario-vacio-click",async(event,text)=>{
     dialog.showMessageBox({
       title: 'Notificación',
       type:'none',
-      message: 'Porfavor Complete los Campos'+text,
+      message: 'Porfavor Complete los Campos',
       icon: 'info',
       buttons: ['Aceptar'],
       defaultId: 0,
@@ -102,32 +100,17 @@ ipcMain.on("Campo-usuario-vacio-click",async(event,text)=>{
 
 ipcMain.on("save-new-username",async(event,data)=>{
 
-console.log("id-USER",ID_User)
-console.log("id-USER",data)
-await UpdateUsername(ID_User,data).then((resutl)=>{
+    console.log("id-USER",ID_User)
+    console.log("id-USER",data)
+    await UpdateUsername(ID_User,data).then((resutl)=>{
 
-dialog.showMessageBox({
-  title: 'Notificación',
-  type:'none',
-  message: 'Nombre de Usuario Actualizado',
-  detail: 'Retorno al Login para establecer información',
-  icon: 'info',
-  buttons: ['Aceptar'],
-  defaultId: 0,
-  cancelId: 1,
-  noLink: true
-}).then(result => {
-  //console.log(result.response);
-  window_edit_user.send("close-window-updane-user")
+      window_edit_user.send("close-window-updane-user")
 
-}).catch(err => {
-  console.log(err);
-});
 
-})
-.catch((err)=>{
+    })
+    .catch((err)=>{
 
-    console.log("ERROR",err)
-})
+        console.log("ERROR",err)
+    })
 
 })
