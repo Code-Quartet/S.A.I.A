@@ -16,7 +16,6 @@ let template_dasboard = `<div class="ControlSystem-container">
 			</nav>
 			<div class="menu-footer">
 				<a class="menu-item logout"><span class="icon-exit"></span> Cerrar Sesión</a>
-				<p class="version-text">SAIA v2 - Prototipo</p>
 			</div>
 		</section>		
 	</aside>

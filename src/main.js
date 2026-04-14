@@ -1404,6 +1404,13 @@ function Message(data){
 
 /*********************************TRASH***************************************************/
 /***********************DASBOARD*********************************************/
+
+ipcMain.on('app_version', (event) => {
+
+    mainWindow.send('app_version', { name:app.getName(), version:app.getVersion() });
+
+});
+
 // Evento cuando la app está lista para crear ventanas
 //Register_App
 //Select_system_type

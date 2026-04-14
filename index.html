@@ -12,8 +12,7 @@
    <link rel="stylesheet" type="text/css" href="src/ControlSystem/ControlSystem.css">
    <link rel="stylesheet" type="text/css" href="src/ControlSystem/ControlSystem_option/My_Profile/My_Profile.css">
    <link rel="stylesheet" type="text/css" href="src/ControlSystem/ControlSystem_option/Manage_Dashboard/Manage_Dashboard.css">
-
-
+    <title id="version"></title>
 </head>
 <body class="container-app" id="app">
 </body>
@@ -59,6 +58,17 @@
 // 1. Cargar datos al iniciar
 window.addEventListener('DOMContentLoaded', () => {
     saludarSegunHora()
+    Change_version()
 });
+
+function Change_version(){
+
+        const version = document.getElementById('version');
+        api.send('app_version');
+        api.receive('app_version', (event, arg) => {
+                version.title = arg.name +" "+ arg.version;
+                version.innerHTML = arg.name +" "+ arg.version;
+        });
+}
 </script>
 </html>
