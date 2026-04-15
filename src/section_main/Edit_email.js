@@ -103,29 +103,10 @@ console.log("id-email",ID_User)
 console.log("id-email",data)
 
 await UpdateEmail(ID_User,data).then((resutl)=>{
-/*
-        dialog.showMessageBox({
-              title: 'Notificación',
-              type:'none',
-              message: 'Correo de Usuario Actualizado',
-              detail: 'Retorno al Login para establecer información',
-              icon: 'info',
-              buttons: ['Aceptar'],
-              defaultId: 0,
-              cancelId: 1,
-              noLink: true
 
-        }).then(result => {
-
-          console.log("result",result)
-      */
             window_edit_email.send("close-window-updane-email")
-/*
-        }).catch(err => {
 
-            console.log(err);
 
-        });*/
 
 })
 .catch((err)=>{
