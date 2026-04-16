@@ -208,7 +208,6 @@ let OBJ = {
     tabla:tabla,
     terms:terms
 }
-    console.log("Search-data-trash",OBJ)
     api.send("Search-data-trash",OBJ)
 
 }
@@ -288,6 +287,8 @@ api.receive("data-list-Course-trash",async(event,data)=>{
 /*----------------------------------------------------------*/
 function RenderTableCourse(info) {
 
+    console.log("RenderTableCourse",info)
+
     document.getElementById("container-table-manage").innerHTML=``;
     document.getElementById("container-table-manage").innerHTML+=`<table>
             <thead>
@@ -343,6 +344,8 @@ function RenderTableCourse(info) {
 
 function RenderTableEmployee(info) {
 
+    console.log("RenderTableEmployee",info)
+
     document.getElementById("container-table-manage").innerHTML=``;
     document.getElementById("container-table-manage").innerHTML+=` <table>
                     <thead>
@@ -394,24 +397,22 @@ function RenderTableEmployee(info) {
 
 function RenderTableStudent(info) {
 
+    console.log("RenderTableStudent",info)
+
     document.getElementById("container-table-manage").innerHTML=``;
     document.getElementById("container-table-manage").innerHTML+=`<table>
-                    <thead>
-                        <tr>
-                            <th>Nombre Completo</th>
-                            <th>Cédula</th>
-                            <th>Curso</th>
-                            <th>Fecha de Inscripción</th>
-                                               <th>F. registro</th>
-                   <th>F. borrado</th>
-                             <th>Acciones</th>
-
-                        </tr>
-                    </thead>
-                    <tbody class="data-tabla" id="data-list-Student">
-
-     
-                    </tbody>
+                <thead>
+                    <tr>
+                        <th>Nombre Completo</th>
+                        <th>Cédula</th>
+                        <th>Curso</th>
+                        <th>Fecha de Inscripción</th>
+                        <th>F. registro</th>
+                        <th>F. borrado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="data-tabla" id="data-list-Student"></tbody>
                 </table>`;
 
     if(info.success==true){
@@ -446,6 +447,8 @@ function RenderTableStudent(info) {
 }
 
 function RenderTableInstructor(info) {
+
+    console.log(RenderTableStudent,info)
 
     document.getElementById("container-table-manage").innerHTML=``;
     document.getElementById("container-table-manage").innerHTML+=`<table class="data-table" id="tablaInstructores">
@@ -498,7 +501,6 @@ function RenderTableInstructor(info) {
 
 function ChargePagination(infopage,action){
 
-    console.log(infopage)
     if(infopage.pagination["isPaged"]==false){
     
         document.getElementById("PaginationRender").style.display="none"

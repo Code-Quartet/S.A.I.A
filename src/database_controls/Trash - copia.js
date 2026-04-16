@@ -8,103 +8,133 @@ const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_ma
 const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
 /*------------------------------------------*/
 
-/* --- FUNCIÓN MAESTRA PARA PAPELERA --- */
-async function getPagedTrash(tableName, sqlData, params, page, limit, entityName) {
-    try {
-        await DB.conectar();
-        
-        // 1. Contar totales
-        const sqlCount = `SELECT COUNT(*) as total FROM ${tableName} WHERE Time_Deleted IS NOT NULL`;
-        const resCount = await DB.buscar(sqlCount);
-        const totalElements = resCount?.total ?? 0;
-
-        // 2. Manejo de caso sin datos (Tu requerimiento)
-        if (totalElements === 0) {
-            return {
-                success:false,
-                data: [],
-                message: `No se encontraron ${entityName} en la papelera.`,
-                pagination: {
-                isPaged:false
-            }
-            };
+/* --- FUNCIÓN AUXILIAR DE RESPUESTA --- */
+function formatResponse(success, data, total, page, limit) {
+    const totalPages = Math.ceil(total / limit);
+    return {
+        success,
+        data: data || [],
+        pagination: {
+            totalElements: total,
+            totalPages: totalPages || 0,
+            currentPage: total <= 20 ? 1 : page,
+            limit,
+            isPaged: total > 20
         }
-
-        // 3. Lógica de paginación (Manteniendo tu regla de 20 elementos)
-        const finalLimit = totalElements <= 20 ? 20 : limit;
-        const offset = totalElements <= 20 ? 0 : (page - 1) * limit;
-
-        // 4. Ejecutar consulta de datos
-        const data = await DB.buscarTodo(sqlData, [finalLimit, offset]);
-
-        // 5. Retornar formato estándar
-        return {
-            success: true,
-            data: data || [],
-            pagination: {
-                totalElements,
-                totalPages: Math.ceil(totalElements / finalLimit),
-                currentPage: totalElements <= 20 ? 1 : page,
-                limit: finalLimit,
-                isPaged: totalElements > 20
-            }
-        };
-    } catch (error) {
-        console.error(`Error en papelera de ${entityName}:`, error);
-        return { success: false, message: `Error al obtener papelera de ${entityName}.` };
-    }
+    };
 }
 
 /* --- CURSOS EN PAPELERA --- */
 async function GetCoursePagedTrash(page = 1, limit = 10) {
-    const sqlData = `
-        SELECT C.Key, C.Name, C.Capacity, C.Start_Time, C.End_Time, 
-               C.Status, C.Cost, C.Days, C.Time_Deleted, C.Date_Created, C.Instructor_ID,
-               I.Name as Instructor_Name,
-               (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
-        FROM Course C
-        LEFT JOIN Instructor I ON C.Instructor_ID = I.Key
-        WHERE C.Time_Deleted IS NOT NULL 
-        ORDER BY C.Time_Deleted DESC LIMIT ? OFFSET ?`;
-    
-    return await getPagedTrash('Course', sqlData, [], page, limit, 'cursos');
+    try {
+        await DB.conectar();
+        const sqlCount = `SELECT COUNT(*) as total FROM Course WHERE Time_Deleted IS NOT NULL`;
+        const resCount = await DB.buscar(sqlCount);
+        const totalElements = resCount?.total ?? 0;
+
+        let finalLimit = totalElements <= 20 ? 20 : limit;
+        let offset = totalElements <= 20 ? 0 : (page - 1) * limit;
+
+        const sqlData = `
+            SELECT 
+                C.Key, C.Name, C.Capacity, C.Start_Time, C.End_Time, 
+                C.Status, C.Cost, C.Days, C.Time_Deleted, C.Date_Created, C.Instructor_ID,
+                I.Name as Instructor_Name,
+                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
+            FROM Course C
+            LEFT JOIN Instructor I ON C.Instructor_ID = I.Key
+            WHERE C.Time_Deleted IS NOT NULL 
+            ORDER BY C.Time_Deleted DESC 
+            LIMIT ? OFFSET ?`;
+
+        const data = await DB.buscarTodo(sqlData, [finalLimit, offset]);
+        return formatResponse(true, data, totalElements, page, finalLimit);
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: "Error al obtener papelera de cursos." };
+    }
 }
 
 /* --- ESTUDIANTES EN PAPELERA --- */
 async function GetStudentPagedTrash(page = 1, limit = 10) {
-    const sqlData = `
-        SELECT S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail, S.Date_Created, 
-               S.Time_Created, S.Time_Deleted,
-               (SELECT GROUP_CONCAT(C.Name, ', ') 
-                FROM Student_Courses SC 
-                JOIN Course C ON SC.Id_curs = C.Key 
-                WHERE SC.Id_student_key = S.Key) as CourseNames
-        FROM Student S
-        WHERE S.Time_Deleted IS NOT NULL 
-        ORDER BY S.Time_Deleted DESC LIMIT ? OFFSET ?`;
+    try {
+        await DB.conectar();
+        const sqlCount = `SELECT COUNT(*) as total FROM Student WHERE Time_Deleted IS NOT NULL`;
+        const resCount = await DB.buscar(sqlCount);
+        const totalElements = resCount?.total ?? 0;
 
-    return await getPagedTrash('Student', sqlData, [], page, limit, 'estudiantes');
+        let finalLimit = totalElements <= 20 ? 20 : limit;
+        let offset = totalElements <= 20 ? 0 : (page - 1) * limit;
+
+        const sqlData = `
+            SELECT S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail, S.Date_Created, 
+                   S.Time_Created, S.Time_Deleted,
+                   (SELECT GROUP_CONCAT(C.Name, ', ') 
+                    FROM Student_Courses SC 
+                    JOIN Course C ON SC.Id_curs = C.Key 
+                    WHERE SC.Id_student_key = S.Key) as CourseNames
+            FROM Student S
+            WHERE S.Time_Deleted IS NOT NULL 
+            ORDER BY S.Time_Deleted DESC 
+            LIMIT ? OFFSET ?`;
+
+        const data = await DB.buscarTodo(sqlData, [finalLimit, offset]);
+        return formatResponse(true, data, totalElements, page, finalLimit);
+    } catch (error) {
+        return { success: false, message: "Error al obtener papelera de estudiantes." };
+    }
 }
 
 /* --- EMPLEADOS EN PAPELERA --- */
 async function GetEmployeesPagedTrash(page = 1, limit = 10) {
-    const sqlData = `
-        SELECT Key, Name, Cod_id, E_mail, Tlf, Status, Date_Created, Time_Deleted
-        FROM Employee WHERE Time_Deleted IS NOT NULL 
-        ORDER BY Time_Deleted DESC LIMIT ? OFFSET ?`;
+    try {
+        await DB.conectar();
+        const sqlCount = `SELECT COUNT(*) as total FROM Employee WHERE Time_Deleted IS NOT NULL`;
+        const resCount = await DB.buscar(sqlCount);
+        const totalElements = resCount?.total ?? 0;
 
-    return await getPagedTrash('Employee', sqlData, [], page, limit, 'empleados');
+        let finalLimit = totalElements <= 20 ? 20 : limit;
+        let offset = totalElements <= 20 ? 0 : (page - 1) * limit;
+
+        const sqlData = `
+            SELECT Key, Name, Cod_id, E_mail, Tlf, Status, Date_Created, Time_Deleted
+            FROM Employee 
+            WHERE Time_Deleted IS NOT NULL 
+            ORDER BY Time_Deleted DESC 
+            LIMIT ? OFFSET ?`;
+
+        const data = await DB.buscarTodo(sqlData, [finalLimit, offset]);
+        return formatResponse(true, data, totalElements, page, finalLimit);
+    } catch (error) {
+        return { success: false, message: "Error al obtener papelera de empleados." };
+    }
 }
 
 /* --- INSTRUCTORES EN PAPELERA --- */
 async function GetInstructorsPagedTrash(page = 1, limit = 10) {
-    const sqlData = `
-        SELECT Key, Name, Cod_id, Specialty, Tlf, Status, Date_Created, Time_Deleted
-        FROM Instructor WHERE Time_Deleted IS NOT NULL 
-        ORDER BY Time_Deleted DESC LIMIT ? OFFSET ?`;
+    try {
+        await DB.conectar();
+        const sqlCount = `SELECT COUNT(*) as total FROM Instructor WHERE Time_Deleted IS NOT NULL`;
+        const resCount = await DB.buscar(sqlCount);
+        const totalElements = resCount?.total ?? 0;
 
-    return await getPagedTrash('Instructor', sqlData, [], page, limit, 'instructores');
+        let finalLimit = totalElements <= 20 ? 20 : limit;
+        let offset = totalElements <= 20 ? 0 : (page - 1) * limit;
+
+        const sqlData = `
+            SELECT Key, Name, Cod_id, Specialty, Tlf, Status, Date_Created, Time_Deleted
+            FROM Instructor 
+            WHERE Time_Deleted IS NOT NULL 
+            ORDER BY Time_Deleted DESC 
+            LIMIT ? OFFSET ?`;
+
+        const data = await DB.buscarTodo(sqlData, [finalLimit, offset]);
+        return formatResponse(true, data, totalElements, page, finalLimit);
+    } catch (error) {
+        return { success: false, message: "Error al obtener papelera de instructores." };
+    }
 }
+
 /* --- OBTENER ÍTEM POR LLAVE --- */
 async function GetTrashItemByKey(tableName, key) {
     try {
