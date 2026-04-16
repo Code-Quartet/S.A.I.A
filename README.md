@@ -29,5 +29,5 @@ El sistema permite el registro y administración de tres tipos de usuarios funda
 
 ## Links
 
-You may be using [Markdown Live Preview](https://github.com/Code-Quartet/S.A.I.A.git).
+You may be using [S.A.I.A](https://github.com/Code-Quartet/S.A.I.A.git).
 
