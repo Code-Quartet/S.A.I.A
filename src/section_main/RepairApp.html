@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/iconos/icomoon/style.css">
+   <style type="text/css">
+      * { padding: 0; margin: 0; }
+
+          :root {
+            --brand-blue: #2b56c5;
+            --brand-light: #f0f4ff;
+            --brand-success: #10b981;
+            --brand-excel: #059669;
+            --text-dark: #2d3748;
+            --text-soft: #718096;
+            --bg-body: #edf2f7;
+            --white: #ffffff;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+     @font-face {
+    font-family: 'Inter';
+    src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+.modal-content {
+    background: #ffffff;
+    width: 550px;
+    border-radius: 24px;
+    padding: 13px;
+    animation: modalFadeIn 0.3s ease-out;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.modal-header h3 {
+    margin: 0;
+    color: var(--brand-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 33px;
+}
+
+.advanced-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+}
+
+.advanced-card {
+    border: 1px solid #c7dbff;
+    border-radius: 16px;
+    padding: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+        .advanced-card:hover {
+            border-color: var(--brand-blue);
+            background: var(--brand-light);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .card-info h4 { margin: 0; font-size: 14px; color: var(--text-dark); }
+        .card-info p { margin: 2px 0 0; font-size: 11px; color: var(--text-soft); }
+
+.close-btn {
+    width: 65%;
+    color: white;
+    background: red;
+    border-style: none;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 20px;
+    margin-top: 15px;
+}
+</style>
+<body>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reparación de Aplicación</h3>
+            </div>
+
+            <div class="advanced-grid">
+               
+                <div class="advanced-card" id="ExcelImportar">
+                    <div class="card-icon" style="background: var(--brand-excel);"><span class="icon-file-excel"></span></div>
+                    <div class="card-info">
+                        <h4>Importar Excel</h4>
+                        <p>Importar reporte de Excel.</p>
+                    </div>
+                </div>
+
+                <div class="advanced-card" id="ImportarSQLITE">
+                  <div class="card-icon" style="background: #32648c;"><span class="icon-database"></span></div>
+                    <div class="card-info">
+                        <h4>Importar Backup SQLite</h4>
+                        <p>Cargar base de datos.</p>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+             <button class="close-btn" onclick="window.close()">Cerrar</button>
+        </div>
+ </body>
+ <script type="text/javascript">
+     
+
+/*----------------ExcelImportar----------------------*/
+    document.getElementById("ExcelImportar").addEventListener("click",(event)=>{
+
+  api.send("Excel-Importar")
+
+    })
+
+    /*--------------ImportarSQLITE-----------------------*/
+    document.getElementById("ImportarSQLITE").addEventListener("click",(event)=>{
+
+
+api.send("Importar-SQLITE-DB")
+ 
+    })   
+
+ </script>
+</html>

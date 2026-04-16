@@ -62,8 +62,8 @@ function View_all_Registered_Users(id){
 
                 document.getElementById("ExportStudnt").style.display = 'none'
 
-                     document.getElementById("NewRegisterStudent").style.display = 'none'
-     document.getElementById("toolbar_table_manage").style.justifyContent = 'space-around'
+                 ///    document.getElementById("NewRegisterStudent").style.display = 'none'
+     //document.getElementById("toolbar_table_manage").style.justifyContent = 'space-around'
 
         }
    /*-------------------------------------------------*/

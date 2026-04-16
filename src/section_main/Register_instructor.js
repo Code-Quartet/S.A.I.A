@@ -24,7 +24,7 @@ module.exports = function Register_instructor(parentWindow) {
         frame:false,
         movable: true,
         modal: true,
-        parent: parentWindow, // Si quieres que sea modal, necesita un padre
+        parent: parentWindow,
         icon: path.join(__dirname, '../favicon.ico'),
         webPreferences: {
             nodeIntegration: false,
@@ -83,14 +83,38 @@ ipcMain.on("Select-new-imagen-instructor",(event,data)=>{
 
 ipcMain.on("Save-data-new-instructor",async(event,data)=>{
 
- await InsertInstructor(data).then((result)=>{
-       
-       window_register_instructor.webContents.send("open-modal-register-instructor");
-        
-      }).catch((error)=>{
-        
-        console.log("ERROR DATA SAVE REGISTRO",error)
+await InsertInstructor(data).then((result)=>{
 
-      })
+if(result.success==false){
+
+  message(result.message)
+       
+  
+}else {
+  
+   window_register_instructor.webContents.send("open-modal-register-instructor");
+        
+}
+       
+     
+}).catch((error)=>{
+        
+  console.log("ERROR DATA SAVE REGISTRO",error)
 
 })
+
+})
+
+
+function message(sms){
+   dialog.showMessageBox(window_register_instructor,{
+        title: 'Alerta',
+          type:'warning',
+      message: sms,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    })
+}

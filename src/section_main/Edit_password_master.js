@@ -59,7 +59,7 @@ console.log("Isuerpass",iduser)
 
 ipcMain.on("sms-alert-system-pass-master",(event,sms)=>{
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(window_Edit_password_master,{
         title: 'Notificación',
           type:'warning',
       message: sms,
@@ -87,25 +87,9 @@ ipcMain.on("update-password-user-master",(event,data)=>{
 
             //console.log(result)
             if(result.success==true){
-/*
-                dialog.showMessageBox({
-                      title: 'Notificación',
-                      type:'info',
-                      message: result.message,
-                      detail: 'Retorno al Login para establecer información',
-                      icon: 'info',
-                      buttons: ['Aceptar'],
-                      defaultId: 0,
-                      cancelId: 1,
-                      noLink: true
-                    }).then(result => {*/
-                      //console.log(result.response);
-                      window_Edit_password_master.send("sms-operation-pass-ok-master")
-/*
-                    }).catch(err => {
-                      console.log(err);
-                    });
-*/
+
+              window_Edit_password_master.send("sms-operation-pass-ok-master")
+
             }
             if(result.success==false){
                 ErrorMessage("Error",result.message)

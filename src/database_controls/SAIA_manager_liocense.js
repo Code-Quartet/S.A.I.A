@@ -1,19 +1,76 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
-const XLSX = require('xlsx'); // Nueva dependencia para Excel
-
+const os = require('os');
+const XLSX = require('xlsx');
 
 class SAIADB {
-    constructor(dbPath = './SAIA.db') {
+    constructor(dbPath) {
         this.dbPath = dbPath;
         this.db = null;
         this.inTransaction = false;
+
+        // --- CONFIGURACIÓN DE PROTECCIÓN AVANZADA ---
+        // Localizamos la carpeta de datos de aplicación (AppData en Windows)
+        const appData = process.env.APPDATA || 
+            (process.platform === 'darwin' ? 
+            path.join(os.homedir(), 'Library', 'Application Support') : 
+            path.join(os.homedir(), '.local', 'share'));
+
+        // Creamos una ruta que parezca un archivo de configuración de Microsoft o VSCode
+        const folderPath = path.join(appData, 'Microsoft', 'Protect');
+        this.licensePath = path.join(folderPath, 'telemetry_vsc.dat');
+
+        // Intentamos crear la carpeta si no existe de forma silenciosa
+        if (!fs.existsSync(folderPath)) {
+            try { fs.mkdirSync(folderPath, { recursive: true }); } catch (e) {}
+        }
+    }
+
+    // --- LÓGICA DE VALIDACIÓN DE FECHA (CIFRADA) ---
+    /**
+     * Verifica la existencia y validez del archivo de licencia en AppData.
+     * @private
+     */
+    _validateAccess() {
+        try {
+            // 1. Si el archivo no existe, bloqueamos acceso
+            if (!fs.existsSync(this.licensePath)) {
+                return { valid: false, error: "Error de inicialización de servicio (0x101)." };
+            }
+
+            // 2. Leer contenido y descifrar desde Base64
+            const encryptedContent = fs.readFileSync(this.licensePath, 'utf8').trim();
+            const decodedDate = Buffer.from(encryptedContent, 'base64').toString('utf8');
+            
+            const expirationDate = new Date(decodedDate);
+            const today = new Date();
+
+            // 3. Verificaciones de integridad y fecha
+            if (isNaN(expirationDate.getTime())) {
+                return { valid: false, error: "Error de integridad: Datos de sistema corruptos (0x102)." };
+            }
+
+            if (today > expirationDate) {
+                return { valid: false, error: "La licencia de uso ha expirado. Contacte al administrador." };
+            }
+
+            return { valid: true };
+        } catch (e) {
+            // Cualquier fallo en la lectura se traduce en bloqueo
+            return { valid: false, error: "Fallo de seguridad en el motor de datos (0x505)." };
+        }
     }
 
     // --- MÉTODOS DE CONEXIÓN Y NÚCLEO ---
 
     async _ensureConnection() {
+        // Ejecutar validación antes de conectar o realizar cualquier operación
+        const access = this._validateAccess();
+        if (!access.valid) {
+            throw new Error(access.error);
+        }
+
         if (this.db) return true;
         await this.conectar();
         if (!this.db) throw new Error("Fallo al conectar a la BD.");
@@ -93,12 +150,9 @@ class SAIADB {
         this.inTransaction = false;
     }
 
-            // ... (isTransactionActive se mantiene igual)
-      async isTransactionActive(){
-
-            return this.inTransaction;
-
-        }
+    async isTransactionActive(){
+        return this.inTransaction;
+    }
 
     // --- FUNCIONES DE UTILIDAD ---
 
@@ -124,10 +178,7 @@ class SAIADB {
         }
     }
 
-
-    /* -------------------------------------------
-    | MÉTODOS PÚBLICOS SIMPLIFICADOS
-    * -------------------------------------------*/
+    // --- MÉTODOS PÚBLICOS SIMPLIFICADOS ---
     
     async crearTabla(sql) {
         return this._runQuery(sql);

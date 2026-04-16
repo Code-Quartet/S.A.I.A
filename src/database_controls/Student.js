@@ -173,59 +173,61 @@ async function GetdataStudent(key) {
         return null;
     }
 }
-
+/*-----------------------------*/
 async function RegisterStudent(data) {
     const key = uuidv4();
     const est = data.estudiante || {};
-    // Si es menor usamos los datos del representante, si no, enviamos null
     const rep = (est.esMenor && data.representante) ? data.representante : {}; 
 
-    const sqlStudent = `
-        INSERT INTO Student (
-            Key, Name, Cod_id, Address, Tlf, E_mail, Image, Age, Birthdate,
-            Name_Representative,
-            Age_Representative,
-            Cod_id_Representative,
-            Tlf_Representative,
-            E_mail_Representative,
-            Address_Representative,
-            Date_Created, Time_Created
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`;
-
-    const paramsStudent = [
-        key, 
-        est.nombre || null, 
-        est.cedula || null, 
-        est.direccion || null,
-        est.telefono || null, 
-        est.correo || null, 
-        est.imagen || null, 
-        est.edad || null,
-        est.nacimiento || null, 
-        rep.nombre || null, 
-        rep.edad || null, 
-        rep.cedula || null, 
-        rep.telefono || null, 
-        rep.correo || null,
-        rep.direccion|| null
-    ];
-
     try {
-        // Iniciamos el registro del estudiante
+        await DB.beginTransaction();
+
+        // 1. Validar si la Cédula (Cod_id) ya existe
+        const checkCI = `SELECT Name FROM Student WHERE Cod_id = ? LIMIT 1`;
+        const existingCI = await DB.buscar(checkCI, [est.cedula]);
+        
+        if (existingCI) {
+            await DB.rollback();
+            return { 
+                success: false, 
+                message: `El estudiante con cédula ${est.cedula} ya está registrado.` 
+            };
+        }
+
+        // 2. Insertar Estudiante
+        const sqlStudent = `
+            INSERT INTO Student (
+                Key, Name, Cod_id, Address, Tlf, E_mail, Image, Age, Birthdate,
+                Name_Representative, Age_Representative, Cod_id_Representative,
+                Tlf_Representative, E_mail_Representative, Address_Representative,
+                Date_Created, Time_Created
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`;
+
+        const paramsStudent = [
+            key, est.nombre || null, est.cedula || null, est.direccion || null,
+            est.telefono || null, est.correo || null, est.imagen || null, 
+            parseInt(est.edad) || null, est.nacimiento || null, 
+            rep.nombre || null, rep.edad || null, rep.cedula || null, 
+            rep.telefono || null, rep.correo || null, rep.direccion || null
+        ];
+
         await DB.crear(sqlStudent, paramsStudent);
 
-        // Si el estudiante tiene cursos seleccionados, los registramos en la tabla intermedia
-        if (est.cursos && est.cursos.length > 0) {
+        // 3. Registrar Cursos (Tabla Intermedia)
+        if (est.cursos && Array.isArray(est.cursos)) {
             for (const courseId of est.cursos) {
                 const sqlRel = `INSERT INTO Student_Courses (Id_student_key, Id_curs) VALUES (?, ?)`;
                 await DB.crear(sqlRel, [key, courseId]);
             }
         }
 
-        return { success: true, key };
+        await DB.commit();
+        return { success: true, message: "Estudiante y cursos registrados correctamente.", key };
+
     } catch (error) {
-        console.error("Error al registrar estudiante y sus cursos:", error);
-        throw error;
+        await DB.rollback();
+        console.error("Error al registrar estudiante:", error);
+        return { success: false, message: error.message || "Error al procesar el registro." };
     }
 }
 
@@ -233,56 +235,69 @@ async function UpdateStudent(key, data) {
     const est = data.estudiante || {};
     const rep = (est.esMenor && data.representante) ? data.representante : {};
 
-    const sqlUpdateStudent = `
-        UPDATE Student SET 
-            Name = ?, 
-            Cod_id = ?, 
-            Address = ?, 
-            Tlf = ?, 
-            E_mail = ?,
-            Image = ?, 
-            Age = ?, 
-            Birthdate = ?, 
-            Name_Representative = ?, 
-            Cod_id_Representative = ?, 
-            Tlf_Representative = ?, 
-            E_mail_Representative = ?
-        WHERE Key = ?`;
-
-    const paramsStudent = [
-        est.nombre || null, est.cedula || null, est.direccion || null,
-        est.telefono || null, est.correo || null, est.imagen || null, est.edad || null,
-        est.nacimiento || null, rep.nombre || null, rep.cedula || null, rep.telefono || null,
-        rep.correo || null, key
-    ];
-
     try {
-        // 1. Actualizar datos básicos
+        await DB.beginTransaction();
+
+        // 1. Validar cédula duplicada en otro registro
+        const checkCI = `SELECT Name FROM Student WHERE Cod_id = ? AND Key != ? LIMIT 1`;
+        const existingCI = await DB.buscar(checkCI, [est.cedula, key]);
+        
+        if (existingCI) {
+            await DB.rollback();
+            return { 
+                success: false, 
+                message: `No se puede actualizar: la cédula ${est.cedula} ya pertenece a otro estudiante.` 
+            };
+        }
+
+        // 2. Actualizar datos básicos
+        const sqlUpdateStudent = `
+            UPDATE Student SET 
+                Name = ?, Cod_id = ?, Address = ?, Tlf = ?, E_mail = ?,
+                Image = ?, Age = ?, Birthdate = ?, Name_Representative = ?, 
+                Cod_id_Representative = ?, Tlf_Representative = ?, 
+                E_mail_Representative = ?, Address_Representative = ?
+            WHERE Key = ?`;
+
+        const paramsStudent = [
+            est.nombre || null, est.cedula || null, est.direccion || null,
+            est.telefono || null, est.correo || null, est.imagen || null, 
+            parseInt(est.edad) || null, est.nacimiento || null, 
+            rep.nombre || null, rep.cedula || null, rep.telefono || null,
+            rep.correo || null, rep.direccion || null, key
+        ];
+
         await DB.actualizar(sqlUpdateStudent, paramsStudent);
 
-        // 2. Actualizar relación de cursos (Borrar y volver a insertar)
-        const sqlDeleteCourses = `DELETE FROM Student_Courses WHERE Id_student_key = ?`;
-        await DB.actualizar(sqlDeleteCourses, [key]);
+        // 3. Sincronizar Cursos (Limpiar antiguos e insertar nuevos)
+        await DB.actualizar(`DELETE FROM Student_Courses WHERE Id_student_key = ?`, [key]);
 
-        if (est.cursos && est.cursos.length > 0) {
+        if (est.cursos && Array.isArray(est.cursos)) {
             for (const courseId of est.cursos) {
                 const sqlInsertRel = `INSERT INTO Student_Courses (Id_student_key, Id_curs) VALUES (?, ?)`;
                 await DB.crear(sqlInsertRel, [key, courseId]);
             }
         }
 
-        return { success: true };
+        await DB.commit();
+        return { success: true, message: "Datos del estudiante actualizados correctamente." };
+
     } catch (error) {
+        await DB.rollback();
         console.error("Error al actualizar estudiante:", error);
-        throw error;
+        return { success: false, message: error.message || "Error al guardar los cambios." };
     }
 }
-
+/*-----------------------------------*/
 async function DeleteStudentLogical(key) {
     try {
         // Usamos el método actualizar porque técnicamente es un UPDATE
         const sql = `UPDATE Student SET Time_Deleted = date('now') WHERE Key = ? AND Time_Deleted IS NULL`;
         const result = await DB.actualizar(sql, [key]);
+        /***/
+                // Usamos el método actualizar porque técnicamente es un UPDATE
+        const sqlStudentC = `UPDATE Student_Courses SET Status='Inactivo' WHERE Id_student_key = ?`;
+        await DB.actualizar(sqlStudentC, [key]);
 
         if (result === 0) {
             return { success: false, message: "Estudiante no encontrado o ya estaba eliminado." };
@@ -294,6 +309,8 @@ async function DeleteStudentLogical(key) {
         return { success: false, message: "Error al procesar el borrado lógico." };
     }
 }
+
+
 /*---------------------------------------------------------*/
 module.exports={
     GetdataStudent:GetdataStudent,

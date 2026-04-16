@@ -66,7 +66,6 @@ ipcMain.on("Get-data-list-course-student",async(event,data)=>{
 
 
 
-
 ipcMain.on("select-Image-new-student",(even,data)=>{
 
    dialog.showOpenDialog(window_Register_student,{
@@ -102,9 +101,17 @@ ipcMain.on("Register-new-data-student",(even,data)=>{
 
     RegisterStudent(data).then((result)=>{
            
+      if(result.success==false){
+
+          message(result.message)
+
+      }else {
           
-      window_Register_student.webContents.send("Open-modal-message-student")
-          
+        window_Register_student.webContents.send("Open-modal-message-student")
+             
+      }
+    
+   
     }).catch((error)=>{
             
         console.log("ERROR DATA SAVE REGISTRO",error)
@@ -115,4 +122,18 @@ ipcMain.on("Register-new-data-student",(even,data)=>{
 })
 
 
+
+
+function message(sms){
+   dialog.showMessageBox(window_Register_student,{
+        title: 'Alerta',
+          type:'warning',
+      message: sms,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    })
+}
 

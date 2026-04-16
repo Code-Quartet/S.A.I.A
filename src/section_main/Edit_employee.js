@@ -12,13 +12,14 @@ const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
 /*--------------LINK BASE DE DATOS ------------------------*/
 const ImageDefault = path.join(__dirname,"../../assets/imagen/ImageLogin3.png")
 /*---------------------------------------------------------------*/
-const {GetEmployeeWithUser,UpdateEmployee,GetEmployeesPaged} = require(path.join(__dirname,'../../src/database_controls/Employee'))
+const {GetEmployeeWithUser,UpdateEmployee,GetEmployeesPaged,verificarSiEsAdministrador} = require(path.join(__dirname,'../../src/database_controls/Employee'))
 /*---------------------------------------------------------------*/
 
 let window_edit_employee;
+let Keyusersession; 
 
 let Key_employee=null;
-module.exports = function Edit_employee(parentWindow,id) {
+module.exports = function Edit_employee(parentWindow,id,keyusersession) {
   window_edit_employee = new BrowserWindow({
       width:940,
         height:540,
@@ -37,6 +38,7 @@ module.exports = function Edit_employee(parentWindow,id) {
     });
 
   Key_employee=id
+  Keyusersession=keyusersession
 
     window_edit_employee.loadFile('src/section_main/Edit_employee.html');
 
@@ -56,8 +58,8 @@ module.exports = function Edit_employee(parentWindow,id) {
 
 ipcMain.on("get-data-employee-user",async (event,key)=>{
 
- let result = await GetEmployeeWithUser(Key_employee)
- window_edit_employee.webContents.send("data-employee-for-edit",result)
+   let result = await GetEmployeeWithUser(Key_employee)
+   window_edit_employee.webContents.send("data-employee-for-edit",result)
 
 })
 
@@ -90,16 +92,65 @@ ipcMain.on("select-Image-edit-employee",(even,data)=>{
 })
 
 ipcMain.on("save-data-update-employee",async(even,data)=>{
+      await UpdateEmployee(data.key,data).then(async(result)=>{
 
-      await UpdateEmployee(data.key,data).then((result)=>{
 
-        window_edit_employee.webContents.send("open-modal-update-employee");
-        
-      }).catch((error)=>{
+if(result.success==false){
+
+          message_codId(result.message)//si cedula ya existe
+       
+}
+if(result.success==true){
+
+      if(data.key==Keyusersession){
+
+        message("Datos de Empleado con permisos de Administrador cambiados")
+
+     }else{
+             window_edit_employee.webContents.send("open-modal-update-employee");
+
+     }
+}
+
+    }).catch((error)=>{
                 console.log("ERROR DATA SAVE REGISTRO",error)
 
         })
 })
+function message_codId(sms){
+   dialog.showMessageBox(window_edit_employee,{
+        title: 'Alerta',
+          type:'warning',
+      message: sms,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    })
+}
+
+function message(sms){
+   dialog.showMessageBox(window_edit_employee,{
+        title: 'Alerta',
+          type:'warning',
+      message: sms,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    }).then(result => {
+      
+      
+      window_edit_employee.webContents.send("open-modal-update-employee-admin");
+
+
+    }).catch(err => {
+      console.log(err);
+    });
+}
+
 
 
 

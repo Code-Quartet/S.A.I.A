@@ -116,14 +116,35 @@ ipcMain.on("Register-update-data-student", (event, data) => {
 
     UpdateStudent(data.key,data)
         .then((result) => {
-            console.log("Estudiante actualizado con éxito:", result);
-            
-            // Enviamos la señal a la ventana
-            window_Update_studient.webContents.send("Open-modal-message-student-update");
+
+            if(result.success==false){
+
+                message(result.message)
+
+            }else {
+                
+        window_Update_studient.webContents.send("Open-modal-message-student-update");
+      
+            }
         })
         .catch((error) => {
+           
+
             console.error("ERROR AL GUARDAR REGISTRO:", error);
-            // Opcional: Notificar al frontend que hubo un error
-            // window_Update_studient.webContents.send("error-en-actualizacion", error.message);
+
         });
 });
+
+
+function message(sms){
+   dialog.showMessageBox(window_Update_studient,{
+        title: 'Alerta',
+          type:'warning',
+      message: sms,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    })
+}

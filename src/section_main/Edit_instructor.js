@@ -99,15 +99,35 @@ ipcMain.on("Select-update-imagen-instructor",(event,data)=>{
 
 ipcMain.on("Save-data-update-instructor",async(event,data)=>{
 
-console.log(data)
  await UpdateInstructor(data.key,data).then((result)=>{
-       
-       console.log(result)
-      window_edit_instructor.webContents.send("open-modal-update-instructor");
-        
+
+        if(result.success==false){
+
+          message(result.message)
+               
+          
+        }else {
+          
+          window_edit_instructor.webContents.send("open-modal-update-instructor");
+                
+        }
+    
       }).catch((error)=>{
         
         console.log("ERROR DATA SAVE REGISTRO",error)
 
       })
 })
+
+function message(sms){
+   dialog.showMessageBox(window_edit_instructor,{
+        title: 'Alerta',
+          type:'warning',
+      message: sms,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    })
+}

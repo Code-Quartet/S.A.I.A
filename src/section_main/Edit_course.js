@@ -70,7 +70,7 @@ ipcMain.on("Get-list-instructor-update",async(event,data)=>{
 
 ipcMain.on("Campo-usuario-vacio",async(event,data)=>{
 
-      dialog.showMessageBox({
+      dialog.showMessageBox(window_edit_course,{
             title: 'Notificación',
             type:'none',
             message: 'Porfavor Complete los Campos',
@@ -92,11 +92,11 @@ ipcMain.on("Campo-usuario-vacio",async(event,data)=>{
 
 ipcMain.on("save-update-data-course",async(event,data)=>{
 
-    console.log("save-update-data-course",data)
+   // console.log("save-update-data-course",data)
     await UpdateCourse(data.Key,data).then((resutl)=>{
   if(resutl.success==false){
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(window_edit_course,{
         title: 'Alerta',
         type:'warning',
         message:resutl.message,

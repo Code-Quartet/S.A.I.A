@@ -63,7 +63,7 @@ let result = await GetAllKeyNameInnstructor()
 
 ipcMain.on("Campo-usuario-vacio",async(event,data)=>{
 
-      dialog.showMessageBox({
+      dialog.showMessageBox(window_register_course,{
         title: 'Notificación',
         type:'none',
         message: 'Porfavor Complete los Campos',
@@ -87,26 +87,26 @@ ipcMain.on("save-new-data-course",async(event,data)=>{
 
         if(resutl.success==false){
 
-    dialog.showMessageBox({
-        title: 'Alerta',
-        type:'warning',
-        message:resutl.message,
-        icon: 'warning',
-        buttons: ['Aceptar'],
-        defaultId: 0,
-        cancelId: 1,
-        noLink: true
-      }).then(resutl => {
-        
+                dialog.showMessageBox(window_register_course,{
+                    title: 'Alerta',
+                    type:'warning',
+                    message:resutl.message,
+                    icon: 'warning',
+                    buttons: ['Aceptar'],
+                    defaultId: 0,
+                    cancelId: 1,
+                    noLink: true
+                  }).then(resutl => {
+                    
 
-      }).catch(err => {
-        console.log(err);
-      });
+                  }).catch(err => {
+                    console.log(err);
+                  });
 
-        }else{
+                    }else{
 
-      window_register_course.webContents.send("open-modal-register-course")
-}
+                  window_register_course.webContents.send("open-modal-register-course")
+            }
 })
 .catch((err)=>{
 

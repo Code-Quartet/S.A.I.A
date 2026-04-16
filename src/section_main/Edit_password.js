@@ -59,7 +59,7 @@ console.log("Isuerpass",iduser)
 
 ipcMain.on("sms-alert-system-pass",(event,sms)=>{
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(window_edit_password,{
         title: 'Notificación',
           type:'warning',
       message: sms,
@@ -83,25 +83,8 @@ ipcMain.on("update-password-user",(event,data)=>{
 
             //console.log(result)
             if(result.success==true){
-/*
-                dialog.showMessageBox({
-                      title: 'Notificación',
-                      type:'info',
-                      message: result.message,
-                      detail: 'Retorno al Login para establecer información',
-                      icon: 'info',
-                      buttons: ['Aceptar'],
-                      defaultId: 0,
-                      cancelId: 1,
-                      noLink: true
-                    }).then(result => {
-                      console.log(result.response);
-                      */
+
                       window_edit_password.send("sms-operation-pass-ok")
-/*
-                    }).catch(err => {
-                      console.log(err);
-                    });*/
 
             }
             if(result.success==false){

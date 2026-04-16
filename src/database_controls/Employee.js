@@ -212,122 +212,118 @@ async function SearchFilterEmployee(status) {
     }
 }
 
-async function RegistreEmployee(data){
- 
+async function RegistreEmployee(data) {
     const ID_USER = uuidv4();
     const ID_EMPLOYEE = uuidv4();
 
-    // Iniciamos la conexión
-    DB.conectar();
-
-    // Retornamos la promesa para poder encadenar .then() y .catch() afuera si es necesario
-    return Promise.all([
-        // Inserción en tabla User
-        DB.crear(
-            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, date('now'), time('now'))`,
-            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, data.User.permission]
-        ),
-        // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
-      DB.crear(
-            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`,
-			[
-                ID_EMPLOYEE, 
-                data.Employee.nombre, 
-                data.Employee.ci, 
-                data.Employee.direccion, 
-                data.Employee.tlf, 
-                data.Employee.edad,
-                data.Employee.correo, 
-                data.Employee.fechanacimiento, 
-                data.Employee.image,
-                data.Employee.status,
-                ID_USER
-               
-            ]
-        )
-    ])
-    .then(() => {
-        console.log("Registro exitoso del Administrador y Empleado");
-        return { success: true, message: "Datos insertados correctamente" };
-    })
-    .catch((error) => {
-        console.error("Error al insertar datos:", error);
-        throw error; // Relanzamos para que quien llame a la función sepa que falló
-    })
-    .finally(() => {
-        // Cerramos la base de datos siempre, sin importar si hubo éxito o error
-        DB.cerrar();
-    });
-}
-
-async function UpdateEmployee(employeeKey, updatedData) {
-
     try {
-        // Usamos los métodos de la clase SAIADB que ya garantizan conexión
         await DB.beginTransaction();
 
-        // 1. Actualizar datos en la tabla Employee
-        // Corregido: eliminada coma antes del WHERE, eliminado Image duplicado y corregido orden de campos
-        const sqlUpdateEmployee = `
-            UPDATE Employee SET 
-                Name = ?, 
-                Cod_id = ?, 
-                Address = ?, 
-                Tlf = ?, 
-                E_mail = ?, 
-                Age = ?,
-                Image = ?,
-                Birthdate = ?,
-                Status = ?
-            WHERE Key = ? AND Time_Deleted IS NULL`;
+        // 1. Validar si la Cédula (Cod_id) ya existe
+        const checkCI = `SELECT Cod_id FROM Employee WHERE Cod_id = ? LIMIT 1`;
+        const existingCI = await DB.buscar(checkCI, [data.Employee.ci]);
+        if (existingCI) {
+            await DB.rollback();
+            return { success: false, message: `La cédula ${data.Employee.ci} ya está registrada.` };
+        }
 
-        const paramsEmployee = [
-            updatedData.Employee.nombre, 
-            updatedData.Employee.ci, 
-            updatedData.Employee.direccion, 
-            updatedData.Employee.tlf, 
-            updatedData.Employee.correo, 
-            updatedData.Employee.edad,
-            updatedData.Employee.image,
-            updatedData.Employee.fechanacimiento, 
-            updatedData.Employee.status,
-            employeeKey
-        ];
+        // 2. Validar si el Username ya existe
+        const checkUser = `SELECT Username FROM User WHERE Username = ? LIMIT 1`;
+        const existingUser = await DB.buscar(checkUser, [data.User.usuario]);
+        if (existingUser) {
+            await DB.rollback();
+            return { success: false, message: `El nombre de usuario "${data.User.usuario}" ya no está disponible.` };
+        }
 
-        await DB.actualizar(sqlUpdateEmployee, paramsEmployee);
+        // 3. Inserción en tabla User
+        await DB.crear(
+            `INSERT INTO User (Key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
+             VALUES (?, ?, ?, ?, ?, date('now'), time('now'))`,
+            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, data.User.permission]
+        );
 
-        // 2. Obtener el Id_user vinculado
-        const sqlFindUser = `SELECT Id_user FROM Employee WHERE Key = ?`;
-        const res = await DB.buscar(sqlFindUser, [employeeKey]);
+        // 4. Inserción en tabla Employee
+        await DB.crear(
+            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), time('now'))`,
+            [
+                ID_EMPLOYEE, data.Employee.nombre, data.Employee.ci, data.Employee.direccion, 
+                data.Employee.tlf, data.Employee.edad, data.Employee.correo, 
+                data.Employee.fechanacimiento, data.Employee.image, data.Employee.status, ID_USER
+            ]
+        );
+
+        await DB.commit();
+        return { success: true, message: "Empleado y Usuario registrados con éxito." };
+
+    } catch (error) {
+        await DB.rollback();
+        console.error("Error en registro:", error);
+        return { success: false, message: error.message || "Error interno en el servidor." };
+    }
+}
+
+
+async function UpdateEmployee(employeeKey, updatedData) {
+    try {
+        await DB.beginTransaction();
+
+        // 1. Validar si la nueva cédula ya pertenece a OTRO empleado
+        const sqlCheckCI = `SELECT Name FROM Employee WHERE Cod_id = ? AND Key != ? LIMIT 1`;
+        const existingCI = await DB.buscar(sqlCheckCI, [updatedData.Employee.ci, employeeKey]);
+        
+        if (existingCI) {
+            await DB.rollback();
+            return { success: false, message: `No se puede actualizar: la cédula ${updatedData.Employee.ci} ya pertenece a otro registro.` };
+        }
+
+        // 2. Obtener el Id_user vinculado antes de actualizar
+        const res = await DB.buscar(`SELECT Id_user FROM Employee WHERE Key = ?`, [employeeKey]);
         const userKey = res?.Id_user;
 
-        // 3. Actualizar tabla User si existe el vínculo
+        // 3. Validar si el nuevo Username ya pertenece a OTRO usuario
+        if (userKey) {
+            const sqlCheckUser = `SELECT Username FROM User WHERE Username = ? AND Key != ? LIMIT 1`;
+            const existingUser = await DB.buscar(sqlCheckUser, [updatedData.User.usuario, userKey]);
+            if (existingUser) {
+                await DB.rollback();
+                return { success: false, message: `El nombre de usuario "${updatedData.User.usuario}" ya está siendo usado.` };
+            }
+        }
+
+        // 4. Actualizar tabla Employee
+        const sqlUpdateEmployee = `
+            UPDATE Employee SET 
+                Name = ?, Cod_id = ?, Address = ?, Tlf = ?, E_mail = ?, 
+                Age = ?, Image = ?, Birthdate = ?, Status = ?
+            WHERE Key = ? AND Time_Deleted IS NULL`;
+
+        await DB.actualizar(sqlUpdateEmployee, [
+            updatedData.Employee.nombre, updatedData.Employee.ci, updatedData.Employee.direccion, 
+            updatedData.Employee.tlf, updatedData.Employee.correo, updatedData.Employee.edad, 
+            updatedData.Employee.image, updatedData.Employee.fechanacimiento, 
+            updatedData.Employee.status, employeeKey
+        ]);
+
+        // 5. Actualizar tabla User
         if (userKey) {
             const sqlUpdateUser = `
-                UPDATE User SET 
-                    Username = ?, 
-                    Permission = ?,
-                    Password = ?
+                UPDATE User SET Username = ?, Permission = ?, Password = ?
                 WHERE Key = ? AND Time_Deleted IS NULL`;
             
             await DB.actualizar(sqlUpdateUser, [
-                updatedData.User.usuario, 
-                updatedData.User.permission, 
-                updatedData.User.clave, // Se agregó 'clave' que faltaba en tus params
-                userKey
+                updatedData.User.usuario, updatedData.User.permission, 
+                updatedData.User.clave, userKey
             ]);
         }
 
         await DB.commit();
-        console.log("Empleado y usuario actualizados con éxito.");
         return { success: true, message: "Datos actualizados correctamente." };
 
     } catch (error) {
         await DB.rollback();
-        console.error("Error al actualizar empleado:", error);
-        return { success: false, message: "Error al intentar guardar los cambios." };
+        console.error("Error al actualizar:", error);
+        return { success: false, message: error.message || "Error al procesar la actualización." };
     }
 }
 
@@ -423,6 +419,46 @@ async function DeleteEmployeePermanent(employeeKey) {
     }
 }
 
+
+async function verificarSiEsAdministrador(employeeKey) {
+    const query = `
+        SELECT U.Permission 
+        FROM Employee E
+        INNER JOIN User U ON E.Id_user = U.Key
+        WHERE E.Key = ? AND E.Time_Deleted IS NULL;
+    `;
+
+    try {
+        // Ejecutamos la consulta pasando el parámetro para evitar SQL Injection
+        const resultado = await DB.buscar(query, [employeeKey]);
+
+        if (!resultado) {
+            return { 
+                isAdmin: false, 
+                message: "Empleado no encontrado o no tiene un usuario vinculado." 
+            };
+        }
+
+        // Verificamos si el permiso coincide exactamente con 'Administrador'
+        if (resultado.Permission === 'Administrador') {
+            return { 
+                isAdmin: true, 
+                //message: "Acceso confirmado: El usuario tiene permisos de Administrador." 
+                message: "Cambios de datos de empleado con permisos de Administrador." 
+            };
+        } else {
+            return { 
+                isAdmin: false, 
+                message: `Acceso denegado: El usuario tiene nivel ${resultado.Permission}.` 
+            };
+        }
+
+    } catch (error) {
+        console.error("Error al verificar permisos:", error);
+        throw new Error("Error interno al consultar la base de datos.");
+    }
+}
+
 module.exports={
 	GetEmployeeWithUser:GetEmployeeWithUser,
 	RegistreEmployee:RegistreEmployee,
@@ -431,7 +467,8 @@ module.exports={
 	GetEmployeesPaged:GetEmployeesPaged,
     DeleteEmployeePermanent:DeleteEmployeePermanent,
     searchEmployee:searchEmployee,
-    SearchFilterEmployee:SearchFilterEmployee
+    SearchFilterEmployee:SearchFilterEmployee,
+    verificarSiEsAdministrador:verificarSiEsAdministrador
 
 
 }

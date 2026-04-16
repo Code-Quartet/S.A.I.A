@@ -1,4 +1,3 @@
-
 const {app, BrowserWindow, Menu, MenuItem, ipcMain, dialog, Notification } = require('electron');
 const path = require('path')
 const fs = require('fs')
@@ -13,18 +12,18 @@ const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
 const {SelectInstructor, UpdateInstructor} = require(path.join(__dirname,'../../src/database_controls/Instructor'));
 /*---------------------------------------------------------------*/
 
-let window_Info_instructor;
+let window_RepairApp;
 
-let key_Instructor=null;
-module.exports = function Info_instructor(parentWindow,id) {
-  window_Info_instructor = new BrowserWindow({
-      width:495,
-        height:450,
-        modal: true,
+module.exports = function RepairApp(parentWindow) {
+  window_RepairApp = new BrowserWindow({
+        width:590,
+        height:230,
         resizable:false, 
         frame:false,
+        transparent:true,
+       center:true,
+        modal: true,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
-        show: false, // Mejor oculto hasta que esté listo
         icon: path.join(__dirname, '../../build/favicon.ico'),
         webPreferences: {
             nodeIntegration: false,
@@ -34,52 +33,19 @@ module.exports = function Info_instructor(parentWindow,id) {
         }
     });
 
-  key_Instructor=id
-
-    window_Info_instructor.loadFile('src/section_main/Info_instructor.html');
+    window_RepairApp.loadFile('src/section_main/RepairApp.html');
 
     // Herramientas de desarrollo
-   //window_Info_instructor.webContents.openDevTools();
+    //window_RepairApp.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
-    window_Info_instructor.webContents.setWindowOpenHandler(() => {
+    window_RepairApp.webContents.setWindowOpenHandler(() => {
         return { action: 'deny' };
     });
 
-    window_Info_instructor.once('ready-to-show', () => {
-        window_Info_instructor.show();
+    window_RepairApp.once('ready-to-show', () => {
+        window_RepairApp.show();
     });
 
 }
-
-ipcMain.on("get-data-instructor-info",async (event,key)=>{
-   
-    let result = await SelectInstructor(key_Instructor)
-    window_Info_instructor.webContents.send("data-instructor",result)
-
-})
-
-/*
-{
-  Key: 'f657f976-1819-44dd-a4a1-9e36e87a5144',
-  Name: 'Instructor10',
-  Cod_id: '26',
-  Address: 'Zulia Venezuela',
-  Tlf: '01412578',
-  E_mail: 'Instructor10@mail.com',
-  Image: 'C:\\Users\\Duno Castellano\\Desktop\\S.A.I.A\\app\\assets\\imagen\\ImageLogin3.png',
-  Age: 4,
-  Status: 'Activo',
-  Specialty: 'ING ELECTRONICA',
-  Certifications: 'Computacion',
-  Date: '2026-03-15',
-  Time: '17:46:17',
-  Time_delet: null
-}
-*/
-
-
-
-
-
 

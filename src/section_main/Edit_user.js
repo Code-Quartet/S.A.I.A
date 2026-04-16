@@ -57,7 +57,7 @@ module.exports = function Edit_user(parentWindow,dataID) {
 
 ipcMain.on("Campo-usuario-vacio-btn",async(event,text)=>{
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(window_edit_user,{
         title: 'Notificación',
         type:'none',
         message: 'Porfavor Complete los Campos',
@@ -79,7 +79,7 @@ ipcMain.on("Campo-usuario-vacio-btn",async(event,text)=>{
 
 ipcMain.on("Campo-usuario-vacio-click",async(event,text)=>{
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(window_edit_user,{
       title: 'Notificación',
       type:'none',
       message: 'Porfavor Complete los Campos',
@@ -100,8 +100,6 @@ ipcMain.on("Campo-usuario-vacio-click",async(event,text)=>{
 
 ipcMain.on("save-new-username",async(event,data)=>{
 
-    console.log("id-USER",ID_User)
-    console.log("id-USER",data)
     await UpdateUsername(ID_User,data).then((resutl)=>{
 
       window_edit_user.send("close-window-updane-user")

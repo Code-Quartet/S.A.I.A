@@ -69,20 +69,13 @@ function Manage_dasboard(id) {
 
     container.innerHTML = template_manage_Dasboard;
 
-    // Asignación de datos del empleado (Asegúrate que Data_employee exista globalmente)
-    /*
-    if (typeof Data_employee !== 'undefined') {
-        document.getElementById("dashboardNameEmployee").innerHTML = Data_employee.name;
-        document.getElementById("dashboardIDEmployee").innerHTML = Data_employee.codId;
-    }
-    */
-
     // Solicitar datos al main process
     api.send("Get-data-stats-dasboard");
 }
 
 // --- Recepción de Cursos ---
 api.receive("Data-list-course-dasboard", (event, courseList) => {
+
     const tableBody = document.getElementById("TableCourseDasboard");
     if (!tableBody) return;
 
@@ -107,16 +100,18 @@ api.receive("Data-list-course-dasboard", (event, courseList) => {
 
 // --- Recepción de Estadísticas y Gráficos ---
 api.receive("Data-stats-dasboard", async (event, dasboard) => {
-    if (!dasboard || !dasboard.success) return;
 
-    const info = dasboard.data;
-    
-    // Corregido: Los IDs deben coincidir con el HTML superior/*
-    document.getElementById("TotalStudents").innerHTML = info.students.total;
-    document.getElementById("TotalInstructors").innerHTML = info.instructors.total;
-    document.getElementById("TotalCourses").innerHTML = info.courses.total;
+        if (!dasboard || !dasboard.success) return;
 
-    renderCharts(dasboard);
+        const info = dasboard.data;
+        
+        // Corregido: Los IDs deben coincidir con el HTML superior/*
+        document.getElementById("TotalStudents").innerHTML = info.students.total;
+        document.getElementById("TotalInstructors").innerHTML = info.instructors.total;
+        document.getElementById("TotalCourses").innerHTML = info.courses.byStatus.activo;
+
+        renderCharts(dasboard);
+
 });
 
 // --- Recepción de Historial ---

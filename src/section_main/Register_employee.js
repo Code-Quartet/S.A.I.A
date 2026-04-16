@@ -84,9 +84,18 @@ ipcMain.on("select-Image-new-employee",(even,data)=>{
 ipcMain.on("save-data-registre-employee",async(even,data)=>{
 
       await RegistreEmployee(data).then((result)=>{
+
+if(result.success==false){
+
+          message(result.message)
        
-       window_register_employee.webContents.send("open-modal-register-employee");
-        
+  
+}else {
+  
+   window_register_employee.webContents.send("open-modal-register-employee");
+      
+}
+
       }).catch((error)=>{
         
         console.log("ERROR DATA SAVE REGISTRO")
@@ -94,3 +103,23 @@ ipcMain.on("save-data-registre-employee",async(even,data)=>{
       })
 
 })
+
+function message(sms){
+   dialog.showMessageBox(window_register_employee,{
+        title: 'Alerta',
+          type:'warning',
+      message: sms,
+      icon: 'info',
+      buttons: ['Aceptar'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    }).then(result => {
+  
+      
+
+    }).catch(err => {
+      console.log(err);
+    });
+}
+

@@ -70,5 +70,16 @@ function Change_version(){
                 version.innerHTML = arg.name +" "+ arg.version;
         });
 }
+
+document.addEventListener('keydown', (e) => {
+    // Verificamos las tres teclas simultáneamente
+    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'd') {
+        e.preventDefault(); // Evita conflictos con el navegador
+        
+        //console.log("Comando Ctrl + Alt + D activado");
+        // Aquí ejecutas tu función, por ejemplo:
+        api.send("Repair-app-system")
+    }
+});
 </script>
 </html>

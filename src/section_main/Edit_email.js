@@ -53,7 +53,7 @@ frame:false,
 
 ipcMain.on("Campo-email-vacio-btn",async(event,data)=>{
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(window_edit_email,{
 
           title: 'Notificación',
           type:'none',
@@ -76,7 +76,7 @@ ipcMain.on("Campo-email-vacio-btn",async(event,data)=>{
 
 ipcMain.on("Campo-email-vacio-click",async(event,data)=>{
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(window_edit_email,{
 
           title: 'Notificación',
           type:'none',
@@ -99,19 +99,14 @@ ipcMain.on("Campo-email-vacio-click",async(event,data)=>{
 
 ipcMain.on("save-new-email",async(event,data)=>{
 
-console.log("id-email",ID_User)
-console.log("id-email",data)
+    await UpdateEmail(ID_User,data).then((resutl)=>{
 
-await UpdateEmail(ID_User,data).then((resutl)=>{
+                window_edit_email.send("close-window-updane-email")
 
-            window_edit_email.send("close-window-updane-email")
+    })
+    .catch((err)=>{
 
-
-
-})
-.catch((err)=>{
-
-    console.log("ERROR",err)
-})
+        console.log("ERROR",err)
+    })
 
 })

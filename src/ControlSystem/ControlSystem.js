@@ -113,7 +113,15 @@ api.receive("Reload-trash-interfaz",(event,data)=>{
 
 	Select_menu(0,"container-admin-info")
 
-})
+	let ItmeMenu = document.querySelectorAll('.menu-item');
+	ItmeMenu.forEach(function(element,index) {
+
+	            element.classList.remove("ItemMenuActive"); 
+	    })
+	     document.getElementsByClassName("menu-item")[0].classList.add("ItemMenuActive");
+
+});
+
 
 api.receive("reload-user-data-modif",(evebt,data)=>{
 
@@ -134,7 +142,17 @@ api.receive("reload-user-data-modif",(evebt,data)=>{
          correo:data.employee.email,
          image:data.employee.image,
      };
+
+
 	Select_menu(1,"container-admin-info")
+
+	let ItmeMenu = document.querySelectorAll('.menu-item');
+	ItmeMenu.forEach(function(element,index) {
+
+	element.classList.remove("ItemMenuActive"); 
+	
+	})
+	document.getElementsByClassName("menu-item")[1].classList.add("ItemMenuActive");
 
 
 

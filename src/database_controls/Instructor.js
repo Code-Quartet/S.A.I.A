@@ -163,9 +163,19 @@ async function searchInstructorByStatus(statusArray) {
 
 async function InsertInstructor(data) {
     try {
-        await DB.conectar();
+        // 1. Validar si el Cod_id (Cédula) ya existe
+        const sqlCheck = `SELECT Name FROM Instructor WHERE Cod_id = ? LIMIT 1`;
+        const existing = await DB.buscar(sqlCheck, [data.cedula]);
+
+        if (existing) {
+            return { 
+                success: false, 
+                message: `El instructor con cédula ${data.cedula} ya está registrado.` 
+            };
+        }
+
+        // 2. Preparar inserción
         const key = uuidv4();
-        // CORRECCIÓN: Faltaban 2 "?" en VALUES para completar los 13 campos definidos.
         const sql = `
             INSERT INTO Instructor (
                 Key, Name, Cod_id, Address, Tlf, E_mail, Image, 
@@ -180,42 +190,79 @@ async function InsertInstructor(data) {
             data.telefono || null,
             data.correo || null,
             data.imagen || null,
-            data.edad || null,
+            parseInt(data.edad) || null,
             data.estado || 'Activo',
             data.especialidad || null,
             data.certificaciones || null
         ];
         
-        return await DB.crear(sql, params);
+        await DB.crear(sql, params);
+        
+        return { 
+            success: true, 
+            message: "Instructor registrado exitosamente.",
+            key: key 
+        };
+
     } catch (error) {
         console.error("Error en InsertInstructor:", error);
-        throw error;
+        return { 
+            success: false, 
+            message: error.message || "Error al registrar el instructor." 
+        };
     }
 }
-
 /**
  * Actualiza un instructor.
  */
 async function UpdateInstructor(key, data) {
     try {
-        await DB.conectar();
+        // 1. Validar si el nuevo Cod_id ya lo tiene OTRO instructor
+        const sqlCheck = `SELECT Name FROM Instructor WHERE Cod_id = ? AND Key != ? LIMIT 1`;
+        const existing = await DB.buscar(sqlCheck, [data.cedula, key]);
+
+        if (existing) {
+            return { 
+                success: false, 
+                message: `No se puede actualizar: la cédula ${data.cedula} ya pertenece a otro instructor.` 
+            };
+        }
+
+        // 2. Preparar actualización
         const sql = `
             UPDATE Instructor SET 
                 Name = ?, Cod_id = ?, Address = ?, Tlf = ?, 
                 E_mail = ?, Image = ?, Age = ?, Status = ?, 
                 Specialty = ?, Certifications = ?
-            WHERE Key = ?`;
+            WHERE Key = ? AND Time_Deleted IS NULL`;
         
         const params = [
-            data.nombre, data.cedula, data.direccion, data.telefono,
-            data.correo, data.imagen, data.edad, data.estado,
-            data.especialidad, data.certificaciones, key
+            data.nombre, 
+            data.cedula, 
+            data.direccion, 
+            data.telefono,
+            data.correo, 
+            data.imagen, 
+            parseInt(data.edad) || null, 
+            data.estado,
+            data.especialidad, 
+            data.certificaciones, 
+            key
         ];
         
-        return await DB.actualizar(sql, params);
+        await DB.actualizar(sql, params);
+        
+        return { 
+            success: true, 
+            message: "Datos del instructor actualizados correctamente." 
+        };
+
     } catch (error) {
         console.error("Error en UpdateInstructor:", error);
-        throw error;
+        return { 
+            success: false, 
+            message: error.message || "Error interno al actualizar el registro." 
+        };
     }
 }
 

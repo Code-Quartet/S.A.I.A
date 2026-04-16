@@ -227,6 +227,7 @@ await DB.crearTabla(`CREATE TABLE Student (
     Id_student_key TEXT NOT NULL,
     Id_curs TEXT NOT NULL,
     Date_Enrolled DATE DEFAULT (date('now')),
+    Status TEXT DEFAULT 'Activo',
     PRIMARY KEY (Id_student_key, Id_curs),
     
     FOREIGN KEY (Id_student_key) 

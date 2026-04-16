@@ -426,7 +426,7 @@ input, select {
             api.send("save-data-update-employee", objData);
                  
                    api.send("Reload-dasboard-system-data-Employee")
-                   
+
 
         }
 
@@ -434,6 +434,20 @@ input, select {
             const notif = document.getElementById('topNotif');
             notif.classList.add('show');
             setTimeout(() => notif.classList.remove('show'), 3000);
+        });
+
+        api.receive("open-modal-update-employee-admin", () => {
+            const notif = document.getElementById('topNotif');
+            notif.classList.add('show');
+            setTimeout(() =>{
+
+                notif.classList.remove('show')
+            api.send("Reload-dasboard-system-Employee-MyProfile")  
+               console.log("data employe admin user")
+            
+            }, 2000);  
+
+
         });
 
         function clearform() {

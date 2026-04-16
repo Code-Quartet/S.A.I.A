@@ -92,7 +92,7 @@ function My_Profile(id){
                     <div class="card-icon" style="background: var(--brand-excel);"><span class="icon-file-excel"></span></div>
                     <div class="card-info">
                         <h4>Importar Todo</h4>
-                        <p>Generar reporte en Excel.</p>
+                        <p>Importar reporte de Excel.</p>
                     </div>
                 </div>
 

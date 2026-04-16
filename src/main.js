@@ -19,6 +19,8 @@ const ImageDefault = path.join(__dirname, "../../assets/img/ImageLogin3.png"); /
 const Register_App = require(path.join(__dirname, './RegisterApp/RegisterApp'));
 
 /*-----------------------------------*/
+const RepairApp = require(path.join(__dirname,'./section_main/RepairApp'));
+/*-----------------------------------*/
 const { InfoMessage, ErrorMessage } = require(path.join(__dirname, './section_main/Message_system'));
 const { UserSessionHistory, login_system, Get_data_user_key,RegisterSessionEvent, UpdateImagenAvatar, GetAllSessionHistory } = require(path.join(__dirname, './database_controls/User'));
 const Login_password_master = require(path.join(__dirname, './section_main/LoginMaster'));
@@ -109,7 +111,7 @@ function createWindow() {
     // Como main.js está en /src, subimos un nivel
     mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
-    mainWindow.webContents.openDevTools();
+mainWindow.webContents.openDevTools();
     
     // Bloqueo de nuevas ventanas
     mainWindow.webContents.setWindowOpenHandler(() => {
@@ -143,7 +145,7 @@ mainWindow.on('close', (event) => {
 
         }
         else{
-            dialog.showMessageBox({
+            dialog.showMessageBox(mainWindow,{
                   title: 'Alerta',
                   type:'warning',
                   message: 'Debe cerrar sesión primero',
@@ -159,6 +161,13 @@ mainWindow.on('close', (event) => {
   });
 
 }
+/****************************REPAIR APP************************************************/
+ipcMain.on('Repair-app-system',async(event,data) => {
+
+    RepairApp(mainWindow)
+
+})
+/****************************REPAIR APP************************************************/
 /****************************LOGIN SYSTEM APP******************************************************/
 
 /*LOGIM SYSTEM APP*/
@@ -186,12 +195,12 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
           mainWindow.send("Data-user-employee",result)
 
-           console.log( 'LOGOIN',User_sesion_login_id.user.key)
+         //  console.log( 'LOGOIN',User_sesion_login_id.user.key)
           await RegisterSessionEvent(User_sesion_login_id.user.key, 'LOGIN');
 
         }else{
 
-           dialog.showMessageBox({
+           dialog.showMessageBox(mainWindow,{
                 title: 'Notificación',
                 type:'question',
                 message:"Credenciales incorrectas o usuario eliminado.",
@@ -215,7 +224,7 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
       console.log(error)
       
-         dialog.showMessageBox({
+         dialog.showMessageBox(mainWindow,{
                 title: 'Notificación',
                 type:'question',
                 message:"Error al insertar datos",
@@ -236,14 +245,12 @@ ipcMain.on('Login-user-app',async(event,data) => {
 
 ipcMain.on("Login-out-user-register",(event,data) => {
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(mainWindow,{
       title: 'Notificación',
       type:'question',
       message:"Esta seguro de cerrar sesión",
       icon: 'info',
       buttons: ['Cancelar','Aceptar'],
-      defaultId: 0,
-      cancelId: 1,
       noLink: true
     }).then(async result => {
       console.log(result.response);
@@ -256,7 +263,6 @@ ipcMain.on("Login-out-user-register",(event,data) => {
         mainWindow.webContents.send("Login-out-app")
 
         User_sesion_login_id=""
-
 
         }
         if(result.response==0){
@@ -274,7 +280,7 @@ ipcMain.on("Login-out-user-register",(event,data) => {
 
 ipcMain.on('message-campos-vacios-login', async (event,text) => {
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(mainWindow,{
       title: 'Notificación',
       type:'question',
       message: text,
@@ -296,33 +302,38 @@ ipcMain.on('message-campos-vacios-login', async (event,text) => {
 /**********************************LOGIN SYSTEM APP********************************/
 /***********************DASBOARD*********************************************/
 ipcMain.on("Get-data-stats-dasboard",async(event,data)=>{
+
   let result = await GetDashboardStats()
 
-  //console.log("StatsDasboard",result)
   mainWindow.webContents.send("Data-stats-dasboard",result);
 
-   let resultcourse = await GetTopCourses()
-    // console.log("course",resultcourse) 
-     mainWindow.webContents.send("Data-list-course-dasboard",resultcourse);
-     /*------------------------------------*/
-     let resultHistory = await UserSessionHistory()
-     //console.log("HistoryUser",resultHistory)
-     mainWindow.webContents.send("List-history-data-user",resultHistory);
+  let resultcourse = await GetTopCourses()
+  // console.log("course",resultcourse) 
+  mainWindow.webContents.send("Data-list-course-dasboard",resultcourse);
+  /*------------------------------------*/
+  let resultHistory = await UserSessionHistory()
+  //console.log("HistoryUser",resultHistory)
+  mainWindow.webContents.send("List-history-data-user",resultHistory);
 
 })
 /***********************DASBOARD*********************************************/
 /********************************System Reload Dasboard***********************************************/
 ipcMain.on("Reload-dasboard-system-data-MyProfile",async(event,data)=>{
 
- await mainWindow.webContents.send("notification-my-profile");
+    await mainWindow.webContents.send("notification-my-profile");
 
-setTimeout(async()=>{
-let dataUSer = await Get_data_user_key(User_sesion_login_id.user.key)
-  mainWindow.webContents.send("reload-user-data-modif",dataUSer);
+    setTimeout(async()=>{
+    let dataUSer = await Get_data_user_key(User_sesion_login_id.user.key)
+      mainWindow.webContents.send("reload-user-data-modif",dataUSer);
+    },2000)
 
+})
 
+ipcMain.on("Reload-dasboard-system-Employee-MyProfile",async(event,data)=>{
 
-},4000)
+  //onscole.log("Reload-dasboard-system-data-Employee-MyProfile")
+   let dataUSer = await Get_data_user_key(User_sesion_login_id.user.key)
+      mainWindow.webContents.send("reload-user-data-modif",dataUSer);
 
 })
 
@@ -678,9 +689,9 @@ ipcMain.on("Deleted-student-register",(event,id)=>{
   //console.log("Deleted-employee-register",id)
  
   DeleteStudentLogical(id).then((result)=>{
-     console.log(result)
+   //  console.log(result)
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(mainWindow,{
                 title:"Notificación",
                 message:"Estudiante Eliminado",
                 icon: 'info',
@@ -768,35 +779,63 @@ ipcMain.on("Open-system-info-course-register",(event,id)=>{
 
 ipcMain.on("Delete-course-register",(event,id)=>{
 
-   DeleteCourse(id).then((result)=>{
+DeleteCourse(id).then((result)=>{
 
-          dialog.showMessageBox({
-                      title:"Notificación",
-                      message:"Curso Eliminado",
-                      icon: 'info',
-                       type:'info',
+    if(result.success==false){
+
+        MessageCourseError("Alerta","warning",result.message)
+
+    }
+    if(result.success==true){
+
+        MessageCourseAcepted("Notificación","info",result.message)
+    }
+
+})
+.catch((err)=>{
+
+    console.log(err);
+
+ })
+
+})
+
+function MessageCourseError(title,type,text){
+
+          dialog.showMessageBox(mainWindow,{
+                      title:title,
+                      message:text,
+                      icon: type,
+                      type:type,
+                      buttons: ['Aceptar'],
+                      defaultId: 0,
+                      cancelId: 1
+          })
+
+}
+
+function MessageCourseAcepted(title,type,text){
+
+          dialog.showMessageBox(mainWindow,{
+                      title:title,
+                      message:text,
+                      icon: type,
+                      type:type,
                       buttons: ['Aceptar'],
                       defaultId: 0,
                       cancelId: 1
           }).then(async result => {
                     
-                     // console.log(result.response);
+                                 let resultgetCourse = await GetCoursePaged() 
+               mainWindow.webContents.send("Data-list-course-search",resultgetCourse);
 
-
-   let resultgetCourse = await GetCoursePaged() 
-   mainWindow.webContents.send("Data-list-course-search",resultgetCourse);
-
-
+       
                 }).catch(err => {
                     
                     console.log(err);
               });
 
-             }).catch((err)=>{
-
-             })
-
-})
+}
 
 /*****************************Register New Cource*******************************/
 /***************************Registrar nuevo instructor*************************************/
@@ -866,7 +905,7 @@ ipcMain.on("Deleted-instructor-register",async(event,id)=>{
 
        if(result.success==true){
 
-                    dialog.showMessageBox({
+                    dialog.showMessageBox(mainWindow,{
                             title:result.title,
                             message:result.message,
                             icon:result.type,
@@ -887,7 +926,7 @@ ipcMain.on("Deleted-instructor-register",async(event,id)=>{
           }
           if(result.success==false){
 
-                    dialog.showMessageBox({
+                    dialog.showMessageBox(mainWindow,{
                             title:result.title,
                             message:result.message,
                             icon:result.type,
@@ -926,7 +965,7 @@ ipcMain.on("Get-data-registre-employee",async(even,data)=>{
 ipcMain.on("search-data-registre-employee",async(even,data)=>{
 
   let result = await searchEmployee(data)
-  console.log("result",result )
+ // console.log("result",result )
   mainWindow.webContents.send("Render-data-employee-list-search",result)
 
 })
@@ -942,7 +981,7 @@ ipcMain.on("search-data-registre-employee-filter",async(even,data)=>{
 
 ipcMain.on("search-pagination-employee",async(even,pos)=>{
 
-  console.log("search page-employee")
+ // console.log("search page-employee")
     
     let result = await GetEmployeesPaged(pos)
 
@@ -965,7 +1004,7 @@ ipcMain.on("Open-system-new-employee-register",(event,data)=>{
 
 ipcMain.on("Open-system-edit-employee-register",(event,id)=>{
  
-   Edit_employee(mainWindow,id)
+   Edit_employee(mainWindow,id,User_sesion_login_id.employee.key)
 
 })
 
@@ -977,7 +1016,7 @@ ipcMain.on("Open-system-info-employee-register",(event,id)=>{
 
 ipcMain.on("Deleted-employee-register",(event,id)=>{
 
-  console.log("Deleted-employee-register",id)
+  //console.log("Deleted-employee-register",id)
  
   DeleteEmployeeLogical(id).then((result)=>{
 
@@ -985,7 +1024,7 @@ ipcMain.on("Deleted-employee-register",(event,id)=>{
 
       if(result.success==true){
 
-                dialog.showMessageBox({
+                dialog.showMessageBox(mainWindow,{
                         title:result.title,
                         message:result.message,
                         icon:result.type,
@@ -1005,7 +1044,7 @@ ipcMain.on("Deleted-employee-register",(event,id)=>{
       }
       if(result.success==false){
 
-                dialog.showMessageBox({
+                dialog.showMessageBox(mainWindow,{
                         title:result.title,
                         message:result.message,
                         icon:result.type,
@@ -1235,8 +1274,6 @@ ipcMain.on("Permanently-Delete-Course-system",(event,key)=>{
  
           mainWindow.webContents.send("data-list-Course-trash",resultCourse);
 
-
-
      }).catch((err)=>{
       console.log("Proceso deleted",err)
 
@@ -1276,25 +1313,7 @@ ipcMain.on("Search-data-trash",async(event,data)=>{
             mainWindow.webContents.send("Search-data-trash-send",result)
         }
         if(result.success==false){
-/*
-             dialog.showMessageBox({
-                      title:"Notificación",
-                      message:data.message,
-                      icon: 'info',
-                       type:'info',
-                      buttons: ['Aceptar'],
-                      defaultId: 0,
-                      cancelId: 1
-          }).then(result => {
-                    
-                      console.log(result.response);
 
-                }).catch(err => {
-                    
-                    console.log(err);
-              });
-         */   
-            
         }
       
 
@@ -1310,7 +1329,7 @@ ipcMain.on("Search-data-trash",async(event,data)=>{
 
 ipcMain.on("Open-message-alert-clear-trash",async(event,data)=>{
 
-    dialog.showMessageBox({
+    dialog.showMessageBox(mainWindow,{
                         title:"Alerta",
                         message:"Esta por Limpiar la Papelera los datos se perderan",
                         icon: 'warning',
@@ -1358,7 +1377,7 @@ ipcMain.on("Clear-Trash-all-data-base",async(event,data)=>{
 function Message(data){
   if(data.success==true){
 
-        dialog.showMessageBox({
+        dialog.showMessageBox(mainWindow,{
                       title:"Notificación",
                       message:data.message,
                       icon: 'info',
@@ -1379,7 +1398,7 @@ function Message(data){
   }
   if(data.success==false){
 
-        dialog.showMessageBox({
+        dialog.showMessageBox(mainWindow,{
                       title:"Alerta",
                       message:data.message,
                       icon: 'error',

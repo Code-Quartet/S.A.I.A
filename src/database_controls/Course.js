@@ -135,8 +135,45 @@ async function UpdateCourse(key, formData) {
      * Borrado lógico (Marca fecha de eliminación)
      */
 async function DeleteCourse(key) {
-        const sql = `UPDATE Course SET Time_Deleted = DATE('now') WHERE Key = ?`;
-        return await DB.borrar(sql, [key]);
+    // 1. Consultar el estado actual del curso
+    const sqlCheck = `SELECT Name, Status FROM Course WHERE Key = ? LIMIT 1`;
+
+    try {
+        const course = await DB.buscar(sqlCheck, [key]);
+
+        // Si el curso no existe
+        if (!course) {
+            return { 
+                success: false, 
+                message: "El curso no existe o ya fue eliminado." 
+            };
+        }
+
+        // 2. Validar si el estatus permite la eliminación
+        // Convertimos a minúsculas para evitar errores de escritura (Cancelado vs cancelado)
+        if (course.Status.toLowerCase() !== 'cancelado') {
+            return { 
+                success: false, 
+                message: `No se puede eliminar el curso "${course.Name}". Solo los cursos con estatus "Cancelado" pueden ser borrados.` 
+            };
+        }
+
+        // 3. Proceder con el borrado lógico
+        const sqlDelete = `UPDATE Course SET Time_Deleted = DATE('now'), Status = 'Eliminado' WHERE Key = ?`;
+        await DB.borrar(sqlDelete, [key]);
+
+        return { 
+            success: true, 
+            message: `El curso "${course.Name}" ha sido eliminado correctamente.` 
+        };
+
+    } catch (error) {
+        console.error("Error al intentar eliminar curso:", error);
+        return { 
+            success: false, 
+            message: error.message || "Error interno al procesar la eliminación." 
+        };
+    }
 }
 
 /*--------------funciones de busqueda para el manage course---------------*/
@@ -167,8 +204,8 @@ async function GetCoursePaged(page = 1, limit = 10) {
                 C.Key, C.Name, C.Capacity, C.Start_Time, C.End_Time, 
                 C.Status, C.Cost, C.Days, C.Instructor_ID,
                 I.Name as Instructor_Name,
-                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
-            FROM Course C
+               (
+        SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key AND SC.Status = 'Activo') AS Total_Students FROM Course C
             LEFT JOIN Instructor I ON C.Instructor_ID = I.Key
             WHERE C.Time_Deleted IS NULL 
             ORDER BY C.Date_Created DESC, C.Time_Created ASC 
@@ -219,6 +256,8 @@ async function GetCoursePaged(page = 1, limit = 10) {
         };
     }
 }
+
+
 async function SearchCourseByStatus(statusArray) {
     try {
         if (!statusArray || !Array.isArray(statusArray) || statusArray.length === 0) {
@@ -230,7 +269,7 @@ async function SearchCourseByStatus(statusArray) {
             SELECT 
                 C.*,
                 I.Name as Instructor_Name,
-                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
+                SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key AND SC.Status = 'Activo') AS Total_Students
             FROM Course C
             LEFT JOIN Instructor I ON C.Instructor_ID = I.Key
             WHERE C.Status IN (${placeholders}) 
@@ -258,7 +297,7 @@ async function SearchCourse(searchTerm) {
             SELECT 
                 c.*, 
                 i.Name AS Instructor_Name,
-                (SELECT COUNT(*) FROM Student_Courses sc WHERE sc.Id_curs = c.Key) AS Total_Students
+                SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key AND SC.Status = 'Activo') AS Total_Students
             FROM Course c
             LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
             WHERE c.Time_Deleted IS NULL 
@@ -285,7 +324,7 @@ async function InformationCourseSelect(key) {
             SELECT 
                 c.*, 
                 i.Name AS Nombre_Instructor,
-                (SELECT COUNT(*) FROM Student_Courses sc WHERE sc.Id_curs = c.Key) AS Total_Students
+                SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key AND SC.Status = 'Activo') AS Total_Students
             FROM Course c
             LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
             WHERE c.Time_Deleted IS NULL AND c.Key = ?
