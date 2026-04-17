@@ -501,7 +501,12 @@ input, select {
                 } : null
             };
             api.send("Register-new-data-student", data);
+
+            setTimeout(()=>{
+
             api.send("Reload-dasboard-system-data-Student");
+
+                  },1000)
         });
 
         api.receive("Open-modal-message-student", () => {

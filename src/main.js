@@ -331,7 +331,7 @@ ipcMain.on("Reload-dasboard-system-data-MyProfile",async(event,data)=>{
 
 ipcMain.on("Reload-dasboard-system-Employee-MyProfile",async(event,data)=>{
 
-  //onscole.log("Reload-dasboard-system-data-Employee-MyProfile")
+  //conscole.log("Reload-dasboard-system-data-Employee-MyProfile")
    let dataUSer = await Get_data_user_key(User_sesion_login_id.user.key)
       mainWindow.webContents.send("reload-user-data-modif",dataUSer);
 
@@ -362,6 +362,7 @@ ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
 ipcMain.on("Reload-dasboard-system-data-Employee",async(event,data)=>{
 
     let result = await GetEmployeesPaged()
+    console.log("Reload-dasboard-system-data-Employee",result)
     mainWindow.webContents.send("Render-data-employee-list",result)
 
 })
@@ -383,12 +384,15 @@ ipcMain.on('Image-select-my-profile',(event,id) => {
 
       if(result.canceled==false){
 
-      mainWindow.webContents.send("Imagen-user-select-my-profile",result.filePaths[0]);
-      mainWindow.webContents.send("notification-my-profile");
+    //await mainWindow.webContents.send("Imagen-user-select-my-profile",result.filePaths[0]);
+  
 
-          let DataUserKey = await Get_data_user_key(User_sesion_login_id.user.key)
-            mainWindow.webContents.send("reload-user-data-modif",DataUserKey);        
-        UpdateImagenAvatar(id,result.filePaths[0])
+    UpdateImagenAvatar(id,result.filePaths[0])
+       
+    let DataUserKey = await Get_data_user_key(User_sesion_login_id.user.key)
+    mainWindow.webContents.send("reload-user-data-modif",DataUserKey);          
+ 
+  mainWindow.webContents.send("notification-my-profile");
 
       }
       

@@ -296,7 +296,12 @@ window.close();
 
             api.send('Save-data-new-instructor', valores);
             LimpiarFormulario();
+
+
+            setTimeout(()=>{
+
             api.send("Reload-dasboard-system-data-Instructor")    
+        },1000)
     }
 
     api.receive("open-modal-register-instructor", (event, data) => {

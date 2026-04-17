@@ -52,7 +52,7 @@ async function DataTrialSAIA() {
 
         // 1. USUARIOS Y EMPLEADOS
         console.log("> Insertando Usuarios y Empleados...");
-        for (let i = 1; i <= 50; i++) {
+        for (let i = 1; i <= 10; i++) {
             const uKey = `U-${i}`;
             await DB.crear(
                 `INSERT INTO User (Key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
@@ -90,7 +90,7 @@ async function DataTrialSAIA() {
 
         // 4. ESTUDIANTES Y MATRÍCULA
         console.log("> Insertando Estudiantes y vinculando a cursos...");
-        for (let i = 1; i <= 100; i++) {
+        for (let i = 1; i <= 30; i++) {
             const sKey = `S-${i}`;
             const cursoAleatorio = cursoKeys[i % cursoKeys.length];
 

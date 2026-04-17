@@ -281,7 +281,7 @@ input, select {
                 <div class="form-group">
                     <label>Estado</label>
                     <select id="select-status-employee">
-                        <option value="">Estado</option>
+                        <option value="" disabled selected>Estado</option>
                         <option value="Activo">Activo</option>
                         <option value="Inactivo">Inactivo</option>
                         <option value="Despedido">Despedido</option>
@@ -423,9 +423,12 @@ input, select {
                 }
                
             };
-            api.send("save-data-update-employee", objData);
+                api.send("save-data-update-employee", objData);
                  
-                   api.send("Reload-dasboard-system-data-Employee")
+                  setTimeout(()=>{
+                    api.send("Reload-dasboard-system-data-Employee")
+                },1000)
+                
 
 
         }
@@ -452,15 +455,14 @@ input, select {
 
         function clearform() {
             camposObligatorios.forEach(id => document.getElementById(id).value = "");
-            avatarImg.src = "../assets/imagen/ImageLogin3.png";
+            avatarImg.src = "../../assets/imagen/ImageLogin3.png";
             validarFormulario();
         }
 
         function Close() { 
-  window.close();
+            window.close();
                   
-
-             }
+        }
     </script>
 </body>
 </html>
