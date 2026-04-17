@@ -5,7 +5,7 @@ function Dasboard(app){
 let template_dasboard = `<div class="ControlSystem-container">
 	<aside class="ControlSystem-sidebar">
 	<div class="containerImagenApp">
-	<img id="ImagenAppId" class="ImagenApp" src="assets/imagen/LogoApp.png">
+	<img id="ImagenAppId" class="ImagenApp" src="assets/imagen/LogoApp.svg">
 </div>
 		<section class="sub-fondo-sidebar">
 			<nav class="ControlSystem-menu">
