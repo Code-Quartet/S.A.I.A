@@ -16,7 +16,7 @@ let template_dasboard = `<div class="ControlSystem-container">
 				<a class="status menu-item"><span class="icon-user-tie"></span> Gestionar Instructores</a>
 				<a class="status menu-item"><span class="icon-users"></span> Gestionar Empleados</a>
 				<a class="status menu-item"><span class="icon-bin"></span> Papelera</a>
-				<a class="menu-item"><span class="icon-exit"></span>Cerrar Sesión</a>
+				<a class="menu-item" id="btnExit"><span class="icon-exit"></span>Cerrar Sesión</a>
 			</nav>
 		</section>		
 	</aside>
@@ -36,6 +36,8 @@ let template_dasboard = `<div class="ControlSystem-container">
 		if(Data_user.permission=="Sub-Administrador"){
 
 				Select_menu(1,"container-admin-info")
+
+				document.getElementById("btnExit").style.gridArea = "8 / 1";
 
 				let item = document.querySelectorAll(".status")
 					item.forEach((item,index)=>{

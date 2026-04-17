@@ -309,9 +309,7 @@ api.receive("Data-list-Student",(event,info)=>{
 
 })
 api.receive("Data-list-Student-serach",(event,info)=>{
-
-    console.log("Data-list-Student-serach",info)
-    
+ 
     document.getElementById("data-list-Student").innerHTML='';
 
 

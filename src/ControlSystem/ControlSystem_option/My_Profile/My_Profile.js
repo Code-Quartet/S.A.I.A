@@ -13,8 +13,8 @@ function My_Profile(id){
     					    <div class="main-circle">
     					      <img id="avatarPreviewMyprofile" class="avatar-main" src="file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/business.png" alt="imagen-dasboard">
     					    </div>
-    					    <button class="camera-button">
-    					   	   <span class="icon-camera"></span> 
+    					    <button class="camera-button" id="BtnCamera">
+    					   	   <span class="icon-camera" ></span> 
     					    </button>
 					  </div>
                     <div class="profile-title">
@@ -153,7 +153,8 @@ function My_Profile(id){
         document.getElementById("openModalBtn").style.display = 'none';
         document.getElementById("EditarUsuario").style.display = 'none';
         document.getElementById("EditarCorreo").style.display = 'none';
-        document.getElementById("btnCamaraMyProfile").style.display = 'none';
+        document.getElementById("btnCamaraMyProfile").disabled = false;
+        document.getElementById("BtnCamera").style.display = 'none';
     }
 
     //document.getElementById("pass-usuario").value = Data_user.password
