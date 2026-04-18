@@ -26,6 +26,8 @@ let template_dasboard = `<div class="ControlSystem-container">
 
 
 		document.getElementById(app).innerHTML=template_dasboard;
+
+		//document.getElementById("ImagenAppId").src =  "";
 		EfectoColorMenuItem()
 		if(Data_user.permission=="Administrador"){
 

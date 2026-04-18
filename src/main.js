@@ -206,8 +206,6 @@ ipcMain.on('Login-user-app',async(event,data) => {
                 message:"Credenciales incorrectas o usuario eliminado.",
                 icon: 'info',
                 buttons: ['Aceptar'],
-                defaultId: 0,
-                cancelId: 1,
                 noLink: true
             }).then(result => {
               console.log(result.response);
@@ -230,8 +228,6 @@ ipcMain.on('Login-user-app',async(event,data) => {
                 message:"Error al insertar datos",
                 icon: 'info',
                 buttons: ['Aceptar'],
-                defaultId: 0,
-                cancelId: 1,
                 noLink: true
             }).then(result => {
               console.log(result.response);
@@ -286,8 +282,6 @@ ipcMain.on('message-campos-vacios-login', async (event,text) => {
       message: text,
       icon: 'info',
       buttons: ['Aceptar'],
-      defaultId: 0,
-      cancelId: 1,
       noLink: true
     }).then(result => {
       console.log(result.response);
@@ -844,8 +838,6 @@ ipcMain.on("Deleted-student-register",(event,id)=>{
                 icon: 'info',
                  type:'info',
                 buttons: ['Aceptar'],
-                defaultId: 0,
-                cancelId: 1
           }).then(async result => {
               
                 console.log(result.response);
@@ -955,8 +947,6 @@ function MessageCourseError(title,type,text){
                       icon: type,
                       type:type,
                       buttons: ['Aceptar'],
-                      defaultId: 0,
-                      cancelId: 1
           })
 
 }
@@ -969,8 +959,6 @@ function MessageCourseAcepted(title,type,text){
                       icon: type,
                       type:type,
                       buttons: ['Aceptar'],
-                      defaultId: 0,
-                      cancelId: 1
           }).then(async result => {
                     
                                  let resultgetCourse = await GetCoursePaged() 
@@ -1058,8 +1046,6 @@ ipcMain.on("Deleted-instructor-register",async(event,id)=>{
                             icon:result.type,
                             type:result.type,
                             buttons: ['Aceptar'],
-                            defaultId: 0,
-                            cancelId: 1
                         }).then(async result => {
 
                             let resultgetInstructor = await GetInstructorsPaged()
@@ -1079,8 +1065,6 @@ ipcMain.on("Deleted-instructor-register",async(event,id)=>{
                             icon:result.type,
                             type:result.type,
                             buttons: ['Aceptar'],
-                            defaultId: 0,
-                            cancelId: 1
                         }).then(async result => {
 
                         }).catch(err => {
@@ -1177,8 +1161,6 @@ ipcMain.on("Deleted-employee-register",(event,id)=>{
                         icon:result.type,
                         type:result.type,
                         buttons: ['Aceptar'],
-                        defaultId: 0,
-                        cancelId: 1
                     }).then(async result => {
 
                           let resultgetEmployee = await GetEmployeesPaged()
@@ -1197,8 +1179,6 @@ ipcMain.on("Deleted-employee-register",(event,id)=>{
                         icon:result.type,
                         type:result.type,
                         buttons: ['Aceptar'],
-                        defaultId: 0,
-                        cancelId: 1
                     }).then(async result => {
 
                     }).catch(err => {
@@ -1482,8 +1462,6 @@ ipcMain.on("Open-message-alert-clear-trash",async(event,data)=>{
                         icon: 'warning',
                         type:'warning',
                         buttons: ['Cancelar','Aceptar'],
-                        defaultId: 0,
-                        cancelId: 1
                     }).then(result => {
                       
                         console.log(result.response);
@@ -1530,8 +1508,7 @@ function Message(data){
                       icon: 'info',
                        type:'info',
                       buttons: ['Aceptar'],
-                      defaultId: 0,
-                      cancelId: 1
+
           }).then(result => {
                     
                       console.log(result.response);
@@ -1551,8 +1528,7 @@ function Message(data){
                       icon: 'error',
                        type:'error',
                       buttons: ['Aceptar'],
-                      defaultId: 0,
-                      cancelId: 1
+
           }).then(result => {
                     
                       console.log(result.response);

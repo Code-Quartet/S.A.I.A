@@ -17,11 +17,11 @@ const Login_password_master =  require(path.join(__dirname,'./LoginMaster'));
 /*---------------------------------------------------------------*/
 /*---------------------------------------------------------------*/
 
-let window_login_password_master;
+let window_Alert_trash;
 let objAction=null;
 let parent=null;
 module.exports = function AlertDeletedPermanet(parentWindow,obj) {
-  window_login_password_master = new BrowserWindow({
+  window_Alert_trash = new BrowserWindow({
         width: 520,
         height: 250,
         resizable: true,
@@ -38,18 +38,18 @@ module.exports = function AlertDeletedPermanet(parentWindow,obj) {
         }
     });
 
-    window_login_password_master.loadFile('src/section_main/AlertDeletedPermanet.html');
+    window_Alert_trash.loadFile('src/section_main/AlertDeletedPermanet.html');
 
     // Herramientas de desarrollo
-    //window_login_password_master.webContents.openDevTools();
+    //window_Alert_trash.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
-    window_login_password_master.webContents.setWindowOpenHandler(() => {
+    window_Alert_trash.webContents.setWindowOpenHandler(() => {
         return { action: 'deny' };
     });
 
-    window_login_password_master.once('ready-to-show', () => {
-        window_login_password_master.show();
+    window_Alert_trash.once('ready-to-show', () => {
+        window_Alert_trash.show();
     });
 
     objAction=obj
@@ -71,8 +71,9 @@ ipcMain.on("Close-alert-system",(event,key)=>{
         console.log("Close-alert-system")
         setTimeout(()=>{
 
-                window_login_password_master.webContents.send("Alert-Close-system")
-        },4000)
+                window_Alert_trash.webContents.send("Alert-Close-system")
+       
+       },3000)
 
 })
 
