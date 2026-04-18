@@ -4,6 +4,9 @@ function Dasboard(app){
 
 let template_dasboard = `<div class="ControlSystem-container">
 	<aside class="ControlSystem-sidebar">
+	<div class="containerImagenApp">
+	<img id="ImagenAppId" class="ImagenApp" src="assets/imagen/LogoApp.png">
+</div>
 		<section class="sub-fondo-sidebar">
 			<nav class="ControlSystem-menu">
 				<a class="status menu-item ItemMenuActive"><span class="icon-icoDasboard"></span>Panel Principal</a>
@@ -13,10 +16,8 @@ let template_dasboard = `<div class="ControlSystem-container">
 				<a class="status menu-item"><span class="icon-user-tie"></span> Gestionar Instructores</a>
 				<a class="status menu-item"><span class="icon-users"></span> Gestionar Empleados</a>
 				<a class="status menu-item"><span class="icon-bin"></span> Papelera</a>
+				<a class="menu-item"><span class="icon-exit"></span>Cerrar Sesión</a>
 			</nav>
-			<div class="menu-footer">
-				<a class="menu-item logout"><span class="icon-exit"></span> Cerrar Sesión</a>
-			</div>
 		</section>		
 	</aside>
 	<section class="container-admin-info" id="container-admin-info">

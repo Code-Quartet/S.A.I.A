@@ -255,6 +255,8 @@ api.receive("Data-list-Student",(event,info)=>{
     console.log("Data-list-Student",info)
 
     document.getElementById("data-list-Student").innerHTML='';
+    document.getElementById("data-list-Student").innerHTML='Cargando......';
+    document.getElementById("data-list-Student").innerHTML='';
 
     if(info.success==true){
         info.data.forEach((student,info)=>{

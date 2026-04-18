@@ -354,6 +354,7 @@ ipcMain.on("Reload-dasboard-system-data-Course",async(event,data)=>{
 ipcMain.on("Reload-dasboard-system-data-Student",async(event,data)=>{
 
     let result = await GetStudentPaged();
+    //console.log("Reload-dasboard-system-data-Student",result)
     await mainWindow.webContents.send("Data-list-Student",result);
 
 })
@@ -436,9 +437,6 @@ ipcMain.on('Editar-informacion-correo',(event,id) => {
 
 ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
 
- // console.log('Iniciando Excel-Exportar',tabla);
-
-    // Generamos fecha y hora para el nombre por defecto
     const ahora = new Date();
     const fecha = ahora.toISOString().split('T')[0];
     const hora = String(ahora.getHours()).padStart(2, '0') + '-' + String(ahora.getMinutes()).padStart(2, '0');
@@ -461,7 +459,37 @@ ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
                 
                 // Llamamos a tu función de base de datos pasando la ruta elegida
                 //console.log(tabla,result.filePath)
-                exportarTablaAExcel(tabla,result.filePath);
+                exportarTablaAExcel(tabla,result.filePath).then((result)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Notificación',
+                            type:'info',
+                            message: "proceso de exportado completado con éxito",
+                            icon: 'info',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
+                      .catch((err)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Alerta',
+                            type:'warning',
+                            message:"Error al realizar operación de exportado",
+                            icon: 'warning',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
+                /*---------*/
             }
         })
         .catch(err => {
@@ -474,7 +502,6 @@ ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
 /*-------------------------------------------------*/
 
 ipcMain.on('Excel-Exportar', (event, id) => {
-   // console.log('Iniciando Excel-Exportar');
 
     // Generamos fecha y hora para el nombre por defecto
     const ahora = new Date();
@@ -498,7 +525,36 @@ ipcMain.on('Excel-Exportar', (event, id) => {
                 console.log("Exportando Excel en:", result.filePath);
                 
                 // Llamamos a tu función de base de datos pasando la ruta elegida
-                exportarTodoAExcel(result.filePath);
+                exportarTodoAExcel(result.filePath).then((result)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Notificación',
+                            type:'info',
+                            message: "proceso de exportado excel completado con éxito",
+                            icon: 'info',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
+                      .catch((err)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Alerta',
+                            type:'warning',
+                            message:"Error al realizar operación de exportado excel",
+                            icon: 'warning',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
             }
         })
         .catch(err => {
@@ -533,7 +589,36 @@ ipcMain.on('Excel-Importar', (event, id) => {
             console.log("Archivo seleccionado para importar:", rutaSeleccionada);
             
             // Llamamos a tu función de base de datos
-            importarTodoDesdeExcel(rutaSeleccionada);
+            importarTodoDesdeExcel(rutaSeleccionada).then((result)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Notificación',
+                            type:'info',
+                            message: "proceso de importado excel completado con éxito",
+                            icon: 'info',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
+                      .catch((err)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Alerta',
+                            type:'warning',
+                            message:"Error al realizar operación de importación excel",
+                            icon: 'warning',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
 
         })
         .catch(err => {
@@ -567,7 +652,36 @@ ipcMain.on('Importar-SQLITE-DB', (event, id) => {
             console.log("Ruta cargada:", address);
 
             // Ejecutar la lógica de importación
-            importarArchivoDB(address);
+            importarArchivoDB(address).then((result)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Notificación',
+                            type:'info',
+                            message: "proceso de importado SQL completado con éxito",
+                            icon: 'info',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
+                      .catch((err)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Alerta',
+                            type:'warning',
+                            message:"Error al realizar operación de importación SQL",
+                            icon: 'warning',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
             
         })
         .catch(err => {
@@ -602,7 +716,36 @@ ipcMain.on('Exportar-SQLITE-DB', (event, id) => {
         .then(result => {
             if (!result.canceled && result.filePath) {
                 console.log("Ruta seleccionada:", result.filePath);
-               respaldarArchivoDB(result.filePath);
+               respaldarArchivoDB(result.filePath).then((result)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Notificación',
+                            type:'info',
+                            message: "proceso de exportado SQL completado con exito",
+                            icon: 'info',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
+                      .catch((err)=>{
+                         dialog.showMessageBox(mainWindow,{
+                            title: 'Alerta',
+                            type:'warning',
+                            message:"Error al realizar operación de exportado SQL",
+                            icon: 'warning',
+                            buttons: ['Aceptar'],
+                            noLink: true
+                          }).then(result => {
+                            console.log(result.response);
+                          }).catch(err => {
+                            console.log(err);
+                          });
+
+                      })
             }
         })
         .catch(err => {

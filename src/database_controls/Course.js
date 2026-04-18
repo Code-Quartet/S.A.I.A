@@ -269,7 +269,7 @@ async function SearchCourseByStatus(statusArray) {
             SELECT 
                 C.*,
                 I.Name as Instructor_Name,
-                SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key AND SC.Status = 'Activo') AS Total_Students
+                (SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key) AS Total_Students
             FROM Course C
             LEFT JOIN Instructor I ON C.Instructor_ID = I.Key
             WHERE C.Status IN (${placeholders}) 
@@ -320,16 +320,27 @@ async function SearchCourse(searchTerm) {
 
 async function InformationCourseSelect(key) {
     try {
+        // Asegurar conexión antes de consultar
+        await DB.conectar();
+
         const sql = `
             SELECT 
                 c.*, 
                 i.Name AS Nombre_Instructor,
-                SELECT COUNT(*) FROM Student_Courses SC WHERE SC.Id_curs = C.Key AND SC.Status = 'Activo') AS Total_Students
+                (SELECT COUNT(*) 
+                 FROM Student_Courses SC 
+                 WHERE SC.Id_curs = c.Key AND SC.Status = 'Activo'
+                ) AS Total_Students
             FROM Course c
             LEFT JOIN Instructor i ON c.Instructor_ID = i.Key
             WHERE c.Time_Deleted IS NULL AND c.Key = ?
         `;
-        return await DB.buscar(sql, [key]);
+
+        const result = await DB.buscar(sql, [key]);
+
+        // Retornar null explícito si no se encuentra nada
+        return result || null;
+
     } catch (error) {
         console.error("Error al obtener información del curso:", error);
         return null;

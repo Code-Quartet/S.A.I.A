@@ -53,6 +53,7 @@ async function GetStudentPaged(page = 1, limit = 10) {
         }
 
         // 3. Consultar datos con relación N:N y agrupamiento de nombres de cursos
+        /*
         const sqlData = `
             SELECT 
                 S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail,
@@ -64,7 +65,21 @@ async function GetStudentPaged(page = 1, limit = 10) {
             WHERE S.Time_Deleted IS NULL 
             GROUP BY S.Key
             ORDER BY S.Date_Created DESC, S.Time_Created DESC
-            LIMIT ? OFFSET ?`;
+            LIMIT ? OFFSET ?`;*/
+
+            const sqlData = `
+    SELECT 
+        S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail,
+        S.Date_Created, S.Time_Created,
+        GROUP_CONCAT(C.Name, ', ') as CourseNames
+    FROM Student S
+    LEFT JOIN Student_Courses SC ON S.Key = SC.Id_student_key
+    LEFT JOIN Course C ON SC.Id_curs = C.Key
+    WHERE S.Time_Deleted IS NULL 
+    GROUP BY S.Key
+    -- Mejora: Usar la PK (Key) como criterio de desempate o principal
+    ORDER BY S.Date_Created DESC, S.Time_Created DESC, S.Key DESC
+    LIMIT ? OFFSET ?`;
 
         const students = await DB.buscarTodo(sqlData, [finalLimit, finalOffset]);
         

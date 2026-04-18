@@ -174,43 +174,6 @@ async function searchEmployee(searchTerm) {
     }
 }
 
-async function SearchFilterEmployee(status) {
-    try {
-        // 1. Conexión a la base de datos
-        await DB.conectar();
-
-        // 2. Consulta SQL filtrando por Status y excluyendo eliminados
-        const sql = `
-            SELECT Key, Name, Cod_id, E_mail, Tlf, Status
-            FROM Employee 
-            WHERE Status = ? AND Time_Deleted IS NULL 
-            ORDER BY Name ASC`;
-
-        // 3. Ejecución de la búsqueda pasando el parámetro
-        const results = await DB.buscarTodo(sql, [status]);
-
-        // 4. Validación: Si no hay registros, retornar success false
-        if (!results || results.length === 0) {
-            return {
-                success: false,
-                message: `No se encontraron empleados con el estado: "${status}".`
-            };
-        }
-
-        // 5. Retorno exitoso con la data
-        return {
-            success: true,
-            data: results
-        };
-
-    } catch (error) {
-        console.error("Error en SearchFilterEmployee:", error);
-        return { 
-            success: false, 
-            message: "Error al intentar filtrar por estado." 
-        };
-    }
-}
 
 async function RegistreEmployee(data) {
     const ID_USER = uuidv4();
@@ -456,6 +419,48 @@ async function verificarSiEsAdministrador(employeeKey) {
     } catch (error) {
         console.error("Error al verificar permisos:", error);
         throw new Error("Error interno al consultar la base de datos.");
+    }
+}
+
+
+async function SearchFilterEmployee(status) {
+    try {
+        await DB.conectar();
+
+        // 1. Normalizar la entrada: si es un string único, lo convertimos a array
+        const statusArray = Array.isArray(status) ? status : [status];
+        
+        // 2. Crear los placeholders (?, ?, ?) dinámicamente
+        const placeholders = statusArray.map(() => '?').join(', ');
+
+        // 3. Construir la consulta con el operador IN
+        const sql = `
+            SELECT Key, Name, Cod_id, E_mail, Tlf, Status
+            FROM Employee 
+            WHERE Status IN (${placeholders}) AND Time_Deleted IS NULL 
+            ORDER BY Name ASC`;
+
+        // 4. Ejecución pasando el array de estados
+        const results = await DB.buscarTodo(sql, statusArray);
+
+        if (!results || results.length === 0) {
+            return {
+                success: false,
+                message: `No se encontraron empleados con los estados: "${statusArray.join(', ')}".`
+            };
+        }
+
+        return {
+            success: true,
+            data: results
+        };
+
+    } catch (error) {
+        console.error("Error en SearchFilterEmployee:", error);
+        return { 
+            success: false, 
+            message: "Error al intentar filtrar por estado." 
+        };
     }
 }
 

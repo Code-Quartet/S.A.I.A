@@ -439,6 +439,8 @@ input, select {
             validateForm();
         });
 
+
+
         // Cursos
         document.getElementById("btnAddCourse").addEventListener("click", () => {
             const val = selectCurso.value;
@@ -467,6 +469,12 @@ input, select {
             renderCourses();
             validateForm();
         };
+
+    selectCurso.addEventListener('change', () => document.getElementById('info-course-student').disabled = !selectCurso.value);
+
+        document.getElementById('info-course-student').addEventListener('click', () => {
+            if(selectCurso.value) api.send("Open-system-info-course-register",selectCurso.value);
+        });
 
         // Validación
         function validateForm() {

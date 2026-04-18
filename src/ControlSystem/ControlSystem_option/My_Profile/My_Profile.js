@@ -9,13 +9,13 @@ function My_Profile(id){
             <div class="container-form">
 	            <div class="form-my-profile" >
 					<div class="profile-container">
-					  <div class="image-uploader" for="fileInput" >
-					    <div class="main-circle">
-					      <img id="avatarPreviewMyprofile" class="avatar-main" src="file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/business.png" alt="imagen-dasboard">
-					    </div>
-					    <button class="camera-button" id="btnCamaraMyProfile">
-					   	   <span class="icon-camera"></span> 
-					    </button>
+					  <div class="image-uploader" for="fileInput"  id="btnCamaraMyProfile">
+    					    <div class="main-circle">
+    					      <img id="avatarPreviewMyprofile" class="avatar-main" src="file:///C:/Users/Duno%20Castellano/Desktop/S.A.I.A/app/assets/imagen/business.png" alt="imagen-dasboard">
+    					    </div>
+    					    <button class="camera-button">
+    					   	   <span class="icon-camera"></span> 
+    					    </button>
 					  </div>
                     <div class="profile-title">
                     	<div style="display:flex;width: 67%;align-items: center;flex-direction: column;"> 
