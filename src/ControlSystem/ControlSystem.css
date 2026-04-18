@@ -11,10 +11,10 @@
 .containerImagenApp {
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
+    width: -webkit-fill-available;
 }
-
 .ImagenApp {
     height: 100px;
     object-fit: fill;
