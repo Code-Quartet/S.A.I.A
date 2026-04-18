@@ -111,7 +111,7 @@ function createWindow() {
     // Como main.js está en /src, subimos un nivel
     mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
-mainWindow.webContents.openDevTools();
+//mainWindow.webContents.openDevTools();
     
     // Bloqueo de nuevas ventanas
     mainWindow.webContents.setWindowOpenHandler(() => {

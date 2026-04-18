@@ -14,6 +14,8 @@ const {SelectInstructor, UpdateInstructor} = require(path.join(__dirname,'../../
 
 let window_RepairApp;
 
+
+
 module.exports = function RepairApp(parentWindow) {
   window_RepairApp = new BrowserWindow({
         width:590,
