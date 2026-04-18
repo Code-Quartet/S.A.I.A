@@ -368,7 +368,7 @@ justify-content: space-between;
     border-style: none;
     font-size: 13px;
     font-weight: bold;
-    cursor: pointer;
+    cursor: not-allowed;
 }
 
 .btn-export {

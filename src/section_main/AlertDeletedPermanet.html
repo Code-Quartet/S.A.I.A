@@ -129,6 +129,13 @@ body {
             border: 1px solid var(--border-color);
         }
 
+.btn-cancel-Deleted-Data:disabled {
+    background: #b9b9b9;
+    color: white;
+    cursor: not-allowed;
+}
+
+
         .btn-cancel-Deleted-Data:hover {
             background: #e5e5e5;
         }
@@ -160,7 +167,7 @@ body {
             </p>
 
             <div class="footer-Deleted-Data">
-                <button class="btn-Deleted-Data btn-cancel-Deleted-Data" id="btnCancel-Deleted-Data" onclick="Close()">cerrar</button>
+                <button class="btn-Deleted-Data btn-cancel-Deleted-Data" id="btnCancelDeletedData" onclick="Close()">cerrar</button>
                 <button class="btn-Deleted-Data btn-delete-Deleted-Data" id="btnDelete-Deleted-Data" onclick="AceptarDeleted()">
                     Eliminar permanentemente
                 </button>
@@ -172,12 +179,17 @@ body {
     function Close(){
             window.close()
     }
+
+
     function AceptarDeleted(){
 
-            api.send("Open-password-master")
 
+   const btn = document.getElementById("btnCancelDeletedData");
+    btn.disabled = true;
+    api.send("Open-password-master")
 
     }
+
     api.receive("Alert-Close-system",(eent,data)=>{
 
                  window.close()

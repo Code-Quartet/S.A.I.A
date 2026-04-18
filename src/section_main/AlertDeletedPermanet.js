@@ -41,7 +41,7 @@ module.exports = function AlertDeletedPermanet(parentWindow,obj) {
     window_Alert_trash.loadFile('src/section_main/AlertDeletedPermanet.html');
 
     // Herramientas de desarrollo
-    //window_Alert_trash.webContents.openDevTools();
+   // window_Alert_trash.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Alert_trash.webContents.setWindowOpenHandler(() => {
@@ -68,12 +68,11 @@ ipcMain.on("Open-password-master",(event,data)=>{
 
 ipcMain.on("Close-alert-system",(event,key)=>{
 
-        console.log("Close-alert-system")
         setTimeout(()=>{
 
                 window_Alert_trash.webContents.send("Alert-Close-system")
        
-       },3000)
+       },4500)
 
 })
 
