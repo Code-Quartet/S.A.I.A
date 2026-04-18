@@ -1,0 +1,139 @@
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="assets/style/main.css">  
+    <link rel="stylesheet" type="text/css" href="assets/style/General_Manage_style.css">  
+    <link rel="stylesheet" type="text/css" href="assets/style/table_style.css">  
+    <link rel="stylesheet" type="text/css" href="assets/style/Style_modal_Delted_trash.css">  
+    <link rel="stylesheet" type="text/css" href="assets/iconos/icomoon/style.css">
+    <link rel="stylesheet" type="text/css" href="src/Login/Login.css">  
+   <link rel="stylesheet" type="text/css" href="src/ControlSystem/ControlSystem.css">
+   <link rel="stylesheet" type="text/css" href="src/ControlSystem/ControlSystem_option/My_Profile/My_Profile.css">
+   <link rel="stylesheet" type="text/css" href="src/ControlSystem/ControlSystem_option/Manage_Dashboard/Manage_Dashboard.css">
+    <title id="version" title="S.A.I.A 1.0.0">S.A.I.A 1.0.0</title>
+</head>
+<body class="container-app" id="app"><div class="ControlSystem-container">
+    <aside class="ControlSystem-sidebar">
+    <div class="containerImagenApp">
+    <img id="ImagenAppId" class="ImagenApp" src="assets/imagen/LogoApp.svg">
+</div>
+        <section class="sub-fondo-sidebar">
+            <nav class="ControlSystem-menu">
+                <a class="status menu-item ItemMenuActive"><span class="icon-icoDasboard"></span>Panel Principal</a>
+                <a class="menu-item"><span class="icon-user"></span> Mi Perfil </a>
+                <a class="menu-item"><span class="icon-list"></span>Estudiantes Inscritos</a>
+                <a class="status menu-item"><span class="icon-book"></span> Gestionar Cursos</a>
+                <a class="status menu-item"><span class="icon-user-tie"></span> Gestionar Instructores</a>
+                <a class="status menu-item"><span class="icon-users"></span> Gestionar Empleados</a>
+                <a class="status menu-item"><span class="icon-bin"></span> Papelera</a>
+                <a class="menu-item" id="btnExit"><span class="icon-exit"></span>Cerrar Sesión</a>
+            </nav>
+        </section>      
+    </aside>
+    <section class="container-admin-info" id="container-admin-info">    
+<main class="dashboard-main-container">
+    <section class="dashboard-metrics-grid">
+        <div class="dashboard-metric-card">
+            <h3>Estudiantes Totales</h3>
+            <p id="TotalStudents">30</p>
+        </div>
+        <div class="dashboard-metric-card">
+            <h3>Cursos Activos</h3>
+            <p id="TotalCourses">5</p>
+        </div>
+        <div class="dashboard-metric-card">
+            <h3>Instructores</h3>
+            <p id="TotalInstructors">10</p>
+        </div>
+    </section>
+    <section class="dashboard-information-section">
+        <section class="dashboard-charts-section">
+            <div class="dashboard-panel">
+                <div class="dashboard-panel-header">
+                    <h2>Estatus de Cursos</h2>
+                    <span class="icon-stats-bars"></span>
+                </div>
+                <div style="height: 250px;"><canvas id="chartCourses" width="369" height="250" style="display: block; box-sizing: border-box; height: 250px; width: 369.8px;"></canvas></div>
+            </div>
+            <div class="dashboard-panel">
+                <div class="dashboard-panel-header">
+                    <h2>Estatus de Instructores</h2>
+                    <span class="icon-pie-chart"></span>
+                </div>
+                <div style="height: 250px;"><canvas id="chartInstructors" width="369" height="250" style="display: block; box-sizing: border-box; height: 250px; width: 369.8px;"></canvas></div>
+            </div>
+        </section>
+
+        <section class="dashboard-data-section">
+            <div class="dashboard-panel">
+                <div class="dashboard-panel-header">
+                    <h2>Cursos Disponibles</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CURSO</th>
+                            <th>DÍAS</th>
+                            <th>HORARIO</th>
+                            <th>COSTO</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="TableCourseDasboard">
+                <tr class="tr-data-table">
+                    <td><strong>Manejo Basico</strong></td>
+                    <td>Lun,Mie,Vie</td>
+                    <td>08:00 - 12:00</td>
+                    <td>150.00</td>
+                    <td><span class="status-pill Activo">Activo</span></td>
+                </tr>
+                <tr class="tr-data-table">
+                    <td><strong>Manejo Pro</strong></td>
+                    <td>Lun,Mie,Vie</td>
+                    <td>08:00 - 12:00</td>
+                    <td>150.00</td>
+                    <td><span class="status-pill Activo">Activo</span></td>
+                </tr>
+                <tr class="tr-data-table">
+                    <td><strong>Computación II</strong></td>
+                    <td>Lun,Mie,Vie</td>
+                    <td>08:00 - 12:00</td>
+                    <td>150.00</td>
+                    <td><span class="status-pill Activo">Activo</span></td>
+                </tr>
+                <tr class="tr-data-table">
+                    <td><strong>Soldadura Arco</strong></td>
+                    <td>Lun,Mie,Vie</td>
+                    <td>08:00 - 12:00</td>
+                    <td>150.00</td>
+                    <td><span class="status-pill Activo">Activo</span></td>
+                </tr>
+                <tr class="tr-data-table">
+                    <td><strong>Excel Avanzado</strong></td>
+                    <td>Lun,Mie,Vie</td>
+                    <td>08:00 - 12:00</td>
+                    <td>150.00</td>
+                    <td><span class="status-pill Activo">Activo</span></td>
+                </tr></tbody>
+                </table>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="dashboard-panel-header">
+                    <h2>Historial de Acceso</h2>
+                    <span class="icon-history"></span>
+                </div>
+                <div class="dashboard-session-history" id="dashboard-session-history-list">
+                <div class="dashboard-session-item">
+                    <div class="dashboard-event-dot dashboard-login"></div>
+                    <div class="dashboard-session-info">
+                        <strong>Usuario: Admin</strong>
+                        <span>2026-04-18 | 00:06:04 (LOGIN)</span>
+                    </div>
+                </div></div>
+            </div>
+        </section>
+     </section>
+
+</main></section>
+</div></body></html>
