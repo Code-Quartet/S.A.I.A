@@ -13,7 +13,7 @@ module.exports = function setupLicense() {
     try {
         // 1. Determinar la ruta de AppData (Windows/Mac/Linux)
         const appData = process.env.APPDATA || 
-            (process.platform === 'darwin' ? 
+            (process.platform === 'darwin' ?  
             path.join(os.homedir(), 'Library', 'Application Support') : 
             path.join(os.homedir(), '.local', 'share'));
 
