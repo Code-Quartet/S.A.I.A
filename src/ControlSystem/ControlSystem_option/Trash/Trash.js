@@ -605,7 +605,8 @@ function TrashAllDataBase(){
                 
             }
         }
-        api.send("Open-message-alert-clear-trash",obj)
+       // api.send("Open-message-alert-clear-trash",obj)
+        api.send("Open-alert-message-modal",obj)
 }
 
 

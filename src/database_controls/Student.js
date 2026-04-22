@@ -52,21 +52,6 @@ async function GetStudentPaged(page = 1, limit = 10) {
             finalPage = 1;
         }
 
-        // 3. Consultar datos con relación N:N y agrupamiento de nombres de cursos
-        /*
-        const sqlData = `
-            SELECT 
-                S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail,
-                S.Date_Created, S.Time_Created,
-                GROUP_CONCAT(C.Name, ', ') as CourseNames
-            FROM Student S
-            LEFT JOIN Student_Courses SC ON S.Key = SC.Id_student_key
-            LEFT JOIN Course C ON SC.Id_curs = C.Key
-            WHERE S.Time_Deleted IS NULL 
-            GROUP BY S.Key
-            ORDER BY S.Date_Created DESC, S.Time_Created DESC
-            LIMIT ? OFFSET ?`;*/
-
             const sqlData = `
     SELECT 
         S.Key, S.Name, S.Cod_id, S.Tlf, S.E_mail,

@@ -173,7 +173,7 @@ body {
             <h1 id="titleLogin">Contraseña Maestra</h1>
             
             <div class="input-container-password" id="container-pass">
-                <input type="password" id="input-password" class="master-input" placeholder="Ingrese Contraseña Maestra">
+                <input type="password" id="input-password" class="master-input" placeholder="Ingrese Contraseña Maestra" autofocus>
                 <span class="icon-eye toggle-password" onclick="toggleVisibility('input-password', this)"></span>
             </div>
 
@@ -454,6 +454,8 @@ api.receive("message-password-master", (event, data) => {
         if(Action=="ClearTrashDataBase"){
 
                api.send("Clear-Trash-all-data-base")
+                CloseAlertWindow()
+
         }
 
 

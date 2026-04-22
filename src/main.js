@@ -1455,7 +1455,7 @@ ipcMain.on("Search-data-trash",async(event,data)=>{
 /*-------------------------------------------------------------------------*/
 
 ipcMain.on("Open-message-alert-clear-trash",async(event,data)=>{
-
+/*
     dialog.showMessageBox(mainWindow,{
                         title:"Alerta",
                         message:"Esta por Limpiar la Papelera los datos se perderan",
@@ -1481,7 +1481,7 @@ ipcMain.on("Open-message-alert-clear-trash",async(event,data)=>{
                       
                       console.log(err);
                 });
-
+*/
 })
 
 ipcMain.on("Clear-Trash-all-data-base",async(event,data)=>{

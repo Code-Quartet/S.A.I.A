@@ -16,7 +16,7 @@
 "build": {
   "appId": "com.SAIA.saiav1",
     "productName": "S.A.I.A v1",
-    "asar": false,
+    "asar":false,
     "extraResources": [
       "database/**"
     ],
@@ -24,7 +24,7 @@
       "output": "dist-installer",
       "buildResources": "build"
     },
-  "win": {
+  "win": { 
     "target": [
       {
         "target": "nsis",

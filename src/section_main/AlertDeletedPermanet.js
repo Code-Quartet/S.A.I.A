@@ -62,10 +62,10 @@ module.exports = function AlertDeletedPermanet(parentWindow,obj) {
 ipcMain.on("Open-password-master",(event,data)=>{
 
         
-        Login_password_master(null,objAction)
+        Login_password_master(parent,objAction)
 
 })
-
+/*
 ipcMain.on("Close-alert-system",(event,key)=>{
 
         setTimeout(()=>{
@@ -75,7 +75,7 @@ ipcMain.on("Close-alert-system",(event,key)=>{
        },4500)
 
 })
-
+*/
 
 
 //sms-operation-pass-ok

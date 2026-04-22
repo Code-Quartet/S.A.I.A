@@ -162,7 +162,7 @@ body {
             <h2 class="title-Deleted-Data">Confirmar Eliminación</h2>
             
             <p class="body-Deleted-Data">
-                ¿Estás seguro de que quieres eliminar este elemento?<br>
+                ¿Estás seguro de que quieres eliminar esta informaión?<br>
                 <span>⚠️ Esta acción no se puede deshacer</span>
             </p>
 
@@ -188,12 +188,15 @@ body {
     btn.disabled = true;
     api.send("Open-password-master")
 
-    }
+    setTimeout(()=>{Close()},3200)
 
+    }
+/*
     api.receive("Alert-Close-system",(eent,data)=>{
 
                  window.close()
 
     })
+    */
 </script>
 </html>

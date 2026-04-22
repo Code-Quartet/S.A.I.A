@@ -7,30 +7,7 @@ const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_ma
 const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
 
 
-async function RestoreCourse(id) {
-    try {
-        await DB.conectar();
-        const sql = `UPDATE Course SET Time_Deleted = NULL WHERE Key = ?`;
-        await DB.actualizar(sql, [id]);
-        return { success: true, message: "Curso restaurado con éxito." };
-    } catch (error) {
-        return { success: false, message: "Error al restaurar curso." };
-    }
-}
 
-async function RestoreStudent(id) {
-
-    console.log("Restore",id)
-    
-    try {
-        await DB.conectar();
-        const sql = `UPDATE Student SET Time_Deleted = NULL WHERE Key = ?`;
-        await DB.actualizar(sql, [id]);
-        return { success: true, message: "Estudiante restaurado con éxito." };
-    } catch (error) {
-        return { success: false, message: "Error al restaurar estudiante." };
-    }
-}
 
 async function RestoreInstructor(id) {
     try {
@@ -95,6 +72,58 @@ async function RestoreEmployee(employeeKey) {
         };
     }
 }
+
+
+async function RestoreCourse(id) {
+    try {
+        // Restauramos la visibilidad y aseguramos que el estatus sea Activo
+        const sql = `UPDATE Course SET Time_Deleted = NULL, Status = 'Activo' WHERE Key = ?`;
+        const result = await DB.actualizar(sql, [id]);
+
+        if (result === 0) {
+            return { success: false, message: "Curso no encontrado o ya está activo." };
+        }
+
+        return { success: true, message: "Curso restaurado con éxito." };
+    } catch (error) {
+        console.error("Error al restaurar curso:", error);
+        return { 
+            success: false, 
+            message: error.message || "Error al restaurar curso." 
+        };
+    }
+}
+
+async function RestoreStudent(id) {
+    try {
+        await DB.beginTransaction();
+
+        // 1. Restaurar al estudiante (limpiar fecha de borrado)
+        const sqlStudent = `UPDATE Student SET Time_Deleted = NULL WHERE Key = ?`;
+        const result = await DB.actualizar(sqlStudent, [id]);
+
+        if (result === 0) {
+            await DB.rollback();
+            return { success: false, message: "No se encontró el estudiante para restaurar." };
+        }
+
+        // 2. Volver a activar sus inscripciones en cursos
+        const sqlCourses = `UPDATE Student_Courses SET Status = 'Activo' WHERE Id_student_key = ?`;
+        await DB.actualizar(sqlCourses, [id]);
+
+        await DB.commit();
+        return { success: true, message: "Estudiante y sus cursos han sido reactivados." };
+
+    } catch (error) {
+        await DB.rollback();
+        console.error("Error al restaurar estudiante:", error);
+        return { 
+            success: false, 
+            message: error.message || "Error al procesar la restauración." 
+        };
+    }
+}
+
 
 module.exports={
     RestoreCourse:RestoreCourse,
