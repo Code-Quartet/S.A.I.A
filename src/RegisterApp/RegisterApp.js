@@ -40,10 +40,10 @@ module.exports = function Register_App(parentWindow) {
         }
     });
 
-   window_register_app.loadFile('src/RegisterApp/RegisterApp.html');
+   window_register_app.loadFile('src/RegisterApp/RegisterAppV2.html');
 
     // Herramientas de desarrollo
-   //window_register_app.webContents.openDevTools();
+ // window_register_app.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_app.webContents.setWindowOpenHandler(() => {

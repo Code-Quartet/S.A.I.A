@@ -2,7 +2,7 @@
   "name": "saia",
   "version": "1.0.0",
   "description": "Sistema de gestión de deudores",
-  "author": "Duno Castellano",
+  "author": "saia",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
@@ -38,8 +38,9 @@
     },
     "nsis": {
       "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
+      "perMachine":false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory":false,
       "deleteAppDataOnUninstall": false,
       "menuCategory": true,
       "installerIcon": "build/favicon.ico",
@@ -47,6 +48,7 @@
       "installerHeaderIcon": "build/favicon.ico",
       "installerSidebar": "build/installerSidebar.bmp"
     }
+
   },
   "devDependencies": {
     "electron": "^13.6.9",

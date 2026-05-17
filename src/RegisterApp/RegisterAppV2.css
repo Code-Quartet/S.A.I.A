@@ -74,19 +74,17 @@
 
 /* Estilo de boton ulsante para abrir modal iy agregar informacion */
 .btn-pulse {
-  padding: 15px 30px;
-  border: none;
-  outline: none;
-  color: white;
-  background: #2ecc71;
-  cursor: pointer;
-  border-radius: 50px;
-  font-size: 18px;
-  font-weight: bold;
-  position: relative;
-  
-  /* Aplicamos la animación */
-  animation: pulse-animation 1s infinite;
+    padding: 15px 30px;
+    border: none;
+    outline: none;
+    color: white;
+    background: #3ac6dc;
+    cursor: pointer;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative;
+    animation: pulse-animation 1s infinite;
 }
 
 /* Definición de la animación de pulso */
@@ -581,11 +579,11 @@ width: 100%;
 /*----------MODAL PASSWORD MASTER--------------*/
 
 .btn-trial {
-    padding: 10px 20px;
-    background: blue;
+    padding: 18px 20px;
+    background: #207ac17a;
     color: white;
     border-style: none;
-    border-radius: 30px;
+    border-radius: 9px;
 }
 
 .form-group>label{
