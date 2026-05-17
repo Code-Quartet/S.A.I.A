@@ -36,7 +36,6 @@ let TemplanteManageInstructor=`
                         </div>
                     </div>
             </div>
-        </div>
 
         <button class="btn-new-data" id="NewRegisterInstructor">
             Nuevo Instructor<span class="icon-user-plus"></span> 

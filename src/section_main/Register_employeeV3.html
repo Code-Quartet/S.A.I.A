@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Empleado - SAIA Compact</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    
+    <style>
+        :root {
+            --primary: #2b56c5;
+            --primary-dark: #1e40af;
+            --text-main: #1f2937;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --bg-main: #f8fafc;
+            --success: #10b981;
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Inter', sans-serif;
+            width: 480px;
+            height: 540px;
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; inset: 0; background: white; z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.4s ease;
+        }
+        .loader-spin {
+            width: 40px; height: 40px; border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary); border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000;
+            display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px);
+        }
+        #lightbox img { max-width: 90%; max-height: 80%; border: 3px solid white; border-radius: 5px; }
+
+        .app-container { width: 100%; height: 100%; background: white; display: flex; flex-direction: column; }
+
+        header {
+            height: 50px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            -webkit-app-region: drag;
+        }
+        header h2 { font-size: 0.9rem; color: var(--text-main); font-weight: 800; text-transform: uppercase; }
+
+        .main-content { flex: 1; overflow-y: auto; padding: 15px 25px; display: flex; flex-direction: column; gap: 20px; }
+        .main-content::-webkit-scrollbar { width: 5px; }
+        .main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* --- SECCIÓN MULTIMEDIA UNIFICADA --- */
+        .identity-header {
+            display: flex; align-items: center; gap: 20px;
+            background: var(--bg-main); padding: 15px; border-radius: 15px; border: 1px solid var(--border);
+        }
+
+        .avatar-container { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+        .avatar-frame {
+            width: 100%; height: 100%; border-radius: 50%; border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary), 0 4px 10px rgba(0,0,0,0.1);
+            overflow: hidden; cursor: zoom-in;
+        }
+        .avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .camera-trigger {
+            position: absolute; bottom: 0; right: 0; width: 30px; height: 30px;
+            background: var(--primary); color: white; border: 3px solid white;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; font-size: 0.7rem;
+        }
+
+        /* UNIÓN DE INPUT CI + IMAGEN CÉDULA */
+        .id-doc-bundle { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        
+        .doc-card {
+            width: 100%; height: 75px; background: white; border: 2px dashed var(--border);
+            border-radius: 10px; position: relative; cursor: pointer; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: 0.2s;
+        }
+        .doc-card:hover { border-color: var(--primary); background: #fff; }
+        .doc-card img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .doc-card i { font-size: 1.2rem; color: var(--primary); }
+        .doc-card span { font-size: 0.55rem; font-weight: 800; color: var(--text-muted); margin-top: 4px; }
+
+        .ci-input-wrapper { position: relative; }
+        .ci-input-wrapper input {
+            padding: 8px 10px; font-weight: 700; text-align: center; letter-spacing: 1px;
+            border-radius: 8px; border: 1.5px solid var(--border); font-size: 0.85rem; width: 100%;
+        }
+
+        /* --- FORMULARIO --- */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .full { grid-column: span 2; }
+        .form-group label {
+            display: block; font-size: 0.65rem; font-weight: 800;
+            color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;
+        }
+        input, select {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid var(--border);
+            font-size: 0.85rem; transition: 0.2s; background: white;
+        }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(43, 86, 197, 0.1); }
+
+        .security-box { background: #f1f5f9; padding: 15px; border-radius: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+        footer {
+            height: 65px; padding: 0 20px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+        }
+
+        .btn { padding: 10px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 0.8rem; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; width: 150px; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-sec { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); }
+
+        #notif {
+            position: fixed; top: 15px; right: -300px; background: var(--success);
+            color: white; padding: 10px 20px; border-radius: 8px; transition: 0.5s; z-index: 3000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-spin"></div>
+    </div>
+
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img id="img-full" src="">
+    </div>
+
+    <div id="notif">¡Registro Exitoso!</div>
+
+    <div class="app-container">
+        <header>
+            <h2>Ficha de Empleado</h2>
+        </header>
+
+        <main class="main-content">
+            <section class="identity-header">
+                <div class="avatar-container">
+                    <div class="avatar-frame" onclick="openFull(document.getElementById('view-avatar').src)">
+                        <img id="view-avatar" src="../../assets/imagen/ImageLogin3.png">
+                    </div>
+                    <div class="camera-trigger" onclick="SelectImage('avatar')">
+                        <i class="icon-camera"></i>
+                    </div>
+                </div>
+
+                <div class="id-doc-bundle">
+                    <div class="doc-card" onclick="SelectImage('doc')" title="Cargar foto de cédula">
+                        <img id="view-doc" onclick="event.stopPropagation(); openFull(this.src)">
+                        <div id="doc-placeholder" style="text-align: center;">
+                            <i class="icon-image"></i>
+                            <span>FOTO CÉDULA</span>
+                        </div>
+                    </div>
+                    <div class="ci-input-wrapper">
+                        <input type="text" id="ci" placeholder="V-00.000.000" maxlength="12">
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Nombre y Apellido</label>
+                    <input type="text" id="nombre" placeholder="Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label>F. Nacimiento</label>
+                    <input type="date" id="fechanacimiento">
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" id="telefono" placeholder="0412-0000000">
+                </div>
+                <div class="form-group full">
+                    <label>E-mail Corporativo / Personal</label>
+                    <input type="email" id="correo" placeholder="ejemplo@saia.com">
+                </div>
+                <div class="form-group full">
+                    <label>Dirección de Habitación</label>
+                    <input type="text" id="direccion" placeholder="Sector, Calle, Casa N°">
+                </div>
+                <div class="form-group">
+                    <label>Rol SAIA</label>
+                    <select id="tipoPermiso">
+                        <option value="Sub-Administrador">Sub-Admin</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Estado Laboral</label>
+                    <select id="select-status-employee">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="security-box">
+                <div class="form-group">
+                    <label>ID de Usuario</label>
+                    <input type="text" id="usuario" placeholder="user.name">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña de Acceso</label>
+                    <input type="password" id="password" placeholder="••••••••">
+                </div>
+                <div id="master-container" style="display: none;">
+                    <div class="form-group">
+                        <label style="color: var(--primary)">Clave Maestra Autorizada</label>
+                        <input type="password" id="password_Master" style="border-color: var(--primary)" placeholder="Token de Seguridad">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <button class="btn btn-sec" onclick="window.close()">Cerrar</button>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-sec" onclick="clearForm()">Limpiar</button>
+                <button class="btn btn-primary" id="btn-save" onclick="DatosRegistro()" disabled>Registrar</button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // UI Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('preloader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 400);
+            }, 600);
+        });
+
+        function openFull(src) {
+            if(src.includes('ImageLogin3.png') || !src) return;
+            document.getElementById('img-full').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        // Image Handling
+        function SelectImage(type) {
+            if(window.api) api.send("select-Image-new-employee", type);
+        }
+
+        if(window.api) {
+            api.receive('Image-select-new-employee', (event, data) => {
+                if(data.type === 'doc') {
+                    const img = document.getElementById("view-doc");
+                    img.src = data.path; img.style.display = 'block';
+                    document.getElementById("doc-placeholder").style.display = 'none';
+                } else {
+                    document.getElementById("view-avatar").src = data.path || data;
+                }
+            });
+        }
+
+        // Form Logic
+        const reqFields = ['nombre', 'ci', 'fechanacimiento', 'usuario', 'password'];
+        document.addEventListener('input', () => {
+            const allOk = reqFields.every(id => document.getElementById(id).value.trim() !== "");
+            document.getElementById('btn-save').disabled = !allOk;
+        });
+
+        document.getElementById('tipoPermiso').addEventListener('change', (e) => {
+            document.getElementById('master-container').style.display = e.target.value === 'Administrador' ? 'block' : 'none';
+        });
+
+        function DatosRegistro() {
+            const objData = {
+                Employee: {
+                    nombre: document.getElementById("nombre").value,
+                    ci: document.getElementById("ci").value,
+                    fechanacimiento: document.getElementById("fechanacimiento").value,
+                    correo: document.getElementById("correo").value,
+                    tlf: document.getElementById("telefono").value,
+                    direccion: document.getElementById("direccion").value,
+                    image: JSON.stringify([document.getElementById("view-avatar").src, document.getElementById("view-doc").src]),
+                    status: document.getElementById("select-status-employee").value
+                },
+                User: {
+                    usuario: document.getElementById("usuario").value,
+                    clave: document.getElementById("password").value,
+                    Mclave: document.getElementById("password_Master").value || "",
+                    permission: document.getElementById("tipoPermiso").value,
+                }
+            };
+            if(window.api) api.send("save-data-registre-employee", objData);
+        }
+
+        if(window.api) {
+            api.receive("open-modal-register-employee", () => {
+                const notif = document.getElementById('notif');
+                notif.style.right = '15px';
+                setTimeout(() => {
+                    notif.style.right = '-300px';
+                    api.send("Reload-dasboard-system-data-Employee");
+                    window.close();
+                }, 1500);
+            });
+        }
+
+        function clearForm() {
+            reqFields.forEach(id => document.getElementById(id).value = "");
+            document.getElementById("view-avatar").src = "../../assets/imagen/ImageLogin3.png";
+            document.getElementById("view-doc").style.display = 'none';
+            document.getElementById("doc-placeholder").style.display = 'block';
+            document.getElementById('btn-save').disabled = true;
+        }
+    </script>
+</body>
+</html>

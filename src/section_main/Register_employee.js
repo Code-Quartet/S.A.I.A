@@ -4,9 +4,11 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+/*----------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
 
 /*--------------LINK BASE DE DATOS ------------------------*/
@@ -19,7 +21,9 @@ let window_register_employee;
 
 module.exports = function Register_employee(parentWindow) {
   window_register_employee = new BrowserWindow({
-        width:940,
+      //  width:940,
+        //height:540,
+        width:480,
         height:540,
        modal: true,
         resizable:false, 
@@ -35,11 +39,11 @@ module.exports = function Register_employee(parentWindow) {
         }
     });
 
-    window_register_employee.loadFile('src/section_main/Register_employee.html');
+    window_register_employee.loadFile('src/section_main/Register_employeeV4.html');
 
     // Herramientas de desarrollo
-   //window_register_employee.webContents.openDevTools();
-
+//window_register_employee.webContents.openDevTools();
+//
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_employee.webContents.setWindowOpenHandler(() => {
         return { action: 'deny' };
@@ -67,11 +71,7 @@ ipcMain.on("select-Image-new-employee",(even,data)=>{
 
           window_register_employee.webContents.send("Image-select-new-employee",result.filePaths[0]);
       }
-      
-      if(result.canceled==true){
 
-         window_register_employee.webContents.send("Image-select-new-employee",ImageDefault);
-      }
 
       }).catch(err => {
 
@@ -81,20 +81,45 @@ ipcMain.on("select-Image-new-employee",(even,data)=>{
 })
 
 
+
+ipcMain.on("select-Image-new-employee-doc",(even,data)=>{
+
+   dialog.showOpenDialog(window_register_employee,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+          window_register_employee.webContents.send("Image-select-new-employee-doc",result.filePaths[0]);
+      }
+
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+})
+/*------------------------------------------*/
 ipcMain.on("save-data-registre-employee",async(even,data)=>{
 
       await RegistreEmployee(data).then((result)=>{
 
-if(result.success==false){
+        if(result.success==false){
 
-          message(result.message)
-       
-  
-}else {
-  
-   window_register_employee.webContents.send("open-modal-register-employee");
-      
-}
+                  message(result.message)
+               
+          
+        }else {
+          
+           window_register_employee.webContents.send("open-modal-register-employee");
+              
+        }
 
       }).catch((error)=>{
         

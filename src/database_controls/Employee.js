@@ -2,10 +2,13 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
-/*--------------LINK BASE DE DATOS ------------------------*/
+const DB = new SAIADB(PathList.dbPath);
+/*------------------------------------------*/
+
 
 async function GetEmployeeWithUser(employeeKey) {
     try {

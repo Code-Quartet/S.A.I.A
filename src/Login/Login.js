@@ -151,6 +151,10 @@ passwordInputClick.addEventListener('keydown', function(event) {
 /*---------------------------------------------------------------*/
 api.receive("Data-user-employee",(event,data)=>{
 
+
+const imagenes = JSON.parse(data.employee.image)
+const email = JSON.parse(data.employee.email)
+
      Data_user={
       key:data.user.key,
       user:data.user.username,
@@ -164,11 +168,11 @@ api.receive("Data-user-employee",(event,data)=>{
          codId:data.employee.cod_id,
          direccion:data.employee.address,
          telefono:data.employee.tlf,
-         correo:data.employee.email,
-         image:data.employee.image,
+         correo:email[0]+email[1],
+         image:imagenes[0]
      };
 
-    document.getElementById("ImagenLogin").src=data.employee.image
+    document.getElementById("ImagenLogin").src=imagenes[0];
     document.getElementById('username-input').value="";
     document.getElementById('password').value="";
 

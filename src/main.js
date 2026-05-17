@@ -4,14 +4,16 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
-const config = require(path.join(__dirname,"../database/.config.json"));
+const PathList = require(path.join(__dirname,'./PathList'));
+const config = require(PathList.configPath);
 /*---------------------------------------------------------*/
 /*--------------LINK BASE DE DATOS (Ajustado a carpeta raíz /database) ------------------------*/
-// Subimos un nivel (../) para salir de src y entrar a database
 const SAIADB = require(path.join(__dirname, './database_controls/SAIA_manager.js'));
+const DB = new SAIADB(PathList.dbPath);
+/*---------------------*/
 const {exportarTablaAExcel,respaldarArchivoDB, importarArchivoDB, exportarJSON, importarJSON, exportarTodoAExcel, importarTodoDesdeExcel } = require(path.join(__dirname, './database_controls/dataExchange.js')); 
 const { LimpiarBaseDeDatos } = require(path.join(__dirname, './database_controls/DataTrialSAIA'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+/*--------------------*/
 /*--------------RECURSOS ESTÁTICOS ------------------------*/
 const ImageDefault = path.join(__dirname, "../../assets/img/ImageLogin3.png"); // Cambiado imagen -> img según estructura
 
@@ -81,6 +83,7 @@ console.log("Select-System")
 
 if(config.state==false && config.plataform=="" && config.cpu=="" && config.hostname==""){
   console.log("register app")
+
   Register_App()
 }
 
@@ -111,7 +114,7 @@ function createWindow() {
     // Como main.js está en /src, subimos un nivel
     mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
-//mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
     
     // Bloqueo de nuevas ventanas
     mainWindow.webContents.setWindowOpenHandler(() => {
@@ -122,59 +125,63 @@ function createWindow() {
         mainWindow = null;
     });
 
-mainWindow.on('close', (event) => {
+    mainWindow.on('close', (event) => {
 
-    if (!app.quitting) { 
-      event.preventDefault(); // Detiene el cierre
+        if (!app.quitting) { 
+          event.preventDefault(); // Detiene el cierre
 
-      // Muestra un diálogo de confirmación
-     const choice = dialog.showMessageBoxSync(mainWindow, {
-        type: 'question',
-        buttons: ['Sí', 'No'],      
-        title: 'Confirmación',
-        message: '¿Estás seguro de que quieres salir?',
+          // Muestra un diálogo de confirmación
+         const choice = dialog.showMessageBoxSync(mainWindow, {
+            type: 'question',
+            buttons: ['Sí', 'No'],      
+            title: 'Confirmación',
+            message: '¿Estás seguro de que quieres salir?',
+          });
+
+          if (choice === 0) {
+
+            console.log("cerrando app",User_sesion_login_id)
+            // Cierra la ventana ahora que está confirmado
+            if(User_sesion_login_id==""){
+                mainWindow.destroy();
+
+
+            }
+            else{
+                dialog.showMessageBox(mainWindow,{
+                      title: 'Alerta',
+                      type:'warning',
+                      message: 'Debe cerrar sesión primero',
+                      icon: 'warning',
+                      buttons: ['Aceptar'],
+                      noLink: true
+                    })
+
+            }
+            
+          }
+        }
       });
 
-      if (choice === 0) {
-
-        console.log("cerrando app",User_sesion_login_id)
-        // Cierra la ventana ahora que está confirmado
-        if(User_sesion_login_id==""){
-            mainWindow.destroy();
 
 
-        }
-        else{
-            dialog.showMessageBox(mainWindow,{
-                  title: 'Alerta',
-                  type:'warning',
-                  message: 'Debe cerrar sesión primero',
-                  icon: 'warning',
-                  buttons: ['Aceptar'],
-                  noLink: true
-                })
-
-        }
-        
-      }
-    }
-  });
 
 }
 /****************************REPAIR APP************************************************/
+
 ipcMain.on('Repair-app-system',async(event,data) => {
 
     RepairApp(mainWindow)
 
 })
+
+
 /****************************REPAIR APP************************************************/
 /****************************LOGIN SYSTEM APP******************************************************/
 
 /*LOGIM SYSTEM APP*/
 /*LOGIM DEL SYSTEMA APLICACION*/
 ipcMain.on('Login-user-master-permission',async(event,data) => {
-
-  //console.log(data)
 
   Login_password_master(mainWindow,data);
 
@@ -212,9 +219,6 @@ ipcMain.on('Login-user-app',async(event,data) => {
             }).catch(err => {
               console.log(err);
             });
-
-
-
         }
 
      })
@@ -558,6 +562,9 @@ ipcMain.on('Excel-Exportar', (event, id) => {
         .catch(err => {
             console.error("Error al exportar Excel:", err);
         });
+
+
+
 });
 
 ipcMain.on('Excel-Importar', (event, id) => {

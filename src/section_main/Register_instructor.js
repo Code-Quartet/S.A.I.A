@@ -4,10 +4,17 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+
+
+/*----------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
+
+
+
 
 const ImageDefault = path.join(__dirname,"../../assets/imagen/ImageLogin3.png")
 /*---------------------------------------------------------------*/
@@ -34,10 +41,10 @@ module.exports = function Register_instructor(parentWindow) {
         }
     });
 
-    window_register_instructor.loadFile('src/section_main/Register_instructor.html');
+    window_register_instructor.loadFile('src/section_main/Register_instructorV2.html');
 
     // Herramientas de desarrollo
-    //window_register_instructor.webContents.openDevTools();
+// window_register_instructor.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_instructor.webContents.setWindowOpenHandler(() => {
@@ -80,6 +87,39 @@ ipcMain.on("Select-new-imagen-instructor",(event,data)=>{
 
 
 })
+
+ipcMain.on("select-Image-document-instructor",(even,data)=>{
+
+   dialog.showOpenDialog(window_register_instructor,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+           window_register_instructor.webContents.send('Image-select-document-instructor',result.filePaths[0]);
+      }
+      
+      if(result.canceled==true){
+
+          
+      }
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+})
+
+
+
+
+
 
 ipcMain.on("Save-data-new-instructor",async(event,data)=>{
 

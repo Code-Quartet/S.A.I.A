@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Estudiante - SAIA v2</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+            font-weight: normal; font-style: normal;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --success: #10b981;
+            --bg-window: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+            --radius-md: 12px;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; outline: none; }
+        body { background: var(--bg-window); margin: 0; overflow: hidden; height: 100vh; width: 100%; color: var(--text-main); display: flex; flex-direction: column; }
+
+        /* PRELOADER GLOBAL */
+        #preloader {
+            position: fixed; inset: 0; background: var(--white); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-spin { width: 30px; height: 30px; border: 3px solid var(--border); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* VISUALIZADOR LIGHTBOX */
+        #viewerModal {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95);
+            z-index: 20000; display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px); animation: fadeIn 0.3s;
+        }
+        #viewerModal img { max-width: 90%; max-height: 80%; border-radius: 12px; border: 3px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .close-viewer { position: absolute; top: 25px; right: 25px; color: white; font-size: 28px; cursor: pointer; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* PRELOADER EN INPUTS */
+        .input-group { position: relative; display: flex; align-items: center; width: 100%; }
+        .input-group i:not(.field-loader) { position: absolute; left: 12px; color: var(--text-muted); font-size: 14px; z-index: 2; }
+        .field-loader { position: absolute; right: 10px; width: 14px; height: 14px; border: 2px solid var(--border); border-top: 2px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 2; }
+        .loading .field-loader { display: block; }
+        .loading input { background: #f1f5f9; pointer-events: none; }
+
+        .app-container { width: 100%; height: 100%; display: flex; flex-direction: column; background: var(--white); }
+        header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; -webkit-app-region: drag; }
+        header h1 { font-size: 12px; margin: 0; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+
+        .main-content { -webkit-app-region: no-drag; flex: 1; overflow-y: auto; padding: 15px 20px; }
+
+        /* HERO SECTION */
+        .hero-section { display: flex; gap: 15px; margin-bottom: 15px; align-items: center; }
+        /*--*/
+ .avatar-container {
+    position: relative;
+    width: 103px;
+    height: 103px;
+   
+    border-radius: 50px;
+    transition: 0.3s;
+    overflow: hidden;
+    border: 4px solid #9e9e9e;
+}
+.avatar-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    object-fit: cover;
+    background: #2196f3;
+    /* border: 2px solid white; */
+}
+        .avatar-controls {
+            position: absolute; inset: 0; background: rgba(15, 23, 42, 0.7);
+            display: flex; align-items: center; justify-content: space-around;
+            opacity: 0; transition: 0.2s; border-radius: 24px; z-index: 5;
+        }
+        .avatar-container:hover .avatar-controls { opacity: 1; }
+        .avatar-btn { color: white; font-size: 18px; cursor: pointer; transition: 0.2s; }
+        .avatar-btn:hover { transform: scale(1.2); color: var(--success); }
+        /*--*/
+
+        .toggle-card { flex: 1; background: #f1f5f9; padding: 12px 15px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+
+        /* FORMULARIO */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .span-2 { grid-column: span 2; }
+        .field label { display: block; font-size: 9px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+        
+        input, select { width: 100%; padding: 8px 10px 8px 35px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; transition: 0.2s; }
+        input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.05); }
+
+/*-----------------*/
+        /* COMPONENTE CÉDULA TRIPLE ACCIÓN */
+        .doc-wrapper { display: flex; gap: 8px; align-items: center; }
+        .doc-trigger { 
+            width: 55px; height: 38px; border-radius: 10px; background: #fff; border: 1.5px dashed var(--primary); 
+            overflow: hidden; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; transition: 0.3s;
+        }
+        .doc-trigger.has-img { border-style: solid; border-color: var(--border); }
+        .doc-trigger img { width: 100%; height: 100%; object-fit: cover; }
+        .doc-trigger i.main-icon { font-size: 16px; color: var(--primary); }
+
+        .doc-controls { position: absolute; inset: 0; background: rgba(79, 70, 229, 0.85); display: flex; align-items: center; justify-content: space-around; opacity: 0; transition: 0.2s; }
+        .doc-trigger:hover .doc-controls { opacity: 1; }
+        .doc-btn { color: white; font-size: 13px; padding: 4px; border-radius: 4px; transition: 0.2s; }
+        .doc-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.15); }
+
+        /* SECCIÓN REPRESENTANTE */
+        #rep-section { grid-column: span 2; background: #f8fafc; border-radius: 16px; max-height: 0; overflow: hidden; opacity: 0; transition: 0.4s ease; }
+        #rep-section.active { max-height: 500px; opacity: 1; padding: 15px; border: 1px solid var(--border); margin-top: 5px; }
+
+        /*-------------------------------*/
+        /* LIGHTBOX */
+        #viewerModal {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95);
+            z-index: 20000; display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px); animation: fadeIn 0.3s;
+        }
+        #viewerModal img { max-width: 90%; max-height: 80%; border-radius: 12px; border: 3px solid white; }
+        .close-viewer { position: absolute; top: 25px; right: 25px; color: white; font-size: 28px; cursor: pointer; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/*-----------------*/
+        /* CURSOS */
+        .course-flex { display: flex; gap: 8px; }
+        .btn-sq { width: 38px; height: 38px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-info { background: white; border: 1px solid var(--border); color: var(--primary); }
+        .btn-add { background: var(--primary); color: white; }
+         .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tag {
+    background: var(--primary);
+    color: white;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+        /* REPRESENTANTE */
+        #rep-section { grid-column: span 2; background: #f8fafc; border-radius: 16px; max-height: 0; overflow: hidden; opacity: 0; transition: 0.4s ease; }
+        #rep-section.active { max-height: 600px; opacity: 1; padding: 15px; border: 1px solid var(--border); margin-top: 5px; }
+
+        footer { -webkit-app-region: no-drag; padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: white; }
+        .btn { padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .btn-close { background: #fef2f2; color: #ef4444; }
+        .btn-clear { background: #f1f5f9; color: var(--text-muted); }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15); }
+        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+
+        /* SWITCH */
+        .switch { position: relative; width: 36px; height: 20px; }
+        .switch input { opacity: 0; width: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background: #cbd5e1; border-radius: 20px; transition: .3s; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .3s; }
+        input:checked + .slider { background: var(--success); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        .top-notification { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: white; padding: 12px 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid var(--success); display: flex; align-items: center; gap: 12px; transition: 0.5s; z-index: 10001; }
+        .top-notification.show { top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="viewerModal" onclick="this.style.display='none'">
+        <i class="icon-cross close-viewer"></i>
+        <img id="imgFull">
+    </div>
+
+    <div id="preloader">
+        <div class="loader-spin"></div>
+        <p style="font-size: 9px; margin-top: 10px; font-weight: 700; color: var(--text-muted);">SAIA ECOSYSTEM - ACTUALIZANDO</p>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <h1><i class="icon-user-check"></i>Actualizar Estudiante</h1>
+            <div id="status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; transition: 0.3s;"></div>
+        </header>
+
+        <div class="main-content">
+            <form id="registrationForm">
+                <div class="hero-section">
+                   
+                    <div class="avatar-container" id="contAvatar">
+                        <img id="previewAvatar" src="../../assets/imagen/ImageLogin3.png">
+                        <div class="avatar-controls">
+                            <i class="icon-search avatar-btn" id="viewAvatar" title="Ver en grande"></i>
+                            <i class="icon-camera avatar-btn" id="changeAvatar" title="Cambiar foto"></i>
+                        </div>
+                    </div>
+
+                    <div class="toggle-card">
+                        <div>
+                            <b style="font-size: 14px; display: block; color: var(--primary);">Estudiante Menor</b>
+                            <span style="font-size: 10px; color: var(--text-muted);">Requiere Representante</span>
+                        </div>
+                        <label class="switch"><input type="checkbox" id="ageToggle"><span class="slider"></span></label>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field span-2">
+                        <label>Nombre Completo</label>
+                        <div class="input-group" id="load-nombre">
+                            <i class="icon-user"></i>
+                            <input type="text" id="nombre">
+                            <div class="field-loader"></div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Cédula Estudiante</label>
+                        <div class="doc-wrapper">
+                            <div class="input-group" id="load-cedula" style="flex:1">
+                                <i class="icon-credit-card"></i>
+                                <input type="text" id="cedula" maxlength="10" placeholder="0000000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                <div class="field-loader"></div>
+                            </div>
+                            <div class="doc-trigger" id="contDocEst">
+                                <i class="icon-image main-icon" id="iconDocEst"></i>
+                                <img id="previewDocEst" style="display:none">
+                                <div class="doc-controls" id="ctrlDocEst" style="display:none">
+                                    <i class="icon-search doc-btn" id="viewEst" title="Ver"></i>
+                                    <i class="icon-spinner11 doc-btn" id="updEst" title="Cambiar"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Edad</label>
+                        <div class="input-group" id="load-edad"><i class="icon-star-full"></i><input type="text" id="edad" maxlength="3"><div class="field-loader"></div></div>
+                    </div>
+
+                    <div class="field">
+                        <label>F. Nacimiento</label>
+                        <div class="input-group" id="load-fechanacimiento"><i class="icon-calendar"></i><input type="date" id="fechanacimiento"><div class="field-loader"></div></div>
+                    </div>
+
+                    <div class="field">
+                        <label>Teléfono</label>
+                        <div class="input-group" id="load-telefono"><i class="icon-phone"></i><input type="tel" id="telefono" maxlength="11"><div class="field-loader"></div></div>
+                    </div>
+
+                    <div class="field span-2">
+                        <label>Dirección</label>
+                        <div class="input-group" id="load-direccion"><i class="icon-location"></i><input type="text" id="direccion"><div class="field-loader"></div></div>
+                    </div>
+
+        <div class="field span-2">
+            <label>Correo Electrónico</label>
+            <div class="input-group" id="load-correo_representante" style="display: flex; flex-direction: row;">
+                <i class="icon-envelop"></i>
+                <input type="email" id="correo" class="rep-field" placeholder="Represetante" >
+                <input type="text" list="listEmail" id="DataList" style="width:75%;padding: 10px;" placeholder="@Saia.com">
+                    <datalist id="listEmail">
+                         <option value="@gmail.com">@gmail.com</option>
+                         <option value="@hotmail.com">@hotmail.com</option>
+                    </datalist>
+            </div>
+        </div>
+
+
+
+
+
+                    <div class="field span-2">
+                        <label>Cursos Inscritos</label>
+                        <div class="course-flex">
+                            <div class="input-group" id="load-tipoCurso" style="flex:1">
+                                <i class="icon-books"></i>
+                                <select id="tipoCurso"></select>
+                                <div class="field-loader"></div>
+                            </div>
+                            <button type="button" class="btn-sq btn-info icon-info" id="info-course-student" disabled></button>
+                            <button type="button" class="btn-sq btn-add icon-plus" id="btnAddCourse"></button>
+                        </div>
+                        <div class="tags" id="selected-courses-container"></div>
+                    </div>
+
+                    <div id="rep-section">
+                        <p style="font-size: 9px; font-weight: 800; color: var(--primary); margin-bottom: 8px; border-bottom: 1px solid var(--border);">REPRESENTANTE LEGAL</p>
+                        <div class="form-grid">
+                            <div class="field">
+                                <label>Nombre Representante</label>
+                                <div class="input-group" id="load-nombre_representante" ><i class="icon-users"></i><input type="text" id="nombre_representante" class="rep-field" placeholder="Nombre Representante"><div class="field-loader"></div></div>
+                            </div>
+                            <!-------------------------->
+                            <div class="field">
+                                <label>Cédula Representante</label>
+                                <div class="doc-wrapper">
+                                    <div class="input-group" id="load-rep_cedula" style="flex:1">
+                                        <i class="icon-credit-card"></i>
+                                        <input type="text" id="cedula_representante" maxlength="10" placeholder="0000000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                        <div class="field-loader"></div>
+                                    </div>
+                                    <div class="doc-trigger" id="contDocRep">
+                                        <i class="icon-image main-icon" id="iconDocRep"></i>
+                                        <img id="previewDocRep" style="display:none">
+                                        <div class="doc-controls" id="ctrlDocRep" style="display:none">
+                                            <i class="icon-search doc-btn" id="viewRep" title="Ver"></i>
+                                            <i class="icon-spinner11 doc-btn" id="updRep" title="Cambiar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!---------------------------->
+
+                            <div class="field">
+                                <label>Teléfono Rep.</label>
+                                <div class="input-group" id="load-telefono_representante"><i class="icon-mobile"></i>
+                                    <input type="tel" id="telefono_representante" class="rep-field" maxlength="11" placeholder="Ej: 0412-000-0000" ><div class="field-loader" oninput="this.value = this.value.replace(/[^0-9]/g, '')"></div></div>
+                            </div>
+                            <div class="field">
+                                <label>Edad Rep.</label>
+                                <div class="input-group" id="load-edad_representante"><i class="icon-star-full"></i><input type="text" id="edad_representante" maxlength="3" placeholder="Ej: 20"><div class="field-loader"></div></div>
+                            </div>
+        <div class="field span-2">
+            <label>Correo Representante</label>
+            <div class="input-group" id="load-correo_representante" style="display: flex; flex-direction: row;">
+                <i class="icon-envelop"></i>
+                <input type="email" id="correo_representante" class="rep-field" placeholder="Represetante" >
+                <input type="text" list="listEmail" id="DataListRep" style="width:75%;padding: 10px;" placeholder="@Saia.com">
+                <datalist id="listEmail">
+                     <option value="@gmail.com">@gmail.com</option>
+                     <option value="@hotmail.com">@hotmail.com</option>
+                </datalist>
+            </div>
+        </div>
+
+                            <div class="field span-2">
+                                <label>Dirección Representante</label>
+                                <div class="input-group" id="load-direccion_representante"><i class="icon-location"></i><input type="text" id="direccion_representante" placeholder="Dirección completa"><div class="field-loader"></div></div>
+                            </div>
+
+
+                           
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <footer>
+            <button class="btn btn-close" id="btn-close"><i class="icon-cross"></i> Cerrar</button>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-clear" id="btn-clear"><i class="icon-undo2"></i> Reiniciar</button>
+                <button class="btn btn-primary" id="btn-confirm" disabled>Actualizar <i class="icon-checkmark"></i></button>
+            </div>
+        </footer>
+    </div>
+
+    <div class="top-notification" id="topNotif">
+        <i class="icon-checkmark" style="color: var(--success); font-size: 20px;"></i>
+        <div>
+            <b style="font-size: 13px; display: block;">¡Actualizado!</b>
+            <span style="font-size: 10px; color: var(--text-muted);">Los cambios se aplicaron correctamente.</span>
+        </div>
+    </div>
+
+    <script>
+        let seleccionCursos = [];
+let ArrayImagenSelect = new Array(3);
+let Key = null;
+
+// Elementos del DOM
+const ageToggle = document.getElementById('ageToggle');
+const repSection = document.getElementById('rep-section');
+const btnConfirm = document.getElementById('btn-confirm');
+const mainAvatar = document.getElementById('previewAvatar');
+const coursesContainer = document.getElementById('selected-courses-container');
+const selectCurso = document.getElementById("tipoCurso");
+const imgEst = document.getElementById('previewDocEst');
+const imgRep = document.getElementById('previewDocRep');
+
+/* --- LÓGICA DE INTERFAZ Y VISUALIZACIÓN --- */
+
+window.openLightbox = (src, e) => {
+    if (e) e.stopPropagation();
+    if (!src || src.includes('undefined')) return;
+    document.getElementById('imgFull').src = src;
+    document.getElementById('viewerModal').style.display = 'flex';
+};
+
+function setLoading(fieldId, state) {
+    const el = document.getElementById(`load-${fieldId}`);
+    if (el) state ? el.classList.add('loading') : el.classList.remove('loading');
+}
+
+/* --- CARGA INICIAL DE DATOS --- */
+
+window.onload = () => {
+    api.send("Get-data-student-update");
+    validateForm();
+};
+
+api.receive('data-student-information', (event, data) => {
+    console.log('Cargando información del estudiante:', data);
+    
+    Key = data.Key;
+    // Mapeo de campos básicos
+    const fields = {
+        'nombre': data.Name,
+        'cedula': data.Cod_id,
+        'edad': data.Age,
+        'fechanacimiento': data.Birthdate,
+        'direccion': data.Address,
+        'telefono': data.Tlf,
+        'nombre_representante': data.Name_Representative,
+        'cedula_representante': data.Cod_id_Representative,
+        'edad_representante': data.Age_Representative,
+        'telefono_representante': data.Tlf_Representative,
+        'direccion_representante': data.Address_Representative
+    };
+
+    Object.keys(fields).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = fields[id] || "";
+    });
+
+    // Procesamiento de Imágenes con Try-Catch por seguridad
+    try {
+        const arrayRecuperado = JSON.parse(data.Image || "[]");
+        mainAvatar.src = arrayRecuperado[0] || "";
+        imgEst.src = arrayRecuperado[1] || "";
+        imgRep.src = arrayRecuperado[2] || "";
+
+        // Activar visualización de documento estudiante si existe
+        if (arrayRecuperado[1]) {
+            actualizarEstadoContenedor('Est', true);
+        }
+    } catch (e) {
+        console.error("Error al parsear imágenes:", e);
+    }
+
+/*----------------------------------------------------------*/
+    try {
+        const arrayRecuperado1 = JSON.parse(data.E_mail || "[]");
+
+        console.log(arrayRecuperado1)
+        document.getElementById('correo').value = arrayRecuperado1[0] || "";
+        document.getElementById('DataList').value = arrayRecuperado1[1] || "";
+
+
+    } catch (e) {
+        console.error("Error al parsear imágenes:", e);
+    }
+/*----------------------------------------------------------*/
+
+/*----------------------------------------------------------*/
+    try {
+        const arrayRecuperado2 = JSON.parse(data.E_mail_Representative || "[]");
+        document.getElementById('correo_representante').value = arrayRecuperado2[0] || "";
+        document.getElementById('DataListRep').value = arrayRecuperado2[1] || "";
+
+    } catch (e) {
+        console.error("Error al parsear imágenes:", e);
+    }
+/*----------------------------------------------------------*/
+
+    // Lógica de Representante (Si tiene nombre, asumimos que es menor/tiene representante)
+    if (data.Name_Representative && data.Name_Representative.trim() !== "") {
+        ageToggle.checked = true;
+        repSection.classList.add('active');
+        actualizarEstadoContenedor('Rep', true);
+    }
+
+    if (data.cursos) {
+        seleccionCursos = data.cursos.map(c => ({ id: c.id, nombre: c.name }));
+        renderCourses();
+    }
+
+    api.send("Get-data-list-course-student-update");
+    validateForm();
+    
+    // Ocultar Preloader
+    const preloader = document.getElementById('preloader');
+    preloader.style.opacity = '0';
+    setTimeout(() => preloader.style.display = 'none', 500);
+});
+
+/* --- GESTIÓN DE CURSOS --- */
+
+api.receive('data-list-course-student-update', (event, info) => {
+    selectCurso.innerHTML = '<option value="" disabled selected>Seleccione...</option>';
+    info.data.forEach(curso => {
+        if(!seleccionCursos.find(c => c.id == curso.Key)) {
+            selectCurso.innerHTML += `<option value="${curso.Key}">${curso.Name}</option>`;
+        }
+    });
+});
+
+document.getElementById("btnAddCourse").addEventListener("click", () => {
+    const val = selectCurso.value;
+    const text = selectCurso.options[selectCurso.selectedIndex].text;
+    if (val && !seleccionCursos.find(c => c.id === val)) {
+        seleccionCursos.push({ id: val, nombre: text });
+        renderCourses(); 
+        validateForm();
+        selectCurso.value = "";
+    }
+});
+
+function renderCourses() {
+    coursesContainer.innerHTML = seleccionCursos.length === 0 
+        ? `<span style="color: var(--text-muted); font-size: 10px;">Sin cursos</span>` 
+        : "";
+    
+    seleccionCursos.forEach(c => {
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML = `${c.nombre} <i class="icon-cross" style="cursor:pointer" onclick="removeCourse('${c.id}')"></i>`;
+        coursesContainer.appendChild(tag);
+    });
+}
+
+window.removeCourse = (id) => {
+    seleccionCursos = seleccionCursos.filter(c => c.id !== id);
+    renderCourses(); 
+    validateForm();
+};
+
+/* --- VALIDACIÓN Y ENVÍO --- */
+
+function validateForm() {
+    const fields = ['nombre', 'cedula', 'edad', 'fechanacimiento', 'direccion', 'correo', 'telefono'];
+    let valid = fields.every(id => document.getElementById(id).value.trim() !== "");
+    
+    if (seleccionCursos.length === 0) valid = false;
+
+    if (ageToggle.checked) {
+        const repFields = ['nombre_representante', 'cedula_representante', 'telefono_representante', 'edad_representante'];
+        const repValid = repFields.every(id => document.getElementById(id).value.trim() !== "");
+        if(!repValid) valid = false;
+    }
+
+    btnConfirm.disabled = !valid;
+    const dot = document.getElementById('status-dot');
+    if (dot) dot.style.background = valid ? 'var(--success)' : '#f59e0b';
+}
+
+document.querySelectorAll('input').forEach(i => i.addEventListener('input', validateForm));
+ageToggle.addEventListener('change', () => {
+    repSection.classList.toggle('active', ageToggle.checked);
+    validateForm();
+});
+
+btnConfirm.addEventListener('click', () => {
+    setLoading('nombre', true);
+    
+    // Preparar Array de Imágenes
+    const imagenesFinales = [
+        document.getElementById('previewAvatar').src,
+        document.getElementById('previewDocEst').src,
+        ageToggle.checked ? document.getElementById('previewDocRep').src : ""
+    ];
+
+    const formData = {
+        key: Key,
+        estudiante: {
+            esMenor: ageToggle.checked,
+            nombre: document.getElementById('nombre').value,
+            cedula: document.getElementById('cedula').value,
+            edad: document.getElementById('edad').value,
+            imagen: (imagenesFinales),
+            nacimiento: document.getElementById('fechanacimiento').value,
+            direccion: document.getElementById('direccion').value,
+            cursos: seleccionCursos.map(c => c.id),
+            correo:JSON.stringify([document.getElementById('correo').value = arrayRecuperado1[0] || "",
+        document.getElementById('DataList').value]),
+            telefono: document.getElementById('telefono').value
+        },
+        representante: ageToggle.checked ? {
+            nombre: document.getElementById('nombre_representante').value,
+            cedula: document.getElementById('cedula_representante').value,
+            edad: document.getElementById('edad_representante').value,
+            telefono: document.getElementById('telefono_representante').value,
+            direccion: document.getElementById('direccion_representante').value,
+            correo:JSON.stringify([document.getElementById('correo_representante').value,document.getElementById('DataListRep').value])
+        } : null
+
+
+    };
+    
+    api.send("Register-update-data-student", formData);
+});
+
+api.receive("Open-modal-message-student-update", () => {
+    setLoading('nombre', false);
+    const notif = document.getElementById('topNotif');
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 3000);
+    api.send("Reload-dasboard-system-data-Student");
+});
+
+/* --- GESTIÓN DE IMÁGENES (CANALES IPC) --- */
+
+function actualizarEstadoContenedor(tipo, tieneImg) {
+    const img = document.getElementById(`previewDoc${tipo}`);
+    const icon = document.getElementById(`iconDoc${tipo}`);
+    const ctrl = document.getElementById(`ctrlDoc${tipo}`);
+    const cont = document.getElementById(`contDoc${tipo}`);
+
+    if (tieneImg) {
+        img.style.display = 'block';
+        icon.style.display = 'none';
+        ctrl.style.display = 'flex';
+        cont.classList.add('has-img');
+    }
+}
+
+// Avatar
+document.getElementById('viewAvatar').onclick = (e) => openLightbox(mainAvatar.src, e);
+document.getElementById('changeAvatar').onclick = (e) => {
+    e.stopPropagation();
+    api.send("select-Image-new-student-update");
+};
+api.receive('Image-select-new-student-update', (e, img) => { mainAvatar.src = img; });
+
+// Documento Estudiante
+document.getElementById('contDocEst').onclick = () => { 
+    if(imgEst.style.display === 'none') api.send("select-Image-document-student-update"); 
+};
+document.getElementById('viewEst').onclick = (e) => openLightbox(imgEst.src, e);
+document.getElementById('updEst').onclick = (e) => { 
+    e.stopPropagation(); 
+    api.send("select-Image-document-student-update"); 
+};
+api.receive('Image-select-document-student-update', (e, img) => {
+    imgEst.src = img;
+    actualizarEstadoContenedor('Est', true);
+});
+
+// Documento Representante
+document.getElementById('contDocRep').onclick = () => { 
+    if(imgRep.style.display === 'none') api.send("select-Image-document-rep-update"); 
+};
+document.getElementById('viewRep').onclick = (e) => openLightbox(imgRep.src, e);
+document.getElementById('updRep').onclick = (e) => { 
+    e.stopPropagation(); 
+    api.send("select-Image-document-rep-update"); 
+};
+api.receive('Image-select-document-rep-update', (e, img) => {
+    imgRep.src = img;
+    actualizarEstadoContenedor('Rep', true);
+});
+
+/* --- ACCIONES DE VENTANA --- */
+
+document.getElementById("btn-close").addEventListener("click", () => window.close());
+document.getElementById("btn-clear").addEventListener("click", () => location.reload());
+    </script>
+</body>
+</html>

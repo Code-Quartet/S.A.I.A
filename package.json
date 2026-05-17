@@ -1,22 +1,22 @@
 {
-  "name": "S.A.I.A",
+  "name": "saia",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sistema de gestión de deudores",
+  "author": "Duno Castellano",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "build --win",
+    "dist": "electron-builder --win",
     "build": "electron-builder build --win --publish never",
-    "deploy": "electron-builder build  --win --publish always"
+    "deploy": "electron-builder build --win --publish always"
   },
   "keywords": [],
-  "author": "",
- "license": "Proprietary",
-"build": {
-  "appId": "com.SAIA.saiav1",
+  "license": "Proprietary",
+  "build": {
+    "appId": "com.saia.saiav1",
     "productName": "S.A.I.A v1",
-    "asar":false,
+    "asar": true,
     "extraResources": [
       "database/**"
     ],
@@ -24,22 +24,30 @@
       "output": "dist-installer",
       "buildResources": "build"
     },
-  "win": { 
-    "target": [
-      {
-        "target": "nsis",
-        "arch": ["x64", "ia32"]
-      }
-    ],
-    "icon": "build/favicon.ico"
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "build/favicon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false,
+      "menuCategory": true,
+      "installerIcon": "build/favicon.ico",
+      "uninstallerIcon": "build/favicon.ico",
+      "installerHeaderIcon": "build/favicon.ico",
+      "installerSidebar": "build/installerSidebar.bmp"
+    }
   },
-  "nsis": {
-    "oneClick": false,
-    "allowToChangeInstallationDirectory": true,
-    "createDesktopShortcut": true,
-    "runAfterFinish": true
-  }
-},
   "devDependencies": {
     "electron": "^13.6.9",
     "electron-builder": "^24.4.0"

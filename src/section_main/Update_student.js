@@ -4,9 +4,11 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+/*----------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
 
 /*--------------LINK BASE DE DATOS ------------------------*/
@@ -38,10 +40,10 @@ module.exports = function Update_studient(parentWindow,key){
         }
     });
 
-    window_Update_studient.loadFile('src/section_main/Update_studentV5.html');
+    window_Update_studient.loadFile('src/section_main/Update_studentV6.html');
 
     // Herramientas de desarrollo
-   // window_Update_studient.webContents.openDevTools();
+   //window_Update_studient.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Update_studient.webContents.setWindowOpenHandler(() => {
@@ -104,6 +106,69 @@ ipcMain.on("select-Image-new-student-update",(even,data)=>{
         
       });
 })
+
+
+ipcMain.on("select-Image-document-student-update",(even,data)=>{
+
+   dialog.showOpenDialog(window_Update_studient,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+          window_Update_studient.webContents.send("Image-select-document-student-update",result.filePaths[0]);
+      }
+      
+      if(result.canceled==true){
+
+         // window_Update_studient.webContents.send("Image-select-new-student",ImageDefault);
+      }
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+})
+
+
+ipcMain.on("select-Image-document-rep-update",(even,data)=>{
+
+   dialog.showOpenDialog(window_Update_studient,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+          window_Update_studient.webContents.send('Image-select-document-rep-update',result.filePaths[0]);
+      }
+      
+      if(result.canceled==true){
+
+         // window_Update_studient.webContents.send("Image-select-new-student",ImageDefault);
+      }
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+})
+
+
+
+
+
 
 ipcMain.on("Register-update-data-student", (event, data) => {
     console.log("Recibiendo datos para actualizar:", data);

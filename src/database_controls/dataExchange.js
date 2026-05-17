@@ -1,10 +1,15 @@
 const path = require('path');
 const fs = require('fs');
 const XLSX = require('xlsx');
+
+
+
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
-/*--------------LINK BASE DE DATOS ------------------------*/
+const DB = new SAIADB(PathList.dbPath);
+/*------------------------------------------*/
+
 
     // --- GESTIÓN DE ARCHIVOS .DB ---
     async function respaldarArchivoDB(destino) {

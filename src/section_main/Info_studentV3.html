@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil SAIA v2 - Vista Extendida</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --bg-light: #f8f9fa;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(60,64,67,.3);
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--white);
+    width: 600px;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-dark);
+}
+        /* --- PRELOADER --- */
+        #preloader {
+            position: absolute; inset: 0; background: white;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 10000; transition: 0.3s;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- LIGHTBOX --- */
+        #viewerModal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 9999; display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        #viewerModal img { max-width: 85%; max-height: 80%; border: 4px solid white; border-radius: 8px; }
+        .close-view { position: absolute; top: 20px; right: 20px; color: white; font-size: 24px; cursor: pointer; }
+
+        /* --- CABECERA --- */
+        .profile-header {
+            padding: 15px 25px;
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 70px 1fr auto;
+            align-items: center;
+            gap: 15px;
+        }
+
+.img-profile-main {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    background: #2196f3;
+}
+
+        .header-info h2 { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 2px; }
+        .header-info p { font-size: 0.85rem; color: var(--text-gray); }
+
+        /* --- CONTENEDORES DE DOCUMENTOS --- */
+        .doc-card {
+            width: 70px; height: 45px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            background: #e8eaed;
+        }
+        .doc-card img { width: 100%; height: 100%; object-fit: cover; }
+        .doc-card .overlay {
+            position: absolute; inset: 0; background: rgba(26, 115, 232, 0.7);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 0.2s; color: white;
+        }
+        .doc-card:hover .overlay { opacity: 1; }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        .scroll-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .data-item {
+            background: var(--bg-light);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+        }
+        .data-item:hover { border-color: var(--border); background: white; }
+        .data-item strong { display: block; font-size: 0.65rem; color: var(--text-gray); text-transform: uppercase; margin-bottom: 2px; }
+        .data-item span { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); }
+
+        /* --- CURSOS --- */
+        .courses-container {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .course-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 15px; border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .course-row:last-child { border-bottom: none; }
+        .status-pill {
+            background: #e8f0fe; color: var(--primary);
+            padding: 2px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 800;
+        }
+
+        /* --- FOOTER --- */
+        .actions {
+            padding: 15px 25px;
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: flex-end;
+            background: var(--white);
+        }
+        .btn-close {
+            padding: 10px 30px;
+            background: #fdf2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-close:hover { background: #dc2626; color: white; }
+
+        .hidden { display: none !important; }
+        .scroll-content::-webkit-scrollbar { width: 6px; }
+        .scroll-content::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="viewerModal" onclick="this.style.display='none'">
+        <i class="icon-cross close-view"></i>
+        <img id="imgFull" src="">
+    </div>
+
+    <header class="profile-header">
+        <img id="view-img" src='../../assets/imagen/ImageLogin3.png' class="img-profile-main" onclick="openViewer(this.src)">
+        <div class="header-info">
+            <h2 id="view-name">---</h2>
+            <p>ID Estudiante: <strong id="view-id">---</strong></p>
+        </div>
+        <div class="doc-card" id="btn-view-doc-est" title="Ver Cédula Estudiante">
+            <img id="view-doc-est-img" src="../../assets/imagen/CeddulaFalsa.png">
+            <div class="overlay"><i class="icon-search"></i></div>
+        </div>
+    </header>
+
+    <main class="scroll-content">
+        <section>
+            <h3 class="section-title">Información Académica</h3>
+            <div class="data-grid">
+                <div class="data-item"><strong>Edad</strong> <span id="view-age">--</span> años</div>
+                <div class="data-item"><strong>Teléfono</strong> <span id="view-tlf">--</span></div>
+                <div class="data-item full-row" style="grid-column: span 2;"><strong>Correo Electrónico</strong> <span id="view-email">--</span></div>
+                <div class="data-item"><strong>Nacimiento</strong> <span id="view-birth">--</span></div>
+                <div class="data-item"><strong>Dirección</strong> <span id="view-address">--</span></div>
+            </div>
+        </section>
+
+        <section id="container-rep" class="hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 class="section-title" style="margin:0; flex:1;">Representante Legal</h3>
+                <div class="doc-card" id="btn-view-doc-rep" title="Ver Cédula Representante">
+                    <img id="view-doc-rep-img" src="../../assets/imagen/CeddulaFalsa.png">
+                    <div class="overlay"><i class="icon-search"></i></div>
+                </div>
+            </div>
+            <div class="data-grid">
+                <div class="data-item"><strong>Nombre</strong> <span id="rep-name">--</span></div>
+                <div class="data-item"><strong>Cédula/ID</strong> <span id="rep-id">--</span></div>
+                <div class="data-item"><strong>Teléfono</strong> <span id="rep-phone">--</span></div>
+                <div class="data-item"><strong>Correo</strong> <span id="rep-email">--</span></div>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="section-title">Inscripciones</h3>
+            <div id="courses-list" class="courses-container">
+                </div>
+        </section>
+    </main>
+
+    <footer class="actions">
+        <button class="btn-close" onclick="window.close()">Cerrar Perfil</button>
+    </footer>
+
+    <script>
+        const modal = document.getElementById('viewerModal');
+        const imgFull = document.getElementById('imgFull');
+
+        function openViewer(src) {
+            if(!src || src.includes('placeholder') || src.includes('user_default')) return;
+            imgFull.src = src;
+            modal.style.display = 'flex';
+        }
+
+        function updateUI(data) {
+
+            console.log(data)
+
+            if (!data) return;
+
+/*
+            const d = JSON.parse(data.E_mail);
+            console.log(d[0])
+*/
+            // Procesar Array de Imágenes [perfil, cedulaEst, cedulaRep]
+            try {
+                const imagenes = JSON.parse(data.Image);
+                document.getElementById('view-img').src = imagenes[0] || '../../assets/imagen/ImageLogin3.png';
+                
+                if(imagenes[1]) {
+                    document.getElementById('view-doc-est-img').src = imagenes[1];
+                    document.getElementById('btn-view-doc-est').onclick = () => openViewer(imagenes[1]);
+                }
+                
+                if(imagenes[2]) {
+                    document.getElementById('view-doc-rep-img').src = imagenes[2];
+                    document.getElementById('btn-view-doc-rep').onclick = () => openViewer(imagenes[2]);
+                }
+            } catch (e) {
+                document.getElementById('view-img').src = '../../assets/imagen/ImageLogin3.png';
+            }
+            // Datos Estudiante
+            document.getElementById('view-name').textContent = data.Name;
+            document.getElementById('view-id').textContent = data.Cod_id;
+            document.getElementById('view-age').textContent = data.Age;
+            document.getElementById('view-tlf').textContent = data.Tlf;
+            const doc = JSON.parse(data.E_mail);
+            document.getElementById('view-email').textContent =doc[0]+doc[1]|| 'N/A';
+            document.getElementById('view-address').textContent = data.Address;
+            document.getElementById('view-birth').textContent = data.Birthdate || 'N/A';
+
+            // Datos Representante
+            const repContainer = document.getElementById('container-rep');
+            if (data.Name_Representative) {
+                repContainer.classList.remove('hidden');
+                document.getElementById('rep-name').textContent = data.Name_Representative;
+                document.getElementById('rep-id').textContent = data.Cod_id_Representative || 'N/A';
+                document.getElementById('rep-phone').textContent = data.Tlf_Representative || 'N/A';
+               
+               const docE = JSON.parse(data.E_mail_Representative);
+               document.getElementById('rep-email').textContent = docE[0]+docE[1] || 'N/A';
+            } else {
+                repContainer.classList.add('hidden');
+            }
+
+            // Cursos
+            const list = document.getElementById('courses-list');
+            list.innerHTML = '';
+            if (data.cursos && data.cursos.length > 0) {
+                data.cursos.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'course-row';
+                    div.innerHTML = `<span>${c.name}</span><span class="status-pill">Activo</span>`;
+                    list.appendChild(div);
+                });
+            } else {
+                list.innerHTML = '<div style="padding:15px; text-align:center; color:#999; font-size:0.8rem;">Sin cursos inscritos</div>';
+            }
+
+            // Ocultar preloader
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => document.getElementById('preloader').style.display = 'none', 300);
+            }, 500);
+        }
+
+        if (typeof api !== 'undefined') {
+            window.onload = () => api.send("Get-data-student-info");
+            api.receive("data-student-information", (event, data) => updateUI(data));
+        }
+    </script>
+</body>
+</html>

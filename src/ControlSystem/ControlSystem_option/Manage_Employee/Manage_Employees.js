@@ -293,9 +293,12 @@ api.receive("Render-data-employee-list",(event,info)=>{
         if(info.success==true){
             info.data.forEach((employee,index)=>{
 
+                const doc = JSON.parse(employee.E_mail);
+
+
                 document.getElementById("employee-body").innerHTML+=`<tr>
                                     <td>${employee.Name}</td>
-                                    <td>${employee.E_mail}</td>
+                                    <td>${doc[0]}${doc[1]}</td>
                                     <td>${employee.Tlf}</td>
                                     <td ><span class="${employee.Status}">${employee.Status}</span></td>
                                   
@@ -338,18 +341,20 @@ api.receive("Render-data-employee-list-search",(event,info)=>{
 
     info.data.forEach((employee,index)=>{
 
-        document.getElementById("employee-body").innerHTML+=`<tr>
-                            <td>${employee.Name}</td>
-                            <td>${employee.E_mail}</td>
-                            <td>${employee.Tlf}</td>
-                            <td><span class="${employee.Status}">${employee.Status}</sapn></td>
-                          
-                        <td class="td-action">
-                            <button class="btn-edit-data-table icon-info" onclick="InfoEmployee('${employee.Key}')"></button>
-                            <button class="btn-edit-data-table icon-pencil" onclick="UpdateEmployee('${employee.Key}')"></button>
-                            <button class="btn-delete-data-table icon-bin"  onclick="DeleteEmployee('${employee.Key}')"></button>
-                        </td>
-                        </tr>`;
+              const doc = JSON.parse(employee.E_mail);
+
+                document.getElementById("employee-body").innerHTML+=`<tr>
+                                    <td>${employee.Name}</td>
+                                    <td>${doc[0]}${doc[1]}</td>
+                                    <td>${employee.Tlf}</td>
+                                    <td ><span class="${employee.Status}">${employee.Status}</span></td>
+                                  
+                                <td class="td-action">
+                                    <button class="btn-edit-data-table icon-info" onclick="InfoEmployee('${employee.Key}')"></button>
+                                    <button class="btn-edit-data-table icon-pencil" onclick="UpdateEmployee('${employee.Key}')"></button>
+                                    <button class="btn-delete-data-table icon-bin"  onclick="DeleteEmployee('${employee.Key}')"></button>
+                                </td>
+                                </tr>`;;
 
         })
     }

@@ -4,10 +4,11 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
-
+/*--------------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
 
 /*--------------LINK BASE DE DATOS ------------------------*/
@@ -38,10 +39,10 @@ module.exports = function Register_student(parentWindow) {
         }
     });
 
-    window_Register_student.loadFile('src/section_main/Register_StudentV5.html');
+    window_Register_student.loadFile('src/section_main/Register_StudentV6.html');
 
     //Herramientas de desarrollo
-   // window_Register_student.webContents.openDevTools();
+    //window_Register_student.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Register_student.webContents.setWindowOpenHandler(() => {
@@ -80,6 +81,64 @@ ipcMain.on("select-Image-new-student",(even,data)=>{
       if(result.canceled==false){
 
           window_Register_student.webContents.send("Image-select-new-student",result.filePaths[0]);
+      }
+      
+      if(result.canceled==true){
+
+         // window_Register_student.webContents.send("Image-select-new-student",ImageDefault);
+      }
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+})
+
+
+ipcMain.on("select-Image-document-student",(even,data)=>{
+
+   dialog.showOpenDialog(window_Register_student,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+          window_Register_student.webContents.send("Image-select-document-student",result.filePaths[0]);
+      }
+      
+      if(result.canceled==true){
+
+         // window_Register_student.webContents.send("Image-select-new-student",ImageDefault);
+      }
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+})
+
+
+ipcMain.on("select-Image-document-rep-student",(even,data)=>{
+
+   dialog.showOpenDialog(window_Register_student,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+          window_Register_student.webContents.send('Image-select-document-rep-student',result.filePaths[0]);
       }
       
       if(result.canceled==true){

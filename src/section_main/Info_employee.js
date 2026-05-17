@@ -4,9 +4,11 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+/*----------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
 
 /*--------------LINK BASE DE DATOS ------------------------*/
@@ -20,7 +22,7 @@ let Key_employee=null;
 module.exports = function Info_employee(parentWindow,id) {
   window_info_employee = new BrowserWindow({
       width:490,
-        height:420,
+        height:520,
         modal: true,
         resizable:false, 
         frame:false,
@@ -37,10 +39,10 @@ module.exports = function Info_employee(parentWindow,id) {
 
   Key_employee=id
 
-    window_info_employee.loadFile('src/section_main/Info_employee.html');
+    window_info_employee.loadFile('src/section_main/Info_employeeV2.html');
 
     // Herramientas de desarrollo
-   // window_info_employee.webContents.openDevTools();
+    //window_info_employee.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_info_employee.webContents.setWindowOpenHandler(() => {

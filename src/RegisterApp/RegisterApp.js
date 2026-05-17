@@ -5,16 +5,19 @@ const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
 /*-------------------------------------*/
-
+const PathList = require(path.join(__dirname,'../PathList'));
+/*--------------------------------*/
 const SAIADB = require(path.join(__dirname, '../database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
+/*------------------------------------*/
 const {LimpiarBaseDeDatos, DataTrialSAIA} = require(path.join(__dirname,'../database_controls/DataTrialSAIA'))
-const config = path.join(__dirname,"../../database/.config.json")
+/*--------------------------------------*/
+const config = path.join(PathList.configPath)
 /*------------------------------------*/
 const setupLicense = require(path.join(__dirname,'../database_controls/.data.js'))
-
 /*--------------LINK BASE DE DATOS ------------------------*/
 const ImageDefault = path.join(__dirname,"../../assets/imagen/ImageLogin3.png")
+const ImageDefaultDoc = path.join(__dirname,"../../assets/imagen/CeddulaFalsa.png")
 /*-----------------------------------*/
 
 let window_register_app;
@@ -40,7 +43,7 @@ module.exports = function Register_App(parentWindow) {
    window_register_app.loadFile('src/RegisterApp/RegisterApp.html');
 
     // Herramientas de desarrollo
-//window_register_app.webContents.openDevTools();
+   //window_register_app.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_app.webContents.setWindowOpenHandler(() => {
@@ -244,10 +247,8 @@ await DB.crearTabla(`CREATE TABLE Student (
     await DB.cerrar();
 }
 /*--------------SELECCIONAR IMAGEN USER----------------------------*/
-ipcMain.on("select-image-user",(event, arg) => {
+ipcMain.on("select-image-user-admin-app",(event,type) => {
  
- //console.log("selectImagen")
-
       dialog.showOpenDialog(window_register_app,{
         title: 'Seleccionar archivo',
         buttonLabel: 'Abrir',
@@ -260,29 +261,28 @@ ipcMain.on("select-image-user",(event, arg) => {
   
       if(result.canceled==false){
 
-               window_register_app.webContents.send("Imagen-user-select",result.filePaths[0]);
+               window_register_app.webContents.send("Imagen-user-admin-select",{type:type,path:result.filePaths[0]});
 
       }
       
       if(result.canceled==true){
 
-               //window_register_app.webContents.send("Imagen-user-select",ImageDefault);
 
       }
 
       }).catch(err => {
         console.log(err);
       });
+})
+/*-*/
 
-
-
- })
 /*--------------SELECCIONAR IMAGEN USER----------------------------*/
 
 
 /*******CREA LA BASE DE DATOS SI NO ESTA Y SE CONECTA****************/
 async function Adding_data_Admin_data(data){
-    
+
+
     const ID_USER = uuidv4();
     const ID_EMPLOYEE = uuidv4();
 
@@ -295,7 +295,7 @@ async function Adding_data_Admin_data(data){
         DB.crear(
             `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
              VALUES (?, ?, ?, ?, ?, Date('now'), Time('now'))`,
-            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave, 'Administrador']
+            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave,'Administrador']
         ),
         // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
         DB.crear(
@@ -403,8 +403,6 @@ ipcMain.on('Instalar-app', async (event,data) => {
             fs.writeFile(config,obj, function(err){
                     if (err) throw err;
 
-                    //console.log('Saved data install!');
-
                      window_register_app.webContents.send("Completed-Saving-data");
 
 
@@ -455,9 +453,9 @@ async function Adding_data_Admin_trial(){
                 "TrialWord", 
                 "01014577854", 
                 "200",
-                "Trial@mail.com", 
+                JSON.stringify(["Trial","@saia.com"]),
                 "00-00-0000", 
-                ImageDefault,
+                JSON.stringify([ImageDefault,ImageDefaultDoc]),
                 "Activo",
                 ID_USER
                 ]

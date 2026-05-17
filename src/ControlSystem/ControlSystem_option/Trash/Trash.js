@@ -310,6 +310,8 @@ function RenderTableCourse(info) {
         if(info.success==true){
             info.data.forEach((course,index)=>{
 
+
+
                     document.getElementById("listaCursos").innerHTML += `
                         <tr>
                             <td>${course.Name}</td>
@@ -367,11 +369,13 @@ function RenderTableEmployee(info) {
         if(info.success==true){
             info.data.forEach((employee,index)=>{
 
+                const doc = JSON.parse(employee.E_mail);
+
                 document.getElementById("employee-body").innerHTML+=`<tr>
-                                    <td>${employee.Name}</td>
-                                    <td>${employee.E_mail}</td>
-                                    <td ><span class="${employee.Status}">${employee.Status}</span></td>
-                                                              <td>${employee.Date_Created}</td>
+                            <td>${employee.Name}</td>
+                            <td>${doc[0]}${doc[1]}</td>
+                            <td ><span class="${employee.Status}">${employee.Status}</span></td>
+                            <td>${employee.Date_Created}</td>
                             <td>${employee.Time_Deleted}</td>
                                 <td class="td-action">
                                     <button class="btn-edit-data-table icon-undo2
@@ -417,6 +421,9 @@ function RenderTableStudent(info) {
 
     if(info.success==true){
         info.data.forEach((student,info)=>{
+
+            const doc = JSON.parse(student.E_mail);
+
 
             document.getElementById("data-list-Student").innerHTML+=`<tr>
                                 <td>${student.Name}</td>

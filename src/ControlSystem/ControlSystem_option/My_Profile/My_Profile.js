@@ -123,8 +123,6 @@ function My_Profile(id){
 </div>
     `;
 /***********************DATOS DE BASE DE DATOS *****************************************/
-    console.log(Data_user)
-
 
     document.getElementById("avatarPreviewMyprofile").src = Data_employee.image
     document.getElementById("NameEmployee").innerHTML = Data_employee.name

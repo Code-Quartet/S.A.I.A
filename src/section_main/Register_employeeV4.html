@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Empleado - SAIA Compact</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    
+    <style>
+:root {
+    --primary: #2b56c5;
+    --primary-dark: #1e40af;
+    --text-main: #1f2937;
+    --text-muted: #64748b;
+    --border: #36a0f5;
+    --bg-main: #f8fafc;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Inter', sans-serif;
+            width: 480px;
+            height: 540px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; inset: 0;
+            background: white;
+            z-index: 1000;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.4s ease;
+        }
+        .loader-spin {
+            width: 40px; height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: none;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        #lightbox img { max-width: 90%; max-height: 80%; border: 3px solid white; border-radius: 5px; }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .app-container {
+            width: 100%; height: 100%;
+            background: white;
+            display: flex; flex-direction: column;
+        }
+
+        header {
+            height: 50px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            -webkit-app-region: drag;
+        }
+        header h2 { font-size: 0.95rem; color: var(--text-main); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- CONTENIDO CON SCROLL --- */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 11px 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+        /* Estilo Scrollbar */
+        .main-content::-webkit-scrollbar { width: 6px; }
+        .main-content::-webkit-scrollbar-track { background: transparent; }
+        .main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* SECCIÓN MULTIMEDIA */
+        .section-media {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: var(--bg-main);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 110px; height: 110px;
+        }
+
+ 
+ 
+         .avatar-container {
+            position: relative; width: 110px; height: 110px;
+            border-radius: 50%; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 3px solid var(--primary);
+        }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover;  background: #2196f3;}
+        .avatar-controls {
+            position: absolute; inset: 0; background: rgba(15, 23, 42, 0.7);
+            display: flex; align-items: center; justify-content: space-around;
+            opacity: 0; transition: 0.2s; z-index: 5;
+        }
+        .avatar-container:hover .avatar-controls { opacity: 1; }
+        .avatar-btn { color: white; font-size: 20px; cursor: pointer; transition: 0.2s; }
+        .avatar-btn:hover { transform: scale(1.2); color: #60a5fa; }
+        /*----------------------------------*/
+        /* Cédula con Miniatura */
+        .input-with-doc { display: flex; gap: 8px; align-items: center; }
+.doc-trigger {
+    width: 45px;
+    height: 36px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px dashed var(--primary);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+}
+        .doc-trigger.has-img { border-style: solid; }
+        .doc-trigger img { width: 100%; height: 100%; object-fit: cover; }
+        .doc-trigger i.main-icon { font-size: 18px; color: var(--primary); }
+        .doc-controls {
+            position: absolute; inset: 0; background: rgba(45, 88, 209, 0.9);
+            display: flex; align-items: center; justify-content: space-around;
+            opacity: 0; transition: 0.2s;
+        }
+        .doc-trigger:hover .doc-controls { opacity: 1; }
+        .doc-btn { color: white; font-size: 14px; cursor: pointer; }
+        /*----------------------------------*/  
+
+        /* FORMULARIO 
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .full { grid-column: span 2; }
+*/
+
+.form-grid{
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: repeat(5, 1fr);
+grid-column-gap: 5px;
+grid-row-gap: 0px;
+
+}
+
+.div1 { grid-area: 1 / 1 / 2 / 4; }
+.div2 { grid-area: 1 / 4 / 2 / 6; }
+.div3 { grid-area: 1 / 6 / 2 / 7; }
+.div4 { grid-area: 2 / 1 / 3 / 4; }
+.div5 { grid-area: 2 / 4 / 3 / 7; }
+.div6 { grid-area: 3 / 1 / 4 / 7; }
+.div7 { grid-area: 4 / 1 / 5 / 7; }
+.div8 { grid-area: 5 / 1 / 6 / 4; }
+.div9 { grid-area: 5 / 4 / 6 / 7; }
+/*------------------------*/
+
+
+
+        .form-group label {
+            display: block; font-size: 0.65rem; font-weight: 800;
+            color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%; padding: 10px; border-radius: 8px;
+            border: 1.5px solid var(--border); font-size: 0.85rem;
+            transition: 0.2s; background: white;
+        }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(43, 86, 197, 0.1); }
+
+        /* SEGURIDAD */
+        .security-box {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pass-input {
+            display: flex; align-items: center; background: white;
+            border: 1.5px solid var(--border); border-radius: 8px; padding-right: 10px;
+        }
+        .pass-input input { border: none; background: transparent; }
+        .pass-input input:focus { box-shadow: none; }
+
+        /* FOOTER */
+        footer {
+            height: 65px;
+            padding: 0 20px;
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .btn { padding: 10px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 0.8rem; }
+        .btn-primary { background: var(--primary); color: white; width: 140px; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-sec { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); }
+/*
+        #notif {
+            position: fixed; top: 15px; right: -300px;
+            background: var(--success); color: white; padding: 10px 20px;
+            border-radius: 8px; transition: 0.5s; z-index: 3000; font-size: 0.8rem;
+        }*/
+
+        #notif{
+            position: fixed;
+            top: 20px;
+            right: -400px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border-left: 5px solid var(--success);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.5s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 9999;
+        }
+       
+        .icono-message { color: var(--success); font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-spin"></div>
+    </div>
+
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img id="img-full" src="">
+    </div>
+
+    <div id="notif">
+         <span class="icon-checkmark icono-message"></span>
+        <h3>¡Datos Guardados!</h3>
+    </div>
+
+    <div class="app-container">
+        <header>
+             <h2 style="color:blue;"><i class="icon-user-tie"></i>Registro Nuevo Empleado</h2>
+        </header>
+
+        <main class="main-content">
+            <section class="section-media">
+      
+            <div class="avatar-container">
+
+                 <div class="avatar-frame">
+                        <img id="view-avatar" src="../../assets/imagen/ImageLogin3.png">
+                    </div>
+                <div class="avatar-controls">
+                    <i class="icon-search avatar-btn" id="viewAvatar" title="Ver foto"></i>
+                    <i class="icon-camera avatar-btn" id="changeAvatar" title="Cambiar foto"></i>
+                </div>
+            </div>
+               </section>
+
+            <div class="form-grid">
+                <div class="form-group div1">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="nombre" placeholder="Nombre y Apellido">
+                </div>
+                 <div class="form-group div3">
+                        <label>Edad</label>
+                        <input type="text" id="edad" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="20">
+                    </div>
+                <div class="form-group div2">
+
+                    <label>Cédula</label>
+<div style="display: flex; justify-content: space-between;">
+    <input type="text" id="ci" placeholder="V-00000000" style="margin-right:4px;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+        <div class="doc-trigger" id="contDocEst">
+                <i class="icon-image main-icon" id="iconDocEst"></i>
+                <img id="previewDocEst" style="display:none">
+                <div class="doc-controls" id="ctrlDocEst" style="display:none">
+                    <i class="icon-search doc-btn" id="viewEst" title="Ver"></i>
+                    <i class="icon-spinner11 doc-btn" id="updEst" title="Cambiar"></i>
+                </div>
+        </div>
+</div>
+
+
+                </div>
+                <div class="form-group div4">
+                    <label>F. Nacimiento</label>
+                    <input type="date" id="fechanacimiento">
+                </div>
+                <div class="form-group div5">
+                    <label>Teléfono</label>
+                    <input type="tel" id="telefono" placeholder="04xx-0000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+                <div class="form-group div6">
+                    <label>E-mail</label>
+                    <div style="display: flex; flex-direction: row;">
+                        <input type="email" id="correo" placeholder="correo">
+                        <input type="text" list="listEmail" id="DataList" style="width:75%; margin-left: 2px;" placeholder="@Saia.com">
+                        <datalist id="listEmail">
+                            <option value="@gmail.com">@gmail.com</option>
+                            <option value="@hotmail.com">@hotmail.com</option>
+                        </datalist>
+                    </div>
+                </div>
+                <div class="form-group div7">
+                    <label>Dirección</label>
+                    <input type="text" id="direccion" placeholder="Sector y Calle">
+                </div>
+                <div class="form-group div8">
+                    <label>Rol de Usuario</label>
+                    <select id="tipoPermiso">
+                        <option value="Sub-Administrador">Sub-Administrador</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group div9">
+                    <label>Estado</label>
+                    <select id="select-status-employee">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="security-box">
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <input type="text" id="usuario" placeholder="usuario.sistema">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña Acceso</label>
+                    <div class="pass-input">
+                        <input type="password" id="password" placeholder="••••••">
+                        <i class="icon-eye-blocked" id="eyeIcon" onclick="togglePass('password')"></i>
+                    </div>
+                </div>
+                <div id="master-container" style="display: none;">
+                    <div class="form-group">
+                        <label style="color: var(--primary)">Token Maestro</label>
+                        <input type="password" id="password_Master" style="border-color: var(--primary)" placeholder="Requerido">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <button class="btn btn-sec" onclick="Close()">Cerrar</button>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-sec" onclick="clearForm()">Limpiar</button>
+                <button class="btn btn-primary" id="btn-save" onclick="DatosRegistro()" disabled>Registrar</button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- LÓGICA UI ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('preloader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 400);
+            }, 600);
+        });
+
+        function openFull(src) {
+            if(src.includes('ImageLogin3.png') || !src) return;
+            document.getElementById('img-full').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+
+                       const isPassword = input.type === 'password';
+
+                document.getElementById('eyeIcon').classList.toggle('icon-eye', !isPassword);
+             document.getElementById('eyeIcon').classList.toggle('icon-eye-blocked', isPassword);
+            
+            
+
+        }
+
+/*--------------------------------------------------*/
+    // --- MANEJO AVATAR ---
+    document.getElementById('viewAvatar').onclick = (e) => openFull(document.getElementById('view-avatar').src, e);
+
+    document.getElementById('changeAvatar').onclick = (e) => {
+    
+        e.stopPropagation();
+        api.send("select-Image-new-employee");
+    
+    };
+
+    api.receive("Image-select-new-employee", (e, img) => {
+
+        document.getElementById('view-avatar').src = img;
+    
+    });
+
+    // --- LÓGICA CÉDULA (DOCUMENTO) ---
+
+/*--------------------------------------------------*/
+ // --- LÓGICA CÉDULA (DOCUMENTO) ---
+    const contEst = document.getElementById('contDocEst');
+    const imgEst = document.getElementById('previewDocEst');
+    const iconEst = document.getElementById('iconDocEst');
+    const ctrlEst = document.getElementById('ctrlDocEst');
+
+    contEst.onclick = () => { 
+      
+        if(imgEst.style.display === 'none') api.send("select-Image-new-employee-doc"); 
+    };
+
+    document.getElementById('viewEst').onclick = (e) => openFull(imgEst.src, e);
+    
+    document.getElementById('updEst').onclick = (e) => { 
+        e.stopPropagation(); 
+        api.send("select-Image-new-employee-doc"); 
+    };
+
+    api.receive('Image-select-new-employee-doc', (e, img) => {
+        imgEst.src = img;
+        imgEst.style.display = 'block';
+        iconEst.style.display = 'none';
+        ctrlEst.style.display = 'flex';
+        contEst.classList.add('has-img');
+    });
+/*--------------------------------------------------*/
+//const reqFields = ['nombre', 'ci', 'fechanacimiento', 'usuario', 'password'];
+const reqFields =  ['nombre', 'ci', 'fechanacimiento','telefono','direccion','correo', 'usuario', 'password'];
+
+document.addEventListener('input', () => {
+
+    const allOk = reqFields.every(id => document.getElementById(id).value.trim() !== "");
+
+    document.getElementById('btn-save').disabled = !allOk;
+
+});
+
+document.getElementById('tipoPermiso').addEventListener('change', (e) => {
+
+    document.getElementById('master-container').style.display = e.target.value === 'Administrador' ? 'block' : 'none';
+});
+
+function DatosRegistro() {
+
+    const objData = {
+        Employee: {
+            nombre: document.getElementById("nombre").value,
+            ci: document.getElementById("ci").value,
+            fechanacimiento: document.getElementById("fechanacimiento").value,
+            correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
+            tlf: document.getElementById("telefono").value,
+              edad: document.getElementById("edad").value,
+            direccion: document.getElementById("direccion").value,
+            image: JSON.stringify([document.getElementById("view-avatar").src, document.getElementById("previewDocEst").src]),
+            status: document.getElementById("select-status-employee").value
+        },
+        User: {
+            usuario: document.getElementById("usuario").value,
+            clave: document.getElementById("password").value,
+            Mclave: document.getElementById("password_Master").value || "",
+            permission: document.getElementById("tipoPermiso").value,
+        }
+    };
+    if(window.api) {
+        api.send("save-data-registre-employee", objData);
+        //console.log("save-data-registre-employee", objData);
+    }
+}
+
+if(window.api) {
+    api.receive("open-modal-register-employee", () => {
+        const notif = document.getElementById('notif');
+        notif.style.right = '15px';
+        setTimeout(() => {
+            notif.style.right = '-300px';
+            api.send("Reload-dasboard-system-data-Employee");
+               api.send("button-register-employee-activate")
+            window.close();
+        }, 1500);
+    });
+}
+/*-----------------------------------------------------------*/
+        function clearForm() {
+            reqFields.forEach(id => document.getElementById(id).value = "");
+            document.getElementById("view-avatar").src = "../../assets/imagen/ImageLogin3.png";
+            document.getElementById('btn-save').disabled = true;
+        }
+
+        function Close() {
+
+                api.send("button-register-employee-activate")
+                window.close();
+        }
+    </script>
+</body>
+</html>

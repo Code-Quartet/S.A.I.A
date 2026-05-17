@@ -4,9 +4,11 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+/*----------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
 
 /*---------------------------------------------------------------*/
@@ -19,9 +21,9 @@ let key_Instructor=null;
 module.exports = function Info_instructor(parentWindow,id) {
   window_Info_instructor = new BrowserWindow({
       width:495,
-        height:450,
+        height:530,
         modal: true,
-        resizable:false, 
+        resizable:true, 
         frame:false,
         parent: parentWindow, // Si quieres que sea modal, necesita un padre
         show: false, // Mejor oculto hasta que esté listo
@@ -36,7 +38,7 @@ module.exports = function Info_instructor(parentWindow,id) {
 
   key_Instructor=id
 
-    window_Info_instructor.loadFile('src/section_main/Info_instructor.html');
+    window_Info_instructor.loadFile('src/section_main/Info_instructorV2.html');
 
     // Herramientas de desarrollo
    //window_Info_instructor.webContents.openDevTools();

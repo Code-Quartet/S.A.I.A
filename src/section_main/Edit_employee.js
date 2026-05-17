@@ -4,10 +4,16 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+
+
+/*----------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
+
+
 
 /*--------------LINK BASE DE DATOS ------------------------*/
 const ImageDefault = path.join(__dirname,"../../assets/imagen/ImageLogin3.png")
@@ -21,7 +27,9 @@ let Keyusersession;
 let Key_employee=null;
 module.exports = function Edit_employee(parentWindow,id,keyusersession) {
   window_edit_employee = new BrowserWindow({
-      width:940,
+     /* width:940,
+        height:540,*/
+      width:480,
         height:540,
        modal: true,
         resizable:false, 
@@ -40,10 +48,10 @@ module.exports = function Edit_employee(parentWindow,id,keyusersession) {
   Key_employee=id
   Keyusersession=keyusersession
 
-    window_edit_employee.loadFile('src/section_main/Edit_employee.html');
+    window_edit_employee.loadFile('src/section_main/Edit_employeeV2.html');
 
     // Herramientas de desarrollo
-  //window_edit_employee.webContents.openDevTools();
+//window_edit_employee.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_employee.webContents.setWindowOpenHandler(() => {
@@ -91,26 +99,54 @@ ipcMain.on("select-Image-edit-employee",(even,data)=>{
       });
 })
 
+
+/*------------------------------------------------*/
+
+ipcMain.on("select-Image-edit-employee-doc",(even,data)=>{
+
+   dialog.showOpenDialog(window_edit_employee,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+          window_edit_employee.webContents.send("Image-select-edit-employee-doc",result.filePaths[0]);
+      }
+
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+})
+/*------------------------------------------------*/
+
 ipcMain.on("save-data-update-employee",async(even,data)=>{
       await UpdateEmployee(data.key,data).then(async(result)=>{
 
 
-if(result.success==false){
+      if(result.success==false){
 
-          message_codId(result.message)//si cedula ya existe
-       
-}
-if(result.success==true){
+                message_codId(result.message)//si cedula ya existe
+             
+      }
+      if(result.success==true){
 
-      if(data.key==Keyusersession){
+            if(data.key==Keyusersession){
 
-        message("Datos de Empleado con permisos de Administrador cambiados")
+              message("Datos de Empleado con permisos de Administrador cambiados")
 
-     }else{
-             window_edit_employee.webContents.send("open-modal-update-employee");
+           }else{
+                   window_edit_employee.webContents.send("open-modal-update-employee");
 
-     }
-}
+           }
+      }
 
     }).catch((error)=>{
                 console.log("ERROR DATA SAVE REGISTRO",error)

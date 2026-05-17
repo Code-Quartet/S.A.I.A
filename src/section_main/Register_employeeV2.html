@@ -1,14 +1,59 @@
 <!DOCTYPE html>
-<html>
-<meta charset="UTF-8">
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Empleado - SAIA v2</title>
     <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
-    <link rel="stylesheet" type="text/css" href="RegisterApp.css">
+    
+    <style>
+        :root {
+            --primary: #2b56c5;
+            --primary-dark: #1e40af;
+            --text-main: #1f2937;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --bg-main: #f8fafc;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
 
-<style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+        }
 
- 
-   
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Inter', sans-serif;
+            width: 940px;
+            height: 540px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; inset: 0;
+            background: white;
+            z-index: 1000;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.4s ease;
+        }
+        .loader-spin {
+            width: 45px; height: 45px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         /* --- LIGHTBOX --- */
         #lightbox {
             position: fixed; inset: 0;
@@ -44,9 +89,8 @@
             background: #fff;
         }
 
-      .panel {
-    padding: 5px;
-}
+        .panel { padding: 20px; }
+
         /* PANEL 1: AVATAR INTEGRADO (ESTILO INSTRUCTOR) */
         .media-panel { 
             display: flex; flex-direction: column; align-items: center; gap: 15px;
@@ -60,16 +104,17 @@
             margin-top: 10px;
         }
 
-.avatar-frame {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 4px solid white;
-    box-shadow: 0 0 0 2px var(--primary), 0 8px 20px rgba(0,0,0,0.1);
-    overflow: hidden;
-    background: #2196f3;
-    cursor: zoom-in;
-}
+        .avatar-frame {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px var(--primary), 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            background: #f3f4f6;
+            cursor: zoom-in;
+        }
+
         .avatar-frame img {
             width: 100%;
             height: 100%;
@@ -118,33 +163,11 @@
         .form-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; overflow-y: auto; }
         .full { grid-column: span 2; }
         
-.form-group {
-    background: #f9f9f9;
-    padding: 6px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 4px;
-}
-
-.form-group>input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid var(--border-color);
-    border-radius: 12px;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border 0.2s;
-    background-color: white;
-}
+        .form-group label { display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        input, select { 
+            width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid var(--border); 
+            font-size: 0.85rem; transition: 0.2s; background: var(--bg-main);
+        }
         input:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 3px rgba(43, 86, 197, 0.1); }
 
         /* PANEL 3: SEGURIDAD */
@@ -175,59 +198,24 @@
             background: var(--success); color: white; padding: 12px 20px;
             border-radius: 8px; transition: 0.5s; z-index: 3000;
         }
-</style>
-<body class="container-body-registre-app">
-	<section id="window-logo-install-app" class="container-show-logo logo-install-app">
-		
-		<h1 style="color:white; font-size: 250px">S.A.I.A</h1>
+    </style>
+</head>
+<body>
 
-	</section>
-	<section id="window-detail-install-app" class="show-detail container-hide">
-		<h1 class="title-system-install">Sistema de Instalación</h1>
-		<section class="container-slide">
-			<div class="slideshow-container">
+    <div id="preloader">
+        <div class="loader-spin"></div>
+        <p style="margin-top:12px; font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Sincronizando con SAIA v2...</p>
+    </div>
 
-				<div class="container-bot">
-				    <span class="dot"></span> 
-				    <span class="dot"></span> 
-				    <span class="dot"></span> 
-				</div>
-
-				 <div class="mySlides fade">
-				    <img src="../../assets/imagen/image1.jpg" class="imagen-slide">
-				    <!--<div class="text">Explora la Naturaleza</div>-->
-				 </div>
-
-				<div class="mySlides fade">
-					    <img src="../../assets/imagen/image2.jpg" class="imagen-slide">
-					    <!--<div class="text">Diseño Minimalista</div>-->
-				</div>
-
-				 <div class="mySlides fade">
-				    <img src="../../assets/imagen/image3.jpg" class="imagen-slide">
-				    <!--<div class="text">Aventura Urbana</div>-->
-				</div>	
-
-			</div>
-		</section>
-		<section class="container-info-btn">
-			<!----->
-			<button class="btn-trial" id="btn-trial-system" style="cursor:pointer">Activar modo Prueba</button>
-      <button class="btn-pulse" id="btn-install-system">Agregar información</button>
-		</section>
-	</section>
-
-	<!-----------MODAL SYSTEM---------------->
     <div id="lightbox" onclick="this.style.display='none'">
         <img id="img-full" src="">
     </div>
-        <div id="notif">¡Registro Exitoso!</div>
 
-<div id="modalRegisterAppOverlay" class="modalRegisterApp-overlay-RegisterApp">
+    <div id="notif">¡Registro Exitoso!</div>
 
     <div class="app-container">
         <header>
-            <h2>FORMULARIO DE REGISTRO - ADMINISTRADOR</h2>
+            <h2>FORMULARIO DE REGISTRO - EMPLEADOS</h2>
         </header>
 
         <main class="content-grid">
@@ -258,7 +246,7 @@
                 </div>
                 <div class="form-group">
                     <label>Cédula</label>
-                    <input type="text" id="ci" placeholder="V-00000000" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <input type="text" id="ci" placeholder="V-00000000" maxlength="10">
                 </div>
                 <div class="form-group">
                     <label>F. Nacimiento</label>
@@ -266,46 +254,53 @@
                 </div>
                 <div class="form-group">
                     <label>Teléfono</label>
-                    <input type="tel" id="telefono" placeholder="04xx-0000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <input type="tel" id="telefono" placeholder="04xx-0000000">
                 </div>
                 <div class="form-group">
-            <label>Correo Electrónico</label>
-                    <div style="display: flex; flex-direction: row;">
-                        <input id="correo" type="email" placeholder="instructor" required>
-                        <input type="text" list="listEmail" id="DataList" style="width:75%; margin-left: 2px;" placeholder="@Saia.com">
-                        <datalist id="listEmail">
-                            <option value="@gmail.com">@gmail.com</option>
-                            <option value="@hotmail.com">@hotmail.com</option>
-                        </datalist>
-                    </div>
-        </div>
+                    <label>E-mail</label>
+                    <input type="email" id="correo" placeholder="correo@saia.com">
+                </div>
                 <div class="form-group full">
                     <label>Dirección Corta</label>
                     <input type="text" id="direccion" placeholder="Sector y Calle">
+                </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select id="tipoPermiso">
+                        <option value="Sub-Administrador">Sub-Administrador</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select id="select-status-employee">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
                 </div>
             </section>
 
             <section class="panel security-panel">
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label>Username</label>
-                    <input type="text" id="usuario" placeholder="Admin" value="Admin">
+                    <input type="text" id="usuario" placeholder="usuario.login">
                 </div>
 
                 <div class="pass-box">
                     <label>Contraseña</label>
                     <div class="input-icon">
                         <i class="icon-lock"></i>
-                        <input type="password" id="password" value="123456789">
+                        <input type="password" id="password" placeholder="••••••">
                         <i class="icon-eye" onclick="togglePass('password')"></i>
                     </div>
                 </div>
 
-                <div id="master-container">
+                <div id="master-container" style="display: none;">
                     <div class="pass-box" style="border-color: var(--primary); background: #eff6ff;">
                         <label style="color: var(--primary)">Key Maestra</label>
                         <div class="input-icon">
                             <i class="icon-shield" style="color: var(--primary)"></i>
-                            <input type="password" id="password_Master" value="123456789">
+                            <input type="password" id="password_Master" placeholder="Autorización">
                         </div>
                     </div>
                 </div>
@@ -316,106 +311,42 @@
         </main>
 
         <footer>
-            <button class="btn btn-sec" onclick="Close_Modal()">Cerrar</button>
+            <button class="btn btn-sec" onclick="window.close()">Cerrar</button>
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-sec" onclick="clearForm()">Limpiar</button>
                 <button class="btn btn-primary" id="btn-save" onclick="DatosRegistro()" disabled>Registrar Ahora</button>
             </div>
         </footer>
     </div>
-</div>
-</body>
-<script type="text/javascript">
-/**-------------------------FUNCION PARA EL CAMBIO DE VISTSA-----------------------------*/
 
-setTimeout(()=>{
+    <script>
+        // --- LOGICA UI ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('preloader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 400);
+            }, 800);
+        });
 
-	document.getElementById("window-logo-install-app").classList.replace("container-show-logo","container-hide")
+        function openFull(src) {
+            if(src.includes('ImageLogin3.png') || !src) return;
+            document.getElementById('img-full').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
 
-	document.getElementById("window-detail-install-app").classList.replace("container-hide","container-show-detail")
-
-},5000)
-
-
-/*----------------------CONTROL DEL SLIDECHOW------------------------------------*/
-let slideIndex = 0;
-showSlides();
-
-function showSlides() {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  
-  // Ocultar todas las imágenes
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";  
-  }
-  
-  slideIndex++;
-  
-  // Reiniciar el índice si llega al final
-  if (slideIndex > slides.length) {slideIndex = 1}    
-  
-  // Quitar la clase "active" de todos los puntos
-
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  
-  // Mostrar la imagen actual y activar el punto correspondiente
-  slides[slideIndex-1].style.display = "block";  
-  dots[slideIndex-1].className += " active";
-  
-  // Ejecutar la función cada 3000ms (3 segundos)
-     setTimeout(showSlides, 3000); 
-
-}
-/*************************************************************/
-
-
-document.getElementById("btn-trial-system").addEventListener("click",()=>{
-	
-	api.send("Activate-system-trial")
-
-})
-
-/*----------------------------------------------------------*/
-document.getElementById("btn-install-system").addEventListener("click",()=>{
-  
-    Show_modal_register_data_admin()
-
-
-})
-
-function  Show_modal_register_data_admin(){
-
-    const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");
-        
-    	modalRegisterInstallApp.style.display = "flex";  	    
-   
-}
-
-function Close_Modal(){
-  const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");         
-  modalRegisterInstallApp.style.display = "none";
-    
-}
-
-/*--------------------------------------------------------------------------*/
-  function togglePass(id) {
+        function togglePass(id) {
             const input = document.getElementById(id);
             input.type = input.type === 'password' ? 'text' : 'password';
         }
 
         // --- MANEJO DE IMÁGENES ---
-      function SelectImage(type) {
-       
-            if(window.api) api.send("select-image-user-admin-app", type);
-      
-      }
+        function SelectImage(type) {
+            if(window.api) api.send("select-Image-new-employee", type);
+        }
 
         if(window.api) {
-            api.receive('Imagen-user-admin-select', (event, data) => {
+            api.receive('Image-select-new-employee', (event, data) => {
                 if(data.type === 'doc') {
                     const img = document.getElementById("view-doc");
                     img.src = data.path;
@@ -427,79 +358,55 @@ function Close_Modal(){
             });
         }
 
-        function openFull(src) {
-            if(src.includes('ImageLogin3.png') || !src) return;
-            document.getElementById('img-full').src = src;
-            document.getElementById('lightbox').style.display = 'flex';
-        }
-
-  
-  
- const reqFields = ['nombre', 'ci', 'fechanacimiento','telefono','direccion','correo', 'usuario', 'password'];
-
+        // --- VALIDACIONES ---
+        const reqFields = ['nombre', 'ci', 'fechanacimiento', 'usuario', 'password'];
         document.addEventListener('input', () => {
             const allOk = reqFields.every(id => document.getElementById(id).value.trim() !== "");
             document.getElementById('btn-save').disabled = !allOk;
         });
 
-/*----------------------------------------------------------------*/
+        document.getElementById('tipoPermiso').addEventListener('change', (e) => {
+            document.getElementById('master-container').style.display = e.target.value === 'Administrador' ? 'block' : 'none';
+        });
+
         // --- ACCION FINAL ---
         function DatosRegistro() {
-
-
-
-if(document.getElementById("usuario").value!=="Admin" && document.getElementById("password").value!=="123456789"){
-
             const objData = {
                 Employee: {
                     nombre: document.getElementById("nombre").value,
                     ci: document.getElementById("ci").value,
                     fechanacimiento: document.getElementById("fechanacimiento").value,
-                   correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
+                    correo: document.getElementById("correo").value,
                     tlf: document.getElementById("telefono").value,
                     direccion: document.getElementById("direccion").value,
                     image: JSON.stringify([
                         document.getElementById("view-avatar").src,
                         document.getElementById("view-doc").src
                     ]),
-                    status:"Activo"
+                    status: document.getElementById("select-status-employee").value
                 },
                 User: {
                     usuario: document.getElementById("usuario").value,
                     clave: document.getElementById("password").value,
-                    Mclave: document.getElementById("password_Master").value || ""
-                   
+                    Mclave: document.getElementById("password_Master").value || "",
+                    permission: document.getElementById("tipoPermiso").value,
                 }
             };
-           
-           //console.log("Instalar-app",objData)
-           if(window.api)   api.send("Instalar-app",objData)
-}
-
-if(document.getElementById("usuario").value=="Admin" && document.getElementById("password").value=="123456789"){
-
-              api.send('open-message-system-user-pass-default',"Mantiene los datos usuario / contraseñas por defecto")
-
-            }
-/*------------------------------------------*/
-}
+            if(window.api) api.send("save-data-registre-employee", objData);
+        }
 
         if(window.api) {
-            api.receive("Completed-Saving-data", () => {
-
+            api.receive("open-modal-register-employee", () => {
                 const notif = document.getElementById('notif');
                 notif.style.right = '20px';
                 setTimeout(() => {
                     notif.style.right = '-300px';
-                    const modalRegisterInstallApp = document.getElementById("modalRegisterAppOverlay");
-                     modalRegisterInstallApp.style.display = "none";
-
+                    api.send("Reload-dasboard-system-data-Employee");
+                    window.close();
                 }, 2000);
-
-
             });
         }
-/*----------------------*/
+
         function clearForm() {
             reqFields.forEach(id => document.getElementById(id).value = "");
             document.getElementById("view-avatar").src = "../../assets/imagen/ImageLogin3.png";
@@ -507,35 +414,6 @@ if(document.getElementById("usuario").value=="Admin" && document.getElementById(
             document.getElementById("doc-placeholder").style.display = 'block';
             document.getElementById('btn-save').disabled = true;
         }
-/*--------------------------------------------------------------------------*/
-
-api.receive("Saving-data-default-user",(event,data)=>{
-
-
-            const objData = {
-                Employee: {
-                    nombre: document.getElementById("nombre").value,
-                    ci: document.getElementById("ci").value,
-                    fechanacimiento: document.getElementById("fechanacimiento").value,
-                   correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
-                    tlf: document.getElementById("telefono").value,
-                    direccion: document.getElementById("direccion").value,
-                    image: JSON.stringify([
-                        document.getElementById("view-avatar").src,
-                        document.getElementById("view-doc").src
-                    ]),
-                    status:"Activo"
-                },
-                User: {
-                    usuario: document.getElementById("usuario").value,
-                    clave: document.getElementById("password").value,
-                    Mclave: document.getElementById("password_Master").value || "",
-                    
-                }
-            };
-            api.send("Instalar-app",objData)
-})
-
-
-</script>
+    </script>
+</body>
 </html>

@@ -1,16 +1,25 @@
 const path = require('path');
-/*
-console.log(path.join(__dirname, './SAIA_manager.js'))
-console.log(path.join(__dirname, '../database/SAIA.db'))
-console.log(path.join(__dirname, "../assets/imagen/ImageLogin3.png"))
-*/
-/*---------------------------------------------------------*/
-const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
-/*-------------- ASSETS ------------------------*/
-const ImageDefault = path.join(__dirname, "../../assets/imagen/ImageLogin3.png");
 
-/**
+/*-------------------------------------*/
+const PathList = require(path.join(__dirname,'../PathList'));
+/*--------------------------------*/
+const SAIADB = require(path.join(__dirname, '../database_controls/SAIA_manager.js'));
+const DB = new SAIADB(PathList.dbPath);
+/*------------------------------------*/
+const config = path.join(PathList.configPath)
+/*-------------- ASSETS ------------------------*/
+const ImageDefaultAvatar = path.join(__dirname, "../../assets/imagen/ImageLogin3.png");
+const ImageDefaultDoc = path.join(__dirname, "../../assets/imagen/CeddulaFalsa.png");
+
+
+
+const  ArrayImagen=[
+                    path.join(__dirname, "../../assets/imagen/ImageLogin3.png"),
+                    path.join(__dirname, "../../assets/imagen/CeddulaFalsa.png"),
+                    path.join(__dirname, "../../assets/imagen/CeddulaFalsa.png")]
+                    
+
+                    /**
  * Limpia las tablas respetando las claves foráneas.
  */
 async function LimpiarBaseDeDatos() {
@@ -61,7 +70,7 @@ async function DataTrialSAIA() {
 
             await DB.crear(
                 `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, E_mail, Image, Birthdate, Status, Age, Id_user, Date_Created, Time_Created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [`E-${i}`, `Empleado Nombre ${i}`, `EMP-00${i}`, `Av. Principal local ${i}`, `+58412${i}`, `emp${i}@saia.com`, ImageDefault, '1990-01-01', 'Activo', '34', uKey, fecha, hora]
+                [`E-${i}`, `Empleado Nombre ${i}`, `EMP-00${i}`, `Av. Principal local ${i}`, `+58412${i}`, JSON.stringify([`emp${i}`,`@saia.com`]), JSON.stringify(ArrayImagen), '1990-01-01', 'Activo', '34', uKey, fecha, hora]
             );
         }
 
@@ -71,7 +80,7 @@ async function DataTrialSAIA() {
         for (let i = 1; i <= 10; i++) {
             await DB.crear(
                 `INSERT INTO Instructor (Key, Name, Cod_id, Address, Tlf, E_mail, Image, Age, Status, Specialty, Certifications, Date_Created, Time_Created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [`I-${i}`, `Prof. Instructor ${i}`, `INS-00${i}`, `Sede Norte ${i}`, `+58424${i}`, `inst${i}@saia.com`, ImageDefault, 25 + i, 'Activo', especialidades[i % 4], 'Certificación Internacional', fecha, hora]
+                [`I-${i}`, `Prof. Instructor ${i}`, `INS-00${i}`, `Sede Norte ${i}`, `+58424${i}`, JSON.stringify([`inst${i}`,`@saia.com`]), JSON.stringify(ArrayImagen), 25 + i, 'Activo', especialidades[i % 4], 'Certificación Internacional', fecha, hora]
             );
         }
 
@@ -97,7 +106,7 @@ async function DataTrialSAIA() {
             // Insertar Estudiante
             await DB.crear(
                 `INSERT INTO Student (Key, Name, Cod_id, Age, Address, Tlf, Birthdate, E_mail, Image, Name_Representative, Cod_id_Representative,Age_Representative,Address_Representative, Tlf_Representative, E_mail_Representative, Date_Created, Time_Created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
-                [sKey, `Estudiante Apellido ${i}`, `V-${2000000 + i}`, '18', 'Urb. Las Flores', `0412${i}`, '2006-05-12', `alumno${i}@mail.com`, ImageDefault, `Repre ${i}`, `V-${1000000 + i}`,`3${i}`,'Urb. Las Flores', '0414000', `repre${i}@mail.com`, fecha, hora]
+                [sKey, `Estudiante Apellido ${i}`, `V-${2000000 + i}`, '18', 'Urb. Las Flores', `0412${i}`, '2006-05-12', JSON.stringify([`alumno${i}`,`@mail.com`]), JSON.stringify(ArrayImagen), `Repre ${i}`, `V-${1000000 + i}`,`3${i}`,'Urb. Las Flores', '0414000', JSON.stringify([`repre${i}`,`@mail.com`]), fecha, hora]
             );
 
             // Insertar en Tabla Intermedia (Relación Muchos a Muchos)

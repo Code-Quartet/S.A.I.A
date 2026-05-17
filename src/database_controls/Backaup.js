@@ -4,9 +4,10 @@ const os_system = require('os')
 const csv = require('fast-csv');
 const { v4: uuidv4 } = require('uuid');
 /*---------------------------------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
 
 // ... (dentro de tu clase SAIADB)

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Empleado - SAIA Compact</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --primary-blue: #2b56c5;
+            --secondary-blue: #1e40af;
+            --text-main: #374151;
+            --text-muted: #9ca3af;
+            --border-color: #d1d5db;
+            --bg-light: #f8fafc;
+            --danger: #ef4444;
+            --success: #28a745;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: white;
+    font-family: 'Inter', sans-serif;
+    width: 480px;
+    height: 546px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; inset: 0;
+            background: white;
+            z-index: 1000;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.4s ease;
+        }
+        .loader-spin {
+            width: 40px; height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: none;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        #lightbox img { max-width: 90%; max-height: 80%; border: 3px solid white; border-radius: 5px; }
+
+        /* --- HEADER & CONTAINER --- */
+header {
+    height: 41px;
+    background: white;
+    border-bottom: 2px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    -webkit-app-region: drag;
+    cursor: move;
+}
+        header h2 { font-size: 1.1rem; color: var(--text-main); font-weight: 800; }
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    -webkit-app-region: no-drag;
+}
+
+        /* Scrollbar Estilizado */
+        .main-content::-webkit-scrollbar { width: 6px; }
+        .main-content::-webkit-scrollbar-track { background: transparent; }
+        .main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* --- SECCIÓN MULTIMEDIA (AVATAR) --- */
+        .section-media {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; background: #2196f3; }
+        
+        .avatar-controls {
+            position: absolute; inset: 0; background: rgba(15, 23, 42, 0.7);
+            display: flex; align-items: center; justify-content: space-around;
+            opacity: 0; transition: 0.2s; z-index: 5;
+        }
+        .avatar-container:hover .avatar-controls { opacity: 1; }
+        .avatar-btn { color: white; font-size: 22px; cursor: pointer; transition: 0.2s; }
+        .avatar-btn:hover { transform: scale(1.2); color: #60a5fa; }
+
+        /* --- FORMULARIO GRID --- */
+        /*
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+*/
+.form-grid{
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: repeat(5, 1fr);
+grid-column-gap: 5px;
+grid-row-gap: 0px;
+
+}
+
+.div1 { grid-area: 1 / 1 / 2 / 4; }
+.div2 { grid-area: 1 / 4 / 2 / 6; }
+.div3 { grid-area: 1 / 6 / 2 / 7; }
+.div4 { grid-area: 2 / 1 / 3 / 4; }
+.div5 { grid-area: 2 / 4 / 3 / 7; }
+.div6 { grid-area: 3 / 1 / 4 / 7; }
+.div7 { grid-area: 4 / 1 / 5 / 7; }
+.div8 { grid-area: 5 / 1 / 6 / 4; }
+.div9 { grid-area: 5 / 4 / 6 / 7; }
+/*------------------------*/
+
+
+        .full { grid-column: span 2; }
+
+        .form-group label {
+            display: block; font-size: 0.75rem; font-weight: 700;
+            color: var(--text-main); text-transform: uppercase; margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%; padding: 11px; border-radius: 10px;
+            border: 1.8px solid var(--border-color); font-size: 0.9rem;
+            transition: all 0.2s; background: white; outline: none;
+        }
+        input:focus, select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(43, 86, 197, 0.15);
+        }
+
+        /* --- CÉDULA CON DOCUMENTO --- */
+        .ci-container { display: flex; gap: 8px; }
+        .doc-trigger {
+            width: 50px; height: 42px; border-radius: 8px;
+            background: #fff; border: 1.5px dashed var(--primary-blue);
+            overflow: hidden; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            position: relative; flex-shrink: 0;
+        }
+        .doc-trigger img { width: 100%; height: 100%; object-fit: cover; }
+        .doc-controls {
+            position: absolute; inset: 0; background: rgba(43, 86, 197, 0.9);
+            display: flex; align-items: center; justify-content: space-around;
+            opacity: 0; transition: 0.2s;
+        }
+        .doc-trigger:hover .doc-controls { opacity: 1; }
+        .doc-btn { color: white; font-size: 14px; }
+
+        /* --- SEGURIDAD --- */
+        .security-box {
+            background: #f1f5f9; padding: 15px;
+            border-radius: 12px; display: flex; flex-direction: column; gap: 12px;
+        }
+        .pass-input {
+            display: flex; align-items: center; background: white;
+            border: 1.8px solid var(--border-color); border-radius: 10px; padding-right: 12px;
+        }
+        .pass-input input { border: none; background: transparent; }
+        .pass-input i { color: var(--text-muted); cursor: pointer; font-size: 1.1rem; }
+
+        /* --- FOOTER --- */
+        footer {
+            height: 70px; padding: 0 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: space-between;
+            background: white; flex-shrink: 0;
+        }
+        .btn { padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; font-size: 0.85rem; transition: 0.2s; }
+        .btn-primary { background: var(--primary-blue); color: white; min-width: 130px; }
+        .btn-primary:disabled { background: #d1d5db; cursor: not-allowed; }
+        .btn-sec { background: white; color: var(--text-main); border: 1.8px solid var(--border-color); }
+        .btn-danger { background: white; color: var(--danger); border: 1.8px solid var(--danger); }
+
+        /* NOTIFICACIÓN */
+        #notif {
+            position: fixed; top: 20px; right: -400px;
+            background: white; padding: 15px 25px;
+            border-radius: 10px; border-left: 5px solid var(--success);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.5s; display: flex; align-items: center; gap: 15px; z-index: 9999;
+        }
+
+        #notif.show { right: 20px; }
+        .icono-message { color: var(--success); font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-spin"></div>
+    </div>
+
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img id="img-full" src="">
+    </div>
+
+    <div id="notif">
+         <span class="icon-checkmark icono-message"></span>
+         <div class="notif-text">
+            <h3 style="font-size: 0.9rem;">¡Operación Exitosa!</h3>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">Los datos han sido guardados.</p>
+         </div>
+    </div>
+
+    <header>
+        <h2 style="color:blue;"><i class="icon-user-tie"></i>Actualizar Empleado</h2>
+    </header>
+
+    <main class="main-content">
+        <section class="section-media">
+            <div class="avatar-container">
+                <img id="view-avatar" src="../../assets/imagen/ImageLogin3.png">
+                <div class="avatar-controls">
+                    <i class="icon-search avatar-btn" id="viewAvatar" title="Ver foto"></i>
+                    <i class="icon-camera avatar-btn" id="changeAvatar" title="Cambiar foto"></i>
+                </div>
+            </div>
+        </section>
+
+        <div class="form-grid">
+            <div class="form-group div1">
+                <label>Nombre Completo</label>
+                <input type="text" id="nombre" placeholder="Ej. Juan Pérez">
+            </div>
+
+            <div class="form-group div3">
+                        <label>Edad</label>
+                        <input type="text" id="edad" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="20">
+            </div>
+            
+            <div class="form-group div2">
+                <label>Cédula</label>
+                <div class="ci-container">
+                    <input type="text" id="ci" placeholder="Solo números" oninput="this.value = this.value.replace(/[^0-9]/g, '')" src="../../assets/imagen/CeddulaFalsa.png">
+                    <div class="doc-trigger" id="contDocEst">
+                        <i class="icon-image" id="iconDocEst" style="color: var(--primary-blue); font-size: 20px;"></i>
+                        <img id="previewDocEst" style="display:none">
+                        <div class="doc-controls" id="ctrlDocEst" style="display:none">
+                            <i class="icon-search doc-btn" id="viewEst"></i>
+                            <i class="icon-spinner11 doc-btn" id="updEst"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group div4">
+                <label>F. Nacimiento</label>
+                <input type="date" id="fechanacimiento">
+            </div>
+
+            <div class="form-group div5">
+                <label>Teléfono</label>
+                <input type="tel" id="telefono" placeholder="04120000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+
+            <div class="form-group div6">
+                <label>E-mail</label>
+                    <div style="display: flex; flex-direction: row;">
+                        <input type="email" id="correo" placeholder="correo">
+                        <input type="text" list="listEmail" id="DataList" style="width:75%; margin-left: 2px;" placeholder="@Saia.com">
+                        <datalist id="listEmail">
+                            <option value="@gmail.com">@gmail.com</option>
+                            <option value="@hotmail.com">@hotmail.com</option>
+                        </datalist>
+                    </div>
+
+            </div>
+
+            <div class="form-group div7">
+                <label>Dirección de Habitación</label>
+                <input type="text" id="direccion" placeholder="Calle, Sector, Ciudad...">
+            </div>
+
+            <div class="form-group div8">
+                <label>Rol de Usuario</label>
+                <select id="tipoPermiso">
+                    <option value="Sub-Administrador">Sub-Administrador</option>
+                    <option value="Administrador">Administrador</option>
+                </select>
+            </div>
+
+            <div class="form-group div9">
+                <label>Estado Laboral</label>
+               <select id="select-status-employee">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                        <option value="Despedido">Despedido</option>
+                    </select>
+            </div>
+        </div>
+
+        <div class="security-box">
+            <div class="form-group">
+                <label>Nombre de Usuario</label>
+                <input type="text" id="usuario" placeholder="ejemplo.usuario">
+            </div>
+            <div class="form-group">
+                <label>Contraseña de Acceso</label>
+                <div class="pass-input">
+                    <input type="password" id="password" placeholder="••••••••">
+                    <i class="icon-eye" onclick="togglePass('password')"></i>
+                </div>
+            </div>
+            <div id="master-container" style="display: none;">
+                <div class="form-group">
+                    <label style="color: var(--primary-blue)">Token Maestro Requerido</label>
+                     <div class="pass-input">
+                    <input type="password" id="password_Master" style="border-color: var(--primary-blue)" placeholder="Ingrese clave maestra">
+                     <i class="icon-eye" onclick="togglePass('password_Master')"></i>
+                </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <button class="btn btn-danger" onclick="Close()">Cancelar</button>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-sec" onclick="clearForm()">Limpiar</button>
+            <button class="btn btn-primary" id="btn-save" onclick="DatosRegistro()" disabled>Registrar</button>
+        </div>
+    </footer>
+</body>
+<script type="text/javascript">
+
+const btnRegistrar = document.getElementById('btn-save');
+const avatarImg = document.getElementById('view-avatar');
+const contDoc = document.getElementById('contDocEst');
+const imgDoc = document.getElementById('previewDocEst');
+const iconDoc = document.getElementById('iconDocEst');
+const ctrlDoc = document.getElementById('ctrlDocEst');
+
+    
+   // --- LÓGICA UI & PRELOADER ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('preloader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 400);
+            }, 600);
+        });
+
+        function openFull(src) {
+            if(src.includes('ImageLogin3.png') || !src) return;
+            document.getElementById('img-full').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+        /*---------------------------------------------------------*/
+        document.getElementById('tipoPermiso').addEventListener('change', (e) => {
+
+       document.getElementById('master-container').style.display = e.target.value === 'Administrador' ? 'block' : 'none';
+        });
+        /*---------------------------------------------------------*/
+       const camposObligatorios =  ['nombre', 'ci', 'fechanacimiento','telefono','direccion','correo', 'usuario', 'password'];
+
+
+        // --- Inicialización ---
+        window.onload = () => api.send("get-data-employee-user");
+
+        // --- Validación ---
+    // --- VALIDACIÓN ---
+    function validarFormulario() {
+        const completo = camposObligatorios.every(id => {
+            const el = document.getElementById(id);
+            return el && el.value.trim() !== "";
+        });
+        btnRegistrar.disabled = !completo;
+    }
+
+    camposObligatorios.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) {
+            el.addEventListener('input', validarFormulario);
+            el.addEventListener('change', validarFormulario);
+        }
+    });
+
+    // --- RECEPCIÓN DE DATOS ---
+    let EmployeeKey = null;
+    api.receive("data-employee-for-edit", (event, response) => {
+        if (response && response.success){
+                const d = response.data;
+
+                EmployeeKey = d.EmployeeKey || "";
+                
+                document.getElementById("nombre").value = d.Name || "";
+                document.getElementById("ci").value = d.Cod_id || "";
+                document.getElementById("edad").value = d.Age || ""; // Requiere input ID edad
+                document.getElementById("fechanacimiento").value = d.Birthdate || "";
+
+
+    try {
+        const arrayRecuperado2 = JSON.parse(d.E_mail|| "[]");
+        document.getElementById('correo').value = arrayRecuperado2[0] || "";
+        document.getElementById('DataList').value = arrayRecuperado2[1] || "";
+
+    } catch (e) {
+        console.error("Error al parsear imágenes:", e);
+    }
+
+
+                document.getElementById("telefono").value = d.Tlf || "";
+                document.getElementById("direccion").value = d.Address || "";
+                document.getElementById("usuario").value = d.Username || "";
+                document.getElementById("password").value = d.Password || "";
+                document.getElementById("select-status-employee").value = d.Status || "";
+                
+                if(d.Permission) {
+                    document.getElementById("tipoPermiso").value = d.Permission;
+                    if(d.Permission === "Administrador"){
+                        document.getElementById("master-container").style.display = 'block';
+                        document.getElementById("password_Master").value = d.PasswordMaster || "";
+                    }
+                }
+             
+                const imgs = JSON.parse(d.Image);
+                avatarImg.src = imgs[0];
+  
+                document.getElementById("previewDocEst").src= imgs[1]
+                imgEst.style.display = 'block';
+                iconEst.style.display = 'none';
+                ctrlEst.style.display = 'flex';
+
+              validarFormulario();
+        }
+    });
+
+    // --- REGISTRO / ACTUALIZACIÓN ---
+    function DatosRegistro() {
+        const objData = {
+            key: EmployeeKey,
+            Employee: {
+                nombre: document.getElementById("nombre").value,
+                ci: document.getElementById("ci").value,
+                fechanacimiento: document.getElementById("fechanacimiento").value,
+                correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
+                tlf: document.getElementById("telefono").value,
+                direccion: document.getElementById("direccion").value,
+                image: JSON.stringify([document.getElementById("view-avatar").src, document.getElementById("previewDocEst").src]),
+                status: document.getElementById("select-status-employee").value
+            },
+            User: {
+                usuario: document.getElementById("usuario").value,
+                clave: document.getElementById("password").value,
+                Mclave: document.getElementById("password_Master").value || "",
+                permission: document.getElementById("tipoPermiso").value,
+            }
+        };
+
+        //console.log("save-data-update-employee", objData);
+        api.send("save-data-update-employee", objData);
+
+        setTimeout(() => {
+            api.send("Reload-dasboard-system-data-Employee");
+        }, 1000);
+    }
+
+
+
+        /*---------------------------------------------*/
+
+        api.receive("open-modal-update-employee", () => {
+            const notif = document.getElementById('notif');
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 3000);
+        });
+
+        api.receive("open-modal-update-employee-admin", () => {
+            const notif = document.getElementById('notif');
+            notif.classList.add('show');
+            setTimeout(() =>{
+
+                notif.classList.remove('show')
+            api.send("Reload-dasboard-system-Employee-MyProfile")  
+               console.log("data employe admin user")
+            
+            }, 2000);  
+
+
+        });
+        /*---------------------------------------------------------*/
+
+
+        // --- MANEJO DE IMÁGENES (AVATAR & DOC) ---
+        document.getElementById('viewAvatar').onclick = (e) => {
+            e.stopPropagation();
+            openFull(document.getElementById('view-avatar').src);
+        };
+
+        document.getElementById('changeAvatar').onclick = (e) => {
+            e.stopPropagation();
+            if(window.api) api.send("select-Image-edit-employee");
+        };
+
+        const contEst = document.getElementById('contDocEst');
+        const imgEst = document.getElementById('previewDocEst');
+        const iconEst = document.getElementById('iconDocEst');
+        const ctrlEst = document.getElementById('ctrlDocEst');
+
+        contEst.onclick = () => { if(imgEst.style.display === 'none') api.send("select-Image-edit-employee-doc"); };
+       
+        document.getElementById('viewEst').onclick = (e) => { e.stopPropagation(); openFull(imgEst.src); };
+       
+
+        document.getElementById('updEst').onclick = (e) => { e.stopPropagation(); api.send("select-Image-edit-employee-doc"); };
+
+        if(window.api) {
+           
+            api.receive("Image-select-edit-employee", (e, img) => { document.getElementById('view-avatar').src = img; });
+           
+
+            api.receive('Image-select-edit-employee-doc', (e, img) => {
+                imgEst.src = img;
+                imgEst.style.display = 'block';
+                iconEst.style.display = 'none';
+                ctrlEst.style.display = 'flex';
+            });
+        }
+
+    /*---------------------------------------------------------*/
+
+        function clearForm() {
+            reqFields.forEach(id => document.getElementById(id).value = "");
+            document.getElementById("view-avatar").src = "../../assets/imagen/ImageLogin3.png";
+            document.getElementById("view-doc").style.display = 'none';
+            document.getElementById("doc-placeholder").style.display = 'block';
+            document.getElementById('btn-save').disabled = true;
+        }
+
+        function Close() {
+                api.send("button-register-employee-activate")
+                window.close();
+        }
+   /*-----------------------------------------------------------*/
+</script>
+</html>

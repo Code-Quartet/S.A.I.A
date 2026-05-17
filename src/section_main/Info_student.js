@@ -5,9 +5,11 @@ const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
 
+/*----------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
 
 /*---------------------------------------------------------------*/
@@ -19,7 +21,7 @@ let Key_Student=null;
 module.exports = function Info_student(parentWindow,key) {
   window_Info_student = new BrowserWindow({
         width:600,
-        height:500,
+        height:530,
        modal: true,
        resizable:false, 
       frame:false,
@@ -34,10 +36,10 @@ module.exports = function Info_student(parentWindow,key) {
         }
     });
 
-    window_Info_student.loadFile('src/section_main/Info_Student.html');
+    window_Info_student.loadFile('src/section_main/Info_studentV3.html');
 
     // Herramientas de desarrollo
-    //window_Info_student.webContents.openDevTools();
+ // window_Info_student.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Info_student.webContents.setWindowOpenHandler(() => {

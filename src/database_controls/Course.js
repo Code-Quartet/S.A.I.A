@@ -2,10 +2,13 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+
+
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
-/*--------------LINK BASE DE DATOS ------------------------*/
+const DB = new SAIADB(PathList.dbPath);
+/*------------------------------------------*/
 
 
 async function InsertCourse(formData) {
@@ -135,22 +138,23 @@ async function UpdateCourse(key, formData) {
      * Borrado lógico (Marca fecha de eliminación)
      */
 async function DeleteCourse(key) {
-    // 1. Consultar el estado actual del curso
-    const sqlCheck = `SELECT Name, Status FROM Course WHERE Key = ? LIMIT 1`;
+    // 1. Consultar el curso y contar estudiantes activos en una sola operación o pasos claros
+    const sqlCheckCourse = `SELECT Name, Status FROM Course WHERE Key = ? AND Time_Deleted IS NULL LIMIT 1`;
+    const sqlCheckStudents = `SELECT COUNT(*) as total FROM Student_Courses WHERE Id_curs = ? AND Status = 'Activo'`;
 
     try {
-        const course = await DB.buscar(sqlCheck, [key]);
+        // Buscamos el curso
+        const course = await DB.buscar(sqlCheckCourse, [key]);
 
-        // Si el curso no existe
+        // Si el curso no existe o ya tiene borrado lógico
         if (!course) {
             return { 
                 success: false, 
-                message: "El curso no existe o ya fue eliminado." 
+                message: "El curso no existe o ya fue eliminado anteriormente." 
             };
         }
 
-        // 2. Validar si el estatus permite la eliminación
-        // Convertimos a minúsculas para evitar errores de escritura (Cancelado vs cancelado)
+        // 2. Validar estatus (Solo 'Cancelado' permite borrar)
         if (course.Status.toLowerCase() !== 'cancelado') {
             return { 
                 success: false, 
@@ -158,24 +162,33 @@ async function DeleteCourse(key) {
             };
         }
 
-        // 3. Proceder con el borrado lógico
+        // 3. Validar si tiene estudiantes registrados
+        const enrollment = await DB.buscar(sqlCheckStudents, [key]);
+        if (enrollment && enrollment.total > 0) {
+            return { 
+                success: false, 
+                message: `Operación denegada: El curso "${course.Name}" tiene ${enrollment.total} estudiante(s) inscritos. Debe desvincular a los estudiantes antes de eliminar el curso.` 
+            };
+        }
+
+        // 4. Proceder con el borrado lógico
+        // Actualizamos Time_Deleted para ocultarlo del sistema
         const sqlDelete = `UPDATE Course SET Time_Deleted = DATE('now'), Status = 'Eliminado' WHERE Key = ?`;
         await DB.borrar(sqlDelete, [key]);
 
         return { 
             success: true, 
-            message: `El curso "${course.Name}" ha sido eliminado correctamente.` 
+            message: `El curso "${course.Name}" ha sido eliminado exitosamente.` 
         };
 
     } catch (error) {
         console.error("Error al intentar eliminar curso:", error);
         return { 
             success: false, 
-            message: error.message || "Error interno al procesar la eliminación." 
+            message: "Error interno del sistema al procesar la eliminación." 
         };
     }
 }
-
 /*--------------funciones de busqueda para el manage course---------------*/
 async function GetCoursePaged(page = 1, limit = 10) {
     try {

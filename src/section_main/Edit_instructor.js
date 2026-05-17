@@ -4,9 +4,11 @@ const path = require('path')
 const fs = require('fs')
 const os_system = require('os')
 const { v4: uuidv4 } = require('uuid');
+/*----------------------------------*/
+const PathList = require(path.join(__dirname,'../../src/PathList'));
 /*-------------------------------------*/
 const SAIADB = require(path.join(__dirname, '../../src/database_controls/SAIA_manager.js'));
-const DB = new SAIADB(path.join(__dirname, '../../database/SAIA.db'));
+const DB = new SAIADB(PathList.dbPath);
 /*------------------------------------------*/
 
 /*--------------LINK BASE DE DATOS ------------------------*/
@@ -37,12 +39,12 @@ module.exports = function Edit_instructor(parentWindow,key) {
         }
     });
 
-    window_edit_instructor.loadFile('src/section_main/Edit_instructor.html');
+    window_edit_instructor.loadFile('src/section_main/Edit_instructorV2.html');
 
     key_Instructor=key;
 
     // Herramientas de desarrollo
-    //window_edit_instructor.webContents.openDevTools();
+   // window_edit_instructor.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_edit_instructor.webContents.setWindowOpenHandler(() => {
@@ -82,7 +84,7 @@ ipcMain.on("Select-update-imagen-instructor",(event,data)=>{
       
       if(result.canceled==true){
 
-          window_edit_instructor.send("Image-select-nupdate-instructor",ImageDefault);
+          //window_edit_instructor.send("Image-select-nupdate-instructor",ImageDefault);
       }
 
       }).catch(err => {
@@ -95,7 +97,36 @@ ipcMain.on("Select-update-imagen-instructor",(event,data)=>{
 })
 
 
+ipcMain.on("select-Image-document-instructor-update",(even,data)=>{
 
+   dialog.showOpenDialog(window_register_instructor,{
+        title: 'Seleccionar archivo',
+        buttonLabel: 'Abrir',
+        filters: [
+          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+        ],
+        properties: ['openFile']
+      }).then(result => {
+        
+      if(result.canceled==false){
+
+           window_register_instructor.webContents.send('Image-select-document-instructor-update',result.filePaths[0]);
+      }
+      
+      if(result.canceled==true){
+
+          
+      }
+
+      }).catch(err => {
+
+        console.log(err);
+        
+      });
+})
+
+
+/*----------------------------------------------*/
 
 ipcMain.on("Save-data-update-instructor",async(event,data)=>{
 

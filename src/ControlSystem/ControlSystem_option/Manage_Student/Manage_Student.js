@@ -255,17 +255,16 @@ api.receive("Data-list-Student",(event,info)=>{
     console.log("Data-list-Student",info)
 
     document.getElementById("data-list-Student").innerHTML='';
-    document.getElementById("data-list-Student").innerHTML='Cargando......';
-    document.getElementById("data-list-Student").innerHTML='';
 
     if(info.success==true){
         info.data.forEach((student,info)=>{
+const doc = JSON.parse(student.E_mail);
 
             document.getElementById("data-list-Student").innerHTML+=`<tr>
                                 <td>${student.Name}</td>
                                 <td>${student.Cod_id}</td>
                                 <td>${student.Tlf}</td>
-                                <td>${student.E_mail}</td>
+                                <td>${doc[0]+doc[1]}</td>
                                 <td>${student.CourseNames}</td>
                                 <td>${student.Date_Created}/${student.Time_Created}</td>
                              <td class="td-action">
@@ -315,12 +314,14 @@ api.receive("Data-list-Student-serach",(event,info)=>{
 
     if(info.success==true){
         info.data.forEach((student,info)=>{
+const doc = JSON.parse(student.E_mail);
 
+ 
             document.getElementById("data-list-Student").innerHTML+=`<tr>
                                 <td>${student.Name}</td>
                                 <td>${student.Cod_id}</td>
                                 <td>${student.Tlf}</td>
-                                <td>${student.E_mail}</td>
+                                <td>${doc[0]+doc[1]}</td>
                                 <td>${student.CourseNames}</td>
                                 <td>${student.Date_Created}/${student.Time_Created}</td>
                                  <td class="td-action">

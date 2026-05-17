@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Instructor - SAIA v2</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    <style>
+        :root {
+            --primary: #2d58d1;
+            --primary-hover: #1e3fa3;
+            --success: #28a745;
+            --border: #d2d2d2;
+            --text-dark: #333;
+            --text-gray: #555;
+            --bg-light: #f1f5f9;
+        }
+
+        * { padding: 0; margin: 0; box-sizing: border-box; }
+        
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+            font-weight: normal; font-style: normal;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-light); 
+            color: var(--text-dark); 
+            overflow-x: hidden;
+        }
+.modal-card {
+    background: white;
+    padding: 10px;
+    max-width: 850px;
+    margin: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+        .modal-header {
+            -webkit-app-region: drag;
+            margin-bottom: 2px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 1px;
+        }
+        .modal-header h2 { text-align: center; color: var(--primary); font-size: 1.4rem; }
+
+        /* --- CSS GRID CON TEMPLATE AREAS --- */
+.form-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    /* grid-gap: 3px; */
+    grid-column-gap: 8px;
+    -webkit-app-region: no-drag;
+    grid-template-areas: "foto  foto  foto    foto    foto    foto"
+        "nom   nom   nom     ced     ced     edad"
+        "dir   dir   dir     dir     dir     dir"
+        "mail  mail  mail    mail mail    mail"
+        "tel   tel     tel     est  est     est"
+        "esp   esp   esp     cert    cert    cert"
+        "btns  btns  btns    btns    btns    btns";
+}
+        /* Asignación de áreas a clases específicas */
+        .area-avatar { grid-area: foto; display: flex; justify-content: center; padding-bottom: 15px; }
+        .area-name   { grid-area: nom; }
+        .area-ced    { grid-area: ced; }
+        .area-age    { grid-area: edad; }
+        .area-addr   { grid-area: dir; }
+        .area-mail   { grid-area: mail; }
+        .area-phone  { grid-area: tel; }
+        .area-status { grid-area: est; }
+        .area-spec   { grid-area: esp; }
+        .area-cert   { grid-area: cert; }
+        .area-footer { grid-area: btns; margin-top: 20px; }
+
+        /* --- COMPONENTES --- */
+        .field { display: flex; flex-direction: column; gap: 5px; }
+        .field label { font-weight: 700; font-size: 11px; color: var(--text-gray); text-transform: uppercase; }
+        .field input, .field select {
+            padding: 10px; border: 2px solid var(--border);
+            border-radius: 8px; font-size: 14px; transition: 0.2s;
+            width: 100%;
+        }
+        .field input:focus, .field select:focus {
+            border-color: var(--primary); outline: none; box-shadow: 0 0 8px rgba(45, 88, 209, 0.2);
+        }
+
+        /* Avatar */
+        
+        .avatar-container {
+            position: relative; width: 110px; height: 110px;
+            border-radius: 50%; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 3px solid var(--primary);
+        }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; background: #2196f3; }
+        .avatar-controls {
+            position: absolute; inset: 0; background: rgba(15, 23, 42, 0.7);
+            display: flex; align-items: center; justify-content: space-around;
+            opacity: 0; transition: 0.2s; z-index: 5;
+        }
+        .avatar-container:hover .avatar-controls { opacity: 1; }
+        .avatar-btn { color: white; font-size: 20px; cursor: pointer; transition: 0.2s; }
+        .avatar-btn:hover { transform: scale(1.2); color: #60a5fa; }
+
+        /* Cédula con Miniatura */
+        .input-with-doc { display: flex; gap: 8px; align-items: center; }
+        .doc-trigger {
+            width: 45px; height: 40px; border-radius: 8px; background: #fff;
+            border: 2px dashed var(--primary); overflow: hidden; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; flex-shrink: 0;
+        }
+        .doc-trigger.has-img { border-style: solid; }
+        .doc-trigger img { width: 100%; height: 100%; object-fit: cover; }
+        .doc-trigger i.main-icon { font-size: 18px; color: var(--primary); }
+        .doc-controls {
+            position: absolute; inset: 0; background: rgba(45, 88, 209, 0.9);
+            display: flex; align-items: center; justify-content: space-around;
+            opacity: 0; transition: 0.2s;
+        }
+        .doc-trigger:hover .doc-controls { opacity: 1; }
+        .doc-btn { color: white; font-size: 14px; cursor: pointer; }
+
+        /* Lightbox */
+        #viewerModal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 10000; display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        #viewerModal img { max-width: 90%; max-height: 85%; border-radius: 8px; border: 3px solid white; }
+        .close-viewer { position: absolute; top: 20px; right: 20px; color: white; font-size: 40px; cursor: pointer; }
+
+        /* Footer */
+        .footer-buttons {
+            display: flex; justify-content: space-between;
+            padding-top: 2px; border-top: 1px solid #eee;
+        }
+        .btn-footer {
+            padding: 10px 20px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s;
+            border: none;
+        }
+        .btn-save { background: var(--primary); color: white; }
+        .btn-save:hover { background: var(--primary-hover); }
+        .btn-save:disabled { background: #ccc; cursor: not-allowed; opacity: 0.7; }
+        .btn-cancel { background: transparent; border: 2px solid #ccc; color: #666; }
+        .btn-cancel:hover { background: #fee2e2; border-color: #ef4444; color: #ef4444; }
+
+        /* Notificación */
+        .top-notification {
+            position: fixed; top: 20px; right: -400px;
+            background: white; padding: 15px 25px; border-radius: 10px;
+            border-left: 5px solid var(--success); box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.5s; z-index: 9999;
+        }
+        .top-notification.show { right: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="viewerModal" onclick="this.style.display='none'">
+    <span class="close-viewer">&times;</span>
+    <img id="imgFull">
+</div>
+
+<div class="modal-card">
+    <div class="modal-header">
+        <h2><i class="icon-user-tie"></i> Registro de Nuevo Instructor</h2>
+    </div>
+
+    <form id="instructorForm" class="form-container">
+        
+        <div class="area-avatar">
+            <div class="avatar-container">
+                <img id="imagen" src="../../assets/imagen/ImageLogin3.png">
+                <div class="avatar-controls">
+                    <i class="icon-search avatar-btn" id="viewAvatar" title="Ver foto"></i>
+                    <i class="icon-camera avatar-btn" id="changeAvatar" title="Cambiar foto"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="field area-name">
+            <label>Nombre Completo</label>
+            <input id="Name" type="text" placeholder="Nombre y Apellido" required>
+        </div>
+
+        <div class="field area-ced">
+            <label>Cédula</label>
+            <div class="input-with-doc">
+                <input id="Codpersona" type="text" placeholder="12345678" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+                <div class="doc-trigger" id="contDocEst">
+                    <i class="icon-image main-icon" id="iconDocEst"></i>
+                    <img id="previewDocEst" style="display:none">
+                    <div class="doc-controls" id="ctrlDocEst" style="display:none">
+                        <i class="icon-search doc-btn" id="viewEst" title="Ver"></i>
+                        <i class="icon-spinner11 doc-btn" id="updEst" title="Cambiar"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field area-age">
+            <label>Edad</label>
+            <input id="Age" type="text" placeholder="Ej: 25" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+        </div>
+
+        <div class="field area-addr">
+            <label>Dirección</label>
+            <input id="Address" type="text" placeholder="Dirección completa" required>
+        </div>
+
+        <div class="field area-mail">
+            <label>Correo Electrónico</label>
+                    <div style="display: flex; flex-direction: row;">
+                        <input id="Email" type="email" placeholder="instructor" required>
+                        <input type="text" list="listEmail" id="DataList" style="width:75%; margin-left: 2px;" placeholder="@Saia.com">
+                        <datalist id="listEmail">
+                            <option value="@gmail.com">@gmail.com</option>
+                            <option value="@hotmail.com">@hotmail.com</option>
+                        </datalist>
+                    </div>
+        </div>
+
+        <div class="field area-phone">
+            <label>Teléfono</label>
+            <input id="Phone" type="text" placeholder="04120000000" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+        </div>
+
+        <div class="field area-status">
+            <label>Estado</label>
+            <select id="status" required>
+                <option value="" disabled selected>Seleccionar...</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+                <option value="Despedido">Despedido</option>
+            </select>
+        </div>
+
+        <div class="field area-spec">
+            <label>Especialidad</label>
+            <input id="Specialty" type="text" placeholder="Ej: Mecánica" required>
+        </div>
+
+        <div class="field area-cert">
+            <label>Certificaciones</label>
+            <input id="Certification" type="text" placeholder="Ej: Certificado INCE" required>
+        </div>
+
+    </form>
+
+        <div class="footer-buttons area-footer">
+            <button type="button" class="btn-footer btn-cancel" onclick="Close()">Cerrar</button>
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn-footer btn-cancel" onclick="LimpiarFormulario()">Limpiar</button>
+                <button type="button" id="btnGuardar" class="btn-footer btn-save" onclick="ValoresFormulario()" disabled>
+                    Guardar <span class="icon-checkmark"></span>
+                </button>
+            </div>
+        </div>
+</div>
+
+<div class="top-notification" id="topNotif">
+    <h3><i class="icon-checkmark"></i> ¡Datos Guardados!</h3>
+</div>
+
+<script>
+    const form = document.getElementById('instructorForm');
+    const btnGuardar = document.getElementById('btnGuardar');
+    const imgAvatar = document.getElementById('imagen');
+    const modal = document.getElementById('viewerModal');
+    const imgFull = document.getElementById('imgFull');
+    const ImagenSelect = new Array(2);
+    const camposObligatorios = ['Name', 'Age', 'Codpersona', 'Address', 'Email', 'Phone', 'status', 'Specialty', 'Certification'];
+
+    // --- LÓGICA LIGHTBOX ---
+    function openLightbox(src, e) {
+        if(e) e.stopPropagation();
+        if(!src || src.includes('ImageLogin3.png')) return;
+        imgFull.src = src;
+        modal.style.display = 'flex';
+    }
+
+    // --- VALIDACIÓN AUTOMÁTICA ---
+    form.addEventListener('input', () => {
+        const todosLlenos = camposObligatorios.every(id => {
+            const el = document.getElementById(id);
+            return el && el.value.trim() !== "";
+        });
+        btnGuardar.disabled = !todosLlenos;
+    });
+
+    // --- MANEJO AVATAR ---
+    document.getElementById('viewAvatar').onclick = (e) => openLightbox(imgAvatar.src, e);
+    document.getElementById('changeAvatar').onclick = (e) => {
+        e.stopPropagation();
+        api.send("Select-new-imagen-instructor");
+    };
+
+    api.receive("Image-select-new-instructor", (e, img) => {
+        imgAvatar.src = img;
+    });
+
+    // --- LÓGICA CÉDULA (DOCUMENTO) ---
+    const contEst = document.getElementById('contDocEst');
+    const imgEst = document.getElementById('previewDocEst');
+    const iconEst = document.getElementById('iconDocEst');
+    const ctrlEst = document.getElementById('ctrlDocEst');
+
+    contEst.onclick = () => { 
+        if(imgEst.style.display === 'none') api.send("select-Image-document-instructor"); 
+    };
+
+    document.getElementById('viewEst').onclick = (e) => openLightbox(imgEst.src, e);
+    
+    document.getElementById('updEst').onclick = (e) => { 
+        e.stopPropagation(); 
+        api.send("select-Image-document-instructor"); 
+    };
+
+    api.receive('Image-select-document-instructor', (e, img) => {
+        imgEst.src = img;
+        imgEst.style.display = 'block';
+        iconEst.style.display = 'none';
+        ctrlEst.style.display = 'flex';
+        contEst.classList.add('has-img');
+    });
+
+    // --- ACCIONES FORMULARIO ---
+    function LimpiarFormulario() {
+        form.reset();
+        imgAvatar.src = '../../assets/imagen/ImageLogin3.png';
+        imgEst.src = '';
+        imgEst.style.display = 'none';
+        iconEst.style.display = 'block';
+        ctrlEst.style.display = 'none';
+        contEst.classList.remove('has-img');
+        btnGuardar.disabled = true;
+    }
+
+    function Close() {
+        api.send("button-register-instructor-activate");
+        window.close();
+    }
+
+    function ValoresFormulario() {
+        ImagenSelect[0] = imgAvatar.src;
+        ImagenSelect[1] = imgEst.src;
+        const valores = {
+            imagen: JSON.stringify(ImagenSelect),
+            nombre: document.getElementById('Name').value.trim(),
+            edad: document.getElementById('Age').value,
+            cedula: document.getElementById('Codpersona').value,
+            direccion: document.getElementById('Address').value,
+            correo: JSON.stringify([document.getElementById('Email').value,document.getElementById("DataList").value]),
+            telefono: document.getElementById('Phone').value,
+            estado: document.getElementById('status').value,
+            especialidad: document.getElementById('Specialty').value,
+            certificaciones: document.getElementById('Certification').value
+        };
+
+        api.send('Save-data-new-instructor', valores);
+        mostrarNotificacion();
+        
+        setTimeout(() => {
+            LimpiarFormulario();
+            api.send("Reload-dasboard-system-data-Instructor");
+        }, 1500);
+    }
+
+    function mostrarNotificacion() {
+        const notif = document.getElementById('topNotif');
+        notif.classList.add('show');
+        setTimeout(() => notif.classList.remove('show'), 3000);
+    }
+</script>
+
+</body>
+</html>

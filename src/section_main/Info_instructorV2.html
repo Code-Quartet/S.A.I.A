@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    <title>Perfil de Instructor - SAIA</title>
+
+    <style>
+        :root {
+            --primary: #2d58d1;
+            --danger: #ef4444;
+            --bg-light: #f1f5f9;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('../../assets/fonts/Inter/Inter-VariableFont_opszwght.ttf') format('truetype');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: absolute;
+            inset: 0;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: 0.3s;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- CARD --- */
+.card-container {
+    background: white;
+    width: 100%;
+    /* border-radius: 16px; */
+    padding: 9px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+.profile-img-container {
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    padding: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+}
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+           background: #2196f3;
+           
+        }
+
+        .header-info h1 { font-size: 1.4rem; color: var(--text-dark); margin-bottom: 5px; }
+        .header-info p { font-size: 0.9rem; color: var(--text-gray); }
+
+        /* --- BADGES ESTADO --- */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        .Activo { background: #dcfce7; color: #166534; }
+        .Inactivo { background: #fee2e2; color: #991b1b; }
+        .Despedido { background: #450a0a; color: white; }
+
+        /* --- INFO GRID --- */
+        .card-body {
+    display: grid;
+    gap: 12px;
+    margin: 0px 0;
+}
+        .info-group h3 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-gray);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+        .info-item strong { color: var(--text-gray); font-weight: 500; }
+        .info-item span { font-weight: 600; text-align: right; }
+
+        /* --- DOCUMENTO CI --- */
+        .ci-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-light);
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .ci-container:hover { background: #e2e8f0; }
+        .ci-thumb {
+            width: 60px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+            background: #cbd5e1;
+        }
+
+        /* --- VIEWER MODAL --- */
+        #viewerModal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 1000; display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        #viewerModal img { max-width: 90%; max-height: 80%; border: 4px solid white; border-radius: 8px; }
+        .close-viewer { position: absolute; top: 30px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
+.btn-close {
+    width: 100%;
+    padding: 12px;
+    background: #e2e2e2;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    color: #607d8b;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+        .btn-close:hover { background: var(--danger); color: white; border-color: var(--danger); }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="spinner"></div>
+        <p style="margin-top:15px; font-weight:600; color:#64748b">Cargando Perfil...</p>
+    </div>
+
+    <div id="viewerModal" onclick="this.style.display='none'">
+        <span class="close-viewer">&times;</span>
+        <img id="imgFull" src="">
+    </div>
+
+    <div class="card-container">
+        <header class="card-header">
+            <div class="profile-img-container" onclick="openLightbox(document.getElementById('profile-img').src)">
+                <img id="profile-img" src="../../assets/imagen/ImageLogin3.png" class="profile-img">
+            </div>
+            <div class="header-info">
+                <h1 id="instructor-name">---</h1>
+              
+                <span id="instructor-status" class="badge">---</span>
+            </div>
+        </header>
+
+        <main class="card-body">
+            <section class="info-group">
+                <h3>Información de Contacto</h3>
+                <div class="info-item"><strong>Teléfono:</strong> <span id="info-tlf">---</span></div>
+                <div class="info-item"><strong>Correo:</strong> <span id="info-email">---</span></div>
+                <div class="info-item"><strong>Dirección:</strong> <span id="info-address">---</span></div>
+            </section>
+
+            <section class="info-group">
+                <h3>Documentación</h3>
+                <div class="info-item"><strong>Cédula:</strong> <span id="info-cod">---</span></div>
+                <div class="ci-container" id="view-ci-btn">
+                    <img id="ci-img" src="../../assets/imagen/CeddulaFalsa.png" class="ci-thumb">
+                    <div>
+                        <p style="font-size: 0.8rem; font-weight: 700;">Documento de Identidad</p>
+                        <p style="font-size: 0.7rem; color: var(--text-gray);">Clic para ampliar</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="info-group">
+                <div class="info-item"><strong>Edad:</strong> <span id="info-age">---</span></div>
+                <div class="info-item"><strong>Fecha Registro:</strong> <span id="info-date">---</span></div>
+            </section>
+        </main>
+
+        <button class="btn-close" id="Btnclose">Cerrar Perfil</button>
+    </div>
+
+    <script>
+        const viewerModal = document.getElementById('viewerModal');
+        const imgFull = document.getElementById('imgFull');
+        const preloader = document.getElementById('preloader');
+
+        function openLightbox(src) {
+            if (!src || src.includes('ImageLogin3.png') || src === window.location.href) return;
+            imgFull.src = src;
+            viewerModal.style.display = 'flex';
+        }
+
+        function addingData(data) {
+            if (!data) return;
+
+            // Datos principales
+            document.getElementById('instructor-name').textContent = data.Name;
+          
+            const statusEl = document.getElementById('instructor-status');
+            statusEl.textContent = data.Status;
+            statusEl.className = 'badge ' + data.Status;
+
+            // Manejo de Imágenes
+            // Suponiendo que data.Image es un JSON string o array con [avatar, ci]
+            try {
+                const imagenes = JSON.parse(data.Image);
+                document.getElementById('profile-img').src = imagenes[0] ||  '../../assets/imagen/CeddulaFalsa.png';
+                document.getElementById('ci-img').src = imagenes[1] || '../../assets/imagen/CeddulaFalsa.png';
+                
+                // Evento para ver la CI
+                document.getElementById('view-ci-btn').onclick = () => openLightbox(imagenes[1]);
+            } catch (e) {
+                document.getElementById('profile-img').src = data.Image;
+            }
+
+            // Datos Detalle
+            document.getElementById('info-tlf').textContent = data.Tlf;
+            document.getElementById('info-age').textContent = data.Age + " años";
+            document.getElementById('info-cod').textContent = data.Cod_id;
+            let dataEmail = JSON.parse(data.E_mail)
+            document.getElementById('info-email').textContent = dataEmail[0]+dataEmail[1];
+            document.getElementById('info-address').textContent = data.Address;
+            document.getElementById('info-date').textContent = data.Date_Created;
+
+            // Ocultar preloader con una pequeña demora para suavidad
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => preloader.style.display = 'none', 300);
+            }, 500);
+        }
+
+        window.onload = () => {
+            // Solicitar datos al iniciar
+            if(typeof api !== 'undefined') {
+                api.send("get-data-instructor-info");
+            }
+        };
+
+        if(typeof api !== 'undefined') {
+            api.receive("data-instructor", (event, data) => {
+                addingData(data);
+            });
+        }
+
+        document.getElementById("Btnclose").addEventListener("click", () => {
+            window.close();
+        });
+    </script>
+</body>
+</html>

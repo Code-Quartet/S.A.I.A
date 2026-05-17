@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../assets/iconos/icomoon/style.css">
+    <title>Perfil SAIA - Compact</title>
+
+    <style>
+        :root {
+            --primary: #2b56c5;
+            --primary-gradient: linear-gradient(135deg, #2b56c5 0%, #60a5fa 100%);
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --bg-light: #f8fafc;
+            --border: #e2e8f0;
+            --radius: 12px;
+        }
+
+        /* Bloqueo de scroll en el body para ajuste exacto a la ventana */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            width: 490px;
+            height: 520px;
+            overflow: hidden; /* Evita scroll de ventana principal */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: absolute; inset: 0; background: white;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 100; transition: 0.3s;
+        }
+        .spinner {
+            width: 35px; height: 35px; border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .main-container {
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: grid;
+            grid-template-rows: auto 1fr auto; /* Header, Body (scrollable), Footer */
+        }
+
+        /* --- HEADER (Fijo arriba) --- */
+.card-header {
+    padding: 26px 20px;
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-wrapper {
+    width: 100px;
+    height: 100px;
+    /* height: 75px; */
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    padding: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+        .profile-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background:blue; }
+
+.header-text h1 {
+    font-size: 2.1rem;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+
+        .header-text p { font-size: 0.75rem; color: var(--primary); font-weight: 700; text-transform: uppercase; }
+        
+        .badge {
+            font-size: 0.65rem; padding: 2px 8px; border-radius: 4px;
+            font-weight: 800; display: inline-block; margin-top: 4px;
+        }
+
+.Activo {
+    background: #dcfce7;
+    color: #166534;
+    font-size: 16px;
+}
+
+
+        .Inactivo { background: #fee2e2; color: #991b1b; }
+
+        /* --- BODY (Con Scroll interno si los datos exceden) --- */
+        .card-content {
+            padding: 15px 20px;
+            overflow-y: auto; /* Permite scroll si la dirección o datos son largos */
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .full-row { grid-column: span 2; }
+
+
+.data-box {
+    background: #ffffff;
+    border: 1px solid #2196f3;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+
+        .label { font-size: 0.6rem; color: var(--text-gray); text-transform: uppercase; font-weight: 700; display: block; }
+        .value { font-size: 0.85rem; color: var(--text-dark); font-weight: 600; }
+
+        /* --- SECCIÓN CÉDULA --- */
+        .ci-section { margin-top: 15px; }
+        .ci-card {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px; background: #f8fafc;
+            border: 1px dashed var(--primary); border-radius: 10px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .ci-card:hover { background: #eff6ff; }
+        .ci-thumb { width: 55px; height: 35px; background: #cbd5e1; border-radius: 4px; object-fit: cover; }
+
+        /* --- FOOTER (Fijo abajo) --- */
+        .card-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+        .btn-close {
+            width: 100%; padding: 10px;
+            background: #f1f5f9; border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text-gray);
+            font-weight: 700; cursor: pointer; transition: 0.2s;
+        }
+        .btn-close:hover { background: #ef4444; color: white; border-color: #ef4444; }
+
+        /* --- LIGHTBOX --- */
+        #viewerModal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 1000; display: none; align-items: center; justify-content: center;
+        }
+        #viewerModal img { max-width: 90%; max-height: 80%; border: 4px solid white; border-radius: 8px; }
+
+        /* Custom Scrollbar */
+        .card-content::-webkit-scrollbar { width: 6px; }
+        .card-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="viewerModal" onclick="this.style.display='none'">
+         <span class="close-viewer">&times;</span>
+        <img id="imgFull" src="">
+    </div>
+
+    <div class="main-container">
+        <header class="card-header">
+            <div class="profile-wrapper" onclick="openLightbox(document.getElementById('profile-img').src)">
+                <img id="profile-img" src="../../assets/imagen/ImageLogin3.png" class="profile-img">
+            </div>
+            <div class="header-text">
+                <h1 id="emp-name">---</h1>
+                <p id="emp-permission">---</p>
+                <div id="emp-status" class="badge">---</div>
+            </div>
+        </header>
+
+        <main class="card-content">
+            <div class="data-grid">
+                <div class="data-box"><span class="label">Teléfono</span><span class="value" id="info-tlf">---</span></div>
+                <div class="data-box"><span class="label">Edad</span><span class="value" id="info-age">---</span></div>
+                <div class="data-box full-row"><span class="label">Correo Electrónico</span><span class="value" id="info-email">---</span></div>
+                <div class="data-box full-row"><span class="label">Dirección</span><span class="value" id="info-address">---</span></div>
+            </div>
+
+            <div class="ci-section">
+                <span class="label" style="margin-bottom: 5px;">Documento de Identidad</span>
+                <div class="ci-card" id="view-ci-btn">
+                    <img id="ci-img-thumb" src="../../assets/imagen/CeddulaFalsa.png" class="ci-thumb">
+                    <div style="flex: 1;">
+                        <span class="value" id="info-id">---</span>
+                        <p style="font-size: 0.6rem; color: var(--text-gray);">Clic para ver adjunto</p>
+                    </div>
+                    <i class="icon-search" style="color: var(--primary);"></i>
+                </div>
+            </div>
+        </main>
+
+        <footer class="card-footer">
+            <button class="btn-close" onclick="window.close()">Cerrar Ventana</button>
+        </footer>
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            if (!src || src.includes('ImageLogin3.png') || src.endsWith('#')) return;
+            document.getElementById('imgFull').src = src;
+            document.getElementById('viewerModal').style.display = 'flex';
+        }
+
+        function loadData(data) {
+            if (!data) return;
+
+            document.getElementById('emp-name').textContent = data.Name;
+            document.getElementById('emp-permission').textContent = data.Permission;
+            
+            const statusEl = document.getElementById('emp-status');
+            statusEl.textContent = data.Status;
+            statusEl.className = 'badge ' + (data.Status || 'Inactivo');
+
+            try {
+                const images = JSON.parse(data.Image);
+                document.getElementById('profile-img').src = images[0] || '../../assets/imagen/ImageLogin3.png';
+                if(images[1]) {
+                    document.getElementById('ci-img-thumb').src = images[1];
+                    document.getElementById('view-ci-btn').onclick = () => openLightbox(images[1]);
+                }
+            } catch (e) {
+                document.getElementById('profile-img').src = data.Image || '../../assets/imagen/CeddulaFalsa.png';
+            }
+
+
+
+            document.getElementById('info-tlf').textContent = data.Tlf;
+
+            let dataEmail = JSON.parse(data.E_mail)
+            document.getElementById('info-email').textContent = dataEmail[0]+dataEmail[1];
+            document.getElementById('info-address').textContent = data.Address;
+            document.getElementById('info-id').textContent = data.Cod_id;
+            document.getElementById('info-age').textContent = data.Age + " años";
+
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => document.getElementById('preloader').style.display = 'none', 300);
+            }, 400);
+        }
+
+        window.onload = () => { if(window.api) api.send("get-data-employee-info"); };
+        if(window.api) api.receive("data-employee-info", (e, res) => loadData(res.data));
+    </script>
+</body>
+</html>
