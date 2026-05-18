@@ -262,22 +262,57 @@ body {
             console.log(d[0])
 */
             // Procesar Array de Imágenes [perfil, cedulaEst, cedulaRep]
-            try {
-                const imagenes = JSON.parse(data.Image);
-                document.getElementById('view-img').src = imagenes[0] || '../../assets/imagen/ImageLogin3.png';
-                
-                if(imagenes[1]) {
-                    document.getElementById('view-doc-est-img').src = imagenes[1];
-                    document.getElementById('btn-view-doc-est').onclick = () => openViewer(imagenes[1]);
-                }
-                
-                if(imagenes[2]) {
-                    document.getElementById('view-doc-rep-img').src = imagenes[2];
-                    document.getElementById('btn-view-doc-rep').onclick = () => openViewer(imagenes[2]);
-                }
-            } catch (e) {
-                document.getElementById('view-img').src = '../../assets/imagen/ImageLogin3.png';
-            }
+try {
+    let imagenes = [];
+
+    // Validamos que exista data.Image y no esté vacío
+    if (data.Image && data.Image.trim() !== "") {
+        // Rompemos por comas y limpiamos espacios o saltos de línea molestos
+        imagenes = data.Image.split(',').map(ruta => ruta.trim());
+    }
+
+    console.log("Imágenes procesadas:", imagenes);
+
+    // 1. Imagen principal (Avatar) - Si no existe, usa la de por defecto
+    const viewImg = document.getElementById('view-img');
+    if (viewImg) {
+        viewImg.src = imagenes[0] || '../../assets/imagen/ImageLogin3.png';
+    }
+    
+    // 2. Documento Estudiante (Índice 1)
+    const viewDocEstImg = document.getElementById('view-doc-est-img');
+    const btnViewDocEst = document.getElementById('btn-view-doc-est');
+
+    if (imagenes[1]) {
+        if (viewDocEstImg) viewDocEstImg.src = imagenes[1];
+        if (btnViewDocEst) btnViewDocEst.onclick = () => openViewer(imagenes[1]);
+    } else {
+        // Si el tamaño varía y no existe la segunda imagen, reseteamos
+        if (viewDocEstImg) viewDocEstImg.src = ""; 
+        if (btnViewDocEst) btnViewDocEst.onclick = null; 
+    }
+    
+    // 3. Documento Representante (Índice 2)
+    const viewDocRepImg = document.getElementById('view-doc-rep-img');
+    const btnViewDocRep = document.getElementById('btn-view-doc-rep');
+
+    if (imagenes[2]) {
+        if (viewDocRepImg) viewDocRepImg.src = imagenes[2];
+        if (btnViewDocRep) btnViewDocRep.onclick = () => openViewer(imagenes[2]);
+    } else {
+        // Si el tamaño varía y no existe la tercera imagen, reseteamos
+        if (viewDocRepImg) viewDocRepImg.src = "";
+        if (btnViewDocRep) btnViewDocRep.onclick = null;
+    }
+
+} catch (e) {
+    console.error("Error al procesar el string de imágenes:", e);
+    // Fallback seguro en caso de error crítico
+    const viewImg = document.getElementById('view-img');
+    if (viewImg) {
+        viewImg.src = '../../assets/imagen/ImageLogin3.png';
+    }
+}
             // Datos Estudiante
             document.getElementById('view-name').textContent = data.Name;
             document.getElementById('view-id').textContent = data.Cod_id;

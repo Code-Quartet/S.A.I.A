@@ -325,7 +325,8 @@
                             </div>
                             <div class="field">
                                 <label>Edad Rep.</label>
-                                <div class="input-group" id="load-edad_representante"><i class="icon-star-full"></i><input type="text" id="edad_representante" maxlength="3" placeholder="Ej: 20"><div class="field-loader"></div></div>
+                                <div class="input-group" id="load-edad_representante"><i class="icon-star-full"></i>
+                                    <input type="text" id="edad_representante" maxlength="3" placeholder="Ej: 20"><div class="field-loader"></div></div>
                             </div>
         <div class="field span-2">
             <label>Correo Representante</label>
@@ -410,7 +411,7 @@ window.onload = () => {
 };
 
 api.receive('data-student-information', (event, data) => {
-    //console.log('Cargando información del estudiante:', data);
+    console.log('Cargando información del estudiante:', data);
     
     Key = data.Key;
     // Mapeo de campos básicos
@@ -435,20 +436,38 @@ api.receive('data-student-information', (event, data) => {
 
     // Procesamiento de Imágenes con Try-Catch por seguridad
 
-    try {
-        arrayRecuperado = JSON.parse(data.Image || "[]");
-        console.log("Array",arrayRecuperado)
-        mainAvatar.src = arrayRecuperado[0] || "";
-        imgEst.src = arrayRecuperado[1] || "";
-        imgRep.src = arrayRecuperado[2] || "";
-
-        // Activar visualización de documento estudiante si existe
-        if (arrayRecuperado[1]) {
-            actualizarEstadoContenedor('Est', true);
-        }
-    } catch (e) {
-        console.error("Error al parsear imágenes:", e);
+ try {
+    // 1. Validamos que exista data.Image y que no sea un string vacío
+    if (data.Image && data.Image.trim() !== "") {
+        // Separamos por comas y limpiamos saltos de línea o espacios extras con map y trim
+        arrayRecuperado = data.Image.split(',').map(ruta => ruta.trim());
     }
+
+   // console.log("Array recuperado:", arrayRecuperado);
+
+    // 2. Asignación dinámica (si el índice no existe, se asigna un string vacío)
+    if (mainAvatar) mainAvatar.src = arrayRecuperado[0] || "";
+    if (imgEst)     imgEst.src     = arrayRecuperado[1] || "";
+    if (imgRep)     imgRep.src     = arrayRecuperado[2] || "";
+
+    // 3. Control dinámico de los contenedores según el tamaño del array
+    // Estudiante (Índice 1)
+    if (arrayRecuperado[1]) {
+        actualizarEstadoContenedor('Est', true);
+    } else {
+        actualizarEstadoContenedor('Est', false); // Opcional: por si necesitas ocultarlo si no viene
+    }
+
+    // Representante (Índice 2) - Añadido por si también manejas su contenedor
+    if (arrayRecuperado[2]) {
+        actualizarEstadoContenedor('Rep', true);
+    } else {
+        actualizarEstadoContenedor('Rep', false);
+    }
+
+} catch (e) {
+    console.error("Error al procesar las imágenes:", e);
+}
 
 
 /*----------------------------------------------------------*/
@@ -480,7 +499,6 @@ api.receive('data-student-information', (event, data) => {
     if (data.Name_Representative && data.Name_Representative.trim() !== "") {
         ageToggle.checked = true;
         repSection.classList.add('active');
-        actualizarEstadoContenedor('Rep', true);
     }
 
     if (data.cursos) {
@@ -570,7 +588,7 @@ btnConfirm.addEventListener('click', () => {
     const imagenesFinales = [
         document.getElementById('previewAvatar').src,
         document.getElementById('previewDocEst').src,
-        ageToggle.checked ? document.getElementById('previewDocRep').src : ""
+        ageToggle.checked ? document.getElementById('previewDocRep').src : "" || "../../assets/imagen/CeddulaFalsa.png"
     ];
 
     const formData = {
@@ -601,6 +619,7 @@ btnConfirm.addEventListener('click', () => {
     };
     
     api.send("Register-update-data-student", formData);
+console.log("Register-update-data-student", formData);
 });
 
 api.receive("Open-modal-message-student-update", () => {

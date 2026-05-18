@@ -260,16 +260,26 @@ async function UpdateStudent(key, data) {
             UPDATE Student SET 
                 Name = ?, Cod_id = ?, Address = ?, Tlf = ?, E_mail = ?,
                 Image = ?, Age = ?, Birthdate = ?, Name_Representative = ?, 
-                Cod_id_Representative = ?, Tlf_Representative = ?, 
-                E_mail_Representative = ?, Address_Representative = ?
+                Cod_id_Representative = ?, Tlf_Representative = ?,
+                E_mail_Representative = ?, Address_Representative = ?, Age_Representative=?
             WHERE Key = ?`;
 
         const paramsStudent = [
-            est.nombre || null, est.cedula || null, est.direccion || null,
-            est.telefono || null, est.correo || null, est.imagen || null, 
-            parseInt(est.edad) || null, est.nacimiento || null, 
-            rep.nombre || null, rep.cedula || null, rep.telefono || null,
-            rep.correo || null, rep.direccion || null, key
+            est.nombre || null, 
+            est.cedula || null, 
+            est.direccion || null,
+            est.telefono || null, 
+            est.correo || null, 
+            est.imagen || null, 
+            parseInt(est.edad) || null, 
+            est.nacimiento || null, 
+            rep.nombre || null, 
+            rep.cedula || null,
+            rep.telefono || null,
+            rep.correo || null, 
+            rep.direccion || null,
+            parseInt(rep.edad) || null,
+            key
         ];
 
         await DB.actualizar(sqlUpdateStudent, paramsStudent);

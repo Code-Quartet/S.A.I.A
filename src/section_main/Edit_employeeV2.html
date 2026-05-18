@@ -478,6 +478,7 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
             Employee: {
                 nombre: document.getElementById("nombre").value,
                 ci: document.getElementById("ci").value,
+                 edad: document.getElementById("edad").value,
                 fechanacimiento: document.getElementById("fechanacimiento").value,
                 correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
                 tlf: document.getElementById("telefono").value,
@@ -493,7 +494,7 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
             }
         };
 
-        //console.log("save-data-update-employee", objData);
+        console.log("save-data-update-employee", objData);
         api.send("save-data-update-employee", objData);
 
         setTimeout(() => {
