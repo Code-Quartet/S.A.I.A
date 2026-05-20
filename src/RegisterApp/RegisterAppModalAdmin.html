@@ -337,7 +337,7 @@ background-color:rgba(0,0,0,0);
             </div>
                             <div class="form-group">
                       <label>Edad</label>
-                      <input type="text" id="edad" placeholder="Ej:20" maxlength="3">
+                      <input type="text" id="edad" placeholder="Ej:20" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
               </div>
             <div class="form-group">
                 <label for="ci">Cédula</label>
@@ -453,7 +453,7 @@ function openFull(src) {
 }
 
 
- const reqFields = ['nombre', 'ci', 'fechanacimiento','telefono','direccion','correo', 'usuario', 'password'];
+ const reqFields = ['nombre', 'ci', 'edad','fechanacimiento','telefono','direccion','correo', 'usuario','password','password_Master'];
 
         document.addEventListener('input', () => {
             const allOk = reqFields.every(id => document.getElementById(id).value.trim() !== "");
@@ -517,6 +517,10 @@ if(window.api) {
 function clearForm() {
     reqFields.forEach(id => document.getElementById(id).value = "");
     document.getElementById("view-avatar").src = "../../assets/imagen/ImageLogin3.png";
+
+    document.getElementById('usuario').value="Admin"
+    document.getElementById('password').value="123456789"
+    document.getElementById('password_Master').value="123456789"
     document.getElementById("view-doc").style.display = 'none';
     document.getElementById("doc-placeholder").style.display = 'block';
     document.getElementById('btn-save').disabled = true;
