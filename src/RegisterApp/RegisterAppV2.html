@@ -256,6 +256,10 @@
                     <label>Nombre y Apellido</label>
                     <input type="text" id="nombre" placeholder="Nombre completo">
                 </div>
+                        <div class="sub-form-group">
+                              <label>Edad</label>
+                              <input type="text" id="edad" placeholder="Ej:20">
+                      </div>
                 <div class="form-group">
                     <label>Cédula</label>
                     <input type="text" id="ci" placeholder="V-00000000" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
@@ -454,6 +458,7 @@ if(document.getElementById("usuario").value!=="Admin" && document.getElementById
                 Employee: {
                     nombre: document.getElementById("nombre").value,
                     ci: document.getElementById("ci").value,
+                    edad:document.getElementById("edad").value,
                     fechanacimiento: document.getElementById("fechanacimiento").value,
                    correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
                     tlf: document.getElementById("telefono").value,
@@ -512,26 +517,22 @@ if(document.getElementById("usuario").value=="Admin" && document.getElementById(
 api.receive("Saving-data-default-user",(event,data)=>{
 
 
-            const objData = {
-                Employee: {
-                    nombre: document.getElementById("nombre").value,
-                    ci: document.getElementById("ci").value,
-                    fechanacimiento: document.getElementById("fechanacimiento").value,
-                   correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
-                    tlf: document.getElementById("telefono").value,
-                    direccion: document.getElementById("direccion").value,
-                    image: JSON.stringify([
-                        document.getElementById("view-avatar").src,
-                        document.getElementById("view-doc").src
-                    ]),
-                    status:"Activo"
-                },
-                User: {
-                    usuario: document.getElementById("usuario").value,
-                    clave: document.getElementById("password").value,
-                    Mclave: document.getElementById("password_Master").value || "",
-                    
-                }
+const objData = {
+Employee: {
+nombre: document.getElementById("nombre").value,
+ci: document.getElementById("ci").value,
+edad:document.getElementById("edad").value,
+fechanacimiento: document.getElementById("fechanacimiento").value,
+correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
+tlf: document.getElementById("telefono").value,
+direccion: document.getElementById("direccion").value,
+image: JSON.stringify([document.getElementById("view-avatar").src, document.getElementById("view-doc").src ]), status:"Activo"},
+User: {
+usuario: document.getElementById("usuario").value,
+clave: document.getElementById("password").value,
+Mclave: document.getElementById("password_Master").value || "",
+
+}
             };
             api.send("Instalar-app",objData)
 })

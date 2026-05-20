@@ -12,46 +12,51 @@ const DB = new SAIADB(PathList.dbPath);
 
 
 async function InsertCourse(formData) {
-    // 1. Validar si el nombre ya existe usando el método buscar de tu clase SAIADB
+    // 1. Validar si el nombre ya existe
     const sqlCheck = `SELECT Name FROM Course WHERE Name = ? LIMIT 1`;
     
     try {
         const existing = await DB.buscar(sqlCheck, [formData.nombre]);
 
-        if (existing) {
+        // Dependiendo de tu clase DB, 'existing' podría ser un array. 
+        // Si es un array, validamos con existing.length > 0
+        if (existing && (!Array.isArray(existing) || existing.length > 0)) {
             return { 
                 success: false, 
                 message: `El curso "${formData.nombre}" ya está registrado.` 
             };
         }
 
-        // 2. SQL corregido (se eliminó el duplicado de Status)
+        // 2. SQL alineado con los parámetros
+        // Dejamos 'Status' como un marcador '?' para usar el formData.estado ("Pausa")
         const sql = `INSERT INTO Course (
             Key, Name, Description, Instructor_ID, Days, 
             Start_Time, End_Time, Duration_Value, Duration_Unit,
             Cost, Capacity, Has_Evaluation, Has_Certificate,
             Status, Date_Created, Time_Created
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Activo', DATE('now'), TIME('now'))`;
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DATE('now'), TIME('now'))`;
 
         const key = uuidv4();
 
+        // 3. Arreglo de parámetros ordenados exactamente como el SQL de arriba
         const params = [
-            key,
-            formData.nombre,
-            formData.descripcion,
-            formData.instructor,
-            Array.isArray(formData.dias) ? formData.dias.join(',') : (formData.dias || ''), 
-            formData.hora_inicio,
-            formData.hora_fin,
-            parseInt(formData.duracion_valor) || 0,
-            formData.duracion_unidad,
-            formData.costo || "0",
-            parseInt(formData.cupo) || 0,
-            formData.evaluacion === 'on' ? 1 : 0,
-            formData.certificado === 'on' ? 1 : 0
+            key,                                                 // Key
+            formData.nombre,                                     // Name
+            formData.descripcion,                                // Description
+            formData.instructor,                                 // Instructor_ID
+            Array.isArray(formData.dias) ? formData.dias.join(',') : (formData.dias || ''), // Days
+            formData.hora_inicio,                                // Start_Time
+            formData.hora_fin,                                   // End_Time
+            parseInt(formData.duracion_valor) || 0,              // Duration_Value
+            formData.duracion_unidad,                            // Duration_Unit
+            formData.costo || "0",                               // Cost
+            parseInt(formData.cupo) || 0,                        // Capacity
+            formData.evaluacion === 'on' ? 1 : 0,                // Has_Evaluation (falso/0 por defecto)
+            formData.certificado === 'on' ? 1 : 0,              // Has_Certificate (falso/0 por defecto)
+            formData.estado || 'Activo'                          // Status (recibe "Pausa" correctamente)
         ];
 
-        // 3. Ejecutar inserción usando el método crear (que llama a _runQuery)
+        // 4. Ejecutar inserción
         await DB.crear(sql, params);
         
         return { 
@@ -62,7 +67,6 @@ async function InsertCourse(formData) {
 
     } catch (err) {
         console.error("Error al insertar curso:", err);
-        // Retornamos el error de licencia o de base de datos de forma controlada
         return { success: false, message: err.message || "Error al procesar la solicitud" };
     }
 }

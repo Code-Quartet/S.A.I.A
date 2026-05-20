@@ -42,7 +42,7 @@ module.exports = function Register_student(parentWindow) {
     window_Register_student.loadFile('src/section_main/Register_studentV6.html');
 
     //Herramientas de desarrollo
-    window_Register_student.webContents.openDevTools();
+    //window_Register_student.webContents.openDevTools();
 
     // Bloquear nuevas ventanas (Forma moderna)
     window_Register_student.webContents.setWindowOpenHandler(() => {

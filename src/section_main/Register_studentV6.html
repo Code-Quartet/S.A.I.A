@@ -582,9 +582,9 @@ input, select {
             setLoading('nombre', true);
 
             /*----------------------*/
-            ArrayImagenSelect[0]=document.getElementById('previewAvatar').src;
-            ArrayImagenSelect[1]=document.getElementById('previewDocEst').src;
-            ArrayImagenSelect[2]=document.getElementById('previewDocRep').src;
+ArrayImagenSelect[0]=document.getElementById('previewAvatar').src || "../../assets/imagen/ImageLogin3.png";
+ArrayImagenSelect[1]=document.getElementById('previewDocEst').src || "../../assets/imagen/CeddulaFalsa.png";
+ArrayImagenSelect[2]=document.getElementById('previewDocRep').src || "../../assets/imagen/CeddulaFalsa.png";
 
             //console.log(ArrayImagenSelect)
             /*-----------------------*/

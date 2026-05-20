@@ -384,7 +384,10 @@ const coursesContainer = document.getElementById('selected-courses-container');
 const selectCurso = document.getElementById("tipoCurso");
 const imgEst = document.getElementById('previewDocEst');
 const imgRep = document.getElementById('previewDocRep');
-
+/**----------*/
+ let arrayRecuperado=null
+ let arrayRecuperado1=null
+ let arrayRecuperado2=null
 /* --- LÓGICA DE INTERFAZ Y VISUALIZACIÓN --- */
 
 window.openLightbox = (src, e) => {
@@ -407,7 +410,7 @@ window.onload = () => {
 };
 
 api.receive('data-student-information', (event, data) => {
-    console.log('Cargando información del estudiante:', data);
+    //console.log('Cargando información del estudiante:', data);
     
     Key = data.Key;
     // Mapeo de campos básicos
@@ -431,8 +434,10 @@ api.receive('data-student-information', (event, data) => {
     });
 
     // Procesamiento de Imágenes con Try-Catch por seguridad
+
     try {
-        const arrayRecuperado = JSON.parse(data.Image || "[]");
+        arrayRecuperado = JSON.parse(data.Image || "[]");
+        console.log("Array",arrayRecuperado)
         mainAvatar.src = arrayRecuperado[0] || "";
         imgEst.src = arrayRecuperado[1] || "";
         imgRep.src = arrayRecuperado[2] || "";
@@ -445,11 +450,12 @@ api.receive('data-student-information', (event, data) => {
         console.error("Error al parsear imágenes:", e);
     }
 
+
 /*----------------------------------------------------------*/
     try {
-        const arrayRecuperado1 = JSON.parse(data.E_mail || "[]");
+        arrayRecuperado1 = JSON.parse(data.E_mail || "[]");
 
-        console.log(arrayRecuperado1)
+    //    console.log(arrayRecuperado1)
         document.getElementById('correo').value = arrayRecuperado1[0] || "";
         document.getElementById('DataList').value = arrayRecuperado1[1] || "";
 
@@ -461,7 +467,7 @@ api.receive('data-student-information', (event, data) => {
 
 /*----------------------------------------------------------*/
     try {
-        const arrayRecuperado2 = JSON.parse(data.E_mail_Representative || "[]");
+        arrayRecuperado2 = JSON.parse(data.E_mail_Representative || "[]");
         document.getElementById('correo_representante').value = arrayRecuperado2[0] || "";
         document.getElementById('DataListRep').value = arrayRecuperado2[1] || "";
 

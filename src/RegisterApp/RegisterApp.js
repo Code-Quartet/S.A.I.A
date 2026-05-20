@@ -19,7 +19,9 @@ const setupLicense = require(path.join(__dirname,'../database_controls/.data.js'
 const ImageDefault = path.join(__dirname,"../../assets/imagen/ImageLogin3.png")
 const ImageDefaultDoc = path.join(__dirname,"../../assets/imagen/CeddulaFalsa.png")
 /*-----------------------------------*/
+const Register_App_Modal = require(path.join(__dirname,'./RegisterAppModalAdmin'))
 
+/*-------------------------------------------*/
 let window_register_app;
 
 module.exports = function Register_App(parentWindow) {
@@ -40,7 +42,7 @@ module.exports = function Register_App(parentWindow) {
         }
     });
 
-   window_register_app.loadFile('src/RegisterApp/RegisterAppV2.html');
+   window_register_app.loadFile('src/RegisterApp/RegisterAppV3.html');
 
     // Herramientas de desarrollo
  // window_register_app.webContents.openDevTools();
@@ -110,9 +112,15 @@ function Reset_data(){
 });
 
 
-
 }
 
+/*----------------------------------------*/
+ipcMain.on('Open-system-Admin-data-register', async (event,data) => {
+
+  Register_App_Modal(window_register_app)
+
+})
+/*----------------------------------------*/
 
 /*******CREA LA BASE DE DATOS SI NO ESTA Y SE CONECTA****************/
 
@@ -124,307 +132,128 @@ async function Adding_table_db(){
     await DB.conectar();
 
 
-// Tabla User
-  await DB.crearTabla(`CREATE TABLE User (
-    Key TEXT PRIMARY KEY, -- Clave primaria
-    Username TEXT NOT NULL UNIQUE,         -- Nombre de usuario único
-    Password TEXT NOT NULL,                -- Contraseña
-    PasswordMaster TEXT NOT NULL,                -- Contraseña
-    Permission TEXT NOT NULL,              -- Permisos del usuario
-    Date_Created DATE NOT NULL,
-    Time_Created TIME NOT NULL,
-    Time_Deleted DATE                        -- Fecha de eliminación lógica
-)`);
+    // Tabla User
+      await DB.crearTabla(`CREATE TABLE User (
+        Key TEXT PRIMARY KEY, -- Clave primaria
+        Username TEXT NOT NULL UNIQUE,         -- Nombre de usuario único
+        Password TEXT NOT NULL,                -- Contraseña
+        PasswordMaster TEXT NOT NULL,                -- Contraseña
+        Permission TEXT NOT NULL,              -- Permisos del usuario
+        Date_Created DATE NOT NULL,
+        Time_Created TIME NOT NULL,
+        Time_Deleted DATE                        -- Fecha de eliminación lógica
+    )`);
 
-  await DB.crearTabla(`CREATE TABLE User_Session (
-    Session_ID TEXT PRIMARY KEY,
-    User_Key TEXT NOT NULL,                -- Referencia a la Key de la tabla User
-    Event_Type TEXT NOT NULL,              -- 'LOGIN' o 'LOGOUT'
-    Date_Created DATE NOT NULL,
-    Time_Created TIME NOT NULL,
-    FOREIGN KEY (User_Key) REFERENCES User(Key)
-)`);
+      await DB.crearTabla(`CREATE TABLE User_Session (
+        Session_ID TEXT PRIMARY KEY,
+        User_Key TEXT NOT NULL,                -- Referencia a la Key de la tabla User
+        Event_Type TEXT NOT NULL,              -- 'LOGIN' o 'LOGOUT'
+        Date_Created DATE NOT NULL,
+        Time_Created TIME NOT NULL,
+        FOREIGN KEY (User_Key) REFERENCES User(Key)
+    )`);
 
-// Tabla Employee
-  await DB.crearTabla(`CREATE TABLE Employee (
-    Key TEXT PRIMARY KEY, -- Clave primaria
-    Name TEXT NOT NULL,                    -- Nombre del empleado
-    Cod_id TEXT NOT NULL UNIQUE,           -- Código único del empleado
-    Address TEXT,                          -- Dirección
-    Tlf TEXT,                              -- Teléfono
-    E_mail TEXT UNIQUE,                  -- Correo electrónico único
-    Image TEXT,
-    Birthdate TEXT,
-    Status TEXT,
-    Age TEXT UNICODE,
-    Id_user TEXT UNIQUE,                       -- Relación con la tabla User
-    Date_Created DATE NOT NULL,
-    Time_Created TIME NOT NULL,
-    Time_Deleted DATE,                       -- Fecha de eliminación lógica
-    FOREIGN KEY (Id_user) REFERENCES User(Key) -- Clave foránea
-)`);
+    // Tabla Employee
+      await DB.crearTabla(`CREATE TABLE Employee (
+        Key TEXT PRIMARY KEY, -- Clave primaria
+        Name TEXT NOT NULL,                    -- Nombre del empleado
+        Cod_id TEXT NOT NULL UNIQUE,           -- Código único del empleado
+        Address TEXT,                          -- Dirección
+        Tlf TEXT,                              -- Teléfono
+        E_mail TEXT UNIQUE,                  -- Correo electrónico único
+        Image TEXT,
+        Birthdate TEXT,
+        Status TEXT,
+        Age TEXT UNICODE,
+        Id_user TEXT UNIQUE,                       -- Relación con la tabla User
+        Date_Created DATE NOT NULL,
+        Time_Created TIME NOT NULL,
+        Time_Deleted DATE,                       -- Fecha de eliminación lógica
+        FOREIGN KEY (Id_user) REFERENCES User(Key) -- Clave foránea
+    )`);
 
 
-// Tabla Instructor
-await DB.crearTabla(`CREATE TABLE Instructor (
-    Key TEXT PRIMARY KEY,           -- Clave primaria
-    Name TEXT NOT NULL,             -- Nombre del empleado
-    Cod_id TEXT NOT NULL UNIQUE,    -- Código único del empleado
-    Address TEXT,                   -- Dirección
-    Tlf TEXT,                       -- Teléfono
-    E_mail TEXT,             -- Correo electrónico único
-    Image TEXT,
-    Age INTEGER,                    -- Corregido: 'UNICODE' no existe. Se cambió a INTEGER.
-    Status TEXT,
-    Specialty TEXT,
-    Certifications TEXT,
-    Date_Created DATE NOT NULL,
-    Time_Created TIME NOT NULL,
-    Time_Deleted DATE                 -- Fecha de eliminación lógica
-)`);
-//Tabla Alumno
-await DB.crearTabla(`CREATE TABLE Student (
-    Key TEXT PRIMARY KEY,
-    Name TEXT NOT NULL,
-    Cod_id TEXT NOT NULL UNIQUE,
-    Age TEXT,
-    Address TEXT,
-    Tlf TEXT,
-    Birthdate TEXT,
-    E_mail TEXT UNIQUE,
-    Image TEXT,
-    Name_Representative TEXT,
-    Age_Representative TEXT,
-    Address_Representative TEXT,
-    Cod_id_Representative TEXT,
-    Tlf_Representative TEXT,
-    E_mail_Representative TEXT,
-    Date_Created DATE NOT NULL,
-    Time_Created TIME NOT NULL,
-    Time_Deleted DATE
-)`);
+    // Tabla Instructor
+    await DB.crearTabla(`CREATE TABLE Instructor (
+        Key TEXT PRIMARY KEY,           -- Clave primaria
+        Name TEXT NOT NULL,             -- Nombre del empleado
+        Cod_id TEXT NOT NULL UNIQUE,    -- Código único del empleado
+        Address TEXT,                   -- Dirección
+        Tlf TEXT,                       -- Teléfono
+        E_mail TEXT,             -- Correo electrónico único
+        Image TEXT,
+        Age INTEGER,                    -- Corregido: 'UNICODE' no existe. Se cambió a INTEGER.
+        Status TEXT,
+        Specialty TEXT,
+        Certifications TEXT,
+        Date_Created DATE NOT NULL,
+        Time_Created TIME NOT NULL,
+        Time_Deleted DATE                 -- Fecha de eliminación lógica
+    )`);
+    //Tabla Alumno
+    await DB.crearTabla(`CREATE TABLE Student (
+        Key TEXT PRIMARY KEY,
+        Name TEXT NOT NULL,
+        Cod_id TEXT NOT NULL UNIQUE,
+        Age TEXT,
+        Address TEXT,
+        Tlf TEXT,
+        Birthdate TEXT,
+        E_mail TEXT UNIQUE,
+        Image TEXT,
+        Name_Representative TEXT,
+        Age_Representative TEXT,
+        Address_Representative TEXT,
+        Cod_id_Representative TEXT,
+        Tlf_Representative TEXT,
+        E_mail_Representative TEXT,
+        Date_Created DATE NOT NULL,
+        Time_Created TIME NOT NULL,
+        Time_Deleted DATE
+    )`);
 
-//Tabla Curso
-  await DB.crearTabla(`CREATE TABLE Course (
-    Key TEXT PRIMARY KEY,                 -- UUID
-    Name TEXT NOT NULL UNIQUE,            -- Nombre del curso
-    Description TEXT,                     -- Descripción
-    Instructor_ID TEXT NOT NULL,          -- Relación UUID Instructor
-    Days TEXT NOT NULL,                   -- "Lun,Mar"
-    Start_Time TIME NOT NULL,             -- "00:00"
-    End_Time TIME NOT NULL,               -- "00:00"
-    Duration_Value INTEGER NOT NULL,      -- 2
-    Duration_Unit TEXT NOT NULL,          -- "Semanas"
-    Capacity INTEGER DEFAULT 0,           -- Cupo
-    Cost TEXT,                            -- "20"
-    Has_Evaluation BOOLEAN DEFAULT 0,     -- 1 o 0
-    Has_Certificate BOOLEAN DEFAULT 0,    -- 1 o 0
-    Status TEXT DEFAULT 'Activo',
-    Date_Created DATE NOT NULL,
-    Time_Created TIME NOT NULL,
-    Time_Deleted DATE                     -- Para borrado lógico
-)`);
+    //Tabla Curso
+      await DB.crearTabla(`CREATE TABLE Course (
+        Key TEXT PRIMARY KEY,                 -- UUID
+        Name TEXT NOT NULL UNIQUE,            -- Nombre del curso
+        Description TEXT,                     -- Descripción
+        Instructor_ID TEXT NOT NULL,          -- Relación UUID Instructor
+        Days TEXT NOT NULL,                   -- "Lun,Mar"
+        Start_Time TIME NOT NULL,             -- "00:00"
+        End_Time TIME NOT NULL,               -- "00:00"
+        Duration_Value INTEGER NOT NULL,      -- 2
+        Duration_Unit TEXT NOT NULL,          -- "Semanas"
+        Capacity INTEGER DEFAULT 0,           -- Cupo
+        Cost TEXT,                            -- "20"
+        Has_Evaluation BOOLEAN DEFAULT 0,     -- 1 o 0
+        Has_Certificate BOOLEAN DEFAULT 0,    -- 1 o 0
+        Status TEXT DEFAULT 'Activo',
+        Date_Created DATE NOT NULL,
+        Time_Created TIME NOT NULL,
+        Time_Deleted DATE                     -- Para borrado lógico
+    )`);
 
-//Tabla Student_Courses
-  await DB.crearTabla(`CREATE TABLE IF NOT EXISTS Student_Courses (
-    Id_student_key TEXT NOT NULL,
-    Id_curs TEXT NOT NULL,
-    Date_Enrolled DATE DEFAULT (date('now')),
-    Status TEXT DEFAULT 'Activo',
-    PRIMARY KEY (Id_student_key, Id_curs),
-    
-    FOREIGN KEY (Id_student_key) 
-        REFERENCES Student (Key) 
-        ON DELETE CASCADE,
-    
-    -- Corregido: Referencia a la columna 'Key' de la tabla Course
-    FOREIGN KEY (Id_curs) 
-        REFERENCES Course (Key) 
-        ON DELETE CASCADE
-)`);
+    //Tabla Student_Courses
+      await DB.crearTabla(`CREATE TABLE IF NOT EXISTS Student_Courses (
+        Id_student_key TEXT NOT NULL,
+        Id_curs TEXT NOT NULL,
+        Date_Enrolled DATE DEFAULT (date('now')),
+        Status TEXT DEFAULT 'Activo',
+        PRIMARY KEY (Id_student_key, Id_curs),
+        
+        FOREIGN KEY (Id_student_key) 
+            REFERENCES Student (Key) 
+            ON DELETE CASCADE,
+        
+        -- Corregido: Referencia a la columna 'Key' de la tabla Course
+        FOREIGN KEY (Id_curs) 
+            REFERENCES Course (Key) 
+            ON DELETE CASCADE
+    )`);
 
 
     await DB.cerrar();
 }
-/*--------------SELECCIONAR IMAGEN USER----------------------------*/
-ipcMain.on("select-image-user-admin-app",(event,type) => {
- 
-      dialog.showOpenDialog(window_register_app,{
-        title: 'Seleccionar archivo',
-        buttonLabel: 'Abrir',
-        filters: [
-          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
-        ],
-        properties: ['openFile']
-      }).then(result => {
-        //console.log(result.filePaths[0]);
-  
-      if(result.canceled==false){
-
-               window_register_app.webContents.send("Imagen-user-admin-select",{type:type,path:result.filePaths[0]});
-
-      }
-      
-      if(result.canceled==true){
-
-
-      }
-
-      }).catch(err => {
-        console.log(err);
-      });
-})
-/*-*/
-
-/*--------------SELECCIONAR IMAGEN USER----------------------------*/
-
-
-/*******CREA LA BASE DE DATOS SI NO ESTA Y SE CONECTA****************/
-async function Adding_data_Admin_data(data){
-
-
-    const ID_USER = uuidv4();
-    const ID_EMPLOYEE = uuidv4();
-
-    // Iniciamos la conexión
-    DB.conectar();
-
-    // Retornamos la promesa para poder encadenar .then() y .catch() afuera si es necesario
-    return Promise.all([
-        // Inserción en tabla User
-        DB.crear(
-            `INSERT INTO User (key, Username, Password, PasswordMaster, Permission, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, Date('now'), Time('now'))`,
-            [ID_USER, data.User.usuario, data.User.clave, data.User.Mclave,'Administrador']
-        ),
-        // Inserción en tabla Employee (Ajustado a 12 columnas para que coincida con los 12 valores)
-        DB.crear(
-            `INSERT INTO Employee (Key, Name, Cod_id, Address, Tlf, Age, E_mail, Birthdate, Image, Status, Id_user, Date_Created, Time_Created) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, Date('now'), Time('now'))`,
-           [
-                ID_EMPLOYEE, 
-                data.Employee.nombre, 
-                data.Employee.ci, 
-                data.Employee.direccion, 
-                data.Employee.tlf, 
-                data.Employee.edad,
-                data.Employee.correo, 
-                data.Employee.fechanacimiento, 
-                data.Employee.image,
-                 "Activo",
-                    ID_USER
-               
-            ]
-        )
-    ])
-    .then(() => {
-        console.log("Registro exitoso del Administrador y Empleado");
-        return { success: true, message: "Datos insertados correctamente" };
-    })
-    .catch((error) => {
-        console.error("Error al insertar datos:", error);
-        throw error; // Relanzamos para que quien llame a la función sepa que falló
-    })
-    .finally(() => {
-        // Cerramos la base de datos siempre, sin importar si hubo éxito o error
-        DB.cerrar();
-    });
-}
-
-
-ipcMain.on('open-message-system-user-pass-default', async (event,text) => {
-
-        AlertMessage(text)
-
-})
-
-
-function AlertMessage(text){
-
-        dialog.showMessageBox({
-                title:"Alerta",
-                message: text,
-                icon: 'error',
-                 type:'warning',
-                buttons: ['Aceptar'],
-                defaultId: 0,
-                cancelId: 1
-          }).then(result => {
-              
-                //console.log("btn-press",result.response);
-                 window_register_app.webContents.send("Saving-data-default-user");
-
-          }).catch(err => {
-              
-              console.log(err);
-        });
-}
-
-
-ipcMain.on('message-campos-vacios', async (event,text) => {
-
-    dialog.showMessageBox({
-      title: 'Notificación',
-      type:'question',
-      message: text,
-      icon: 'info',
-      buttons: ['Aceptar'],
-      defaultId: 0,
-      cancelId: 1,
-      noLink: true
-    }).then(result => {
-      console.log(result.response);
-    }).catch(err => {
-      console.log(err);
-    });
-
-
-
-})
-
-
-ipcMain.on('Instalar-app', async (event,data) => { 
-
-        let hostname = os_system.hostname().toString();
-        let platform = os_system.platform().toString();
-        let cpu = os_system.cpus()[0].model.toString();
-
-        const info = {
-            "state":true,
-            "hostname":hostname,
-            "plataform":platform,
-            "cpu":cpu                 
-        }
-
-        let obj = JSON.stringify(info);
-        
-        await Adding_data_Admin_data(data).then(()=>{
-       
-            fs.writeFile(config,obj, function(err){
-                    if (err) throw err;
-
-                     window_register_app.webContents.send("Completed-Saving-data");
-
-
-                     setTimeout(()=>{
-
-                        app.relaunch();
-                        app.quit();
-
-                     },5000)
-                    
-            });
-
-        })
-        .catch((error)=>{
-                console.log("ERROR DATA SAVE REGISTRO")
-
-        })
-});
-
-
-/********************************************************************************************/
-
 
 async function Adding_data_Admin_trial(){
     
@@ -479,72 +308,72 @@ async function Adding_data_Admin_trial(){
 
 ipcMain.on('Activate-system-trial', async (event,data) => { 
 
-let adminTrial=false
-let DBTrial=false
-await Adding_data_Admin_trial().then((result)=>{
+    let adminTrial=false
+    let DBTrial=false
+    await Adding_data_Admin_trial().then((result)=>{
 
 
-adminTrial=result.success;
+    adminTrial=result.success;
 
-}).catch((err)=>{
-    console.log(err)
-})
-await DataTrialSAIA().then((result)=>{
+    }).catch((err)=>{
+        console.log(err)
+    })
+    await DataTrialSAIA().then((result)=>{
 
-DBTrial=result.success;
-
-
-}).catch((err)=>{
-    console.log(err)
-})
+    DBTrial=result.success;
 
 
-if(adminTrial==true  && DBTrial==true){
+    }).catch((err)=>{
+        console.log(err)
+    })
 
 
-    dialog.showMessageBox({
-          title: 'Notificación',
-          type:'info',
-          message: "DATOS DE PRUEBA CARGADOS 'Usuario: Admin | Clave: 123456789'",
-          icon: 'info',
-          buttons: ['Aceptar'],
-          defaultId: 0,
-          cancelId: 1,
-          noLink: true
-    }).then(result => {
-      //console.log(result.response);
-        let hostname = os_system.hostname().toString();
-        let platform = os_system.platform().toString();
-        let cpu = os_system.cpus()[0].model.toString();
+    if(adminTrial==true  && DBTrial==true){
 
-        const info = {
-            "state":true,
-            "hostname":hostname,
-            "plataform":platform,
-            "cpu":cpu                 
-        }
 
-        let obj = JSON.stringify(info);
-        
-            fs.writeFile(config,obj, function(err){
-                    if (err) throw err;
+        dialog.showMessageBox({
+              title: 'Notificación',
+              type:'info',
+              message: "DATOS DE PRUEBA CARGADOS 'Usuario: Admin | Clave: 123456789'",
+              icon: 'info',
+              buttons: ['Aceptar'],
+              defaultId: 0,
+              cancelId: 1,
+              noLink: true
+        }).then(result => {
+          //console.log(result.response);
+            let hostname = os_system.hostname().toString();
+            let platform = os_system.platform().toString();
+            let cpu = os_system.cpus()[0].model.toString();
 
-                    //console.log('Saved data install!');
+            const info = {
+                "state":true,
+                "hostname":hostname,
+                "plataform":platform,
+                "cpu":cpu                 
+            }
 
-                     window_register_app.webContents.send("Completed-Saving-data");
-                     setTimeout(()=>{
+            let obj = JSON.stringify(info);
+            
+                fs.writeFile(config,obj, function(err){
+                        if (err) throw err;
 
-                        app.relaunch();
-                        app.quit();
+                        //console.log('Saved data install!');
 
-                     },3000)
-                    
-            });
+                         window_register_app.webContents.send("Completed-Saving-data");
+                         setTimeout(()=>{
 
-    }).catch(err => {
-      console.log(err);
-    });
+                            app.relaunch();
+                            app.quit();
 
-}
+                         },3000)
+                        
+                });
+
+        }).catch(err => {
+          console.log(err);
+        });
+
+    }
 
 })

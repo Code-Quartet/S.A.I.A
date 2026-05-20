@@ -237,6 +237,8 @@ input, select {
             </div>
         </div>
 
+
+
         <div class="form-group">
             <label>Horario *</label>
             <div class="input-split">
@@ -245,7 +247,8 @@ input, select {
             </div>
         </div>
 
-        <div class="form-group">
+ 
+                 <div class="form-group">
             <label>Duración *</label>
             <div class="input-split">
                 <input type="number" name="duracion_valor" placeholder="Cant." min ="0"required>
@@ -257,8 +260,8 @@ input, select {
                     <option value="Horas">Horas</option>
                 </select>
             </div>
-        </div> 
- 
+        </div>
+        
         <div class="form-group">
             <label for="cupo">Cupo Máximo</label>
           <input type="number" id="cupo" name="cupo" placeholder="Ej: 20" style="
@@ -267,7 +270,7 @@ input, select {
         </div>
         <div class="form-group">
             <label>Costo</label>
-            <input type="text" name="costo" placeholder="Ej: 30$">
+            <input type="number" name="costo" placeholder="Ej: 30$">
 
         </div>
 
@@ -346,7 +349,10 @@ api.receive("Data-list-intructor", (event, data) => {
         data.dias = Array.from(form.querySelectorAll('input[name="dias"]:checked')).map(el => el.value);
 
         api.send("save-new-data-course", data);
-      //console.log("Formulario validado y listo:", data);
+      
+      console.log("Formulario validado y listo:", data);
+      
+
              form.reset();
             checkFormValidity(); // Re-validar para desactivar el botón
             form.querySelector('input[name="nombre"]').focus();
