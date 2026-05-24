@@ -115,8 +115,6 @@ document.getElementById("Btn-Ingresar-login").addEventListener("click",()=>{
       console.log("Usuario:", usernameInput.value);
       console.log("Password:", passwordInput.value);
 
-
-
       api.send("Login-user-app",{username:usernameInput.value,password:passwordInput.value})
 
 });
@@ -151,6 +149,7 @@ passwordInputClick.addEventListener('keydown', function(event) {
 /*---------------------------------------------------------------*/
 api.receive("Data-user-employee",(event,data)=>{
 
+console.log("Data-user-employee",data)
 
 const imagenes = JSON.parse(data.employee.image)
 const email = JSON.parse(data.employee.email)

@@ -112,8 +112,12 @@ function Select_menu(index,container){
 }
 
 api.receive("Login-out-app",(event,data)=>{
+
 StatusRender("login")
+
 })
+
+
 api.receive("Reload-trash-interfaz",(event,data)=>{
 
 	Select_menu(0,"container-admin-info")
@@ -128,10 +132,13 @@ api.receive("Reload-trash-interfaz",(event,data)=>{
 });
 
 
-api.receive("reload-user-data-modif",(evebt,data)=>{
+api.receive("reload-user-data-modif",(event,data)=>{
+console.log("reload-user-data-modif",data.employee.image)
 
-	//StatusRender("login")
-	Data_user={
+const imagenes = JSON.parse(data.employee.image)
+const email = JSON.parse(data.employee.email)
+
+     Data_user={
       key:data.user.key,
       user:data.user.username,
       password:data.user.password,
@@ -144,8 +151,8 @@ api.receive("reload-user-data-modif",(evebt,data)=>{
          codId:data.employee.cod_id,
          direccion:data.employee.address,
          telefono:data.employee.tlf,
-         correo:data.employee.email,
-         image:data.employee.image,
+         correo:email[0]+email[1],
+         image:imagenes[0]
      };
 
 

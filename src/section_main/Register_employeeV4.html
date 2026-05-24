@@ -468,7 +468,9 @@
         });
 
         document.getElementById('tipoPermiso').addEventListener('change', (e) => {
+          
             document.getElementById('master-container').style.display = e.target.value === 'Administrador' ? 'block' : 'none';
+        
         });
 
         function DatosRegistro() {
@@ -492,6 +494,7 @@
                 }
             };
             if(window.api) {
+               // console.log("save-data-registre-employee", objData);
                 api.send("save-data-registre-employee", objData);
             }
         }
@@ -504,7 +507,7 @@
                     notif.style.right = '-400px';
                     api.send("Reload-dasboard-system-data-Employee");
                     api.send("button-register-employee-activate");
-                    window.close();
+                  //  window.close();
                 }, 1500);
             });
         }

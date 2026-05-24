@@ -42,8 +42,8 @@ module.exports = function Register_employee(parentWindow) {
     window_register_employee.loadFile('src/section_main/Register_employeeV4.html');
 
     // Herramientas de desarrollo
-//window_register_employee.webContents.openDevTools();
-//
+  //window_register_employee.webContents.openDevTools();
+
     // Bloquear nuevas ventanas (Forma moderna)
     window_register_employee.webContents.setWindowOpenHandler(() => {
         return { action: 'deny' };

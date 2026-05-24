@@ -153,6 +153,7 @@ ipcMain.on("save-data-update-employee",async(even,data)=>{
 
         })
 })
+
 function message_codId(sms){
    dialog.showMessageBox(window_edit_employee,{
         title: 'Alerta',

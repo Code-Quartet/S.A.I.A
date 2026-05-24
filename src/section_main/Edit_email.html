@@ -62,28 +62,47 @@ label {
 .input-container {
     position: relative;
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.sub-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 /* Estilo para los iconos de Icomoon */
-.input-container span[class^="icon-"] {
+.sub-input-container span[class^="icon-"] {
     position: absolute;
     left: 15px;
     color: #9ca3af;
     font-size: 1.2rem;
+   
 }
 
 input {
-    width: 100%;
-    padding: 14px 14px 14px 48px;
     border: 1.5px solid var(--border-light);
-    border-radius: 12px;
+    border-radius: 6px;
     font-size: 1rem;
     color: var(--text-dark);
     outline: none;
     transition: all 0.2s ease;
+    margin-left: 5px;
 }
+/**/
+.inputTextmail {
+    width: 95%;
+    padding: 10px;
+}
+.inputmail{
 
+ width:50%;
+    padding: 10px;
+}
 input::placeholder {
     color: #9ca3af;
 }
@@ -146,8 +165,17 @@ button:active {
             <label>Correo</label>
             <div class="input-container">
                 <span class="icon-pencil"></span>
-                 <input type="text" placeholder="NuevoCorreo@correo.com" id="emailInput">
+            <div class="sub-input-container">
+                 <input class="inputTextmail" type="text" placeholder="NuevoCorreo" id="emailInput">
+                         <div style="display: flex; flex-direction: row; gap: 4px;">
+                        <input class="inputTextmail" type="text" list="listEmail" id="DataList" style="width:75%;" placeholder="@Saia.com">
+                        <datalist id="listEmail">
+                            <option value="@gmail.com">@gmail.com</option>
+                            <option value="@hotmail.com">@hotmail.com</option>
+                        </datalist>
+                    </div>
             </div>
+
         </div>
 
         <div class="button-group">
@@ -170,8 +198,10 @@ button:active {
             if(document.getElementById("emailInput").value!=""){
 
                 let dataInput = document.getElementById("emailInput").value
+                let dataInputSelect = document.getElementById("DataList").value
 
-                api.send("save-new-email",dataInput)
+    console.log("save-new-email",JSON.stringify([dataInput,dataInputSelect]))
+   api.send("save-new-email",JSON.stringify([dataInput,dataInputSelect]))
 
             }else{
 

@@ -103,7 +103,7 @@ ipcMain.on("save-new-email",async(event,data)=>{
 
     await UpdateEmail(ID_User,data).then((resutl)=>{
 
-                window_edit_email.send("close-window-updane-email")
+        window_edit_email.send("close-window-updane-email")
 
     })
     .catch((err)=>{

@@ -275,7 +275,7 @@ grid-row-gap: 0px;
                     <input type="text" id="ci" placeholder="Solo números" oninput="this.value = this.value.replace(/[^0-9]/g, '')" src="../../assets/imagen/CeddulaFalsa.png">
                     <div class="doc-trigger" id="contDocEst">
                         <i class="icon-image" id="iconDocEst" style="color: var(--primary-blue); font-size: 20px;"></i>
-                        <img id="previewDocEst" style="display:none">
+                        <img id="previewDocEmployee" style="display:none" src="../../assets/imagen/CeddulaFalsa.png">
                         <div class="doc-controls" id="ctrlDocEst" style="display:none">
                             <i class="icon-search doc-btn" id="viewEst"></i>
                             <i class="icon-spinner11 doc-btn" id="updEst"></i>
@@ -367,7 +367,7 @@ grid-row-gap: 0px;
 const btnRegistrar = document.getElementById('btn-save');
 const avatarImg = document.getElementById('view-avatar');
 const contDoc = document.getElementById('contDocEst');
-const imgDoc = document.getElementById('previewDocEst');
+const imgDoc = document.getElementById('previewDocEmployee');
 const iconDoc = document.getElementById('iconDocEst');
 const ctrlDoc = document.getElementById('ctrlDocEst');
 
@@ -424,6 +424,8 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
     // --- RECEPCIÓN DE DATOS ---
     let EmployeeKey = null;
     api.receive("data-employee-for-edit", (event, response) => {
+
+        //console.log(response)
         if (response && response.success){
                 const d = response.data;
 
@@ -462,7 +464,7 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
                 const imgs = JSON.parse(d.Image);
                 avatarImg.src = imgs[0];
   
-                document.getElementById("previewDocEst").src= imgs[1]
+                document.getElementById("previewDocEmployee").src = imgs[1] || "../../assets/imagen/CeddulaFalsa.png"
                 imgEst.style.display = 'block';
                 iconEst.style.display = 'none';
                 ctrlEst.style.display = 'flex';
@@ -483,7 +485,7 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
                 correo:JSON.stringify([document.getElementById("correo").value,document.getElementById("DataList").value]),
                 tlf: document.getElementById("telefono").value,
                 direccion: document.getElementById("direccion").value,
-                image: JSON.stringify([document.getElementById("view-avatar").src, document.getElementById("previewDocEst").src]),
+                image: JSON.stringify([document.getElementById("view-avatar").src, document.getElementById("previewDocEmployee").src]),
                 status: document.getElementById("select-status-employee").value
             },
             User: {
@@ -494,7 +496,7 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
             }
         };
 
-        console.log("save-data-update-employee", objData);
+       // console.log("save-data-update-employee", objData);
         api.send("save-data-update-employee", objData);
 
         setTimeout(() => {
@@ -519,8 +521,10 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
 
                 notif.classList.remove('show')
             api.send("Reload-dasboard-system-Employee-MyProfile")  
-               console.log("data employe admin user")
-            
+              // console.log("data employe admin user")
+                setTimeout(() =>{
+                    window.close()
+                }, 2000);  
             }, 2000);  
 
 
@@ -540,7 +544,7 @@ const ctrlDoc = document.getElementById('ctrlDocEst');
         };
 
         const contEst = document.getElementById('contDocEst');
-        const imgEst = document.getElementById('previewDocEst');
+        const imgEst = document.getElementById('previewDocEmployee');
         const iconEst = document.getElementById('iconDocEst');
         const ctrlEst = document.getElementById('ctrlDocEst');
 

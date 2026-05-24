@@ -240,7 +240,7 @@ async function UpdatePasswordMaster(key, passwordMasterActual, nuevaPasswordMast
     }
 }
 /*-----------------------------------------*/
-
+/*
 async function UpdateImagenAvatar(key,url){
 
  const sql = `UPDATE Employee SET Image = ? WHERE Key = ?`;
@@ -251,6 +251,53 @@ async function UpdateImagenAvatar(key,url){
         console.error("Error al actualizar el Imagen:", error);
     }
 
+}
+
+*/
+async function UpdateImagenAvatar(key, url) {
+    // 1. Consultas SQL necesarias
+    console.log(url);
+
+    const sqlSelect = `SELECT Image FROM Employee WHERE Key = ?`;
+    const sqlUpdate = `UPDATE Employee SET Image = ? WHERE Key = ?`;
+
+    try {
+
+        const resultado = await DB.buscar(sqlSelect, [key]); 
+
+        console.log("resultado",resultado)
+        
+        if (!resultado || !resultado.Image) {
+            console.warn("No se encontró el empleado o la columna Image está vacía.");
+            return;
+        }
+
+        // 3. Parsear el string JSON a un array de JavaScript
+        let imagenesArray = [];
+        try {
+            imagenesArray = JSON.parse(resultado.Image);
+        } catch (e) {
+            console.error("La columna Image no contiene un JSON válido. Se creará un array nuevo.");
+            imagenesArray = [];
+        }
+
+        // 4. Actualizar el primer elemento (índice 0) con la nueva URL
+        if (Array.isArray(imagenesArray)) {
+            imagenesArray[0] = url; 
+        } else {
+            // Si por alguna razón no era un array, lo convertimos en uno
+            imagenesArray = [url];
+        }
+
+        // 5. Convertir el array de nuevo a string JSON y guardar en la base de datos
+        const jsonActualizado = JSON.stringify(imagenesArray);
+        await DB.actualizar(sqlUpdate, [jsonActualizado, key]);
+
+        console.log("Primera imagen del avatar actualizada con éxito.");
+
+    } catch (error) {
+        console.error("Error al procesar la actualización de la imagen:", error);
+    }
 }
 /*------------------------------------------*/
 async function RegisterSessionEvent(userKey, eventType) {

@@ -251,6 +251,7 @@ api.receive("message-password-master", (event, data) => {
         iconU.style.color="white";
         sms.innerHTML = data.sms.message;
         sms.style.display = 'block';
+        sms.style.color = "#10b981";
         
         // Ocultamos el resto
         passCont.style.display = 'none';
