@@ -599,7 +599,7 @@ ArrayImagenSelect[2]=document.getElementById('previewDocRep').src || "../../asse
                     correo: JSON.stringify([document.getElementById('correo').value,document.getElementById("DataList").value]),
                     telefono: document.getElementById('telefono').value,
                     cursos: selectCursos.map(c => c.id),
-                    imagen:ArrayImagenSelect,
+                    imagen:JSON.stringify(ArrayImagenSelect),
                     direccion: document.getElementById('direccion').value,
                 },
 

@@ -440,15 +440,16 @@ api.receive('data-student-information', (event, data) => {
     // 1. Validamos que exista data.Image y que no sea un string vacío
     if (data.Image && data.Image.trim() !== "") {
         // Separamos por comas y limpiamos saltos de línea o espacios extras con map y trim
-        arrayRecuperado = data.Image.split(',').map(ruta => ruta.trim());
+        //arrayRecuperado = data.Image.split(',').map(ruta => ruta.trim());
+        arrayRecuperado = JSON.parse(data.Image);
     }
 
    // console.log("Array recuperado:", arrayRecuperado);
 
     // 2. Asignación dinámica (si el índice no existe, se asigna un string vacío)
-    if (mainAvatar) mainAvatar.src = arrayRecuperado[0] || "";
-    if (imgEst)     imgEst.src     = arrayRecuperado[1] || "";
-    if (imgRep)     imgRep.src     = arrayRecuperado[2] || "";
+    if (mainAvatar) mainAvatar.src = arrayRecuperado[0] || '../../assets/imagen/ImageLogin3.png';
+    if (imgEst)     imgEst.src     = arrayRecuperado[1] || "../../assets/imagen/CeddulaFalsa.png";
+    if (imgRep)     imgRep.src     = arrayRecuperado[2] || "../../assets/imagen/CeddulaFalsa.png";
 
     // 3. Control dinámico de los contenedores según el tamaño del array
     // Estudiante (Índice 1)
@@ -475,8 +476,8 @@ api.receive('data-student-information', (event, data) => {
         arrayRecuperado1 = JSON.parse(data.E_mail || "[]");
 
     //    console.log(arrayRecuperado1)
-        document.getElementById('correo').value = arrayRecuperado1[0] || "";
-        document.getElementById('DataList').value = arrayRecuperado1[1] || "";
+        document.getElementById('correo').value = arrayRecuperado1[0] || "N/A";
+        document.getElementById('DataList').value = arrayRecuperado1[1] || "N/A";
 
 
     } catch (e) {
@@ -487,8 +488,8 @@ api.receive('data-student-information', (event, data) => {
 /*----------------------------------------------------------*/
     try {
         arrayRecuperado2 = JSON.parse(data.E_mail_Representative || "[]");
-        document.getElementById('correo_representante').value = arrayRecuperado2[0] || "";
-        document.getElementById('DataListRep').value = arrayRecuperado2[1] || "";
+        document.getElementById('correo_representante').value = arrayRecuperado2[0] || "N/A";
+        document.getElementById('DataListRep').value = arrayRecuperado2[1] || "N/A";
 
     } catch (e) {
         console.error("Error al parsear imágenes:", e);
@@ -598,11 +599,11 @@ btnConfirm.addEventListener('click', () => {
             nombre: document.getElementById('nombre').value,
             cedula: document.getElementById('cedula').value,
             edad: document.getElementById('edad').value,
-            imagen: (imagenesFinales),
+            imagen: JSON.stringify(imagenesFinales),
             nacimiento: document.getElementById('fechanacimiento').value,
             direccion: document.getElementById('direccion').value,
             cursos: seleccionCursos.map(c => c.id),
-            correo:JSON.stringify([document.getElementById('correo').value = arrayRecuperado1[0] || "",
+            correo:JSON.stringify([document.getElementById('correo').value = arrayRecuperado1[0] || "N/A",
         document.getElementById('DataList').value]),
             telefono: document.getElementById('telefono').value
         },

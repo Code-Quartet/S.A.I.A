@@ -251,27 +251,22 @@ body {
             modal.style.display = 'flex';
         }
 
-        function updateUI(data) {
+function updateUI(data) {
 
-            console.log(data)
+     console.log(data)
 
-            if (!data) return;
-
-/*
-            const d = JSON.parse(data.E_mail);
-            console.log(d[0])
-*/
-            // Procesar Array de Imágenes [perfil, cedulaEst, cedulaRep]
+if (!data) return;
 try {
     let imagenes = [];
 
     // Validamos que exista data.Image y no esté vacío
     if (data.Image && data.Image.trim() !== "") {
         // Rompemos por comas y limpiamos espacios o saltos de línea molestos
-        imagenes = data.Image.split(',').map(ruta => ruta.trim());
+       // imagenes = JSON.parse(data.Image.split(',').map(ruta => ruta.trim()));
+        imagenes = JSON.parse(data.Image);
     }
 
-    console.log("Imágenes procesadas:", imagenes);
+    //console.log("Imágenes procesadas:", imagenes[0]);
 
     // 1. Imagen principal (Avatar) - Si no existe, usa la de por defecto
     const viewImg = document.getElementById('view-img');
@@ -287,8 +282,7 @@ try {
         if (viewDocEstImg) viewDocEstImg.src = imagenes[1];
         if (btnViewDocEst) btnViewDocEst.onclick = () => openViewer(imagenes[1]);
     } else {
-        // Si el tamaño varía y no existe la segunda imagen, reseteamos
-        if (viewDocEstImg) viewDocEstImg.src = ""; 
+        if (viewDocEstImg) viewDocEstImg.src = "../../assets/imagen/CeddulaFalsa.png"; 
         if (btnViewDocEst) btnViewDocEst.onclick = null; 
     }
     
@@ -300,14 +294,12 @@ try {
         if (viewDocRepImg) viewDocRepImg.src = imagenes[2];
         if (btnViewDocRep) btnViewDocRep.onclick = () => openViewer(imagenes[2]);
     } else {
-        // Si el tamaño varía y no existe la tercera imagen, reseteamos
-        if (viewDocRepImg) viewDocRepImg.src = "";
+        if (viewDocRepImg) viewDocRepImg.src = "../../assets/imagen/CeddulaFalsa.png";
         if (btnViewDocRep) btnViewDocRep.onclick = null;
     }
 
 } catch (e) {
     console.error("Error al procesar el string de imágenes:", e);
-    // Fallback seguro en caso de error crítico
     const viewImg = document.getElementById('view-img');
     if (viewImg) {
         viewImg.src = '../../assets/imagen/ImageLogin3.png';

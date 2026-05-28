@@ -363,7 +363,7 @@
         };
 
         api.send('Save-data-new-instructor', valores);
-        mostrarNotificacion();
+       
         
         setTimeout(() => {
             LimpiarFormulario();
@@ -376,6 +376,12 @@
         notif.classList.add('show');
         setTimeout(() => notif.classList.remove('show'), 3000);
     }
+
+    api.receive("open-modal-register-instructor",()=>{
+
+         mostrarNotificacion();
+        
+    })
 </script>
 
 </body>

@@ -60,31 +60,30 @@ module.exports = function Register_instructor(parentWindow) {
 
 ipcMain.on("Select-new-imagen-instructor",(event,data)=>{
 
- dialog.showOpenDialog(window_register_instructor,{
-        title: 'Seleccionar archivo',
-        buttonLabel: 'Abrir',
-        filters: [
-          { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
-        ],
-        properties: ['openFile']
-      }).then(result => {
+   dialog.showOpenDialog(window_register_instructor,{
+          title: 'Seleccionar archivo',
+          buttonLabel: 'Abrir',
+          filters: [
+            { name: 'Imágenes', extensions: ['jpg', 'png', 'gif','jpeg'] }
+          ],
+          properties: ['openFile']
+        }).then(result => {
+          
+        if(result.canceled==false){
+
+            window_register_instructor.send("Image-select-new-instructor",result.filePaths[0]);
+        }
         
-      if(result.canceled==false){
+        if(result.canceled==true){
 
-          window_register_instructor.send("Image-select-new-instructor",result.filePaths[0]);
-      }
-      
-      if(result.canceled==true){
+            window_register_instructor.send("Image-select-new-instructor",ImageDefault);
+        }
 
-          window_register_instructor.send("Image-select-new-instructor",ImageDefault);
-      }
+        }).catch(err => {
 
-      }).catch(err => {
-
-        console.log(err);
-        
-      });
-
+          console.log(err);
+          
+        });
 
 })
 
@@ -125,16 +124,20 @@ ipcMain.on("Save-data-new-instructor",async(event,data)=>{
 
 await InsertInstructor(data).then((result)=>{
 
-if(result.success==false){
+console.log(result.success)
+  if(result.success==false){
 
-  message(result.message)
-       
-  
-}else {
-  
-   window_register_instructor.webContents.send("open-modal-register-instructor");
-        
-}
+    message(result.message)
+         
+    
+  }
+  if(result.success==true){
+
+    console.log("se activo rtue")
+    
+     window_register_instructor.webContents.send("open-modal-register-instructor");
+          
+  }
        
      
 }).catch((error)=>{

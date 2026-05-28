@@ -452,7 +452,7 @@ ipcMain.on('Exportar-excel-tabla-unica',(event,tabla) => {
         buttonLabel: 'Exportar',
         defaultPath: `Reporte_General_${tabla}_${fecha}_${hora}.xlsx`, // Nombre sugerido
         filters: [
-            { name: 'Excel Workbook', extensions: ['xlsx'] }
+            { name: 'Excel Workbook', extensions: ['xlsx', 'xls'] }
         ]
     };
 
@@ -519,7 +519,7 @@ ipcMain.on('Excel-Exportar', (event, id) => {
         buttonLabel: 'Exportar',
         defaultPath: `Reporte_General_${fecha}_${hora}.xlsx`, // Nombre sugerido
         filters: [
-            { name: 'Excel Workbook', extensions: ['xlsx'] }
+            { name: 'Excel Workbook', extensions: ['xlsx', 'xls'] }
         ]
     };
 
@@ -595,6 +595,7 @@ ipcMain.on('Excel-Importar', (event, id) => {
             // 2. CORRECCIÓN: Usar filePaths[0] (es un array)
             const rutaSeleccionada = result.filePaths[0];
 
+
             console.log("Archivo seleccionado para importar:", rutaSeleccionada);
             
             // Llamamos a tu función de base de datos
@@ -614,6 +615,7 @@ ipcMain.on('Excel-Importar', (event, id) => {
 
                       })
                       .catch((err)=>{
+                        //console.log("Error IMportar excel",err)
                          dialog.showMessageBox(mainWindow,{
                             title: 'Alerta',
                             type:'warning',
@@ -658,7 +660,7 @@ ipcMain.on('Importar-SQLITE-DB', (event, id) => {
             }
 
             const address = result.filePaths[0];
-            console.log("Ruta cargada:", address);
+            console.log("Ruta cargada de inportado DB:", address);
 
             // Ejecutar la lógica de importación
             importarArchivoDB(address).then((result)=>{
